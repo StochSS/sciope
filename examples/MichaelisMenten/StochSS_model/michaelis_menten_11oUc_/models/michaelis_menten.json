@@ -1,0 +1,7 @@
+{
+    "model": "michaelis_menten_11oUc_/models/data/michaelis_menten.xml", 
+    "name": "michaelis_menten", 
+    "units": "population", 
+    "user_id": "andreas.hellander@gmail.com", 
+    "version": "1.7.0"
+}
