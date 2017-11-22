@@ -1,0 +1,57 @@
+Metadata-Version: 1.1
+Name: mio
+Version: 0.1
+Summary: The mio toolbox for surrogate modeling, likelihood-free parameter inference and black-box optimization.
+Home-page: https://hellanderlab.research.it.uu.se
+Author: Prashant Singh; Andreas Hellander
+Author-email: prashant.singh@it.uu.se
+License: Apache 2.0
+Description-Content-Type: UNKNOWN
+Description: # README #
+        
+        The (M)odeling, (I)inference and (O)ptimization toolbox is a Python 2 package for performing model-assisted inference and optimization.
+        
+        ### What can the MIO toolbox do? ###
+        
+        * Surrogate Modeling: 
+        	- train fast metamodels of computationally expensive problems
+        	- perform surrogate-assisted model reduction for large-scale models/simulators (e.g., biochemical reaction networks)
+        * Inference: 
+        	- perform likelihood-free parameter inference using surrogate modeling or Bayesian optimization
+        	- perform efficient parameter sweeps based on statistical designs and sampling techniques
+        * Optimization: 
+        	- optimize a specified objective function or surrogate model using a variety of approaches
+        	
+        * Version 0.1
+        
+        ### How do I get set up? ###
+        
+        * Summary of set up
+        	pip support coming up
+        * Configuration
+        * Dependencies
+        	scikit-learn, SciPy, numpy, gpflowopt
+        * How to run tests
+        	test suite coming up
+        
+        ### Contribution guidelines ###
+        
+        * Writing tests
+        	ToDo
+        * Code review
+        	ToDo
+        * Other guidelines
+        	ToDo
+        
+        ### Who do I talk to? ###
+        
+        * Prashant Singh (prashant.singh@it.uu.se)
+        * Andreas Hellander (andreas.hellander@it.uu.se)
+Keywords: parameter inference surrogate modeling optimization sweeps sampling design model reduction
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
