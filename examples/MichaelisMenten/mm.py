@@ -92,6 +92,31 @@ if __name__ == '__main__':
     # Write it to file
     np.savetxt("mmDataset.dat", dataToWrite, delimiter=",")
 
+def simulate(param):
+    # If the parameters are not within sensible range, complain about it
+    if np.any(param < 0):
+    	return 99999999
+    
+    # Here, we create the model object.
+    # We could pass new parameter values to this model here if we wished.
+    simple_model = MichaelisMenten(parameter_values=param)
+    
+    # The model object is simulated with the StochKit solver, and 25 
+    # trajectories are returned.
+    num_trajectories = 250
+    simple_trajectories = simple_model.run(number_of_trajectories = num_trajectories)
+    
+    # extract time values
+    time = np.array(simple_trajectories[0][:,0]) 
+
+    # extract just the trajectories for S into a numpy array
+    S_trajectories = np.array([simple_trajectories[i][:,1] for i in xrange(num_trajectories)]).T
+    
+    # Save values to text - 10th value of mean
+    meanTrajs = S_trajectories.mean(1);
+    simulatedValue = meanTrajs.item(9)
+    return simulatedValue
+
     
 def simulateTS(param):
     # Here, we create the model object.
