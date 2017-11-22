@@ -12,19 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Example: Michaelis-Menten simulator pass-through
-Loads a fixed dataset and computes the distance from simulated values
+Initial Design Base Class
 """
-import mm
-import numpy as np
-from random import randint
-    
-def compute(param):
-	# param is n-d array passed from GPyOpt so we take param[0]
-	#computedValue = model2.simulate(param[0])
-	computedValue = mm.simulate(param)
-	lines = np.loadtxt("mmDataset.dat")
-	numLines = len(lines)
-	randIdx = randint(0,numLines-1)
-	dist = (lines.item(randIdx) - computedValue) ** 2
-	return dist
+
+# Imports
+from abc import ABCMeta, abstractmethod
+
+# Class definition
+class InitialDesignBase(object):
+	"""
+	Base class for initial designs. 
+	Must not be used directly!
+	Each initial design type must implement the methods described herein:
+	
+	* InitialDesignBase.generate(n,domain)
+	"""
+	__metaclass__ = ABCMeta
+	
+	def __init__(self, name, xmin, xmax):
+		self.name = name
+		self.xmin = xmin
+		self.xmax = xmax
+		
+	@abstractmethod
+	def generate(self, n):
+		"""
+		Sub-classable method for generating 'n' points within a given domain. Each derived class must implement.
+		"""
+	
