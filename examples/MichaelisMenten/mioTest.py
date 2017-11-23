@@ -25,8 +25,8 @@ sys.path.append("../../mio/initialDesigns")
 import mio
 import numpy as np
 import mmSim as m2s
-import svmRegressor as svr
-import latinHypercubeSampling as lhs
+from models import *
+from initialDesigns import *
 
 # Domain
 min = [0.1, 80, 5, 5]
@@ -42,8 +42,8 @@ def obj(X):
 	return Y
 
 # Set up MIO components
-lhd = lhs.LatinHypercube(min,max)
-mlModel = svr.SVRModel()
+lhd = latinHypercubeSampling.LatinHypercube(min,max)
+mlModel = svmRegressor.SVRModel()
 numPoints = 200
 problem = obj
 

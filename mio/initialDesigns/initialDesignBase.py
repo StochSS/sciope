@@ -17,6 +17,7 @@ Initial Design Base Class
 
 # Imports
 from abc import ABCMeta, abstractmethod
+import numpy as np
 
 # Class definition
 class InitialDesignBase(object):
@@ -31,6 +32,7 @@ class InitialDesignBase(object):
 	
 	def __init__(self, name, xmin, xmax):
 		self.name = name
+		np.testing.assert_array_less(xmin, xmax, err_msg="Please validate the values and ensure shape equality of domain lower and upper bounds.")
 		self.xmin = xmin
 		self.xmax = xmax
 		
