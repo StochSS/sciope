@@ -1,1 +1,0 @@
-https://github.com/GPflow/GPflowOpt/tarball/master
