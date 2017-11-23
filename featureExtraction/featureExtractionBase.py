@@ -29,8 +29,10 @@ class FeatureExtractionBase():
 		"""TODO"""
 
 		non_computed = self.dataframe.loc[self.dataframe['computed'] == 0] #filter non-computed rows
-		if len(non_computed) == 0:
-			print 'All datapoints in __.dataframe has already been computed. Add new datapoints first.'
+		try:
+			assert len(non_computed) > 0
+		except AssertionError:
+			print 'All datapoints in __.dataframe has already been computed or data is missing. Add new datapoints first.'
 		else:
 			non_computed.drop(['computed'], axis=1) #remove the 'computed' column  (required by tsfresh)
 
