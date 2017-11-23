@@ -75,7 +75,8 @@ setup(
     install_requires=[
 			'numpy',
 			'scipy',
-			'scikit-learn'],
+			'scikit-learn',
+			'tsfresh'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
