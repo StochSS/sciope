@@ -1,4 +1,6 @@
-numpyscipyscikit-learn
+numpy
+scipy
+scikit-learn
 
 [dev]
 check-manifest
