@@ -1,9 +1,0 @@
-LICENSE.txt
-MANIFEST.in
-README.md
-setup.py
-mio.egg-info/PKG-INFO
-mio.egg-info/SOURCES.txt
-mio.egg-info/dependency_links.txt
-mio.egg-info/requires.txt
-mio.egg-info/top_level.txt
