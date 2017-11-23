@@ -21,7 +21,19 @@ Forms the backbone of the following tasks:
 
 # Imports
 from scipy.optimize import basinhopping
+from types import *
 import numpy as np
+import sys
+
+# Set up paths
+sys.path.append('initialDesigns')
+sys.path.append('sampling')
+sys.path.append('models')
+
+# Import mio modules
+from initialDesigns import *
+from models import *
+from sampling import *
 
 # Class definition
 class MIO(object):
@@ -46,7 +58,18 @@ class MIO(object):
 	
 	"""
 	
-	def __init__(self, name='default', dataset=None, problem=None, initialDesign=None, initialDesignSize=10, batchSize=5, evaluationBudget=100, surrogate=None, samplingAlgorithm=None):
+	def __init__(self, name='default', dataset=None, problem=None, initialDesign=None, initialDesignSize=10, batchSize=5, evaluationBudget=100, surrogate=svmRegressor.SVRModel(), samplingAlgorithm=None):
+		# Validate
+		assert type(initialDesignSize) is IntType, "initialDesignSize is not an integer: %r" % initialDesignSize
+		assert type(batchSize) is IntType, "batchSize is not an integer: %r" % batchSize
+		assert type(evaluationBudget) is IntType, "evaluationBudget is not an integer: %r" % evaluationBudget
+		assert type(name) is StringType, "name is not a string: %r" % name
+		assert isinstance(initialDesign, initialDesignBase.InitialDesignBase), 'initialDesign: Argument of wrong type! Must be a derivative of InitialDesignBase'
+		assert isinstance(surrogate, modelBase.ModelBase), 'surrogate: Argument of wrong type! Must be a derivative of ModelBase'
+		#assert isinstance(samplingAlgorithm, samplingBase.SamplingBase), 'samplingAlgorithm: Argument of wrong type! Must be a derivative of SamplingBase'
+		#@ToDo: assert for sampling, dataset, problem
+				
+		# Assign
 		self.name = name
 		self.dataset = dataset
 		self.problem = problem
