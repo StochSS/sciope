@@ -6,7 +6,6 @@ Home-page: https://hellanderlab.research.it.uu.se
 Author: Prashant Singh; Andreas Hellander
 Author-email: prashant.singh@it.uu.se
 License: Apache 2.0
-Description-Content-Type: UNKNOWN
 Description: # README #
         
         The (M)odeling, (I)inference and (O)ptimization toolbox is a Python 2 package for performing model-assisted inference and optimization.
