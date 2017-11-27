@@ -17,6 +17,7 @@ Sequential Sampling Base Class
 
 # Imports
 from abc import ABCMeta, abstractmethod
+import numpy as np
 
 # Class definition
 class SamplingBase(object):
@@ -33,17 +34,20 @@ class SamplingBase(object):
 	"""
 	__metaclass__ = ABCMeta
 	
-	def __init__(self, name):
+	def __init__(self, name, xmin, xmax):
 		self.name = name
+		np.testing.assert_array_less(xmin, xmax, err_msg="Please validate the values and ensure shape equality of domain lower and upper bounds.")
+		self.xmin = xmin
+		self.xmax = xmax
 		
 	@abstractmethod
-	def selectPoint(self):
+	def selectPoint(self, X):
 		"""
-		Sub-classable method for selecting one new point. Each derived class must implement.
+		Sub-classable method for selecting one new point to X. Each derived class must implement.
 		"""
 	
 	@abstractmethod
-	def selectPoints(self, n):
+	def selectPoints(self, X, n):
 		"""
-		Sub-classable method for selecting 'n' new points. Each derived class must implement.
+		Sub-classable method for selecting 'n' new points to X. Each derived class must implement.
 		"""

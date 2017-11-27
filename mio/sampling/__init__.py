@@ -1,1 +1,1 @@
-__all__ = ["samplingBase"]
+__all__ = ["samplingBase", "maximinSampling"]
