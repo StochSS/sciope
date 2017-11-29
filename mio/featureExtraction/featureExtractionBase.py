@@ -13,51 +13,54 @@
 # limitations under the License.
 """
 Feature Extraction Base Class
-
 """
-# Imports
+#import
 from pandas import DataFrame
-import tsfresh
 import numpy as np
+import gillespy
 
-class FeatureExtractionBase():
+class FeatureExtractionBase(object):
 
-	def __init__(self, gillespy_model):
-		self.model = gillespy_model
-		self.columns = np.concatenate((['index', 'computed', 'time'], self.model.listOfSpecies.keys()))
-		self.dataframe = DataFrame(columns = self.columns)
-		self.features = DataFrame()
+	def __init__(self, name, gillespy_model=None, columns=None):
+		self.name = name
+		try:
+			if gillespy_model is not None:
+				assert type(gillespy_model) == gillespy.gillespy.Model,\
+					"gillespy_model needs to be of type gillespy.gillespy.Model: \
+						%r was given" % type(gillespy_model)
+
+				self.columns = np.concatenate((['index', 'computed', 'time'],
+					gillespy_model.listOfSpecies.keys()))
+
+			elif columns is None:
+				print "columns need to be defined if not using gillespy_model"
+			else:
+				assert type(columns) is np.ndarray  or type(columns) is list,\
+					"columns need to be of type list or numpy.ndarray: %r was given" \
+						% type(columns)
+				assert len(columns) > 0, "columns need to be of 1D shape, for example ['A','B']"
+				self.columns = np.concatenate((['index', 'computed', 'time'], columns))
+
+			self.data = DataFrame(columns = self.columns)
+			self.features = DataFrame()
+
+		except ValueError:
+			print "columns need to be of 1D shape, for example ['A','B']"
+			raise
 
 	def put(self, data):
-		"""TODO"""
-		nr_datapoints = len(self.features)
-		for enum, datapoint in enumerate(data):
-			enum += nr_datapoints
-			df = DataFrame(data=map(lambda x: np.concatenate(([enum, 0], x)), datapoint), columns = self.columns)
-			self.dataframe = self.dataframe.append(df)
-			
+		"""Abstract method to put data"""
+		raise NotImplementedError("Subclass must implement abstract method")
 
 	def delete_row(self):
-		"""TODO"""
+		"""Abstract method to delete rows in all or one data container"""
+		raise NotImplementedError("Subclass must implement abstract method")
 
 	def delete_column(self):
-		"""TODO"""
+		"""Abstract method to delete column in either data container"""
+		raise NotImplementedError("Subclass must implement abstract method")
 
 	def generate(self):
-		"""TODO"""
+		"""Abstract method to generate features"""
+		raise NotImplementedError("Subclass must implement abstract method")
 
-		non_computed = self.dataframe.loc[self.dataframe['computed'] == 0] #filter non-computed rows
-		try:
-			assert len(non_computed) > 0
-		except AssertionError:
-			print 'All datapoints in __.dataframe has already been computed or data is missing. Add new datapoints first.'
-		else:
-			non_computed = non_computed.drop(['computed'], axis=1) #remove the 'computed' column  (required by tsfresh)
-
-			#compute the features using tsfresh
-			f_subset = tsfresh.extract_features(non_computed, column_id = "index", column_sort = "time", column_kind = None, column_value = None)
-			self.features = self.features.append(f_subset)
-			self.dataframe.loc[self.dataframe['computed'] == 0, 'computed'] = 1 #warning code redundancy 
-
-	def normalize(self):
-		"""TODO"""
