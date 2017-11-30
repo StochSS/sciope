@@ -20,8 +20,32 @@ import numpy as np
 import gillespy
 
 class FeatureExtractionBase(object):
+	"""
+	Base class for featureExraction module.
+
+	Attributes:
+	name: identifier for instance 
+	columns: A 1D numpy ndarray or list containing time series quantity of interest, for example
+		['Molecule_A, 'Molecule_B']
+	data: A pandas DataFrame container for datapoints (time series) with 
+		columns = ['index','computed','time'. self.columns]
+	features: A pandas DataFrame container for computed features from self.data
+	info: for keeping track of index of time series, if they have been computed, and time-steps.
+		It also contain self.columns. Used  for building the structure of self.data
+	"""
 
 	def __init__(self, name, gillespy_model=None, columns=None):
+		"""
+		Input:
+		name: identifier for instance
+		gillespy_model: for efficiency, a gillespy model can be provided to read-in all species 
+			as columns.
+		columns: A 1D numpy ndarray or list containing time series quantity of interest, for example 
+			['Molecule_A, 'Molecule_B']
+
+		Obs! Even though both gillespy_model and columns are implemented as optional, one of these
+			are required.
+		"""
 		self.name = name
 		try:
 			if gillespy_model is not None:
@@ -29,8 +53,7 @@ class FeatureExtractionBase(object):
 					"gillespy_model needs to be of type gillespy.gillespy.Model: \
 						%r was given" % type(gillespy_model)
 
-				self.columns = np.concatenate((['index', 'computed', 'time'],
-					gillespy_model.listOfSpecies.keys()))
+				self.columns = gillespy_model.listOfSpecies.keys()
 
 			elif columns is None:
 				print "columns need to be defined if not using gillespy_model"
@@ -39,9 +62,10 @@ class FeatureExtractionBase(object):
 					"columns need to be of type list or numpy.ndarray: %r was given" \
 						% type(columns)
 				assert len(columns) > 0, "columns need to be of 1D shape, for example ['A','B']"
-				self.columns = np.concatenate((['index', 'computed', 'time'], columns))
+				self.columns = columns
 
-			self.data = DataFrame(columns = self.columns)
+			self.info = np.concatenate((['index', 'computed', 'time'], self.columns))
+			self.data = DataFrame(columns = self.info)
 			self.features = DataFrame()
 
 		except ValueError:

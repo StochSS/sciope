@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Time Series Analysis Class
+Time Series Analysis using feature extraction in tsfresh. Extracts many time series analysis features 
+from a collection of datapoints (time series).
 
 """
 # Imports
@@ -22,28 +23,50 @@ import tsfresh
 import numpy as np
 
 class TimeSeriesAnalysis(FeatureExtractionBase):
+	"""
+	Add data to container (data) and extract features from data into another container (features) using
+	.generete ()
+	
+	Attributes:
+	see super class
+
+	"""
 
 	def __init__(self, name, gillespy_model=None, columns=None):
 		super(TimeSeriesAnalysis, self).__init__(name, gillespy_model, columns)
 		
 	def put(self, data):
-		"""TODO"""
+		"""
+		Abstract method to put datapoints into container self.data
+
+		Input:
+		data: a numpy ndarray of shape (N, T, C)  where N is the number of datapoints, C is the number of
+			time series for each datapoint (length of self.columns) plus an array containing
+				time-steps, and T is the length of the time series
+		
+		TODO: Assert data
+		"""
 		nr_datapoints = len(self.features)
 		for enum, datapoint in enumerate(data):
 			enum += nr_datapoints
 			df = DataFrame(data=map(lambda x: np.concatenate(([enum, 0], x)), datapoint),
-				columns = self.columns)
+				columns = self.info)
 			self.data = self.data.append(df)
 			
 
 	def delete_row(self):
-		"""TODO"""
+		"""Abstract method to delete rows in all or one data container"""
 
 	def delete_column(self):
-		"""TODO"""
+		"""Abstract method to delete column in either data container"""
 
 	def generate(self):
-		"""TODO"""
+		"""
+		Abstract method to generate features
+		Locates data in self.data that has not yet been computed ('computed' element is zero),
+			and computes features using tsfresh. The computed features are put into self.features
+		
+		"""
 
 		non_computed = self.data.loc[self.data['computed'] == 0] #filter non-computed rows
 		try:
