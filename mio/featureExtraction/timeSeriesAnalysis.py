@@ -15,6 +15,12 @@
 Time Series Analysis using feature extraction in tsfresh. Extracts many time series analysis features 
 from a collection of datapoints (time series).
 
+References:
+
+Christ, M., Kempa-Liehr, A.W. and Feindt, M. (2016).
+Distributed and parallel time series feature extraction for industrial big data applications.
+ArXiv e-print 1610.07717
+
 """
 # Imports
 from featureExtractionBase import FeatureExtractionBase
