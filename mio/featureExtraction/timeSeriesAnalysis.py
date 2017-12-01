@@ -31,7 +31,7 @@ import numpy as np
 class TimeSeriesAnalysis(FeatureExtractionBase):
 	"""
 	Add data to container (data) and extract features from data into another container (features) using
-	.generete ()
+	.generate ()
 	
 	Attributes:
 	see super class
