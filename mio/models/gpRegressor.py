@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Gaussian Process Regression Surrogate Model
+Gaussian Process Regression Surrogate Model using sklearn
 """
 
 # Imports

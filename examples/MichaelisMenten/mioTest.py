@@ -27,6 +27,7 @@ import numpy as np
 import mmSim as m2s
 from models import *
 from initialDesigns import *
+from sklearn.metrics import mean_squared_error
 
 # Domain
 min = [0.1, 80, 5, 5]
@@ -66,3 +67,11 @@ def objSurrogate(X):
 # Optimize the surrogate
 mioOptimizer = mio.MIO(problem=objSurrogate, initialDesign=lhd, surrogate=mlModel)
 mioOptimizer.optimize()
+
+# Sanity check to verify that the model is accurate enough
+rnds = randomSampling.RandomSampling(min, max)
+XTest = rnds.generate(100)
+YTest = obj(XTest)
+YPredicted = mioInstance.surrogate.predict(XTest)
+mseSVM = mean_squared_error(YTest, YPredicted)
+print 'Mean Squared Error on 100 random test points = {0}'.format(mseSVM)

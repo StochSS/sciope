@@ -1,1 +1,1 @@
-__all__ = ["initialDesignBase", "latinHypercubeSampling"]
+__all__ = ["initialDesignBase", "latinHypercubeSampling", "randomSampling"]
