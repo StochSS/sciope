@@ -41,6 +41,7 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 	def __init__(self, name, gillespy_model=None, columns=None):
 		super(TimeSeriesAnalysis, self).__init__(name, gillespy_model, columns)
 		
+		
 	def put(self, data):
 		"""
 		Abstract method to put datapoints into container self.data
@@ -60,13 +61,19 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 			self.data = self.data.append(df)
 			
 
+	def get_datarows(self, idx):
+		"""
+		TODO
+		"""
+		return self.data[self.data['index'].isin(idx)]
+
 	def delete_row(self):
 		"""Abstract method to delete rows in all or one data container"""
 
 	def delete_column(self):
 		"""Abstract method to delete column in either data container"""
 
-	def generate(self):
+	def generate(self, sub_features = None):
 		"""
 		Abstract method to generate features
 		Locates data in self.data that has not yet been computed ('computed' element is zero),
@@ -84,8 +91,14 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 			#remove the 'computed' column  (required by tsfresh)
 			non_computed = non_computed.drop(['computed'], axis=1)
 
-			#compute the features using tsfresh
-			f_subset = tsfresh.extract_features(non_computed, column_id = "index", 
+			#compute all the features using tsfresh
+                        if sub_features is None:
+                                f_subset = tsfresh.extract_features(non_computed, column_id = "index", 
 				column_sort = "time", column_kind = None, column_value = None)
+			else:
+				idx = self.features.iloc[:, sub_features]
+				fc_params = tsfresh.feature_extraction.settings.from_columns(idx)
+				f_subset = tsfresh.extract_features(non_computed, column_id = "index", column_sort= "time",
+					column_kind = None, column_value = None, kind_to_fc_parameters=fc_params)
 			self.features = self.features.append(f_subset)
 			self.data.loc[self.data['computed'] == 0, 'computed'] = 1 #warning code redundancy 
