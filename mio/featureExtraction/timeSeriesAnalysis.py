@@ -73,6 +73,13 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 	def delete_column(self):
 		"""Abstract method to delete column in either data container"""
 
+	def get_data(self):
+                """
+                Returns pandas dataframe containing data, drops the 'computed' column
+                """
+                df = self.data
+                return df.drop(['computed'], axis=1)
+
 	def generate(self, sub_features = None):
 		"""
 		Abstract method to generate features
