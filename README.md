@@ -17,8 +17,7 @@ The (M)odeling, (I)inference and (O)ptimization toolbox is a Python 2 package fo
 
 ### How do I get set up? ###
 
-* Summary of set up
-	pip support coming up
+* Pip support coming up
 * Configuration
 * Dependencies
 	scikit-learn, SciPy, numpy, gpflowopt
@@ -37,4 +36,5 @@ The (M)odeling, (I)inference and (O)ptimization toolbox is a Python 2 package fo
 ### Who do I talk to? ###
 
 * Prashant Singh (prashant.singh@it.uu.se)
+* Fredrik Wrede (fredrik.wrede@it.uu.se)
 * Andreas Hellander (andreas.hellander@it.uu.se)
