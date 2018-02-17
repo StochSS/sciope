@@ -18,13 +18,18 @@ Loads a fixed dataset and computes the distance from simulated values
 import mm
 import numpy as np
 from random import randint
+import burstiness as bs
     
 def compute(param):
 	# param is n-d array passed from GPyOpt so we take param[0]
 	#computedValue = model2.simulate(param[0])
 	computedValue = mm.simulate(param)
-	lines = np.loadtxt("mmDataset.dat")
-	numLines = len(lines)
-	randIdx = randint(0,numLines-1)
-	dist = (lines.item(randIdx) - computedValue) ** 2
+	simulatedSS = bs.compute(computedValue)
+	data = np.loadtxt("mmDataset10.dat", delimiter=",")
+	
+	# Take the mean trajectory from the dataset, and compute summary statistic
+	dataMean = data.mean(axis=0)
+	dataSS = bs.compute(dataMean)
+	#dist = (lines.item(randIdx) - computedValue) ** 2
+	dist = (dataSS - simulatedSS) ** 2
 	return dist

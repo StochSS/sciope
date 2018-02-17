@@ -50,23 +50,23 @@ class MichaelisMenten(gillespy.Model):
                 name = 'S production',
                 reactants = {},
                 products = {S:1},
-                rate = k1 )
+                rate = mu )
                 
 
         rxn2 = gillespy.Reaction(
                 name = 'P production',
                 reactants = {P:1},
                 products = {},
-                rate = mu )
+                rate = k1 )
 
         rxn3 = gillespy.Reaction(
                 name = 'S conversion to P',
                 reactants = {S:1},
                 products = {P:1},
-                rate = mu )
+                propensity_function = 'Vmax * S / (Km + S)' )
 
         self.add_reaction([rxn1,rxn2,rxn3])
-        self.timespan(np.linspace(0,20,101))
+        self.timespan(range(150))
 
 
 
@@ -78,7 +78,8 @@ if __name__ == '__main__':
     
     # The model object is simulated with the StochKit solver, and 25 
     # trajectories are returned.
-    num_trajectories = 250
+    num_trajectories = 1000
+    num_timestamps = 150
     '''
     simple_trajectories = simple_model.run(number_of_trajectories = num_trajectories)
     
@@ -92,34 +93,23 @@ if __name__ == '__main__':
     print meanTrajs.item(9)
     '''
     # Generate some data for parameter inference
-    numDataPoints = 2000
-    dataToWrite = np.ndarray(shape=(numDataPoints, 1), dtype=float, order='F') * 0
-    idx=0
-    for x in range(0, numDataPoints):
-    	# run the model
-    	simple_trajectories = simple_model.run(number_of_trajectories = num_trajectories)
-    	
-    	# extract just the trajectories for S into a numpy array
-    	S_trajectories = np.array([simple_trajectories[i][:,1] for i in xrange(num_trajectories)]).T
-    	meanTrajs = S_trajectories.mean(1);
-    	dataToWrite[idx] = meanTrajs.item(9)
-    	idx += 1
+    simple_model.tspan=range(num_timestamps)
+    res = simple_model.run(number_of_trajectories = num_trajectories)
+    S_trajectories = np.array([res[i][:,1] for i in xrange(num_trajectories)]).T
     	
     # Write it to file
-    np.savetxt("mmDataset.dat", dataToWrite, delimiter=",")
+    np.savetxt("mmDataset1000_t500.dat", S_trajectories, delimiter=",")
 
+    
 def simulate(param):
-    # If the parameters are not within sensible range, complain about it
-    if np.any(param < 0):
-    	return 99999999
-    
     # Here, we create the model object.
     # We could pass new parameter values to this model here if we wished.
     simple_model = MichaelisMenten(parameter_values=param)
     
     # The model object is simulated with the StochKit solver, and 25 
     # trajectories are returned.
-    num_trajectories = 250
+    #num_trajectories = 250
+    num_trajectories = 1
     simple_trajectories = simple_model.run(number_of_trajectories = num_trajectories)
     
     # extract time values
@@ -127,30 +117,7 @@ def simulate(param):
 
     # extract just the trajectories for S into a numpy array
     S_trajectories = np.array([simple_trajectories[i][:,1] for i in xrange(num_trajectories)]).T
-    
-    # Save values to text - 10th value of mean
-    meanTrajs = S_trajectories.mean(1);
-    simulatedValue = meanTrajs.item(9)
-    return simulatedValue
 
-    
-def simulateTS(param):
-    # Here, we create the model object.
-    # We could pass new parameter values to this model here if we wished.
-    simple_model = MichaelisMenten(parameter_values=param)
-    
-    # The model object is simulated with the StochKit solver, and 25 
-    # trajectories are returned.
-    num_trajectories = 250
-    simple_trajectories = simple_model.run(number_of_trajectories = num_trajectories)
-    
-    # extract time values
-    time = np.array(simple_trajectories[0][:,0]) 
-
-    # extract just the trajectories for S into a numpy array
-    S_trajectories = np.array([simple_trajectories[i][:,1] for i in xrange(num_trajectories)]).T
-    
-    meanTrajs = S_trajectories.mean(1);
-    return meanTrajs
+    return S_trajectories
 
 
