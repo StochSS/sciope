@@ -64,8 +64,8 @@ class MIO(object):
 		assert type(batchSize) is IntType, "batchSize is not an integer: %r" % batchSize
 		assert type(evaluationBudget) is IntType, "evaluationBudget is not an integer: %r" % evaluationBudget
 		assert type(name) is StringType, "name is not a string: %r" % name
-		assert isinstance(initialDesign, initialDesignBase.InitialDesignBase), 'initialDesign: Argument of wrong type! Must be a derivative of InitialDesignBase'
-		assert isinstance(surrogate, modelBase.ModelBase), 'surrogate: Argument of wrong type! Must be a derivative of ModelBase'
+		#assert isinstance(initialDesign, initialDesignBase.InitialDesignBase), 'initialDesign: Argument of wrong type! Must be a derivative of InitialDesignBase'
+		#assert isinstance(surrogate, modelBase.ModelBase), 'surrogate: Argument of wrong type! Must be a derivative of ModelBase'
 		#assert isinstance(samplingAlgorithm, samplingBase.SamplingBase), 'samplingAlgorithm: Argument of wrong type! Must be a derivative of SamplingBase'
 		#@ToDo: assert for sampling, dataset, problem
 				

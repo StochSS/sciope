@@ -25,11 +25,15 @@ def compute(param):
 	#computedValue = model2.simulate(param[0])
 	computedValue = mm.simulate(param)
 	simulatedSS = bs.compute(computedValue)
-	data = np.loadtxt("mmDataset10.dat", delimiter=",")
+	data = np.loadtxt("mmDataset1000.dat", delimiter=",")
 	
 	# Take the mean trajectory from the dataset, and compute summary statistic
-	dataMean = data.mean(axis=0)
-	dataSS = bs.compute(dataMean)
+	#dataMean = data.mean(axis=0)
+	#dataSS = bs.compute(dataMean)
+	# Compute stat for each trajectory and then take the mean
+	stats = np.apply_along_axis(bs.compute, 0, data)
+	dataSS = np.nanmean(stats)
+	
 	#dist = (lines.item(randIdx) - computedValue) ** 2
 	dist = (dataSS - simulatedSS) ** 2
 	return dist
