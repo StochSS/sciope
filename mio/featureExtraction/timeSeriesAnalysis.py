@@ -55,8 +55,8 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 		"""
 		nr_datapoints = len(self.features)
 		for enum, datapoint in enumerate(data):
-			enum += nr_datapoints
-			df = DataFrame(data=map(lambda x: np.concatenate(([enum, 0], x)), datapoint),
+			enum += nr_datapoints       #enum = id for datapoint 
+                        df = DataFrame(data=map(lambda x: np.concatenate(([enum, 0], x)), datapoint),  # 0 = "computed" column set to zero
 				columns = self.info)
 			self.data = self.data.append(df)
 			
