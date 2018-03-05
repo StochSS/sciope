@@ -52,15 +52,31 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 				time-steps, and T is the length of the time series
 		
 		TODO: Assert data
+		
 		"""
-		nr_datapoints = len(self.features)
-		for enum, datapoint in enumerate(data):
-			enum += nr_datapoints       #enum = id for datapoint 
-                        df = DataFrame(data=map(lambda x: np.concatenate(([enum, 0], x)), datapoint),  # 0 = "computed" column set to zero
-				columns = self.info)
-			self.data = self.data.append(df)
-			
+		try:
+			nr_datapoints = self.data['index'].iloc[-1]
+		except IndexError:
+			nr_datapoints  = 0
 
+		data = np.asarray(data)
+		idx = np.asarray([[x]*data.shape[1] for x in range(nr_datapoints,nr_datapoints+data.shape[0])]) #creating indices 
+		idx = idx.reshape(data.shape[0]*data.shape[1]) #reshapinf for dataframe
+
+		data = data.reshape(data.shape[0]*data.shape[1],data.shape[2]) #reshaping for dataframe
+
+		computed  = np.zeros(data.shape[0])
+		
+		df = DataFrame(columns = self.data.keys())
+		df['index'] = idx
+		df['computed'] = computed
+		df['time'] = data[:,0]
+		for e, col in enumerate(self.columns):
+		    df[col] = data[:,e+1]
+
+		self.data = self.data.append(df)
+		
+		
 	def get_datarows(self, idx):
 		"""
 		TODO
