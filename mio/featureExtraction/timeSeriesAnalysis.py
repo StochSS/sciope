@@ -95,8 +95,13 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
                 """
                 df = self.data
                 return df.drop(['computed'], axis=1)
+	
+	def get_fc_params(self, sub_features):
+		idx = self.features.iloc[:, sub_features]
+		fc_params = tsfresh.feature_extraction.settings.from_columns(idx)
+		return fc_params
 
-	def generate(self, sub_features = None):
+	def generate(self, fc_params = None):
 		"""
 		Abstract method to generate features
 		Locates data in self.data that has not yet been computed ('computed' element is zero),
@@ -115,12 +120,10 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 			non_computed = non_computed.drop(['computed'], axis=1)
 
 			#compute all the features using tsfresh
-                        if sub_features is None:
+                        if fc_params is None:
                                 f_subset = tsfresh.extract_features(non_computed, column_id = "index", 
 				column_sort = "time", column_kind = None, column_value = None)
 			else:
-				idx = self.features.iloc[:, sub_features]
-				fc_params = tsfresh.feature_extraction.settings.from_columns(idx)
 				f_subset = tsfresh.extract_features(non_computed, column_id = "index", column_sort= "time",
 					column_kind = None, column_value = None, kind_to_fc_parameters=fc_params)
 			self.features = self.features.append(f_subset)
