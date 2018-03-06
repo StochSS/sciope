@@ -98,7 +98,7 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 	
 	def get_fc_params(self, sub_features):
 		idx = self.features.iloc[:, sub_features]
-		fc_params = tsfresh.feature_extraction.settings.from_columns(idx)
+		fc_params = tsfresh.feature_extraction.settings.from_columns(idx).values()[0] ##### temporary 
 		return fc_params
 
 	def generate(self, fc_params = None):
@@ -125,6 +125,6 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 				column_sort = "time", column_kind = None, column_value = None)
 			else:
 				f_subset = tsfresh.extract_features(non_computed, column_id = "index", column_sort= "time",
-					column_kind = None, column_value = None, kind_to_fc_parameters=fc_params)
+					column_kind = None, column_value = None, default_fc_parameters=fc_params)
 			self.features = self.features.append(f_subset)
 			self.data.loc[self.data['computed'] == 0, 'computed'] = 1 #warning code redundancy 
