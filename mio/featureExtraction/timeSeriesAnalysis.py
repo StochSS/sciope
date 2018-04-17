@@ -55,7 +55,7 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 		
 		"""
 		try:
-			nr_datapoints = self.data['index'].iloc[-1]
+			nr_datapoints = int(self.data['index'].iloc[-1])
 		except IndexError:
 			nr_datapoints  = 0
 
