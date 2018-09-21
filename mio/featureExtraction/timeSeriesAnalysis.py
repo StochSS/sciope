@@ -26,6 +26,7 @@ ArXiv e-print 1610.07717
 from featureExtractionBase import FeatureExtractionBase
 from pandas import DataFrame
 import tsfresh
+from tsfresh.utilities.distribution import ClusterDaskDistributor
 import numpy as np
 
 class TimeSeriesAnalysis(FeatureExtractionBase):
@@ -80,7 +81,7 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
                 df = self.data
                 return df.drop(['computed'], axis=1)
 
-	def generate(self, sub_features = None):
+	def generate(self, sub_features = None, dask_client = None):
 		"""
 		Abstract method to generate features
 		Locates data in self.data that has not yet been computed ('computed' element is zero),
@@ -97,15 +98,20 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 		else:
 			#remove the 'computed' column  (required by tsfresh)
 			non_computed = non_computed.drop(['computed'], axis=1)
-
+			if dask_client:
+				Distributor = ClusterDaskDistributor(address=dask_client.scheduler.address)
+			else:
+				Distributor = None
 			#compute all the features using tsfresh
                         if sub_features is None:
                                 f_subset = tsfresh.extract_features(non_computed, column_id = "index", 
-				column_sort = "time", column_kind = None, column_value = None)
+				column_sort = "time", column_kind = None, column_value = None,
+				distributor = Distributor)
 			else:
 				idx = self.features.iloc[:, sub_features]
 				fc_params = tsfresh.feature_extraction.settings.from_columns(idx)
 				f_subset = tsfresh.extract_features(non_computed, column_id = "index", column_sort= "time",
-					column_kind = None, column_value = None, kind_to_fc_parameters=fc_params)
+					column_kind = None, column_value = None, kind_to_fc_parameters=fc_params,
+					distributor = Distributor)
 			self.features = self.features.append(f_subset)
 			self.data.loc[self.data['computed'] == 0, 'computed'] = 1 #warning code redundancy 
