@@ -81,7 +81,7 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
                 df = self.data
                 return df.drop(['computed'], axis=1)
 
-	def generate(self, sub_features = None, dask_client = None):
+	def generate(self, sub_features = None, dask_client = None, progressbar_off=False):
 		"""
 		Abstract method to generate features
 		Locates data in self.data that has not yet been computed ('computed' element is zero),
@@ -106,12 +106,12 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
                         if sub_features is None:
                                 f_subset = tsfresh.extract_features(non_computed, column_id = "index", 
 				column_sort = "time", column_kind = None, column_value = None,
-				distributor = Distributor)
+				distributor = Distributor, disable_progressbar=progressbar_off)
 			else:
 				idx = self.features.iloc[:, sub_features]
 				fc_params = tsfresh.feature_extraction.settings.from_columns(idx)
 				f_subset = tsfresh.extract_features(non_computed, column_id = "index", column_sort= "time",
 					column_kind = None, column_value = None, kind_to_fc_parameters=fc_params,
-					distributor = Distributor)
+					distributor = Distributor, disable_progressbar=progressbar_off)
 			self.features = self.features.append(f_subset)
 			self.data.loc[self.data['computed'] == 0, 'computed'] = 1 #warning code redundancy 
