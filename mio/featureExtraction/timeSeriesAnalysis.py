@@ -106,12 +106,12 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
                         if sub_features is None:
                                 f_subset = tsfresh.extract_features(non_computed, column_id = "index", 
 				column_sort = "time", column_kind = None, column_value = None,
-				distributor = Distributor, disable_progressbar=progressbar_off)
+				distributor = Distributor, disable_progressbar=progressbar_off,n_jobs=0)
 			else:
 				idx = self.features.iloc[:, sub_features]
 				fc_params = tsfresh.feature_extraction.settings.from_columns(idx)
 				f_subset = tsfresh.extract_features(non_computed, column_id = "index", column_sort= "time",
 					column_kind = None, column_value = None, kind_to_fc_parameters=fc_params,
-					distributor = Distributor, disable_progressbar=progressbar_off)
+					distributor = Distributor, disable_progressbar=progressbar_off,n_jobs=0)
 			self.features = self.features.append(f_subset)
 			self.data.loc[self.data['computed'] == 0, 'computed'] = 1 #warning code redundancy 
