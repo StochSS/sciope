@@ -102,7 +102,7 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 		fc_params = tsfresh.feature_extraction.settings.from_columns(idx).values()[0] ##### temporary 
 		return fc_params
 
-	def generate(self, sub_features = None, dask_client = None, progressbar_off=False):
+	def generate(self, fc_params = None, dask_client = None, progressbar_off=False):
 		"""
 		Abstract method to generate features
 		Locates data in self.data that has not yet been computed ('computed' element is zero),
