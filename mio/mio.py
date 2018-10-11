@@ -26,12 +26,12 @@ import numpy as np
 import sys
 
 # Set up paths
-sys.path.append('initialDesigns')
+sys.path.append('designs')
 sys.path.append('sampling')
 sys.path.append('models')
 
 # Import mio modules
-from initialDesigns import *
+from designs import *
 from models import *
 from sampling import *
 

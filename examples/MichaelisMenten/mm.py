@@ -14,110 +14,75 @@
 """
 Example: Michaelis-Menten chemical kinetics
 """
-import scipy as sp
 import numpy as np
-import matplotlib.pyplot as plt
-import gillespy
+import gillespy2
+from gillespy2 import SSACSolver, GillesPySolver
 
-class MichaelisMenten(gillespy.Model):
-    """
-        This is an example showcasing a simple Michaelis Menten reaction.
-    """
 
-    def __init__(self, parameter_values=[1.0, 110.0, 10.0, 10.0]):
+class MichaelisMenten(gillespy2.Model):
+    def __init__(self, parameter_values=None):
+        # initialize Model
+        gillespy2.Model.__init__(self, name="Michaelis_Menten")
 
-        # Initialize the model.
-        gillespy.Model.__init__(self, name="MichaelisMenten")
-        #print parameter_values
-        #print parameter_values.shape
-        
-        # Parameters
-        k1 = gillespy.Parameter(name='k1', expression=parameter_values[0])
-        Km = gillespy.Parameter(name='Km', expression=parameter_values[1])
-        mu = gillespy.Parameter(name='mu', expression=parameter_values[2])
-        Vmax = gillespy.Parameter(name='Vmax', expression=parameter_values[3])
-        
-        self.add_parameter([k1,Km,mu,Vmax])
-        
+        # parameters
+        rate1 = gillespy2.Parameter(name='rate1', expression=0.0017)
+        rate2 = gillespy2.Parameter(name='rate2', expression=0.5)
+        rate3 = gillespy2.Parameter(name='rate3', expression=0.1)
+        self.add_parameter([rate1, rate2, rate3])
+
         # Species
-        S = gillespy.Species(name='S', initial_value=0)
-        P = gillespy.Species(name='P', initial_value=0)
-        
-        self.add_species([S,P])
-        
-        # Reactions
-        rxn1 = gillespy.Reaction(
-                name = 'S production',
-                reactants = {},
-                products = {S:1},
-                rate = mu )
-                
+        A = gillespy2.Species(name='A', initial_value=301)
+        B = gillespy2.Species(name='B', initial_value=120)
+        C = gillespy2.Species(name='C', initial_value=0)
+        D = gillespy2.Species(name='D', initial_value=0)
+        self.add_species([A, B, C, D])
 
-        rxn2 = gillespy.Reaction(
-                name = 'P production',
-                reactants = {P:1},
-                products = {},
-                rate = k1 )
+        # reactions
+        r1 = gillespy2.Reaction(name="r1", reactants={A: 1, B: 1}, products={C: 1},
+                                rate=rate1)
 
-        rxn3 = gillespy.Reaction(
-                name = 'S conversion to P',
-                reactants = {S:1},
-                products = {P:1},
-                propensity_function = 'Vmax * S / (Km + S)' )
+        r2 = gillespy2.Reaction(name="r2", reactants={C: 1}, products={A: 1, B: 1},
+                                rate=rate2)
 
-        self.add_reaction([rxn1,rxn2,rxn3])
-        self.timespan(range(150))
-
+        r3 = gillespy2.Reaction(name="r3", reactants={C: 1}, products={B: 1, D: 1},
+                                rate=rate3)
+        self.add_reaction([r1, r2, r3])
+        self.timespan(np.linspace(0, 100, 101))
 
 
 if __name__ == '__main__':
-
     # Here, we create the model object.
     # We could pass new parameter values to this model here if we wished.
-    simple_model = MichaelisMenten([1.0, 110.0, 10.0, 10.0])
-    
-    # The model object is simulated with the StochKit solver, and 25 
-    # trajectories are returned.
+    model = MichaelisMenten()
+    csolver = SSACSolver(model)
+
+    # Specify the simulation density and sampling density
     num_trajectories = 1000
     num_timestamps = 150
-    '''
-    simple_trajectories = simple_model.run(number_of_trajectories = num_trajectories)
-    
-    # extract time values
-    time = np.array(simple_trajectories[0][:,0]) 
 
-    # extract just the trajectories for S into a numpy array
-    S_trajectories = np.array([simple_trajectories[i][:,1] for i in xrange(num_trajectories)]).T
-    
-    meanTrajs = S_trajectories.mean(1);
-    print meanTrajs.item(9)
-    '''
     # Generate some data for parameter inference
-    simple_model.tspan=range(num_timestamps)
-    res = simple_model.run(number_of_trajectories = num_trajectories)
-    S_trajectories = np.array([res[i][:,1] for i in xrange(num_trajectories)]).T
-    	
-    # Write it to file
-    np.savetxt("mmDataset1000_t500.dat", S_trajectories, delimiter=",")
+    model.tspan = np.linspace(1, 100, num_timestamps)
+    res = model.run(solver=csolver, show_labels=False, number_of_trajectories=num_trajectories)
+    S_trajectories = np.array([res[i][:, 1] for i in range(num_trajectories)]).T
 
-    
+    # Write it to file
+    np.savetxt("mm_dataset1000_t500.dat", S_trajectories, delimiter=",")
+
+
 def simulate(param):
     # Here, we create the model object.
     # We could pass new parameter values to this model here if we wished.
-    simple_model = MichaelisMenten(parameter_values=param)
-    
-    # The model object is simulated with the StochKit solver, and 25 
-    # trajectories are returned.
-    #num_trajectories = 250
+    model = MichaelisMenten(parameter_values=param)
+    csolver = SSACSolver(model)
+
+    # Set up simulation density
     num_trajectories = 1
-    simple_trajectories = simple_model.run(number_of_trajectories = num_trajectories)
-    
+    simple_trajectories = model.run(number_of_trajectories=num_trajectories)
+
     # extract time values
-    time = np.array(simple_trajectories[0][:,0]) 
+    time = np.array(simple_trajectories[0][:, 0])
 
     # extract just the trajectories for S into a numpy array
-    S_trajectories = np.array([simple_trajectories[i][:,1] for i in xrange(num_trajectories)]).T
+    S_trajectories = np.array([simple_trajectories[i][:, 1] for i in range(num_trajectories)]).T
 
     return S_trajectories
-
-

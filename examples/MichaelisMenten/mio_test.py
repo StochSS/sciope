@@ -16,62 +16,64 @@ Example: use the modules from mio to perform surrogate-based parameter inference
 """
 # Set up paths
 import sys
+
 sys.path.append("../../mio")
 sys.path.append("../../mio/models")
-sys.path.append("../../mio/initialDesigns")
-
+sys.path.append("../../mio/designs")
 
 # Imports
 import mio
 import numpy as np
-import mmSim as m2s
+import mm_sim as m2s
 from models import *
-from initialDesigns import *
+from designs import *
 from sklearn.metrics import mean_squared_error
 
 # Domain
 min = [0.1, 80, 5, 5]
 max = [3, 135, 15, 15]
 
+
 # Call to simulator
 # The simulator computes the distance between a simulated value and a random value from an existing dataset
 def obj(X):
-	n = len(X)
-	Y = np.zeros(n)
-	for i in range(0,n-1):
-		Y[i] = m2s.compute(X[i,:])
-	return Y
+    n = len(X)
+    Y = np.zeros(n)
+    for i in range(0, n - 1):
+        Y[i] = m2s.compute(X[i, :])
+    return Y
+
 
 # Set up MIO components
-lhd = latinHypercubeSampling.LatinHypercube(min,max)
-mlModel = svmRegressor.SVRModel()
-numPoints = 200
+lhd = latin_hypercube_sampling.LatinHypercube(min, max)
+ml_model = svm_regressor.SVRModel()
+num_points = 200
 problem = obj
 
 # Instantiate
-mioInstance = mio.MIO(problem=obj, initialDesign=lhd, initialDesignSize=numPoints, surrogate=mlModel)
+mio_instance = mio.MIO(problem=obj, initialDesign=lhd, initialDesignSize=num_points, surrogate=ml_model)
 
 # Train a surrogate
-mioInstance.model()
+mio_instance.model()
 
 
 # Use the surrogate as an objective
 # This now corresponds to minimizing the distance between simulated values and the given fixed dataset
 # The optima corresponds to the inferred parameters
-def objSurrogate(X):
-	n = X.size
-	x = X.reshape(1,n)
-	return mioInstance.surrogate.predict(x)
+def obj_surrogate(X):
+    n = X.size
+    x = X.reshape(1, n)
+    return mio_instance.surrogate.predict(x)
 
 
 # Optimize the surrogate
-mioOptimizer = mio.MIO(problem=objSurrogate, initialDesign=lhd, surrogate=mlModel)
+mioOptimizer = mio.MIO(problem=obj_surrogate, initialDesign=lhd, surrogate=ml_model)
 mioOptimizer.optimize()
 
 # Sanity check to verify that the model is accurate enough
-rnds = randomSampling.RandomSampling(min, max)
-XTest = rnds.generate(100)
-YTest = obj(XTest)
-YPredicted = mioInstance.surrogate.predict(XTest)
-mseSVM = mean_squared_error(YTest, YPredicted)
-print 'Mean Squared Error on 100 random test points = {0}'.format(mseSVM)
+rnds = random_sampling.RandomSampling(min, max)
+xtest = rnds.generate(100)
+ytest = obj(xtest)
+ypredicted = mio_instance.surrogate.predict(xtest)
+mse_svm = mean_squared_error(ytest, ypredicted)
+print('Mean Squared Error on 100 random test points = {0}'.format(mse_svm))
