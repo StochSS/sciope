@@ -32,7 +32,7 @@ class ANNModel(ModelBase):
     # train the ANN model given the data
     def train(self, inputs, targets):
         # Scale the training data
-        self.scaleTrainingData(inputs, targets)
+        self.scale_training_data(inputs, targets)
 
         # Train the model
         self.model = MLPRegressor(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(200, 2), max_iter=50000,
