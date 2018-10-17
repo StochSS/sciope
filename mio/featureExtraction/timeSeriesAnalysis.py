@@ -99,16 +99,18 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 	
 	def get_fc_params(self, sub_features):
 		idx = self.features.iloc[:, sub_features]
-		fc_params = tsfresh.feature_extraction.settings.from_columns(idx).values()[0] ##### temporary 
+		fc_params = tsfresh.feature_extraction.settings.from_columns(idx)
 		return fc_params
 
-	def generate(self, fc_params = None, dask_client = None, progressbar_off=False):
+	def generate(self, fc_params = None, default_fc_params=None, dask_client = None, progressbar_off=False):
 		"""
 		Abstract method to generate features
 		Locates data in self.data that has not yet been computed ('computed' element is zero),
 			and computes features using tsfresh. The computed features are put into self.features
 		
 		"""
+		if default_fc_params == None:
+			default_fc_params = tsfresh.feature_extraction.settings.EfficientFCParameters()
 
 		non_computed = self.data.loc[self.data['computed'] == 0] #filter non-computed rows
 		try:
@@ -127,10 +129,13 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
                         if fc_params is None:
                                 f_subset = tsfresh.extract_features(non_computed, column_id = "index", 
 				column_sort = "time", column_kind = None, column_value = None,
-				distributor = Distributor, disable_progressbar=progressbar_off,n_jobs=0)
+				distributor = Distributor, disable_progressbar=progressbar_off,n_jobs=0,
+				default_fc_parameters = default_fc_params)
 			else:
 				f_subset = tsfresh.extract_features(non_computed, column_id = "index", column_sort= "time",
 					column_kind = None, column_value = None, kind_to_fc_parameters=fc_params,
-					distributor = Distributor, disable_progressbar=progressbar_off,n_jobs=0)
+					distributor = Distributor, disable_progressbar=progressbar_off,n_jobs=0,
+					default_fc_parameters = default_fc_params)
+
 			self.features = self.features.append(f_subset)
 			self.data.loc[self.data['computed'] == 0, 'computed'] = 1 #warning code redundancy 
