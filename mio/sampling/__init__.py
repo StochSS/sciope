@@ -1,1 +1,1 @@
-__all__ = ["sampling_base.py", "maximin_sampling.py"]
+__all__ = ["sampling_base", "maximin_sampling"]

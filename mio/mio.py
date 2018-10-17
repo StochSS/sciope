@@ -47,7 +47,7 @@ class MIO(object):
 	* initial design					(object of initialDesignBase)
 	* initial design size				(integer indicating the desired size of the initial design)
 	* batchSize							(integer indicating the batch size for sampling per iteration)
-	* evaluationBudget					(integer indicating the objective function evaluation budget)
+	* evaluation_budget					(integer indicating the objective function evaluation budget)
 	* surrogate							(object of modelBase)
 	* samplingAlgorithm					(object of samplingBase)
 	
@@ -58,52 +58,49 @@ class MIO(object):
 	
 	"""
 	
-	def __init__(self, name='default', dataset=None, problem=None, initialDesign=None, initialDesignSize=10, batchSize=5, evaluationBudget=100, surrogate=svmRegressor.SVRModel(), samplingAlgorithm=None):
+	def __init__(self, name='default', dataset=None, problem=None, initial_design=None, initial_design_size=10, batch_size=5, evaluation_budget=100, surrogate=svm_regressor.SVRModel(), sampling_algorithm=None):
 		# Validate
-		assert type(initialDesignSize) is IntType, "initialDesignSize is not an integer: %r" % initialDesignSize
-		assert type(batchSize) is IntType, "batchSize is not an integer: %r" % batchSize
-		assert type(evaluationBudget) is IntType, "evaluationBudget is not an integer: %r" % evaluationBudget
-		assert type(name) is StringType, "name is not a string: %r" % name
-		#assert isinstance(initialDesign, initialDesignBase.InitialDesignBase), 'initialDesign: Argument of wrong type! Must be a derivative of InitialDesignBase'
+		assert type(initial_design_size) is int, "initial_design_size is not an integer: %r" % initial_design_size
+		assert type(batch_size) is int, "batch_size is not an integer: %r" % batch_size
+		assert type(evaluation_budget) is int, "evaluation_budget is not an integer: %r" % evaluation_budget
+		assert type(name) is str, "name is not a string: %r" % name
+		#assert isinstance(initial_design, initialDesignBase.InitialDesignBase), 'initial_design: Argument of wrong type! Must be a derivative of InitialDesignBase'
 		#assert isinstance(surrogate, modelBase.ModelBase), 'surrogate: Argument of wrong type! Must be a derivative of ModelBase'
-		#assert isinstance(samplingAlgorithm, samplingBase.SamplingBase), 'samplingAlgorithm: Argument of wrong type! Must be a derivative of SamplingBase'
+		#assert isinstance(sampling_algorithm, samplingBase.SamplingBase), 'sampling_algorithm: Argument of wrong type! Must be a derivative of SamplingBase'
 		#@ToDo: assert for sampling, dataset, problem
 				
 		# Assign
 		self.name = name
 		self.dataset = dataset
 		self.problem = problem
-		self.initialDesign = initialDesign
-		self.initialDesignSize = initialDesignSize
-		self.batchSize = batchSize
-		self.evaluationBudget = evaluationBudget
+		self.initial_design = initial_design
+		self.initial_design_size = initial_design_size
+		self.batch_size = batch_size
+		self.evaluation_budget = evaluation_budget
 		self.surrogate = surrogate
-		self.samplingAlgorithm = samplingAlgorithm
+		self.sampling_algorithm = sampling_algorithm
 
-		
 	def model(self):
 		"""
 		Trains an accurate surrogate model according to specified settings
 		"""
 		# @ToDo: handle errors - undefined variables
-		X = self.initialDesign.generate(self.initialDesignSize)
+		X = self.initial_design.generate(self.initial_design_size)
 		y = self.problem(X)
 		y = y.reshape(len(X),1)
 		self.surrogate.train(X,y)
-			
 	
 	def optimize(self):
 		"""
 		Optimizes a given surrogate model or a simulator
 		"""
-		bds = [(low, high) for low, high in zip(self.initialDesign.xmin, self.initialDesign.xmax)]
+		bds = [(low, high) for low, high in zip(self.initial_design.xmin, self.initial_design.xmax)]
 		idx = np.argmin(self.surrogate.y)
-		x0 = self.surrogate.X[idx,:]
+		x0 = self.surrogate.x[idx,:]
 		minimizer_kwargs = dict(method="L-BFGS-B", bounds=bds)
 		res = basinhopping(self.problem, x0, minimizer_kwargs=minimizer_kwargs)
-		print res
-		
-	
+		print(res)
+
 	def infer(self):
 		"""
 		Perform parameter inference or inverse modeling/hotspot detection

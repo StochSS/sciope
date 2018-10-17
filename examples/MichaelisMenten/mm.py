@@ -77,7 +77,7 @@ def simulate(param):
 
     # Set up simulation density
     num_trajectories = 1
-    simple_trajectories = model.run(number_of_trajectories=num_trajectories)
+    simple_trajectories = model.run(solver=csolver, show_labels=False, number_of_trajectories=num_trajectories)
 
     # extract time values
     time = np.array(simple_trajectories[0][:, 0])

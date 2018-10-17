@@ -20,6 +20,7 @@ import sys
 sys.path.append("../../mio")
 sys.path.append("../../mio/models")
 sys.path.append("../../mio/designs")
+sys.path.append("../../mio/sampling")
 
 # Imports
 import mio
@@ -30,28 +31,28 @@ from designs import *
 from sklearn.metrics import mean_squared_error
 
 # Domain
-min = [0.1, 80, 5, 5]
-max = [3, 135, 15, 15]
+dmin = [0.0001, 0.2, 0.05]
+dmax = [0.05, 0.6, 0.3]
 
 
 # Call to simulator
 # The simulator computes the distance between a simulated value and a random value from an existing dataset
-def obj(X):
-    n = len(X)
-    Y = np.zeros(n)
+def obj(x):
+    n = len(x)
+    y = np.zeros(n)
     for i in range(0, n - 1):
-        Y[i] = m2s.compute(X[i, :])
-    return Y
+        y[i] = m2s.compute(x[i, :])
+    return y
 
 
 # Set up MIO components
-lhd = latin_hypercube_sampling.LatinHypercube(min, max)
+lhd = latin_hypercube_sampling.LatinHypercube(dmin, dmax)
 ml_model = svm_regressor.SVRModel()
 num_points = 200
 problem = obj
 
 # Instantiate
-mio_instance = mio.MIO(problem=obj, initialDesign=lhd, initialDesignSize=num_points, surrogate=ml_model)
+mio_instance = mio.MIO(problem=obj, initial_design=lhd, initial_design_size=num_points, surrogate=ml_model)
 
 # Train a surrogate
 mio_instance.model()
@@ -60,18 +61,18 @@ mio_instance.model()
 # Use the surrogate as an objective
 # This now corresponds to minimizing the distance between simulated values and the given fixed dataset
 # The optima corresponds to the inferred parameters
-def obj_surrogate(X):
-    n = X.size
-    x = X.reshape(1, n)
+def obj_surrogate(xt):
+    n = xt.size
+    x = xt.reshape(1, n)
     return mio_instance.surrogate.predict(x)
 
 
 # Optimize the surrogate
-mioOptimizer = mio.MIO(problem=obj_surrogate, initialDesign=lhd, surrogate=ml_model)
-mioOptimizer.optimize()
+mio_optimizer = mio.MIO(problem=obj_surrogate, initial_design=lhd, surrogate=ml_model)
+mio_optimizer.optimize()
 
 # Sanity check to verify that the model is accurate enough
-rnds = random_sampling.RandomSampling(min, max)
+rnds = random_sampling.RandomSampling(dmin, dmax)
 xtest = rnds.generate(100)
 ytest = obj(xtest)
 ypredicted = mio_instance.surrogate.predict(xtest)

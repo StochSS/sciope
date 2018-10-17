@@ -1,1 +1,1 @@
-__all__ = ["ann_regressor.py", "gp_regressor.py", "model_base.py", "svm_regressor.py"]
+__all__ = ["ann_regressor", "gp_regressor", "model_base", "svm_regressor"]
