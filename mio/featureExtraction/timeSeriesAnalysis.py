@@ -87,8 +87,9 @@ class TimeSeriesAnalysis(FeatureExtractionBase):
 	def delete_row(self):
 		"""Abstract method to delete rows in all or one data container"""
 
-	def delete_column(self):
-		"""Abstract method to delete column in either data container"""
+	def delete_features(self, features=None):
+		"""Abstract method to delete column in self.features"""
+                self.features = self.features.drop(features, axis= 1)
 
 	def get_data(self):
                 """
