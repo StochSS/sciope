@@ -1,4 +1,6 @@
 *.pyc
-dist
+*.ipynb_checkpoints
+**dask-worker-space
+**build
+**dist
 *egg-info
-build
