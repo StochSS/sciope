@@ -1,4 +1,4 @@
-# Copyright 2017 Prashant Singh, Andreas Hellander and Fredrik Wrede
+# Copyright 2017 Prashant Singh, Fredrik Wrede and Andreas Hellander
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

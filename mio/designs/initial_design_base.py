@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Sequential Sampling Base Class
+Initial Design Base Class
 """
 
 # Imports
@@ -21,17 +21,13 @@ import numpy as np
 
 
 # Class definition
-class SamplingBase(object):
+class InitialDesignBase(object):
     """
-    Base class for sequential sampling.
+    Base class for initial designs.
     Must not be used directly!
-    Each sampling algorithm must implement the methods described herein:
+    Each initial design type must implement the methods described herein:
 
-    * SamplingBase.select_point()
-    * SamplingBase.select_points(n)
-
-    The following variables are available to derived classes:
-    *
+    * InitialDesignBase.generate(n,domain)
     """
     __metaclass__ = ABCMeta
 
@@ -43,13 +39,7 @@ class SamplingBase(object):
         self.xmax = xmax
 
     @abstractmethod
-    def select_point(self, x):
+    def generate(self, n):
         """
-        Sub-classable method for selecting one new point to X. Each derived class must implement.
-        """
-
-    @abstractmethod
-    def select_points(self, x, n):
-        """
-        Sub-classable method for selecting 'n' new points to X. Each derived class must implement.
+        Sub-classable method for generating 'n' points within a given domain. Each derived class must implement.
         """
