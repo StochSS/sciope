@@ -35,6 +35,7 @@ class InferenceBase(object):
         # ToDo: implement assertions here
         self.data = data
         self.sim = sim
+        self.results = dict()
 
     @abstractmethod
     def infer(self):

@@ -47,7 +47,7 @@ class BanditsABC(ABC):
         trial_count = 0
         accepted_samples = []
         distances = []
-        dataset_stats = self.summaries_function(self.data)
+        dataset_stats = self.summaries_function.compute(self.data)
 
         while accepted_count < num_samples:
             # Rejection sampling

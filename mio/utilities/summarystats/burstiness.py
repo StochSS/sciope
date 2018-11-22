@@ -29,12 +29,12 @@ class Burstiness(SummaryBase):
     Ref: Burstiness and memory in complex systems, Europhys. Let., 81, pp. 48002, 2008.
     """
 
-    def __init__(self, name):
+    def __init__(self):
         self.name = 'Burstiness'
         super(Burstiness, self).__init__(self.name)
 
     @staticmethod
-    def compute(self, data, improvement=False):
+    def compute(data, improvement=False):
         r = np.std(data) / np.mean(data)
 
         # original burstiness due to Goh and Barabasi

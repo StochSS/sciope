@@ -17,9 +17,8 @@ Approximate Bayesian Computation
 
 # Imports
 from inference_base import InferenceBase
-from utilities.distancefunctions.euclidean import EuclideanDistance
-from utilities.priors.uniform_prior import UniformPrior
-from utilities.summarystats.burstiness import Burstiness
+from utilities.distancefunctions import euclidean as euc
+from utilities.summarystats import burstiness as bs
 import multiprocessing as mp
 import numpy as np
 
@@ -43,8 +42,8 @@ class ABC(InferenceBase):
     * InferenceBase.infer()
     """
 
-    def __init__(self, data, sim, epsilon=0.1, parallel_mode=False, summaries_function=Burstiness,
-                 distance_function=EuclideanDistance, prior_function=UniformPrior):
+    def __init__(self, data, sim, prior_function, epsilon=0.1, parallel_mode=False, summaries_function=bs.Burstiness(),
+                 distance_function=euc.EuclideanDistance()):
         self.name = 'ABC'
         self.epsilon = epsilon
         self.summaries_function = summaries_function
@@ -66,7 +65,7 @@ class ABC(InferenceBase):
         trial_count = 0
         accepted_samples = []
         distances = []
-        dataset_stats = self.summaries_function(self.data)
+        dataset_stats = self.summaries_function.compute(self.data)
 
         while accepted_count < num_samples:
             # Rejection sampling
@@ -90,7 +89,9 @@ class ABC(InferenceBase):
 
             trial_count += 1
 
-        return accepted_samples, distances, accepted_count, trial_count
+        self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
+                   'trial_count': trial_count}
+        return self.results
 
     def perform_abc(self, num_samples, output):
         """
@@ -101,7 +102,6 @@ class ABC(InferenceBase):
         """
         output.put(self.rejection_sampling(num_samples))
 
-    @staticmethod
     def process_queue_outputs(self, x):
         """
         Post-processing of rejection sampling results for parallel ABC
@@ -110,15 +110,18 @@ class ABC(InferenceBase):
         accepted_samples = []
         distances = []
         for p in x:
-            accepted_samples.append(p[0])
-            distances.append(p[1])
+            accepted_samples.append(p['accepted_samples'])
+            distances.append(p['distances'])
 
         flat_posteriors_list = [item for sublist in accepted_samples for item in sublist]
         flat_distances_list = [item for sublist in distances for item in sublist]
 
-        accepted_count = sum([p[2] for p in x])
-        trial_count = sum([p[3] for p in x])
-        return flat_posteriors_list, flat_distances_list, accepted_count, trial_count
+        accepted_count = sum([p['accepted_count'] for p in x])
+        trial_count = sum([p['trial_count'] for p in x])
+
+        self.results = {'accepted_samples': flat_posteriors_list, 'distances': flat_distances_list,
+                        'accepted_count': accepted_count, 'trial_count': trial_count}
+        return self.results
 
     def infer(self, num_samples):
         """
@@ -136,10 +139,10 @@ class ABC(InferenceBase):
         else:
             # Parallel ABC
             proc_count = mp.cpu_count()
-            chunks_count = np.ceil(self.num_samples / float(proc_count))
+            chunks_count = np.ceil(num_samples / float(proc_count))
             print("Parallel ABC: Running {} samples on {} processors...".format(chunks_count, proc_count))
             output = mp.Queue()
-            processes = [ABCProcess(target=self.perform_abc, args=chunks_count)
+            processes = [ABCProcess(target=self.perform_abc, args=(chunks_count, output))
                          for i in range(proc_count)]
             for p in processes:
                 p.start()
