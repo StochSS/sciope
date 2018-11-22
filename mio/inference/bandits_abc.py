@@ -52,16 +52,16 @@ class BanditsABC(ABC):
         while accepted_count < num_samples:
             # Rejection sampling
             # Draw from the prior
-            trial_param = self.prior_function()
+            trial_param = self.prior_function.draw()
 
             # Perform the trial
             sim_result = self.sim(trial_param)
 
             # Get the statistic
-            sim_stats = self.summaries_function(sim_result)
+            sim_stats = self.summaries_function.compute(sim_result)
 
             # Calculate the distance between the dataset and the simulated result
-            sim_dist = self.distance_function(dataset_stats, sim_stats)
+            sim_dist = self.distance_function.compute(dataset_stats, sim_stats)
 
             # Normalize distances between [0,1]
             sim_dist_scaled = scale(sim_dist)

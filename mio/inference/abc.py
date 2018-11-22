@@ -19,6 +19,7 @@ Approximate Bayesian Computation
 from inference_base import InferenceBase
 from utilities.distancefunctions.euclidean import EuclideanDistance
 from utilities.priors.uniform_prior import UniformPrior
+from utilities.summarystats.burstiness import Burstiness
 import multiprocessing as mp
 import numpy as np
 
@@ -42,7 +43,7 @@ class ABC(InferenceBase):
     * InferenceBase.infer()
     """
 
-    def __init__(self, data, sim, epsilon=0.1, parallel_mode=False, summaries_function,
+    def __init__(self, data, sim, epsilon=0.1, parallel_mode=False, summaries_function=Burstiness,
                  distance_function=EuclideanDistance, prior_function=UniformPrior):
         self.name = 'ABC'
         self.epsilon = epsilon
@@ -70,16 +71,16 @@ class ABC(InferenceBase):
         while accepted_count < num_samples:
             # Rejection sampling
             # Draw from the prior
-            trial_param = self.prior_function()
+            trial_param = self.prior_function.draw()
 
             # Perform the trial
             sim_result = self.sim(trial_param)
 
             # Get the statistic
-            sim_stats = self.summaries_function(sim_result)
+            sim_stats = self.summaries_function.compute(sim_result)
 
             # Calculate the distance between the dataset and the simulated result
-            sim_dist = self.distance_function(dataset_stats, sim_stats)
+            sim_dist = self.distance_function.compute(dataset_stats, sim_stats)
 
             # Accept/Reject
             if sim_dist <= self.epsilon:
