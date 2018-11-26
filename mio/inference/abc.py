@@ -90,7 +90,7 @@ class ABC(InferenceBase):
             trial_count += 1
 
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
-                   'trial_count': trial_count}
+                   'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
         return self.results
 
     def perform_abc(self, num_samples, output):
@@ -120,7 +120,8 @@ class ABC(InferenceBase):
         trial_count = sum([p['trial_count'] for p in x])
 
         self.results = {'accepted_samples': flat_posteriors_list, 'distances': flat_distances_list,
-                        'accepted_count': accepted_count, 'trial_count': trial_count}
+                        'accepted_count': accepted_count, 'trial_count': trial_count,
+                        'inferred_parameters': np.mean(flat_posteriors_list, axis=0)}
         return self.results
 
     def infer(self, num_samples):
