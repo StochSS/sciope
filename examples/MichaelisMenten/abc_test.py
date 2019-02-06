@@ -42,7 +42,7 @@ dmax = [0.05, 0.6, 0.3]
 mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 
 # Set up ABC
-abc_instance = abc.ABC(data, mm.simulate, epsilon=0.01, parallel_mode=True, prior_function=mm_prior)
+abc_instance = abc.ABC(data, mm.simulate, epsilon=0.01, prior_function=mm_prior)
 
 # Perform ABC; require 30 samples
 abc_instance.infer(30)

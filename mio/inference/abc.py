@@ -42,7 +42,7 @@ class ABC(InferenceBase):
     * InferenceBase.infer()
     """
 
-    def __init__(self, data, sim, prior_function, epsilon=0.1, parallel_mode=False, summaries_function=bs.Burstiness(),
+    def __init__(self, data, sim, prior_function, epsilon=0.1, parallel_mode=True, summaries_function=bs.Burstiness(),
                  distance_function=euc.EuclideanDistance()):
         self.name = 'ABC'
         self.epsilon = epsilon

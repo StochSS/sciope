@@ -17,20 +17,40 @@ Multi-Armed Bandit - Approximate Bayesian Computation
 
 # Imports
 from abc import ABC
+import numpy as np
 from sklearn.preprocessing import scale
+from utilities.distancefunctions import euclidean as euc
+from utilities.summarystats import burstiness as bs
+from utilities.mab import mab_direct as md
+
+
+# The following variable stores n normalized distance values after n summary statistics have been calculated
+normalized_distances = None
+
+
+def arm_pull(arm_idx):
+    """
+    Used by MAB algorithms; Each arm corresponds to a summary statistic and an arm pull is simply selection of one
+    (or more) summary statistics in inference. Here that corresponds to simply returning the desired arm.
+    :param arm_idx: The index into the vector of arms
+    :return: -1 * distance value from distances corresponding to the arm_idx, as reward is to be maximized according to
+    MABs but in inference we minimize distance.
+    """
+    global normalized_distances
+    return -1 * normalized_distances[arm_idx]
 
 
 # Class definition: Bandits-ABC rejection sampling
 class BanditsABC(ABC):
     """
-    ABC rejection sampling with dynamic multi-armed bandit (MAB) assisted summary statistic selection
+    ABC rejection sampling with dynamic multi-armed bandit (MAB) assisted summary statistic selection.
     """
 
-    def __init__(self, data, sim, epsilon=0.1, parallel_mode=False, summaries_function,
-                 distance_function, prior_function, mab_variant):
+    def __init__(self, data, sim, prior_function, mab_variant=md.MABDirect(arm_pull), k=1, epsilon=0.1,
+                 parallel_mode=True, summaries_function=bs.Burstiness(), distance_function=euc.EuclideanDistance()):
         self.mab_variant = mab_variant
-        super(BanditsABC, self).__init__(data, sim, epsilon, parallel_mode, summaries_function,
-                                  distance_function, prior_function)
+        super(BanditsABC, self).__init__(data, sim, prior_function, epsilon, parallel_mode, summaries_function,
+                                         distance_function)
         self.name = 'BanditsABC'
 
     def rejection_sampling(self, num_samples):
@@ -47,6 +67,7 @@ class BanditsABC(ABC):
         trial_count = 0
         accepted_samples = []
         distances = []
+        global normalized_distances
         dataset_stats = self.summaries_function.compute(self.data)
 
         while accepted_count < num_samples:
@@ -57,7 +78,7 @@ class BanditsABC(ABC):
             # Perform the trial
             sim_result = self.sim(trial_param)
 
-            # Get the statistic
+            # Get the statistic(s)
             sim_stats = self.summaries_function.compute(sim_result)
 
             # Calculate the distance between the dataset and the simulated result
@@ -65,11 +86,18 @@ class BanditsABC(ABC):
 
             # Normalize distances between [0,1]
             sim_dist_scaled = scale(sim_dist)
+            normalized_distances = sim_dist_scaled
 
-            # ToDo: Put in MAB call here
+            # Use MAB arm selection to identify the best 'k' arms or summary statistics
+            num_arms = len(normalized_distances)
+            arms = range(num_arms)
+            top_k_distances = self.mab_variant.select(arms, self.k)
+
+            # Take the norm to combine the top k distances
+            combined_distance = np.linalg.norm(top_k_distances)
 
             # Accept/Reject
-            if sim_dist <= self.epsilon:
+            if combined_distance <= self.epsilon:
                 accepted_samples.append(trial_param)
                 distances.append(sim_dist)
                 accepted_count += 1
