@@ -16,7 +16,7 @@ Multi-Armed Bandit - Approximate Bayesian Computation
 """
 
 # Imports
-from abc import ABC
+from abc_inference import ABC
 import numpy as np
 from sklearn.preprocessing import scale
 from utilities.distancefunctions import euclidean as euc
@@ -37,7 +37,7 @@ def arm_pull(arm_idx):
     MABs but in inference we minimize distance.
     """
     global normalized_distances
-    return -1 * normalized_distances[arm_idx]
+    return -1 * normalized_distances[-1, arm_idx]
 
 
 # Class definition: Bandits-ABC rejection sampling
@@ -48,10 +48,28 @@ class BanditsABC(ABC):
 
     def __init__(self, data, sim, prior_function, mab_variant=md.MABDirect(arm_pull), k=1, epsilon=0.1,
                  parallel_mode=True, summaries_function=bs.Burstiness(), distance_function=euc.EuclideanDistance()):
-        self.mab_variant = mab_variant
-        super(BanditsABC, self).__init__(data, sim, prior_function, epsilon, parallel_mode, summaries_function,
-                                         distance_function)
+        super().__init__(data, sim, prior_function, epsilon, parallel_mode, summaries_function, distance_function)
         self.name = 'BanditsABC'
+        self.mab_variant = mab_variant
+        self.k = k
+        self.historical_distances = []
+
+    def scale_distance(self, dist):
+        """
+        Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
+        :param dist: a distance value or vector
+        :return: scaled distance value or vector
+        """
+        global normalized_distances
+        self.historical_distances.append(dist.ravel())
+        all_distances = np.array(self.historical_distances)
+        divisor = np.asarray(all_distances.max(axis=0))
+        normalized_distances = all_distances
+        for j in range(0, len(divisor), 1):
+            if divisor[j] > 0:
+                normalized_distances[:, j] = normalized_distances[:, j] / divisor[j]
+
+        return normalized_distances[-1, :]
 
     def rejection_sampling(self, num_samples):
         """
@@ -67,7 +85,6 @@ class BanditsABC(ABC):
         trial_count = 0
         accepted_samples = []
         distances = []
-        global normalized_distances
         dataset_stats = self.summaries_function.compute(self.data)
 
         while accepted_count < num_samples:
@@ -79,17 +96,19 @@ class BanditsABC(ABC):
             sim_result = self.sim(trial_param)
 
             # Get the statistic(s)
+            # In case of multiple summaries, a numpy array of k summaries should be returned
+            # ToDo: add exception handling to enforce it
             sim_stats = self.summaries_function.compute(sim_result)
 
             # Calculate the distance between the dataset and the simulated result
+            # In case of multiple summaries, a numpy array of k distances should be returned
             sim_dist = self.distance_function.compute(dataset_stats, sim_stats)
 
             # Normalize distances between [0,1]
-            sim_dist_scaled = scale(sim_dist)
-            normalized_distances = sim_dist_scaled
+            sim_dist_scaled = self.scale_distance(sim_dist)
 
             # Use MAB arm selection to identify the best 'k' arms or summary statistics
-            num_arms = len(normalized_distances)
+            num_arms = len(sim_dist_scaled)
             arms = range(num_arms)
             top_k_distances = self.mab_variant.select(arms, self.k)
 
@@ -104,4 +123,7 @@ class BanditsABC(ABC):
 
             trial_count += 1
 
-        return accepted_samples, distances, accepted_count, trial_count
+        self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
+                        'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
+        return self.results
+

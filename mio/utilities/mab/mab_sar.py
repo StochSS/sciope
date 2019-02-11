@@ -49,7 +49,7 @@ class MABSAR(MABBase):
         :param k: number of arms to select
         :return: k selected arms
         """
-        active_arms = arms
+        active_arms = list(arms)
         selected_arms = []
         sum_i = 0
         n_prev = 0

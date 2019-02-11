@@ -17,7 +17,7 @@ The Manhattan distance function
 
 # Imports
 from distance_base import DistanceBase
-from scipy.spatial.distance import cdist
+from scipy.spatial.distance import cityblock
 
 
 # Class definition: Manhattan distance function
@@ -41,6 +41,14 @@ class ManhattanDistance(DistanceBase):
         The arguments should either be provided with the function call or during instantiation.
         :param data: as in init
         :param sim: as in init
-        :return: the distance calculated using numpy (found to be more efficient than scipy.distance)
+        :return: the cityblock distance calculated using scipy
         """
-        return cdist(data, sim, metric='cityblock')
+        # Make sure we have numpy arrays
+        data = np.asarray(data)
+        sim = np.asarray(data)
+
+        # Reshape to 1 x dim
+        data = data.reshape(1, data.size)
+        sim = sim.reshape(1, sim.size)
+
+        return cityblock(data, sim)

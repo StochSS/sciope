@@ -1,4 +1,4 @@
-# Copyright 2017 Prashant Singh, Fredrik Wrede and Andreas Hellander
+# Copyright 2019 Prashant Singh, Fredrik Wrede and Andreas Hellander
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-The Euclidean distance function
+The naive squared function: (a-b ** 2)
 """
 
 # Imports
@@ -20,10 +20,10 @@ from distance_base import DistanceBase
 import numpy as np
 
 
-# Class definition: Euclidean distance function
-class EuclideanDistance(DistanceBase):
+# Class definition: NaiveSquared distance function
+class NaiveSquaredDistance(DistanceBase):
     """
-    Calculates Euclidean distance between two given datasets
+    Calculates squared element-wise distance between two given datasets
 
     * DistanceBase.compute()
     """
@@ -33,7 +33,7 @@ class EuclideanDistance(DistanceBase):
         We just set the name here and call the superclass constructor.
         """
         self.name = 'Euclidean'
-        super(EuclideanDistance, self).__init__(self.name)
+        super(NaiveSquaredDistance, self).__init__(self.name)
 
     @staticmethod
     def compute(data, sim):
@@ -41,7 +41,7 @@ class EuclideanDistance(DistanceBase):
         The arguments should either be provided with the function call or during instantiation.
         :param data: as in init
         :param sim: as in init
-        :return: the distance calculated using numpy (found to be more efficient than scipy.distance)
+        :return: the squared element-wise distance
         """
         # Make sure we have numpy arrays
         data = np.asarray(data)
@@ -51,4 +51,4 @@ class EuclideanDistance(DistanceBase):
         data = data.reshape(1, data.size)
         sim = sim.reshape(1, sim.size)
 
-        return np.linalg.norm(data - sim)
+        return (data - sim) ** 2

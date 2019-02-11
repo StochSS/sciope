@@ -26,14 +26,15 @@ class SummaryBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name):
+    def __init__(self, name, mean_trajectories=True):
         """
         Set up local variables
         :param name: unique identifier for the statistic
+        :param mean_trajectories: if enabled, it returns the mean statistic value computed over all trajectories
         """
         self.name = name
+        self.mean_trajectories = mean_trajectories
 
-    @abstractmethod
     def compute(self, data):
         """
         Calculate the summary statistic value for given 'data'

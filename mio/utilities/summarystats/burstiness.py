@@ -29,20 +29,44 @@ class Burstiness(SummaryBase):
     Ref: Burstiness and memory in complex systems, Europhys. Let., 81, pp. 48002, 2008.
     """
 
-    def __init__(self):
+    def __init__(self, mean_trajectories=True, improvement=False):
         self.name = 'Burstiness'
-        super(Burstiness, self).__init__(self.name)
+        self.improvement = improvement
+        super(Burstiness, self).__init__(self.name, mean_trajectories)
 
-    @staticmethod
-    def compute(data, improvement=False):
-        r = np.std(data) / np.mean(data)
+    def compute(self, data):
+        """
+        Calculate the value(s) of the summary statistic(s)
+        :param data: simulated or data set
+        :return: computed statistic value
+        """
+        if self.mean_trajectories:
+            data_arr = np.array(data)
+            trajs = []
+            for i in range(np.shape(data)[0]):
+                y = data_arr[i, :]
+                r = np.std(y) / np.mean(y)
+                if not self.improvement:
+                    # original burstiness due to Goh and Barabasi
+                    out = (r - 1) / (r + 1)
+                else:
+                    # improvement by Kim & Ho, 2016 (arxiv)
+                    n = len(y)
+                    out = (mt.sqrt(n + 1) * r - mt.sqrt(n - 1)) / ((mt.sqrt(n + 1) - 2) * r + mt.sqrt(n - 1))
 
-        # original burstiness due to Goh and Barabasi
-        if not improvement:
-            out1 = (r - 1) / (r + 1)
-            return out1
+                trajs.append(out)
+
+            return np.mean(np.array(trajs))
+
         else:
-            # improvement by Kim & Ho, 2016 (arxiv)
-            n = len(data)
-            out2 = (mt.sqrt(n + 1) * r - mt.sqrt(n - 1)) / ((mt.sqrt(n + 1) - 2) * r + mt.sqrt(n - 1))
-            return out2
+            r = np.std(data) / np.mean(data)
+
+            # original burstiness due to Goh and Barabasi
+            if not self.improvement:
+                out1 = (r - 1) / (r + 1)
+                return out1
+            else:
+                # improvement by Kim & Ho, 2016 (arxiv)
+                n = len(data)
+                out2 = (mt.sqrt(n + 1) * r - mt.sqrt(n - 1)) / ((mt.sqrt(n + 1) - 2) * r + mt.sqrt(n - 1))
+                return out2
