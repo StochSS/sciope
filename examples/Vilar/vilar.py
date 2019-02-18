@@ -13,108 +13,142 @@
 # limitations under the License.
 """
 Example: The Vilar model
-* 5 trajectories, averaged 
-* and the output is also averaged 
 """
 # Initialize
-import gillespy 
-import matplotlib.pyplot as plt
 import numpy as np
+import gillespy2
+from gillespy2 import SSACSolver, GillesPySolver, StochKitSolver
 
-# Load the model definition
-model_doc = gillespy.StochMLDocument.from_file("StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
+if __name__ == '__main__':
+    # Load the model definition
+    model_doc = gillespy2.StochMLDocument.from_file(
+        "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
 
+    # Here, we create the model object.
+    # We could pass new parameter values to this model here if we wished.
+    model = model_doc.to_model("Vilar")
 
-# Create the model from definition
-model = model_doc.to_model("Vilar")
-numTrajs = 5
-numTimeStamps = 1000
+    # Specify the simulation density and sampling density
+    num_trajectories = 10
+    num_timestamps = 1500
 
-testParam = model.get_parameter('alpha_A')
-testParam.set_expression(50.0)
+    # Set parameters
+    temp_param = model.get_parameter('alpha_A')
+    temp_param.set_expression(50.0)
 
-testParam = model.get_parameter('alpha_a_prime')
-testParam.set_expression(500.0)
+    temp_param = model.get_parameter('alpha_a_prime')
+    temp_param.set_expression(500.0)
 
-testParam = model.get_parameter('alpha_r')
-testParam.set_expression(0.01)
+    temp_param = model.get_parameter('alpha_r')
+    temp_param.set_expression(0.01)
 
-testParam = model.get_parameter('alpha_r_prime')
-testParam.set_expression(50.0)
+    temp_param = model.get_parameter('alpha_r_prime')
+    temp_param.set_expression(50.0)
 
-testParam = model.get_parameter('beta_a')
-testParam.set_expression(50.0)
+    temp_param = model.get_parameter('beta_a')
+    temp_param.set_expression(50.0)
 
-testParam = model.get_parameter('beta_r')
-testParam.set_expression(5.0)
+    temp_param = model.get_parameter('beta_r')
+    temp_param.set_expression(5.0)
 
-testParam = model.get_parameter('delta_ma')
-testParam.set_expression(10.0)
+    temp_param = model.get_parameter('delta_ma')
+    temp_param.set_expression(10.0)
 
-testParam = model.get_parameter('delta_mr')
-testParam.set_expression(0.5)
+    temp_param = model.get_parameter('delta_mr')
+    temp_param.set_expression(0.5)
 
-testParam = model.get_parameter('delta_a')
-testParam.set_expression(1.0)
+    temp_param = model.get_parameter('delta_a')
+    temp_param.set_expression(1.0)
 
-testParam = model.get_parameter('delta_r')
-testParam.set_expression(0.2)
+    temp_param = model.get_parameter('delta_r')
+    temp_param.set_expression(0.2)
 
-testParam = model.get_parameter('gamma_a')
-testParam.set_expression(1.0)
+    temp_param = model.get_parameter('gamma_a')
+    temp_param.set_expression(1.0)
 
-testParam = model.get_parameter('gamma_r')
-testParam.set_expression(1.0)
+    temp_param = model.get_parameter('gamma_r')
+    temp_param.set_expression(1.0)
 
-testParam = model.get_parameter('gamma_c')
-testParam.set_expression(2.0)
+    temp_param = model.get_parameter('gamma_c')
+    temp_param.set_expression(2.0)
 
-testParam = model.get_parameter('Theta_a')
-testParam.set_expression(50.0)
+    temp_param = model.get_parameter('Theta_a')
+    temp_param.set_expression(50.0)
 
-testParam = model.get_parameter('Theta_r')
-testParam.set_expression(100.0)
+    temp_param = model.get_parameter('Theta_r')
+    temp_param.set_expression(100.0)
 
-# Set parameters
-# model.set_parameter('alpha_A', 50.0)
-# model.set_parameter('alpha_a_prime', 500)
-# model.set_parameter('alpha_r', 0.01)
-# model.set_parameter('alpha_r_prime', 50)
-# model.set_parameter('beta_a', 50)
-# model.set_parameter('beta_r', 5)
-# model.set_parameter('delta_ma', 10)
-# model.set_parameter('delta_mr', 0.5)
-# model.set_parameter('delta_a', 1)
-# model.set_parameter('delta_r', 0.2)
-# model.set_parameter('gamma_a', 1)
-# model.set_parameter('gamma_r', 1)
-# model.set_parameter('gamma_c', 2)
-# model.set_parameter('Theta_a', 50)
-# model.set_parameter('Theta_r', 100)
+    # Generate some data for parameter inference - we concentrate on specie A [index 8, index 0 is time]
+    model.tspan = np.linspace(1, 100, num_timestamps)
+    res = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_trajectories)
+    s_trajectories = np.array([res[i][:, 8] for i in range(num_trajectories)]).T
+
+    # Write it to file
+    np.savetxt("vilar_dataset_specieA_10trajs_1500time.dat", s_trajectories, delimiter=",")
 
 
-# Simulate
-model.tspan = range(numTimeStamps)
-res = model.run(number_of_trajectories=numTrajs)
-#print res
-#res = model.run()
+def simulate(param):
+    # Load the model definition
+    model_doc = gillespy2.StochMLDocument.from_file(
+        "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
 
-# Post-process
-colSum = np.ndarray(shape=(1000,10)) * 0
-for i in res:
-	colSum = np.add(colSum, i)
-	
-# Average over trajectories
-colSum = colSum / numTrajs
+    # Here, we create the model object.
+    model = model_doc.to_model("Vilar")
 
-# Average count of each species over 1000 time steps
-out = colSum.mean(axis=0)
-print out.shape
-print out
+    # Set model parameters
+    temp_param = model.get_parameter('alpha_A')
+    temp_param.set_expression(param[0])
 
-# Plot it!
-#plt.plot(res[0][:,0], res[0][:,1:-1])
-plt.plot(colSum[:,0], colSum[:,1:-1])
-plt.show()
+    temp_param = model.get_parameter('alpha_a_prime')
+    temp_param.set_expression(param[1])
 
+    temp_param = model.get_parameter('alpha_r')
+    temp_param.set_expression(param[2])
 
+    temp_param = model.get_parameter('alpha_r_prime')
+    temp_param.set_expression(param[3])
+
+    temp_param = model.get_parameter('beta_a')
+    temp_param.set_expression(param[4])
+
+    temp_param = model.get_parameter('beta_r')
+    temp_param.set_expression(param[5])
+
+    temp_param = model.get_parameter('delta_ma')
+    temp_param.set_expression(param[6])
+
+    temp_param = model.get_parameter('delta_mr')
+    temp_param.set_expression(param[7])
+
+    temp_param = model.get_parameter('delta_a')
+    temp_param.set_expression(param[8])
+
+    temp_param = model.get_parameter('delta_r')
+    temp_param.set_expression(param[9])
+
+    temp_param = model.get_parameter('gamma_a')
+    temp_param.set_expression(param[10])
+
+    temp_param = model.get_parameter('gamma_r')
+    temp_param.set_expression(param[11])
+
+    temp_param = model.get_parameter('gamma_c')
+    temp_param.set_expression(param[12])
+
+    temp_param = model.get_parameter('Theta_a')
+    temp_param.set_expression(param[13])
+
+    temp_param = model.get_parameter('Theta_r')
+    temp_param.set_expression(param[14])
+
+    # Set up simulation density
+    num_sim_trajectories = 1
+    simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
+
+    # extract time values
+    #time = np.array(simple_trajectories[0][:, 0])
+
+    # extract just the trajectories for Specie A with index 8 into a numpy array
+    s_trajectories = np.array([simple_trajectories[i][:, 8] for i in range(num_sim_trajectories)]).T
+
+    return s_trajectories
