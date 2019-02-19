@@ -17,7 +17,8 @@ Example: The Vilar model
 # Initialize
 import numpy as np
 import gillespy2
-from gillespy2 import SSACSolver, GillesPySolver, StochKitSolver
+from gillespy2.solvers.cpp import SSACSolver
+from gillespy2.solvers.stochkit import StochKitSolver
 
 if __name__ == '__main__':
     # Load the model definition
@@ -96,6 +97,7 @@ def simulate(param):
     model = model_doc.to_model("Vilar")
 
     # Set model parameters
+    param = param.ravel()
     temp_param = model.get_parameter('alpha_A')
     temp_param.set_expression(param[0])
 

@@ -16,18 +16,19 @@ Example: Michaelis-Menten chemical kinetics
 """
 import numpy as np
 import gillespy2
-from gillespy2 import SSACSolver, GillesPySolver
+from gillespy2.solvers.cpp import SSACSolver
 
 
 class MichaelisMenten(gillespy2.Model):
-    def __init__(self, parameter_values=None):
+    def __init__(self, parameter_values=[0.0017, 0.5, 0.1]):
         # initialize Model
         gillespy2.Model.__init__(self, name="Michaelis_Menten")
 
         # parameters
-        rate1 = gillespy2.Parameter(name='rate1', expression=0.0017)
-        rate2 = gillespy2.Parameter(name='rate2', expression=0.5)
-        rate3 = gillespy2.Parameter(name='rate3', expression=0.1)
+        params = parameter_values.ravel()
+        rate1 = gillespy2.Parameter(name='rate1', expression=params[0])
+        rate2 = gillespy2.Parameter(name='rate2', expression=params[1])
+        rate3 = gillespy2.Parameter(name='rate3', expression=params[2])
         self.add_parameter([rate1, rate2, rate3])
 
         # Species
