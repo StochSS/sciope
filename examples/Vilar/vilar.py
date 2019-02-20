@@ -20,10 +20,13 @@ import gillespy2
 from gillespy2.solvers.cpp import SSACSolver
 from gillespy2.solvers.stochkit import StochKitSolver
 
+import os
+
 if __name__ == '__main__':
     # Load the model definition
-    model_doc = gillespy2.StochMLDocument.from_file(
-        "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
+    config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                               "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
+    model_doc = gillespy2.StochMLDocument.from_file(config_file)
 
     # Here, we create the model object.
     # We could pass new parameter values to this model here if we wished.
@@ -90,8 +93,9 @@ if __name__ == '__main__':
 
 def simulate(param):
     # Load the model definition
-    model_doc = gillespy2.StochMLDocument.from_file(
-        "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
+    config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                               "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
+    model_doc = gillespy2.StochMLDocument.from_file(config_file)
 
     # Here, we create the model object.
     model = model_doc.to_model("Vilar")

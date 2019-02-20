@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-The Vilar Model: Multi-Armed Bandits based Approximate Bayesian Computation Test Run
+The Vilar Model: Approximate Bayesian Computation Test Run
 """
 
 # Imports
