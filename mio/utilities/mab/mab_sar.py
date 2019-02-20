@@ -76,6 +76,7 @@ class MABSAR(MABBase):
             for a in range(0, len(active_arms)):
                 for p in range(0, num_pulls):
                     rewards[p, a] = self.arm_pull(arms[a])
+                    self.num_pulls += 1
 
             mean_rewards = rewards.mean(axis=0)
             sorted_idx = np.argsort(-mean_rewards)

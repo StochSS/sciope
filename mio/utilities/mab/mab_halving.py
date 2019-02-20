@@ -62,6 +62,7 @@ class MABHalving(MABBase):
             for a in range(0, len(r)):
                 for p in range(0, num_pulls):
                     rewards[p, a] = self.arm_pull(arms[a])
+                    self.num_pulls += 1
 
             mean_rewards = rewards.mean(axis=0)
             halving_point = int(min(np.ceil(len(r) / 2), k))

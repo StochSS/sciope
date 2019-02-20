@@ -57,6 +57,7 @@ class MABDirect(MABBase):
         for a in range(0, n):
             for p in range(0, num_pulls):
                 rewards[p, a] = self.arm_pull(arms[a])
+                self.num_pulls += 1
 
         # find the 'k' sized subset with the highest estimated mean reward
         mean_rewards = rewards.mean(axis=0)

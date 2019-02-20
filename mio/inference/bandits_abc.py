@@ -52,7 +52,6 @@ class BanditsABC(ABC):
         self.name = 'BanditsABC'
         self.mab_variant = mab_variant
         self.k = k
-        self.historical_distances = []
 
     def scale_distance(self, dist):
         """
@@ -110,7 +109,8 @@ class BanditsABC(ABC):
             # Use MAB arm selection to identify the best 'k' arms or summary statistics
             num_arms = len(sim_dist_scaled)
             arms = range(num_arms)
-            top_k_distances = self.mab_variant.select(arms, self.k)
+            top_k_arms_idx = self.mab_variant.select(arms, self.k)
+            top_k_distances = np.asarray([sim_dist_scaled[i] for i in top_k_arms_idx])
 
             # Take the norm to combine the top k distances
             combined_distance = np.linalg.norm(top_k_distances)

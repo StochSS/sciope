@@ -64,6 +64,7 @@ class MABIncremental(MABBase):
                 for a in range(0, len(r_i)):
                     for p in range(0, num_pulls):
                         rewards[p, a] = self.arm_pull(r_i[a])
+                        self.num_pulls += 1
 
                 median_value = np.median(rewards)
                 mean_rewards = rewards.mean(axis=0)

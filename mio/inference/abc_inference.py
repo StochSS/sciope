@@ -22,6 +22,9 @@ from utilities.summarystats import burstiness as bs
 import multiprocessing as mp
 import numpy as np
 
+# The following variable stores n normalized distance values after n summary statistics have been calculated
+normalized_distances = None
+
 
 # Class definition: multiprocessing ABC process
 class ABCProcess(mp.Process):
@@ -50,7 +53,25 @@ class ABC(InferenceBase):
         self.prior_function = prior_function
         self.distance_function = distance_function
         self.parallel_mode = parallel_mode
+        self.historical_distances = []
         super(ABC, self).__init__(self.name, data, sim)
+
+    def scale_distance(self, dist):
+        """
+        Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
+        :param dist: a distance value or vector
+        :return: scaled distance value or vector
+        """
+        global normalized_distances
+        self.historical_distances.append(dist.ravel())
+        all_distances = np.array(self.historical_distances)
+        divisor = np.asarray(all_distances.max(axis=0))
+        normalized_distances = all_distances
+        for j in range(0, len(divisor), 1):
+            if divisor[j] > 0:
+                normalized_distances[:, j] = normalized_distances[:, j] / divisor[j]
+
+        return normalized_distances[-1, :]
 
     def rejection_sampling(self, num_samples):
         """
@@ -75,14 +96,20 @@ class ABC(InferenceBase):
             # Perform the trial
             sim_result = self.sim(trial_param)
 
-            # Get the statistic
+            # Get the statistic(s)
             sim_stats = self.summaries_function.compute(sim_result)
 
             # Calculate the distance between the dataset and the simulated result
             sim_dist = self.distance_function.compute(dataset_stats, sim_stats)
 
+            # Normalize distances between [0,1]
+            sim_dist_scaled = self.scale_distance(sim_dist)
+
+            # Take the norm to combine the distances
+            combined_distance = np.linalg.norm(sim_dist_scaled)
+
             # Accept/Reject
-            if sim_dist <= self.epsilon:
+            if combined_distance <= self.epsilon:
                 accepted_samples.append(trial_param)
                 distances.append(sim_dist)
                 accepted_count += 1

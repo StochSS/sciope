@@ -36,7 +36,7 @@ class MABBase(object):
         self.name = name
         self.arm_pull = arm_pull
         # ToDo: implement assertions here
-        self.iteration_number = 0
+        self.num_pulls = 0
 
     @abstractmethod
     def select(self, arms, k=1):
