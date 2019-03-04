@@ -16,12 +16,13 @@ Feature Extraction
 """
 # Import
 from tsfresh.feature_extraction import feature_calculators
+import numpy as np
 
 
 def generate_tsfresh_features(X, features=None):
     """Method to generate time series features
         input: 
-            X -  2D numpy array (Nr trajectories x Nr time points) 
+            X -  numpy array of shape (Nr time points) 
             features - dict containing tsfresh features
                        
                        for exempel:  features = {'variance': None,
@@ -31,9 +32,8 @@ def generate_tsfresh_features(X, features=None):
         return: numpy array of shape Nr of total features
         """
 
-    assert type(features) == dict "features has to be of type dict"
     for key in features.keys():
-    assert hasattr(feature_calculators, key) "%s does not exist as a feature" % key
+        assert hasattr(feature_calculators, key), "%s does not exist as a feature" % key
 
     def _f():
         for function_name, parameter_list in features.items():
@@ -46,10 +46,12 @@ def generate_tsfresh_features(X, features=None):
                 
             else:
                 if parameter_list:
-                    result = ((convert_to_output_format(param), func(X, **param)) for param in parameter_list) # TODO: convert to array
+                    res = [func(X, **param) for param in parameter_list]
+                    for item in res:
+                        yield item # TODO: convert to array
                 else:
-                    result = func(X)
-            yield result
-    return np.array(_f())
+                    res = func(X)
+                    yield res
+    return np.array(list(_f()))
         
         
