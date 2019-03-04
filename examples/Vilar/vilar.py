@@ -158,3 +158,66 @@ def simulate(param):
     s_trajectories = np.array([simple_trajectories[i][:, 8] for i in range(num_sim_trajectories)]).T
 
     return s_trajectories
+
+
+def simulate_all_species(param):
+    # Load the model definition
+    config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                               "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
+    model_doc = gillespy2.StochMLDocument.from_file(config_file)
+
+    # Here, we create the model object.
+    model = model_doc.to_model("Vilar")
+
+    # Set model parameters
+    param = param.ravel()
+    temp_param = model.get_parameter('alpha_A')
+    temp_param.set_expression(param[0])
+
+    temp_param = model.get_parameter('alpha_a_prime')
+    temp_param.set_expression(param[1])
+
+    temp_param = model.get_parameter('alpha_r')
+    temp_param.set_expression(param[2])
+
+    temp_param = model.get_parameter('alpha_r_prime')
+    temp_param.set_expression(param[3])
+
+    temp_param = model.get_parameter('beta_a')
+    temp_param.set_expression(param[4])
+
+    temp_param = model.get_parameter('beta_r')
+    temp_param.set_expression(param[5])
+
+    temp_param = model.get_parameter('delta_ma')
+    temp_param.set_expression(param[6])
+
+    temp_param = model.get_parameter('delta_mr')
+    temp_param.set_expression(param[7])
+
+    temp_param = model.get_parameter('delta_a')
+    temp_param.set_expression(param[8])
+
+    temp_param = model.get_parameter('delta_r')
+    temp_param.set_expression(param[9])
+
+    temp_param = model.get_parameter('gamma_a')
+    temp_param.set_expression(param[10])
+
+    temp_param = model.get_parameter('gamma_r')
+    temp_param.set_expression(param[11])
+
+    temp_param = model.get_parameter('gamma_c')
+    temp_param.set_expression(param[12])
+
+    temp_param = model.get_parameter('Theta_a')
+    temp_param.set_expression(param[13])
+
+    temp_param = model.get_parameter('Theta_r')
+    temp_param.set_expression(param[14])
+
+    # Set up simulation density
+    num_sim_trajectories = 1
+    simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
+
+    return np.asarray(simple_trajectories)
