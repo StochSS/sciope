@@ -17,35 +17,28 @@ This summary statistic returns an ensemble of summaries calculated using time se
 
 # Imports
 import sys
+sys.path.append("../../mio/features")
 sys.path.append("../../mio/utilities/")
 sys.path.append("../../mio/utilities/summarystats")
-sys.path.append("../../mio/features")
 from summary_base import SummaryBase
 import numpy as np
-import tsfresh as tsf
-import time_series_analysis as tsa
+from feature_extraction import generate_tsfresh_features
+from tsfresh.feature_extraction import EfficientFCParameters
 
 
 # Class definition: SummariesEnsemble
 class SummariesTSFRESH(SummaryBase):
     """
-    An ensemble of different statistics
+    An ensemble of different statistics from TSFRESH
     """
 
     def __init__(self):
         self.name = 'SummariesTSFRESH'
+        self.features = None
         super(SummariesTSFRESH, self).__init__(self.name)
 
-    @staticmethod
-    def compute(data):
-        fe = tsa.TimeSeriesAnalysis(name="Vilar", columns=['A'])
-        if len(data.shape) == 3:
-            # Extract the time series for specie A
-            data_reshaped = data[:, :, [0, -2]]
-        else:
-            data_reshaped = data.reshape(data.shape[0], data.shape[1], 1)
-        fe.put(data_reshaped)
-        df = fe.get_data()
-        features = tsf.extract_features(df, column_id="index", column_sort="time")
-        effective_features = features.dropna(axis=1, how='any')
-        return np.asarray(effective_features).ravel()
+    def compute(self, data, features=EfficientFCParameters()):
+        self.features = features
+        feature_values = generate_tsfresh_features(data.ravel(), features)
+        # ToDo: Check for NaNs
+        return np.asarray(feature_values).ravel()
