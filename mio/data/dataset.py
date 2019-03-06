@@ -17,6 +17,7 @@ Dataset Class
 
 # Imports
 import numpy as np
+from collections import OrderedDict
 
 
 # Class definition
@@ -29,20 +30,17 @@ class DataSet(object):
 	* y					(targets)
 	* ts				(time series)
 	* s 				(summary statistics)
-	* s_data			(summary statistics data)
-	* user_labels		(for interactive active learning)
+	* size
+	* configurations 	(OrderedDict with relavant information)
 
 	
 	Methods:
-	* add_summary
-	* remove_summary
 	* impute 			(treat missing values in summary statistics data)
 	* scaler? 
 	* set_data			(set inputs and targets)
 	* get_size			(returns current size of the dataset)
 	* add_points		(updates the dataset to include new points)
-	* remove_points
-	
+
 	
 	"""
 	
@@ -50,14 +48,19 @@ class DataSet(object):
 		self.name = name
 		self.x = None
 		self.y = None
+		self.ts = None
+		self.s = None
+		self.configurations = OrderedDict()
 		self.size = 0
 		
-	def set_data(self, inputs, targets):
+	def set_data(self, inputs, targets, time_series=None, summary_stats=None):
 		"""
 		Sets the inputs and target variables
 		"""
 		self.x = inputs
 		self.y = targets
+		self.ts = time_series
+		self.s = summary_stats
 		self.size = self.x.shape[0]
 	
 	def get_size(self):
@@ -66,10 +69,18 @@ class DataSet(object):
 		"""
 		return self.size
 		
-	def add_points(self, inputs, targets):
+	def add_points(self, inputs, targets, time_series=None, summary_stats=None):
 		"""
 		Updates the dataset to include new points
 		"""
-		self.x = np.concatenate(self.x, inputs)
-		self.y = np.concatenate(self.y, targets)
+
+		self.x = np.concatenate((self.x, inputs))
+		self.y = np.concatenate((self.y, targets))
+		
+		if time_series.any() != None: 
+			self.ts = np.concatenate((self.ts, time_series))
+
+		if summary_stats.any() != None:
+			self.s = np.concatenate((self.s, ))
+		
 		self.size = self.x.shape[0]
