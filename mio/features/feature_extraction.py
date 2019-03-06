@@ -19,39 +19,39 @@ from tsfresh.feature_extraction import feature_calculators
 import numpy as np
 
 
-def generate_tsfresh_features(X, features=None):
+def generate_tsfresh_features(data, features=None):
     """Method to generate time series features
         input: 
-            X -  numpy array of shape (Nr time points) 
+            data -  numpy array of shape 2D  N x T, where T is number of time points
             features - dict containing tsfresh features
                        
                        for exempel:  features = {'variance': None,
                                                 'absolute_sum_of_changes': None,
                                                 'agg_autocorrelation': [{'f_agg': 'mean'},
                                                                         {'f_agg': 'var'}]}
-        return: numpy array of shape Nr of total features
+        return: numpy array of shape N x (Nr of total features)
         """
 
     for key in features.keys():
         assert hasattr(feature_calculators, key), "%s does not exist as a feature" % key
 
-    def _f():
+    def _f(x):
         for function_name, parameter_list in features.items():
             func = getattr(feature_calculators, function_name)
 
             if func.fctype == "combiner":
-                res = func(X, param=parameter_list)  ## returns a list of tuples with string and value
+                res = func(x, param=parameter_list)  ## returns a list of tuples with string and value
                 for item in res:
                     yield item[1]
                 
             else:
                 if parameter_list:
-                    res = [func(X, **param) for param in parameter_list]
+                    res = [func(x, **param) for param in parameter_list]
                     for item in res:
-                        yield item # TODO: convert to array
+                        yield item
                 else:
-                    res = func(X)
+                    res = func(x)
                     yield res
-    return np.array(list(_f()))
+    return np.array([list(_f(x)) for x in data])
         
         
