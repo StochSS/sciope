@@ -27,11 +27,21 @@ class dataset(object):
 	Properties/variables:
 	* X					(inputs)
 	* y					(targets)
+	* ts				(time series)
+	* s 				(summary statistics)
+	* s_data			(summary statistics data)
+	* user_labels		(for interactive active learning)
+
 	
 	Methods:
 	* setData			(set inputs and targets)
 	* getSize			(returns current size of the dataset)
-	* addPoints			(updates the dataset to include new points)
+	* add			(updates the dataset to include new points)
+	* remove
+	* add_summary
+	* remove_summary
+	* impute 			(treat missing values in summary statistics data)
+	* scaler? 
 	
 	"""
 	
