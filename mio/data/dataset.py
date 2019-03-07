@@ -32,6 +32,7 @@ class DataSet(object):
 	* s 				(summary statistics)
 	* size
 	* configurations 	(OrderedDict with relavant information)
+	* ensembles? 
 
 	
 	Methods:
