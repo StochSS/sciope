@@ -114,8 +114,9 @@ class DataSet(object):
 			# Outlier detection using IQR
 			quants = mquantiles(self.s)
 			iqr = quants[2] - quants[0]
-			violations_left = x2 < quants[0] - 1.5 * iqr
-			violations_right = x2 > quants[2] + 1.5 * iqr
+			iqr_factor = 1.5
+			violations_left = x2 < quants[0] - iqr_factor * iqr
+			violations_right = x2 > quants[2] + iqr_factor * iqr
 			self.outlier_column_indices = np.unique(np.argwhere(violations_left | violations_right)[:, 1])
 
 		self.s[:, self.outlier_column_indices] = np.log(self.s[:, self.outlier_column_indices])
