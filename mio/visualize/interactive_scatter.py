@@ -2,7 +2,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 from matplotlib.text import Annotation
-import seaborn as sns
 from pandas import DataFrame
 import numpy as np
 from ipywidgets import widgets
@@ -52,9 +51,6 @@ def interative_scatter(scatter_data, data_class=None):
 
          """
     assert scatter_data.shape[0] == data_class.y.shape[0], "scatter_data and data contained in DataSet class need the same number of points"
-    
-    
-    sns.set()
     
     instances_colors = data_class.y
     axis_values_x = scatter_data[:,0]
