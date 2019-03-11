@@ -53,5 +53,3 @@ def generate_tsfresh_features(data, features=None):
                     res = func(x)
                     yield res
     return np.array([list(_f(x)) for x in data])
-        
-        
