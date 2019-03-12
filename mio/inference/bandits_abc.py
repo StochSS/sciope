@@ -19,6 +19,7 @@ Multi-Armed Bandit - Approximate Bayesian Computation
 from abc_inference import ABC
 import numpy as np
 from sklearn.preprocessing import scale
+from data.dataset import DataSet
 from utilities.distancefunctions import euclidean as euc
 from utilities.summarystats import burstiness as bs
 from utilities.mab import mab_direct as md
@@ -84,7 +85,9 @@ class BanditsABC(ABC):
         trial_count = 0
         accepted_samples = []
         distances = []
-        dataset_stats = self.summaries_function.compute(self.data)
+        fixed_dataset = DataSet('Fixed Data')
+        sim_dataset = DataSet('Simulated Data')
+        fixed_dataset.set_data(targets=self.data, summary_stats=self.summaries_function.compute(self.data))
 
         while accepted_count < num_samples:
             # Rejection sampling
@@ -99,9 +102,15 @@ class BanditsABC(ABC):
             # ToDo: add exception handling to enforce it
             sim_stats = self.summaries_function.compute(sim_result)
 
+            # Set/Update simulated dataset
+            if sim_dataset.s is None:
+                sim_dataset.set_data(targets=sim_result, summary_stats=sim_stats)
+            else:
+                sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
+
             # Calculate the distance between the dataset and the simulated result
             # In case of multiple summaries, a numpy array of k distances should be returned
-            sim_dist = self.distance_function.compute(dataset_stats, sim_stats)
+            sim_dist = self.distance_function.compute(fixed_dataset.s, sim_stats)
 
             # Normalize distances between [0,1]
             sim_dist_scaled = self.scale_distance(sim_dist)

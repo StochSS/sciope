@@ -19,6 +19,7 @@ Approximate Bayesian Computation
 from inference_base import InferenceBase
 from utilities.distancefunctions import euclidean as euc
 from utilities.summarystats import burstiness as bs
+from data.dataset import DataSet
 import multiprocessing as mp
 import numpy as np
 
@@ -86,7 +87,9 @@ class ABC(InferenceBase):
         trial_count = 0
         accepted_samples = []
         distances = []
-        dataset_stats = self.summaries_function.compute(self.data)
+        fixed_dataset = DataSet('Fixed Data')
+        sim_dataset = DataSet('Simulated Data')
+        fixed_dataset.set_data(targets=self.data, summary_stats=self.summaries_function.compute(self.data))
 
         while accepted_count < num_samples:
             # Rejection sampling
@@ -99,14 +102,22 @@ class ABC(InferenceBase):
             # Get the statistic(s)
             sim_stats = self.summaries_function.compute(sim_result)
 
+            # Set/Update simulated dataset
+            if sim_dataset.s is None:
+                sim_dataset.set_data(targets=sim_result, summary_stats=sim_stats)
+            else:
+                sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
+
             # Calculate the distance between the dataset and the simulated result
-            sim_dist = self.distance_function.compute(dataset_stats, sim_stats)
+            sim_dist = self.distance_function.compute(fixed_dataset.s, sim_stats)
 
             # Normalize distances between [0,1]
             sim_dist_scaled = self.scale_distance(sim_dist)
+            print(sim_dist_scaled)
 
             # Take the norm to combine the distances
             combined_distance = np.linalg.norm(sim_dist_scaled)
+            print(combined_distance)
 
             # Accept/Reject
             if combined_distance <= self.epsilon:

@@ -56,19 +56,23 @@ class DataSet(object):
 		self.ts = None
 		self.s = None
 		self.outlier_column_indices = None
+		self.outlier_detection = False
 		self.configurations = OrderedDict()
 		self.size = 0
 		
-	def set_data(self, inputs, targets, time_series=None, summary_stats=None):
+	def set_data(self, inputs=None, targets=None, time_series=None, summary_stats=None):
 		"""
 		Sets the inputs and target variables
 		"""
 		self.x = inputs
 		self.y = targets
 		self.ts = time_series
-		self.s = summary_stats
-		self.size = self.x.shape[0]
-		self.process_outliers()
+		if summary_stats is not None:
+			self.s = summary_stats
+		if self.x is not None:
+			self.size = self.x.shape[0]
+		if self.outlier_detection and self.s is not None and len(self.s) > 1:
+			self.process_outliers()
 	
 	def get_size(self):
 		"""
@@ -76,25 +80,29 @@ class DataSet(object):
 		"""
 		return self.size
 		
-	def add_points(self, inputs, targets, time_series=None, summary_stats=None):
+	def add_points(self, inputs=None, targets=None, time_series=None, summary_stats=None):
 		"""
 		Updates the dataset to include new points
+		@ToDo: Put in validation and exception handling
 		"""
+		if inputs is not None:
+			self.x = np.concatenate((self.x, inputs), axis=0)
+			self.size = self.x.shape[0]
 
-		self.x = np.concatenate((self.x, inputs))
-		self.y = np.concatenate((self.y, targets))
+		if targets is not None:
+			self.y = np.concatenate((self.y, targets), axis=0)
 		
-		if time_series.any() is not None:
-			self.ts = np.concatenate((self.ts, time_series))
+		if time_series is not None:
+			self.ts = np.concatenate((self.ts, time_series), axis=0)
 
-		if summary_stats.any() is not None:
-			if self.outlier_column_indices is not None:
+		if summary_stats is not None:
+			if self.outlier_detection and self.outlier_column_indices is not None:
 				summary_stats[:, self.outlier_column_indices] = np.log(summary_stats[:, self.outlier_column_indices])
-			self.s = np.concatenate((self.s, summary_stats))
-		
-		self.size = self.x.shape[0]
+			self.s = np.concatenate((self.s, summary_stats), axis=0)
+			if self.outlier_detection and len(self.s) > 1:
+				self.process_outliers()
 
-	def process_outliers(self, mode='iqr'):
+	def process_outliers(self, mode='zscore'):
 		"""
 		Check for outliers in calculated summary stats. Outliers are the few very high or very low values that can
 		potentially introduce bias in tasks such as parameter inference. One can either remove them, replace with mean
@@ -109,7 +117,10 @@ class DataSet(object):
 
 			# Find columns where abs(zscore) > threshold
 			zscore_threshold = 3
-			self.outlier_column_indices = np.unique(np.argwhere(np.abs(zscores) > zscore_threshold)[:, 1])
+			violation_indices = np.argwhere(np.abs(zscores) > zscore_threshold)
+			if len(violation_indices) < 1:
+				return
+			outlier_indices = np.unique(np.argwhere(np.abs(zscores) > zscore_threshold)[:, 1])
 		else:
 			# Outlier detection using IQR
 			quants = mquantiles(self.s)
@@ -117,6 +128,50 @@ class DataSet(object):
 			iqr_factor = 1.5
 			violations_left = self.s < quants[0] - iqr_factor * iqr
 			violations_right = self.s > quants[2] + iqr_factor * iqr
-			self.outlier_column_indices = np.unique(np.argwhere(violations_left | violations_right)[:, 1])
+			violation_indices = np.argwhere(violations_left | violations_right)
+			if len(violation_indices) < 1:
+				return
+			outlier_indices = np.unique(np.argwhere(violations_left | violations_right)[:, 1])
 
-		self.s[:, self.outlier_column_indices] = np.log(self.s[:, self.outlier_column_indices])
+		# Check if the indices have previously been processed
+		# We do not want to get into a cycle of logloglog...
+		if self.outlier_column_indices is not None:
+			indices_to_process = np.setdiff1d(np.union1d(self.outlier_column_indices, outlier_indices),
+														np.intersect1d(self.outlier_column_indices, outlier_indices))
+			self.outlier_column_indices = np.union1d(self.outlier_column_indices, indices_to_process)
+		else:
+			indices_to_process = outlier_indices
+			self.outlier_column_indices = indices_to_process
+
+		self.s[:, indices_to_process] = np.log(self.s[:, indices_to_process])
+
+	@staticmethod
+	def calculate_distance(fixed_ds, sim_ds, sim_stats):
+		"""
+		Compares the fixed and simulated datasets for outlier indices, and returns the union of outlier indices.
+		:param fixed_ds: the fixed dataset
+		:param sim_ds: the simulated dataset
+		:param sim_stats: the simulated stats, subset of sim_ds
+		:return: the indices of the fixed dataset that will need to be log-scaled based on outliers in both datasets
+		"""
+		if fixed_ds.outlier_column_indices is None and sim_ds.outlier_column_indices is None:
+			# No outliers anywhere
+			fixed_stats = fixed_ds.s
+		elif fixed_ds.outlier_column_indices is None and sim_ds.outlier_column_indices is not None:
+			# outliers only in simulated data
+			sim_stats[:, sim_ds.outlier_column_indices] = np.log(sim_stats[:, sim_ds.outlier_column_indices])
+			fixed_stats = fixed_ds.s
+			fixed_stats[:, sim_ds.outlier_column_indices] = np.log(fixed_stats[:, sim_ds.outlier_column_indices])
+		elif fixed_ds.outlier_column_indices is not None and sim_ds.outlier_column_indices is None:
+			# outliers only in fixed dataset
+			fixed_stats = fixed_ds.s
+			sim_stats[:, fixed_ds.outlier_column_indices] = np.log(sim_stats[:, fixed_ds.outlier_column_indices])
+		else:
+			# outliers in both datasets
+			outlier_indices = np.union1d(fixed_ds.outlier_column_indices, sim_ds.outlier_column_indices)
+			sim_stats[:, outlier_indices] = np.log(sim_stats[:, outlier_indices])
+			outliers_for_fixed_ds = np.setdiff1d(sim_ds.outlier_column_indices, fixed_ds.outlier_column_indices)
+			fixed_stats = fixed_ds.s
+			fixed_stats[:, outliers_for_fixed_ds] = np.log(fixed_stats[:, outliers_for_fixed_ds])
+
+		return fixed_stats, sim_stats
