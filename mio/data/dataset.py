@@ -34,16 +34,13 @@ class DataSet(object):
 	* s 						(summary statistics)
 	* outlier_column_indices	(columns containing outliers)
 	* size
-	* configurations 			(OrderedDict with relavant information)
-	* ensembles? 
+	* configurations 			(OrderedDict with relavant information) 
 
 	
 	Methods:
-	* impute 					(treat missing values in summary statistics data)
-	* scaler? 
-	* set_data					(set inputs and targets)
+	* impute 					(treat missing values in summary statistics data) 
 	* get_size					(returns current size of the dataset)
-	* add_points				(updates the dataset to include new points)
+	* add_points				(add data to the dataset, data can be added incrementally)
 	* process_outliers			(check summary stats that contain outliers, and apply log scaling)
 
 	
@@ -59,23 +56,10 @@ class DataSet(object):
 		self.outlier_detection = False
 		self.configurations = OrderedDict()
 		self.size = 0
-		
-	def set_data(self, inputs=None, targets=None, time_series=None, summary_stats=None):
-		"""
-		Sets the inputs and target variables
-		"""
-		self.x = inputs
-		self.y = targets
-		self.ts = time_series
-		if summary_stats is not None:
-			self.s = summary_stats
-		if self.x is not None:
-			self.size = self.x.shape[0]
-		if self.outlier_detection and self.s is not None and len(self.s) > 1:
-			self.process_outliers()
-	
+			
 	def get_size(self):
 		"""
+		TODO:
 		Returns the current number of points in the dataset
 		"""
 		return self.size
@@ -86,19 +70,32 @@ class DataSet(object):
 		@ToDo: Put in validation and exception handling
 		"""
 		if inputs is not None:
-			self.x = np.concatenate((self.x, inputs), axis=0)
-			self.size = self.x.shape[0]
-
+			if self.x is not None:
+				self.x = np.concatenate((self.x, inputs), axis=0)
+			else:
+				self.x = inputs
+				
 		if targets is not None:
-			self.y = np.concatenate((self.y, targets), axis=0)
+			if self.y is not None:
+				self.y = np.concatenate((self.y, targets), axis=0)
+			else:
+				self.y = targets
 		
 		if time_series is not None:
-			self.ts = np.concatenate((self.ts, time_series), axis=0)
-
+			if self.ts is not None:
+				self.ts = np.concatenate((self.ts, time_series), axis=0)
+			else:
+				self.ts = time_series
+		
 		if summary_stats is not None:
 			if self.outlier_detection and self.outlier_column_indices is not None:
 				summary_stats[:, self.outlier_column_indices] = np.log(summary_stats[:, self.outlier_column_indices])
-			self.s = np.concatenate((self.s, summary_stats), axis=0)
+			
+			if self.s is not None:
+				self.s = np.concatenate((self.s, summary_stats), axis=0)
+			else:
+				self.s = summary_stats
+
 			if self.outlier_detection and len(self.s) > 1:
 				self.process_outliers()
 
