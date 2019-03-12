@@ -59,7 +59,7 @@ def interative_scatter(scatter_data, data_class=None):
 
     # draw a subplots
     fig, [[ax,ax2],[ax3,ax4]] = plt.subplots(2,2, figsize=(10, 8))
-
+    plotting_axes = [ax2, ax3, ax4]
 
     # draw the initial scatterplot
     draw_scatterplot(ax, axis_values_x, axis_values_y, instances_colors)
@@ -83,7 +83,7 @@ def interative_scatter(scatter_data, data_class=None):
         label_pos_y = event.mouseevent.ydata
 
         # just in case two dots are very close, this offset will help the labels not appear one on top of each other
-        offset = 0.01
+        offset = 0.01 # TODO this offset has to be scaled to the data, or the data has to be scaled
 
         # if the dots are to close one to another, a list of dots clicked is returned by the matplotlib library
         for i in ind:
@@ -112,9 +112,8 @@ def interative_scatter(scatter_data, data_class=None):
 
         #lastly lets draw the trajectory (we can only draw one, so we take the last in "ind")
         
-        draw_trajectory(ax2, ind[-1], int(plot1_idx.value))
-        draw_trajectory(ax3, ind[-1], int(plot2_idx.value))
-        draw_trajectory(ax4, ind[-1], int(plot3_idx.value))
+        for e, plots in enumerate(trajectory_plots):
+            draw_trajectory(plotting_axes[e], ind[-1], int(plots.value))
         
 
 
@@ -160,41 +159,29 @@ def interative_scatter(scatter_data, data_class=None):
     button_submit.on_click(set_user_label)
 
 
-    # Widgets for labeling
+    # Widgets for plotting trajectories
+    species = {}
     if 'listOfSpecies' in data_class.configurations.keys():
         indices = data_class.configurations['listOfSpecies']
-        species = {}
         for e,s in enumerate(indices):
             species[s] = e
 
     else:
         indices = range(data_class.ts.shape[2])
-        species = {}
         for i in indices:
             species['Index ' + str(i)] = i
 
-    plot1_idx = widgets.Dropdown(
-        options=species,
-        value=0,
-        description='Species plot 1:',
-        disabled=False,
-        )
-
-    plot2_idx = widgets.Dropdown(
-        options=species,
-        value=1,
-        description='Species plot 2:',
-        disabled=False,
-        )
-
-    plot3_idx = widgets.Dropdown(
-    options=species,
-    value=2,
-    description='Species plot 3:',
-    disabled=False,
-    )
-
-    display(plot1_idx, plot2_idx, plot3_idx)
+    # create drowpdown widgets for selecting species
+    trajectory_plots = []
+    for key, val in species.items():
+        plot = widgets.Dropdown(
+            options=species,
+            value=val,
+            description='Species plot ' + str(val + 1),
+            disabled=False,
+            )
+        trajectory_plots.append(plot)
+        display(plot)
 
     # initial drawing of the scatterplot
     plt.plot()
