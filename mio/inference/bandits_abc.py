@@ -18,15 +18,18 @@ Multi-Armed Bandit - Approximate Bayesian Computation
 # Imports
 from abc_inference import ABC
 import numpy as np
-from sklearn.preprocessing import scale
 from data.dataset import DataSet
 from utilities.distancefunctions import euclidean as euc
 from utilities.summarystats import burstiness as bs
 from utilities.mab import mab_direct as md
+from utilities.housekeeping import mio_logger as ml
 
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
+
+# Set up the logger
+logger = ml.MIOLogger().get_logger()
 
 
 def arm_pull(arm_idx):
@@ -53,6 +56,7 @@ class BanditsABC(ABC):
         self.name = 'BanditsABC'
         self.mab_variant = mab_variant
         self.k = k
+        logger.info("Multi-Armed Bandits Approximate Bayesian Computation initialized")
 
     def scale_distance(self, dist):
         """
@@ -87,7 +91,7 @@ class BanditsABC(ABC):
         distances = []
         fixed_dataset = DataSet('Fixed Data')
         sim_dataset = DataSet('Simulated Data')
-        fixed_dataset.set_data(targets=self.data, summary_stats=self.summaries_function.compute(self.data))
+        fixed_dataset.add_points(targets=self.data, summary_stats=self.summaries_function.compute(self.data))
 
         while accepted_count < num_samples:
             # Rejection sampling
@@ -103,10 +107,7 @@ class BanditsABC(ABC):
             sim_stats = self.summaries_function.compute(sim_result)
 
             # Set/Update simulated dataset
-            if sim_dataset.s is None:
-                sim_dataset.set_data(targets=sim_result, summary_stats=sim_stats)
-            else:
-                sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
+            sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
 
             # Calculate the distance between the dataset and the simulated result
             # In case of multiple summaries, a numpy array of k distances should be returned
@@ -123,12 +124,16 @@ class BanditsABC(ABC):
 
             # Take the norm to combine the top k distances
             combined_distance = np.linalg.norm(top_k_distances)
+            logger.debug("Rejection Sampling: trial parameter = [{0}], distance = [{1}]".format(trial_param,
+                                                                                                combined_distance))
 
             # Accept/Reject
             if combined_distance <= self.epsilon:
                 accepted_samples.append(trial_param)
                 distances.append(sim_dist)
                 accepted_count += 1
+                logger.info("Rejection Sampling: accepted a new sample, total accepted samples = {0}".
+                            format(len(accepted_samples)))
 
             trial_count += 1
 

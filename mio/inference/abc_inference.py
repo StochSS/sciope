@@ -19,12 +19,16 @@ Approximate Bayesian Computation
 from inference_base import InferenceBase
 from utilities.distancefunctions import euclidean as euc
 from utilities.summarystats import burstiness as bs
+from utilities.housekeeping import mio_logger as ml
 from data.dataset import DataSet
 import multiprocessing as mp
 import numpy as np
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
+
+# Set up the logger
+logger = ml.MIOLogger().get_logger()
 
 
 # Class definition: multiprocessing ABC process
@@ -56,6 +60,7 @@ class ABC(InferenceBase):
         self.parallel_mode = parallel_mode
         self.historical_distances = []
         super(ABC, self).__init__(self.name, data, sim)
+        logger.info("Approximate Bayesian Computation initialized")
 
     def scale_distance(self, dist):
         """
@@ -89,7 +94,7 @@ class ABC(InferenceBase):
         distances = []
         fixed_dataset = DataSet('Fixed Data')
         sim_dataset = DataSet('Simulated Data')
-        fixed_dataset.set_data(targets=self.data, summary_stats=self.summaries_function.compute(self.data))
+        fixed_dataset.add_points(targets=self.data, summary_stats=self.summaries_function.compute(self.data))
 
         while accepted_count < num_samples:
             # Rejection sampling
@@ -103,27 +108,26 @@ class ABC(InferenceBase):
             sim_stats = self.summaries_function.compute(sim_result)
 
             # Set/Update simulated dataset
-            if sim_dataset.s is None:
-                sim_dataset.set_data(targets=sim_result, summary_stats=sim_stats)
-            else:
-                sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
+            sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
 
             # Calculate the distance between the dataset and the simulated result
             sim_dist = self.distance_function.compute(fixed_dataset.s, sim_stats)
 
             # Normalize distances between [0,1]
             sim_dist_scaled = self.scale_distance(sim_dist)
-            print(sim_dist_scaled)
 
             # Take the norm to combine the distances
             combined_distance = np.linalg.norm(sim_dist_scaled)
-            print(combined_distance)
+            logger.debug("Rejection Sampling: trial parameter = [{0}], distance = [{1}]".format(trial_param,
+                                                                                                combined_distance))
 
             # Accept/Reject
             if combined_distance <= self.epsilon:
                 accepted_samples.append(trial_param)
                 distances.append(sim_dist)
                 accepted_count += 1
+                logger.info("Rejection Sampling: accepted a new sample, total accepted samples = {0}".
+                            format(len(accepted_samples)))
 
             trial_count += 1
 
@@ -160,6 +164,8 @@ class ABC(InferenceBase):
         self.results = {'accepted_samples': flat_posteriors_list, 'distances': flat_distances_list,
                         'accepted_count': accepted_count, 'trial_count': trial_count,
                         'inferred_parameters': np.mean(flat_posteriors_list, axis=0)}
+        logger.info("\n\nInferred parameters: {0}".format(self.results['inferred_parameters']))
+        logger.info("Trial count: {0}".format(self.results['trial_count']))
         return self.results
 
     def infer(self, num_samples):
@@ -179,7 +185,7 @@ class ABC(InferenceBase):
             # Parallel ABC
             proc_count = mp.cpu_count()
             chunks_count = np.ceil(num_samples / float(proc_count))
-            print("Parallel ABC: Running {} samples on {} processors...".format(chunks_count, proc_count))
+            logger.info("Parallel ABC: Running {0} samples on {1} processors...".format(chunks_count, proc_count))
             output = mp.Queue()
             processes = [ABCProcess(target=self.perform_abc, args=(chunks_count, output))
                          for i in range(proc_count)]
