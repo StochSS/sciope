@@ -17,7 +17,11 @@ Factorial Initial Design
 
 # Imports
 from initial_design_base import InitialDesignBase
+from utilities.housekeeping import mio_logger as ml
 import gpflowopt
+
+# Set up the logger
+logger = ml.MIOLogger().get_logger()
 
 
 # Class definition
@@ -31,6 +35,7 @@ class FactorialDesign(InitialDesignBase):
     def __init__(self, xmin, xmax):
         name = 'FactorialDesign'
         super(FactorialDesign, self).__init__(name, xmin, xmax)
+        logger.info("Factorial design in {0} dimensions initialized".format(len(self.xmin)))
 
     def generate(self, n):
         """
@@ -44,4 +49,5 @@ class FactorialDesign(InitialDesignBase):
             gpf_domain = gpf_domain + gpflowopt.domain.ContinuousParameter(var_name, self.xmin[i], self.xmax[i])
 
         design = gpflowopt.design.FactorialDesign(n, gpf_domain)
+        logger.info("Factorial design: generated {0} points in {1} dimensions".format(n, num_variables))
         return design.generate()

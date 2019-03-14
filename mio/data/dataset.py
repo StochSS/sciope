@@ -143,7 +143,7 @@ class DataSet(object):
 		self.s[:, indices_to_process] = np.log(self.s[:, indices_to_process])
 
 	@staticmethod
-	def calculate_distance(fixed_ds, sim_ds, sim_stats):
+	def sync_log_scaled_datasets(fixed_ds, sim_ds, sim_stats):
 		"""
 		Compares the fixed and simulated datasets for outlier indices, and returns the union of outlier indices.
 		:param fixed_ds: the fixed dataset

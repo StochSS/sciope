@@ -19,7 +19,11 @@ Ranks monte-carlo samples such that minimum distance between them is maximized
 # Imports
 from sampling_base import SamplingBase
 from scipy.spatial import distance_matrix
+from utilities.housekeeping import mio_logger as ml
 import numpy as np
+
+# Set up the logger
+logger = ml.MIOLogger().get_logger()
 
 
 # Class definition
@@ -39,10 +43,11 @@ class MaximinSampling(SamplingBase):
     def __init__(self, xmin, xmax):
         name = 'MaximinSampling'
         super(MaximinSampling, self).__init__(name, xmin, xmax)
+        logger.info("Maximin sequential sampler in {0} dimensions initialized".format(len(self.xmin)))
 
     # Example call:
     # ms = MaximinSampling([0,0], [1,1])
-    # newPoints = ms.selectPoint(X)
+    # new_points = ms.select_point(X)
     def select_point(self, x):
         """
         Get top ranked candidate according to maximin sampling to add to current samples x
@@ -67,6 +72,7 @@ class MaximinSampling(SamplingBase):
         idx = np.argsort(-ranking)
 
         # ta-da!
+        logger.info("Maximin sequential design: selected one new sample")
         return c[idx[0], :]
 
     def select_points(self, x, n):
@@ -78,4 +84,5 @@ class MaximinSampling(SamplingBase):
             c_new = self.selectPoint(x)
             x = np.vstack((x, c_new))
             c.append(c_new)
+        logger.info("Maximin sequential design: selected {0} new samples".format(n))
         return np.array(c)
