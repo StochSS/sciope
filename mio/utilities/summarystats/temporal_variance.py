@@ -37,6 +37,6 @@ class TemporalVariance(SummaryBase):
         :return: computed statistic value
         """
         if self.mean_trajectories:
-            return np.mean(np.std(data, axis=1), axis=0)
+            return np.asarray(np.mean(np.std(data, axis=1), axis=0)).reshape(1, 1)
         else:
-            return np.std(data, axis=1)
+            return np.asarray(np.std(data, axis=1)).reshape(1, 1)

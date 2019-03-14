@@ -20,6 +20,7 @@ from inference_base import InferenceBase
 from utilities.distancefunctions import euclidean as euc
 from utilities.summarystats import burstiness as bs
 from utilities.housekeeping import mio_logger as ml
+from utilities.housekeeping import mio_profiler as mp
 from data.dataset import DataSet
 import multiprocessing as mp
 import numpy as np
@@ -79,6 +80,7 @@ class ABC(InferenceBase):
 
         return normalized_distances[-1, :]
 
+    @mp.profile
     def rejection_sampling(self, num_samples):
         """
         Perform ABC inference according to initialized configuration.

@@ -37,6 +37,6 @@ class GlobalMin(SummaryBase):
         :return: computed statistic value
         """
         if self.mean_trajectories:
-            return np.mean(np.min(data, axis=1))
+            return np.asarray(np.mean(np.min(data, axis=1))).reshape(1, 1)
         else:
-            return np.min(data, axis=1)
+            return np.asarray(np.min(data, axis=1)).reshape(1, 1)
