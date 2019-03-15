@@ -17,7 +17,11 @@ Latin Hypercube Sampling Initial Design
 
 # Imports
 from initial_design_base import InitialDesignBase
+from utilities.housekeeping import mio_logger as ml
 import gpflowopt
+
+# Set up the logger
+logger = ml.MIOLogger().get_logger()
 
 
 # Class definition
@@ -31,6 +35,7 @@ class LatinHypercube(InitialDesignBase):
     def __init__(self, xmin, xmax):
         name = 'LatinHypercube'
         super(LatinHypercube, self).__init__(name, xmin, xmax)
+        logger.info("Latin hypercube design in {0} dimensions initialized".format(len(self.xmin)))
 
     def generate(self, n):
         """
@@ -43,4 +48,5 @@ class LatinHypercube(InitialDesignBase):
             gpf_domain = gpf_domain + gpflowopt.domain.ContinuousParameter(var_name, self.xmin[i], self.xmax[i])
 
         design = gpflowopt.design.LatinHyperCube(n, gpf_domain)
+        logger.info("Latin hypercube design: generated {0} points in {1} dimensions".format(n, num_variables))
         return design.generate()

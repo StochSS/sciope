@@ -56,17 +56,18 @@ class Burstiness(SummaryBase):
 
                 trajs.append(out)
 
-            return np.mean(np.array(trajs))
+            out = np.array(np.mean(np.array(trajs)))
+            return out.reshape(1, 1)
 
         else:
             r = np.std(data) / np.mean(data)
 
             # original burstiness due to Goh and Barabasi
             if not self.improvement:
-                out1 = (r - 1) / (r + 1)
-                return out1
+                out1 = np.asarray((r - 1) / (r + 1))
+                return out1.reshape(1, 1)
             else:
                 # improvement by Kim & Ho, 2016 (arxiv)
                 n = len(data)
-                out2 = (mt.sqrt(n + 1) * r - mt.sqrt(n - 1)) / ((mt.sqrt(n + 1) - 2) * r + mt.sqrt(n - 1))
-                return out2
+                out2 = np.asarray((mt.sqrt(n + 1) * r - mt.sqrt(n - 1)) / ((mt.sqrt(n + 1) - 2) * r + mt.sqrt(n - 1)))
+                return out2.reshape(1, 1)

@@ -19,6 +19,7 @@ The Vilar Model: Multi-Armed Bandits based Approximate Bayesian Computation Test
 import sys
 sys.path.append("../../mio")
 sys.path.append("../../mio/models")
+sys.path.append("../../mio/data")
 sys.path.append("../../mio/designs")
 sys.path.append("../../mio/sampling")
 sys.path.append("../../mio/inference")

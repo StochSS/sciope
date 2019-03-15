@@ -37,6 +37,6 @@ class TemporalMean(SummaryBase):
         :return: computed statistic value
         """
         if self.mean_trajectories:
-            return np.mean(np.mean(data, axis=1), axis=0)
+            return np.asarray(np.mean(np.mean(data, axis=1), axis=0)).reshape(1, 1)
         else:
-            return np.mean(data, axis=1)
+            return np.asarray(np.mean(data, axis=1)).reshape(1, 1)

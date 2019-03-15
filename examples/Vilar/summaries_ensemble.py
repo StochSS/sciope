@@ -46,4 +46,4 @@ class SummariesEnsemble(SummaryBase):
         ensemble.append(mn.GlobalMin().compute(data))
         ensemble.append(tm.TemporalMean().compute(data))
         ensemble.append(tv.TemporalVariance().compute(data))
-        return np.asarray(ensemble).ravel()
+        return np.asarray(ensemble).reshape(1, len(ensemble))

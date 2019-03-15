@@ -37,6 +37,6 @@ class GlobalMax(SummaryBase):
         :return: computed statistic value
         """
         if self.mean_trajectories:
-            return np.mean(np.max(data, axis=1))
+            return np.asarray(np.mean(np.max(data, axis=1))).reshape(1, 1)
         else:
-            return np.max(data, axis=1)
+            return np.asarray(np.max(data, axis=1)).reshape(1, 1)
