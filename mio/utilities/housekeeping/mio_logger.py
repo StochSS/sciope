@@ -34,9 +34,9 @@ class Singleton(type):
 class MIOLogger(object, metaclass=Singleton):
     _logger = None
 
-    def __init__(self):
+    def __init__(self, log_level=logging.DEBUG):
         self._logger = logging.getLogger("MIOLogger")
-        self._logger.setLevel(logging.DEBUG)
+        self._logger.setLevel(log_level)
         log_format = logging.Formatter('\n%(asctime)s \t [%(levelname)-8s | %(filename)-12s:%(lineno)s] : %(message)s')
 
         now = datetime.datetime.now()
@@ -55,6 +55,7 @@ class MIOLogger(object, metaclass=Singleton):
 
         self._logger.addHandler(filename)
         self._logger.addHandler(stream_handler)
+        self._logger.propagate = False          # To stop duplicate logging
 
         print("MIO Logger is now ready.")
 

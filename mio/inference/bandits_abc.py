@@ -23,7 +23,7 @@ from utilities.distancefunctions import euclidean as euc
 from utilities.summarystats import burstiness as bs
 from utilities.mab import mab_direct as md
 from utilities.housekeeping import mio_logger as ml
-from utilities.housekeeping import mio_profiler as mp
+from utilities.housekeeping import mio_profiler
 
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
@@ -76,7 +76,7 @@ class BanditsABC(ABC):
 
         return normalized_distances[-1, :]
 
-    @mp.profile
+    @mio_profiler.profile
     def rejection_sampling(self, num_samples):
         """
         * overrides rejection_sampling of ABC class *
