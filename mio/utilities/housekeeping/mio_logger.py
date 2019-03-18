@@ -18,8 +18,8 @@ Data Logging Class
 # Imports
 import logging
 import datetime
+import tempfile
 import os
-from pathlib import Path
 
 
 class Singleton(type):
@@ -40,14 +40,13 @@ class MIOLogger(object, metaclass=Singleton):
         log_format = logging.Formatter('\n%(asctime)s \t [%(levelname)-8s | %(filename)-12s:%(lineno)s] : %(message)s')
 
         now = datetime.datetime.now()
-        mio_root_path = Path(__file__).parents[3]
-        log_path = mio_root_path/"log"
-        dirname = str(log_path.as_posix())
+        log_path = os.path.join(tempfile.gettempdir(), "log")
+        self._log_dir_path = log_path
 
-        if not os.path.isdir(dirname):
-            os.mkdir(dirname)
+        if not os.path.isdir(log_path):
+            os.mkdir(log_path)
 
-        filename = logging.FileHandler(dirname + "/log_" + now.strftime("%Y-%m-%d_%H.%M.%S.%f") + ".log")
+        filename = logging.FileHandler(log_path + "/log_" + now.strftime("%Y-%m-%d_%H:%M:%S.%f") + ".log")
         stream_handler = logging.StreamHandler()
 
         filename.setFormatter(log_format)
@@ -57,7 +56,10 @@ class MIOLogger(object, metaclass=Singleton):
         self._logger.addHandler(stream_handler)
         self._logger.propagate = False          # To stop duplicate logging
 
-        print("MIO Logger is now ready.")
+        print("MIO Logger is now ready. Log directory is {}".format(log_path))
 
     def get_logger(self):
         return self._logger
+
+    def get_log_dir_path(self):
+        return self._log_dir_path
