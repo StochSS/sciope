@@ -40,7 +40,7 @@ class MIOLogger(object, metaclass=Singleton):
         log_format = logging.Formatter('\n%(asctime)s \t [%(levelname)-8s | %(filename)-12s:%(lineno)s] : %(message)s')
 
         now = datetime.datetime.now()
-        log_path = os.path.join(tempfile.gettempdir(), "log")
+        log_path = os.path.join(tempfile.gettempdir(), "MIO_logs")
         self._log_dir_path = log_path
 
         if not os.path.isdir(log_path):
