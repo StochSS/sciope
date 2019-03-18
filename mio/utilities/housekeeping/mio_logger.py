@@ -42,7 +42,7 @@ class MIOLogger(object, metaclass=Singleton):
         now = datetime.datetime.now()
         mio_root_path = Path(__file__).parents[3]
         log_path = mio_root_path/"log"
-        dirname = str(log_path.resolve())
+        dirname = str(log_path.as_posix())
 
         if not os.path.isdir(dirname):
             os.mkdir(dirname)
