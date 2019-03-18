@@ -36,7 +36,7 @@ class RandomSampling(InitialDesignBase):
     def __init__(self, xmin, xmax, use_logger=True):
         name = 'RandomSampling'
         super(RandomSampling, self).__init__(name, xmin, xmax, use_logger)
-        if use_logger:
+        if self.use_logger:
             self.logger = get_logger()
             self.logger.info("Random design in {0} dimensions initialized".format(len(self.xmin)))
 
@@ -51,6 +51,6 @@ class RandomSampling(InitialDesignBase):
             gpf_domain = gpf_domain + gpflowopt.domain.ContinuousParameter(var_name, self.xmin[i], self.xmax[i])
 
         design = gpflowopt.design.RandomDesign(n, gpf_domain)
-        if use_logger:
+        if self.use_logger:
             self.logger.info("Random design: generated {0} points in {1} dimensions".format(n, num_variables))
         return design.generate()
