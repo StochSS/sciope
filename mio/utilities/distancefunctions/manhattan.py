@@ -16,7 +16,7 @@ The Manhattan distance function
 """
 
 # Imports
-from distance_base import DistanceBase
+from mio.utilities.distancefunctions.distance_base import DistanceBase
 from scipy.spatial.distance import cityblock
 
 

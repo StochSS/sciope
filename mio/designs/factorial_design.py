@@ -16,8 +16,8 @@ Factorial Initial Design
 """
 
 # Imports
-from initial_design_base import InitialDesignBase
-from utilities.housekeeping import mio_logger as ml
+from mio.designs.initial_design_base import InitialDesignBase
+from mio.utilities.housekeeping import mio_logger as ml
 import gpflowopt
 
 # Set up the logger

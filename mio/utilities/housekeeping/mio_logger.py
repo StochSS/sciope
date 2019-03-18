@@ -47,7 +47,7 @@ class MIOLogger(object, metaclass=Singleton):
         if not os.path.isdir(dirname):
             os.mkdir(dirname)
 
-        filename = logging.FileHandler(dirname + "/log_" + now.strftime("%Y-%m-%d_%H:%M:%S.%f") + ".log")
+        filename = logging.FileHandler(dirname + "/log_" + now.strftime("%Y-%m-%d_%H.%M.%S.%f") + ".log")
         stream_handler = logging.StreamHandler()
 
         filename.setFormatter(log_format)

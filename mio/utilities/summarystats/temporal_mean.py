@@ -17,7 +17,7 @@ The temporal mean summary statistic
 
 # Imports
 import numpy as np
-from summary_base import SummaryBase
+from mio.utilities.summarystats.summary_base import SummaryBase
 
 
 # Class definition: Temporal Mean Statistic

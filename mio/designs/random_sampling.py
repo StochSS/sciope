@@ -16,7 +16,7 @@ Random Sampling Initial Design
 """
 
 # Imports
-from initial_design_base import InitialDesignBase
+from mio.designs.initial_design_base import InitialDesignBase
 from mio.utilities.housekeeping import mio_logger as ml
 import gpflowopt
 

@@ -67,7 +67,8 @@ class DataSet(object):
 	def add_points(self, inputs=None, targets=None, time_series=None, summary_stats=None):
 		"""
 		Updates the dataset to include new points
-		@ToDo: Put in validation and exception handling
+		@ToDo: Put in validation and exception handling. at the moment only support adding collections of points, i.e
+		inputs = N x num_params, time_series = N x num_timepoints x num_species etc. N can be 1.  
 		"""
 		if inputs is not None:
 			if self.x is not None:

@@ -16,7 +16,7 @@ Support Vector Machine Regression Surrogate Model
 """
 
 # Imports
-from model_base import ModelBase
+from mio.models.model_base import ModelBase
 from sklearn.svm import SVR
 from sklearn.model_selection import GridSearchCV
 

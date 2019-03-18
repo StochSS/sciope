@@ -16,7 +16,7 @@ Multi-Armed Bandits: Successive Accepts and Rejects (SAR) Algorithm Solution Cla
 """
 
 # Imports
-from mab_base import MABBase
+from mio.utilities.mab.mab_base import MABBase
 import numpy as np
 
 

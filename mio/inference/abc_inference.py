@@ -16,12 +16,12 @@ Approximate Bayesian Computation
 """
 
 # Imports
-from inference_base import InferenceBase
-from utilities.distancefunctions import euclidean as euc
-from utilities.summarystats import burstiness as bs
-from utilities.housekeeping import mio_logger as ml
-from utilities.housekeeping import mio_profiler
-from data.dataset import DataSet
+from mio.inference.inference_base import InferenceBase
+from mio.utilities.distancefunctions import euclidean as euc
+from mio.utilities.summarystats import burstiness as bs
+from mio.utilities.housekeeping import mio_logger as ml
+from mio.utilities.housekeeping import mio_profiler
+from mio.data.dataset import DataSet
 import multiprocessing as mp
 import numpy as np
 

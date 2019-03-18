@@ -16,7 +16,7 @@ The Uniform Prior
 """
 
 # Imports
-from prior_base import PriorBase
+from mio.utilities.priors.prior_base import PriorBase
 import numpy as np
 
 

@@ -16,14 +16,14 @@ Multi-Armed Bandit - Approximate Bayesian Computation
 """
 
 # Imports
-from abc_inference import ABC
+from mio.inference.abc_inference import ABC
 import numpy as np
-from data.dataset import DataSet
-from utilities.distancefunctions import euclidean as euc
-from utilities.summarystats import burstiness as bs
-from utilities.mab import mab_direct as md
-from utilities.housekeeping import mio_logger as ml
-from utilities.housekeeping import mio_profiler
+from mio.data.dataset import DataSet
+from mio.utilities.distancefunctions import euclidean as euc
+from mio.utilities.summarystats import burstiness as bs
+from mio.utilities.mab import mab_direct as md
+from mio.utilities.housekeeping import mio_logger as ml
+from mio.utilities.housekeeping import mio_profiler
 
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated

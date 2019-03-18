@@ -16,7 +16,7 @@ The naive squared function: (a-b ** 2)
 """
 
 # Imports
-from distance_base import DistanceBase
+from mio.utilities.distancefunctions.distance_base import DistanceBase
 import numpy as np
 
 

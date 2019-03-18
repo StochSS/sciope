@@ -16,7 +16,7 @@ Multi-Armed Bandits: Incremental Algorithm Solution Class
 """
 
 # Imports
-from mab_base import MABBase
+from mio.utilities.mab.mab_base import MABBase
 import numpy as np
 import math
 
