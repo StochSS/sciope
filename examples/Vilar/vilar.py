@@ -17,7 +17,6 @@ Example: The Vilar model
 # Initialize
 import numpy as np
 import gillespy2
-from gillespy2.solvers.cpp import SSACSolver
 from gillespy2.solvers.stochkit import StochKitSolver
 
 import os

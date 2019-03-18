@@ -16,7 +16,7 @@ Example: Michaelis-Menten chemical kinetics
 """
 import numpy as np
 import gillespy2
-from gillespy2.solvers.cpp import SSACSolver
+from gillespy2.solvers.stochkit import StochKitSolver
 
 
 class MichaelisMenten(gillespy2.Model):
@@ -55,7 +55,6 @@ if __name__ == '__main__':
     # Here, we create the model object.
     # We could pass new parameter values to this model here if we wished.
     model = MichaelisMenten()
-    csolver = SSACSolver(model)
 
     # Specify the simulation density and sampling density
     num_trajectories = 1000
@@ -63,7 +62,7 @@ if __name__ == '__main__':
 
     # Generate some data for parameter inference
     model.tspan = np.linspace(1, 100, num_timestamps)
-    res = model.run(solver=csolver, show_labels=False, number_of_trajectories=num_trajectories)
+    res = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_trajectories)
     S_trajectories = np.array([res[i][:, 1] for i in range(num_trajectories)]).T
 
     # Write it to file
@@ -74,11 +73,10 @@ def simulate(param):
     # Here, we create the model object.
     # We could pass new parameter values to this model here if we wished.
     model = MichaelisMenten(parameter_values=param)
-    csolver = SSACSolver(model)
 
     # Set up simulation density
     num_trajectories = 1
-    simple_trajectories = model.run(solver=csolver, show_labels=False, number_of_trajectories=num_trajectories)
+    simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_trajectories)
 
     # extract time values
     time = np.array(simple_trajectories[0][:, 0])
