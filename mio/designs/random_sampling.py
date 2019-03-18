@@ -17,11 +17,12 @@ Random Sampling Initial Design
 
 # Imports
 from initial_design_base import InitialDesignBase
-from utilities.housekeeping import mio_logger as ml
+from mio.utilities.housekeeping import mio_logger as ml
 import gpflowopt
 
 # Set up the logger
-logger = ml.MIOLogger().get_logger()
+def get_logger():
+    return ml.MIOLogger().get_logger()
 
 
 # Class definition
@@ -32,10 +33,12 @@ class RandomSampling(InitialDesignBase):
     * InitialDesignBase.generate(n)
     """
 
-    def __init__(self, xmin, xmax):
+    def __init__(self, xmin, xmax, use_logger=True):
         name = 'RandomSampling'
-        super(RandomSampling, self).__init__(name, xmin, xmax)
-        logger.info("Random design in {0} dimensions initialized".format(len(self.xmin)))
+        super(RandomSampling, self).__init__(name, xmin, xmax, use_logger)
+        if use_logger:
+            self.logger = get_logger()
+            self.logger.info("Random design in {0} dimensions initialized".format(len(self.xmin)))
 
     def generate(self, n):
         """
@@ -48,5 +51,6 @@ class RandomSampling(InitialDesignBase):
             gpf_domain = gpf_domain + gpflowopt.domain.ContinuousParameter(var_name, self.xmin[i], self.xmax[i])
 
         design = gpflowopt.design.RandomDesign(n, gpf_domain)
-        logger.info("Random design: generated {0} points in {1} dimensions".format(n, num_variables))
+        if use_logger:
+            self.logger.info("Random design: generated {0} points in {1} dimensions".format(n, num_variables))
         return design.generate()

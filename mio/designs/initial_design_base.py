@@ -31,12 +31,13 @@ class InitialDesignBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, xmin, xmax):
+    def __init__(self, name, xmin, xmax, use_logger=True):
         self.name = name
         np.testing.assert_array_less(xmin, xmax, err_msg=("Please validate the values and ensure shape equality of "
                                                           "domain lower and upper bounds."))
         self.xmin = xmin
         self.xmax = xmax
+        self.use_logger= use_logger
 
     @abstractmethod
     def generate(self, n):
