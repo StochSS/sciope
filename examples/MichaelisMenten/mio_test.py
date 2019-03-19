@@ -14,20 +14,12 @@
 """
 Example: use the modules from mio to perform surrogate-based parameter inference from existing data
 """
-# Set up paths
-import sys
-
-sys.path.append("../../mio")
-sys.path.append("../../mio/models")
-sys.path.append("../../mio/designs")
-sys.path.append("../../mio/sampling")
-
 # Imports
 import mio
 import numpy as np
 import mm_sim as m2s
-from models import *
-from designs import *
+from mio.models import *
+from mio.designs import *
 from sklearn.metrics import mean_squared_error
 
 # Domain

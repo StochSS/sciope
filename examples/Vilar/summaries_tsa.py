@@ -16,13 +16,9 @@ This summary statistic returns an ensemble of summaries calculated using time se
 """
 
 # Imports
-import sys
-sys.path.append("../../mio/features")
-sys.path.append("../../mio/utilities/")
-sys.path.append("../../mio/utilities/summarystats")
-from summary_base import SummaryBase
+from mio.utilities.summarystats.summary_base import SummaryBase
 import numpy as np
-from feature_extraction import generate_tsfresh_features
+from mio.features.feature_extraction import generate_tsfresh_features
 from tsfresh.feature_extraction import EfficientFCParameters
 
 

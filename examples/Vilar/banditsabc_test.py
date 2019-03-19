@@ -16,22 +16,11 @@ The Vilar Model: Multi-Armed Bandits based Approximate Bayesian Computation Test
 """
 
 # Imports
-import sys
-sys.path.append("../../mio")
-sys.path.append("../../mio/models")
-sys.path.append("../../mio/designs")
-sys.path.append("../../mio/sampling")
-sys.path.append("../../mio/inference")
-sys.path.append("../../mio/utilities")
-sys.path.append("../../mio/utilities/distancefunctions")
-sys.path.append("../../mio/utilities/mab")
-sys.path.append("../../mio/utilities/priors")
-sys.path.append("../../mio/utilities/summarystats")
-from utilities.priors import uniform_prior
-from inference import bandits_abc
-from utilities.distancefunctions import naive_squared as ns
+from mio.utilities.priors import uniform_prior
+from mio.inference import bandits_abc
+from mio.utilities.distancefunctions import naive_squared as ns
 import summaries_ensemble as se
-from utilities.mab import mab_halving as mh
+from mio.utilities.mab import mab_halving as mh
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error

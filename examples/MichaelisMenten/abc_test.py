@@ -16,20 +16,9 @@ Michaelis-Menten Model: Approximate Bayesian Computation Test Run
 """
 
 # Imports
-import sys
-sys.path.append("../../mio")
-sys.path.append("../../mio/models")
-sys.path.append("../../mio/designs")
-sys.path.append("../../mio/sampling")
-sys.path.append("../../mio/inference")
-sys.path.append("../../mio/utilities")
-sys.path.append("../../mio/utilities/distancefunctions")
-sys.path.append("../../mio/utilities/mab")
-sys.path.append("../../mio/utilities/priors")
-sys.path.append("../../mio/utilities/summarystats")
-from utilities.priors import uniform_prior
-from utilities.summarystats import burstiness as bs
-from inference import abc_inference
+from mio.utilities.priors import uniform_prior
+from mio.utilities.summarystats import burstiness as bs
+from mio.inference import abc_inference
 import numpy as np
 import mm
 from sklearn.metrics import mean_absolute_error

@@ -16,25 +16,13 @@ The Vilar Model: Multi-Armed Bandits based Approximate Bayesian Computation Test
 """
 
 # Imports
-import sys
-sys.path.append("../../mio")
-sys.path.append("../../mio/models")
-sys.path.append("../../mio/data")
-sys.path.append("../../mio/designs")
-sys.path.append("../../mio/sampling")
-sys.path.append("../../mio/inference")
-sys.path.append("../../mio/utilities")
-sys.path.append("../../mio/utilities/distancefunctions")
-sys.path.append("../../mio/utilities/mab")
-sys.path.append("../../mio/utilities/priors")
-sys.path.append("../../mio/utilities/summarystats")
-from utilities.priors import uniform_prior
-from inference import abc_inference
+from mio.utilities.priors import uniform_prior
+from mio.inference import abc_inference
 import summaries_ensemble as se
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
-from utilities.distancefunctions import naive_squared as ns
+from mio.utilities.distancefunctions import naive_squared as ns
 
 # Load data
 data = np.loadtxt("datasets/vilar_dataset_specieA_100trajs_150time.dat", delimiter=",")
