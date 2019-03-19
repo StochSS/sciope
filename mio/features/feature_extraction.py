@@ -53,3 +53,24 @@ def generate_tsfresh_features(data, features=None):
                     res = func(x)
                     yield res
     return np.array([list(_f(x)) for x in data])
+
+
+def remove_nan_features(x, features):
+    """
+    Method to remove features containing NaN values.
+    :param x: numpy array of calculated features
+    :param features: list of calculated features
+    :return: non-nan features dict, and feature values
+    """
+    nan_idx = np.any(np.isnan(x), axis=0)
+    key_idx = 0
+    non_nan_features = dict()
+    non_nan_feature_values = x[:, ~nan_idx]
+
+    for key, value in features.items():
+        if not nan_idx[key_idx]:
+            # Not a nan feature
+            non_nan_features[key] = value
+        key_idx += 1
+
+    return non_nan_feature_values, non_nan_features
