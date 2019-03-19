@@ -78,8 +78,8 @@ setup(
         'scikit-learn',
         'pandas<0.24'
         'tsfresh',
-        'GPflow==0.5.0'
-        'GPflowOpt'
+        'GPflow==0.5.0',
+        'GPflowOpt',
         'ipywidgets'],
 
     # List additional groups of dependencies here (e.g. development
