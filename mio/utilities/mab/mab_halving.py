@@ -17,8 +17,12 @@ Multi-Armed Bandits: Halving Algorithm Solution Class
 
 # Imports
 from mio.utilities.mab.mab_base import MABBase
+from mio.utilities.housekeeping import mio_logger as ml
 import numpy as np
 import math
+
+# Set up the logger and profiler
+logger = ml.MIOLogger().get_logger()
 
 
 # Class definition: HALVING MAB arm selection
@@ -64,11 +68,17 @@ class MABHalving(MABBase):
                     rewards[p, a] = self.arm_pull(arms[a])
                     self.num_pulls += 1
 
-            mean_rewards = rewards.mean(axis=0)
+            mean_rewards = np.nanmean(rewards, axis=0)
+
+            # replace nan with inf
+            mean_rewards[np.isnan(mean_rewards)] = -1 * np.inf
+            logger.debug("MABDirect: reward values are {}".format(mean_rewards))
+
             halving_point = int(min(np.ceil(len(r) / 2), k))
             top_half_arms = np.argpartition(mean_rewards, -halving_point)[-halving_point:]
             r = top_half_arms.tolist()
             epsilon_i = 3 / 4 * epsilon_i
             delta_i = delta_i / 2
 
+        logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[r]))
         return r

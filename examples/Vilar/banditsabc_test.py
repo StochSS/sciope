@@ -20,6 +20,7 @@ from mio.utilities.priors import uniform_prior
 from mio.inference import bandits_abc
 from mio.utilities.distancefunctions import naive_squared as ns
 import summaries_ensemble as se
+import summaries_tsa as st
 from mio.utilities.mab import mab_halving as mh
 import numpy as np
 import vilar

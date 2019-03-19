@@ -17,7 +17,11 @@ Multi-Armed Bandits: Successive Accepts and Rejects (SAR) Algorithm Solution Cla
 
 # Imports
 from mio.utilities.mab.mab_base import MABBase
+from mio.utilities.housekeeping import mio_logger as ml
 import numpy as np
+
+# Set up the logger and profiler
+logger = ml.MIOLogger().get_logger()
 
 
 # Class definition: SAR MAB arm selection
@@ -78,7 +82,12 @@ class MABSAR(MABBase):
                     rewards[p, a] = self.arm_pull(arms[a])
                     self.num_pulls += 1
 
-            mean_rewards = rewards.mean(axis=0)
+            mean_rewards = np.nanmean(rewards, axis=0)
+            logger.debug("MABDirect: reward values are {}".format(mean_rewards))
+
+            # replace nan with inf
+            mean_rewards[np.isnan(mean_rewards)] = -1 * np.inf
+
             sorted_idx = np.argsort(-mean_rewards)
             k_th_best_arm = sorted_idx[k - 1]
             k_star_th_best_arm = sorted_idx[k]
@@ -109,4 +118,5 @@ class MABSAR(MABBase):
             # increment ...
             n_prev = n_x
 
+        logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[selected_arms]))
         return selected_arms

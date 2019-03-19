@@ -19,7 +19,7 @@ This summary statistic returns an ensemble of summaries calculated using time se
 from mio.utilities.summarystats.summary_base import SummaryBase
 import numpy as np
 from mio.features.feature_extraction import generate_tsfresh_features
-from tsfresh.feature_extraction import EfficientFCParameters
+from tsfresh.feature_extraction import EfficientFCParameters, MinimalFCParameters
 
 
 # Class definition: SummariesEnsemble
@@ -35,6 +35,5 @@ class SummariesTSFRESH(SummaryBase):
 
     def compute(self, data, features=EfficientFCParameters()):
         self.features = features
-        feature_values = generate_tsfresh_features(data.ravel(), features)
-        # ToDo: Check for NaNs
-        return np.asarray(feature_values).ravel()
+        feature_values = generate_tsfresh_features(data, features)
+        return feature_values.reshape(1, feature_values.size)

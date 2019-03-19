@@ -17,8 +17,12 @@ Multi-Armed Bandits: Direct Algorithm Solution Class
 
 # Imports
 from mio.utilities.mab.mab_base import MABBase
+from mio.utilities.housekeeping import mio_logger as ml
 import numpy as np
 import math
+
+# Set up the logger and profiler
+logger = ml.MIOLogger().get_logger()
 
 
 # Class definition: DIRECT MAB arm selection
@@ -60,6 +64,12 @@ class MABDirect(MABBase):
                 self.num_pulls += 1
 
         # find the 'k' sized subset with the highest estimated mean reward
-        mean_rewards = rewards.mean(axis=0)
+        mean_rewards = np.nanmean(rewards, axis=0)
+
+        # replace nan with inf
+        mean_rewards[np.isnan(mean_rewards)] = -1 * np.inf
+        logger.debug("MABDirect: reward values are {}".format(mean_rewards))
+
         top_k_arms = np.argpartition(mean_rewards, -k)[-k:]
+        logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[top_k_arms]))
         return top_k_arms

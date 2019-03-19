@@ -17,8 +17,12 @@ Multi-Armed Bandits: Incremental Algorithm Solution Class
 
 # Imports
 from mio.utilities.mab.mab_base import MABBase
+from mio.utilities.housekeeping import mio_logger as ml
 import numpy as np
 import math
+
+# Set up the logger and profiler
+logger = ml.MIOLogger().get_logger()
 
 
 # Class definition: HALVING MAB arm selection
@@ -67,7 +71,11 @@ class MABIncremental(MABBase):
                         self.num_pulls += 1
 
                 median_value = np.median(rewards)
-                mean_rewards = rewards.mean(axis=0)
+                mean_rewards = np.nanmean(rewards, axis=0)
+
+                # replace nan with inf
+                mean_rewards[np.isnan(mean_rewards)] = -1 * np.inf
+                logger.debug("MABDirect: reward values are {}".format(mean_rewards))
 
                 # remove all arms with mean rewards < median_value
                 r_new = []
@@ -82,4 +90,5 @@ class MABIncremental(MABBase):
             s.append(r_i[0])
             r.remove(r_i[0])
 
+        logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[s]))
         return s
