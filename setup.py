@@ -76,8 +76,11 @@ setup(
         'numpy',
         'scipy',
         'scikit-learn',
+        'pandas<0.24'
         'tsfresh',
-        'GPflowOpt'],
+        'GPflow==0.5.0'
+        'GPflowOpt'
+        'ipywidgets'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
@@ -88,7 +91,8 @@ setup(
         'test': ['coverage'],
     },
 
-    dependency_links=['https://github.com/GPflow/GPflowOpt/archive/v0.1.0.tar.gz#egg=GPflowOpt-0.1.0'],
+    dependency_links=['https://github.com/GPflow/GPflow/archive/0.5.0.tar.gz#egg=GPflow-0.5.0',
+                      'https://github.com/GPflow/GPflowOpt/archive/v0.1.0.tar.gz#egg=GPflowOpt-0.1.0'],
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
