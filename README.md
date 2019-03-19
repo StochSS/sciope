@@ -17,17 +17,17 @@ The (M)odeling, (I)inference and (O)ptimization toolbox is a Python 2 package fo
 
 ### How do I get set up? ###
 
-* Pip support coming up
+* pip install . --process-dependency-links
 * Configuration
 * Dependencies
-	scikit-learn, SciPy, numpy, gpflowopt
+	scikit-learn, SciPy, numpy, gpflowopt, ipywidgets, tsfresh, pandas
 * How to run tests
 	test suite coming up
 
 ### Contribution guidelines ###
 
 * Writing tests
-	ToDo
+	Ongoing
 * Code review
 	ToDo
 * Other guidelines

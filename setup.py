@@ -76,7 +76,7 @@ setup(
         'numpy',
         'scipy',
         'scikit-learn',
-        'pandas<0.24'
+        'pandas<0.24',
         'tsfresh',
         'GPflow==0.5.0',
         'GPflowOpt',
