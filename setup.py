@@ -88,7 +88,7 @@ setup(
         'test': ['coverage'],
     },
 
-    dependency_links=['https://github.com/GPflow/GPflowOpt/tarball/master'],
+    dependency_links=['https://github.com/GPflow/GPflowOpt/archive/v0.1.0.tar.gz#egg=GPflowOpt-0.1.0'],
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
