@@ -1,8 +1,54 @@
 from mio.utilities.summarystats.summary_base import SummaryBase
 from mio.features.feature_extraction import generate_tsfresh_features
 from mio.designs.random_sampling import RandomSampling
+from mio.visualize import interactive_scatter
 from tsfresh.feature_extraction import MinimalFCParameters
 from mio.data.dataset import DataSet
+import numpy as np
+
+def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
+        n_iter = 1000, lr = 200, rs= None):
+
+    tsne = manifold.TSNE(n_components=nr_components, init=init,
+            perplexity=plex, random_state=rs, n_iter=n_iter, learning_rate=lr)
+
+    return tsne.fit_transform(data), tsne
+
+def _do_pca(data, nr_components = 2, rs = None):
+    pca = PCA(n_components=nr_components , random_state = rs)
+    return pca.fit_transform(data), pca
+
+def _do_kpca(data , nr_components  = 2 , kernel  = 'rbf', gamma = 0.01,
+        degree = 3):
+
+    kpca = kPCA(n_components = nr_components, kernel = kernel, gamma = gamma,
+            degree = degree)
+    return kpca.fit_transform(data), kpca
+
+def _do_umap(data, nr_components = 2, nr_neighbors = 10, min_dist = 0.1):
+    rd = umap.UMAP(n_components = nr_components, n_neighbors = nr_neighbors,
+            min_dist = min_dist)
+    return rd.fit_transform(data), rd
+
+def _validate_dr_method(method):
+        allowed_methods = ["umap", "t_sne", "pca", "kpca"]
+        if method not in allowed_methods:
+            raise ValueError("Implemented dimension reduction methods are: {0} "
+                             " got dr_method={1}".format(allowed_methods,
+                                                        method))
+
+def _do_dimension_reduction(X, method, **kwargs):
+    _validate_dr_method(method)
+    if method == 'umap':
+        return _do_umap(X, kwargs)
+    if method == 't_sne':
+        return _do_tsne(X, kwargs)
+    if method == 'pca':
+        return _do_pca(X, kwargs)
+    else:
+        return _do_kpca(X, kwargs)
+    
+
 
 class SummariesTSFRESH(SummaryBase):
     """
@@ -64,9 +110,33 @@ class StochMET():
             n_points = self.batch_size
         
         params = self.sampling.generate(n_points)
-        trajectories = simulator(params)
+        trajectories = simulator(params) #TODO: how to handle explosions/events fired 
 
-        features = summaries.compute(trajectories)
+        features_values = summaries.compute(trajectories)
+
+        features_values = np.array(features_values)
+        if len(features_values.shape) > 1:
+            features_comb = features_values[0]
+            for i in range(1, len(features_values)):
+                features_comb = np.concatenate((features_comb,features_values[i])), axis=1)
+
+
+        self.data.add_points(params, time_series=trajectories, summary_stats=features_comb)
+    
+    def explore(self, dr_method='umap', scaling=None, **kwargs):
+        if scaling is not None:
+            assert hasattr(scaling, 'fit_transform'), "%r.fit_transform does not exist" % scaling
+            data = scaling.fit_transform(self.data.s)
+        else:
+            data = self.data.s
+        
+        data, model = _do_dimension_reduction(data, dr_method, kwargs)
+        interactive_scatter(data, self.data) #TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
+        
+
+
+
+
 
 
         
