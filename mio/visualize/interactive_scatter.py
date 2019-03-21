@@ -50,9 +50,10 @@ def interative_scatter(scatter_data, data_class=None):
     https://medium.com/@gorjanz/data-analysis-in-python-interactive-scatterplot-with-matplotlib-6bb8ad2f1f18
 
          """
-    assert scatter_data.shape[0] == data_class.y.shape[0], "scatter_data and data contained in DataSet class need the same number of points"
+    assert hasattr(data_class, 'user_labels'), "For interative exploration to work the DataSet class need attribute 'user_labels'" 
+    assert scatter_data.shape[0] == data_class.user_labels.shape[0], "scatter_data and data contained in DataSet class need the same number of points"
     
-    instances_colors = data_class.y
+    instances_colors = data_class.user_labels
     axis_values_x = scatter_data[:,0]
     axis_values_y = scatter_data[:,1]
     user_labels = UserLabel()
@@ -88,7 +89,7 @@ def interative_scatter(scatter_data, data_class=None):
         # if the dots are to close one to another, a list of dots clicked is returned by the matplotlib library
         for i in ind:
             # step 3: take the label for the corresponding instance of the data
-            label = data_class.y[i]
+            label = instances_colors[i]
             user_labels.add(i)
 
             # step 4: log it for debugging purposes
@@ -126,6 +127,7 @@ def interative_scatter(scatter_data, data_class=None):
     button_clear_all = widgets.Button(description='Clear all')
     display(button_clear_all)
 
+
     # define the "clear all" behaviour
     def onclick(event):
         # step 1: we clear all artist object of the scatter plot
@@ -138,7 +140,7 @@ def interative_scatter(scatter_data, data_class=None):
         user_labels.clear()
 
         # step 2: we re-populate the scatterplot only with the dots not the labels
-        draw_scatterplot(ax, axis_values_x, axis_values_y, data_class.y)
+        draw_scatterplot(ax, axis_values_x, axis_values_y, instances_colors)
 
         # step 3: we force re-draw
         ax.figure.canvas.draw_idle()
@@ -149,7 +151,7 @@ def interative_scatter(scatter_data, data_class=None):
 
     # For interactive labeling of highlighted points
     def set_user_label(event):
-        data_class.y[user_labels.highlighted] = user_label_slider.value
+        instances_colors[user_labels.highlighted] = user_label_slider.value
         onclick('')
 
     user_label_slider = widgets.IntSlider(min=-1, max=10)

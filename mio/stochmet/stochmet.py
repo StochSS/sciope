@@ -1,15 +1,18 @@
 from mio.utilities.summarystats.summary_base import SummaryBase
 from mio.features.feature_extraction import generate_tsfresh_features
 from mio.designs.random_sampling import RandomSampling
-from mio.visualize import interactive_scatter
+from mio.visualize.interactive_scatter import interative_scatter
 from tsfresh.feature_extraction import MinimalFCParameters
+from sklearn.manifold import t_sne
+from sklearn.decomposition import PCA, KernelPCA
 from mio.data.dataset import DataSet
 import numpy as np
+import umap
 
 def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
         n_iter = 1000, lr = 200, rs= None):
 
-    tsne = manifold.TSNE(n_components=nr_components, init=init,
+    tsne = t_sne.TSNE(n_components=nr_components, init=init,
             perplexity=plex, random_state=rs, n_iter=n_iter, learning_rate=lr)
 
     return tsne.fit_transform(data), tsne
@@ -21,7 +24,7 @@ def _do_pca(data, nr_components = 2, rs = None):
 def _do_kpca(data , nr_components  = 2 , kernel  = 'rbf', gamma = 0.01,
         degree = 3):
 
-    kpca = kPCA(n_components = nr_components, kernel = kernel, gamma = gamma,
+    kpca = KernelPCA(n_components = nr_components, kernel = kernel, gamma = gamma,
             degree = degree)
     return kpca.fit_transform(data), kpca
 
@@ -37,18 +40,19 @@ def _validate_dr_method(method):
                              " got dr_method={1}".format(allowed_methods,
                                                         method))
 
-def _do_dimension_reduction(X, method, **kwargs):
+def _do_dimension_reduction(X, method, kwargs={}):
     _validate_dr_method(method)
     if method == 'umap':
-        return _do_umap(X, kwargs)
+        return _do_umap(X, **kwargs)
     if method == 't_sne':
-        return _do_tsne(X, kwargs)
+        return _do_tsne(X, **kwargs)
     if method == 'pca':
-        return _do_pca(X, kwargs)
+        return _do_pca(X, **kwargs)
     else:
-        return _do_kpca(X, kwargs)
+        return _do_kpca(X, **kwargs)
     
-
+class EventFired(Exception):
+    pass
 
 class SummariesTSFRESH(SummaryBase):
     """
@@ -77,17 +81,16 @@ class DataSetMET(DataSet):
 
     def __init__(self):
         name = 'stochmet'
-        super(FactorialDesign, self).__init__(name)
+        super(DataSetMET, self).__init__(name)
         self.user_labels = None
 
     def add_points(self, inputs=None, targets=None, time_series=None, summary_stats=None, user_labels=None):
-        super(DataSetMET, self).add_points(self, inputs=None, targets=None, time_series=None, summary_stats=None)
-
+        super(DataSetMET, self).add_points(inputs, targets, time_series, summary_stats)
         if user_labels is not None:
-			if self.user_labels is not None:
-				self.user_labels = np.concatenate((self.user_labels, user_labels), axis=0)
-			else:
-				self.user_labels = user_labels
+            if self.user_labels is not None:
+                self.user_labels = np.concatenate((self.user_labels, user_labels), axis=0)
+            else:
+                self.user_labels = user_labels
 
 class StochMET():
 
@@ -105,33 +108,53 @@ class StochMET():
         self.data = DataSetMET()
         self.summaries = SummariesTSFRESH()
 
-    def compute(self, n_points=None):
+    def compute(self, n_points=None, kwargs=None):
         if n_points is None:
             n_points = self.batch_size
         
+        # Draw parameter points 
         params = self.sampling.generate(n_points)
-        trajectories = simulator(params) #TODO: how to handle explosions/events fired 
+        
+        # Containers for simulation output
+        res_trajectories = []
+        res_params = []
 
-        features_values = summaries.compute(trajectories)
+        # Start simulations
+        for p in params:
+            try:
+                trajectories, param = self.simulator(p, **kwargs)
+            except EventFired:
+                continue #TODO: generalize
+            res_trajectories.append(trajectories)
+            res_params.append(param)
 
+        res_trajectories = np.array(res_trajectories)
+        res_params = np.array(res_params)
+        
+        # Compute features of result
+        features_values = self.summaries.compute(res_trajectories)
+
+        # Aggregate features from several species
         features_values = np.array(features_values)
         if len(features_values.shape) > 1:
             features_comb = features_values[0]
             for i in range(1, len(features_values)):
-                features_comb = np.concatenate((features_comb,features_values[i])), axis=1)
+                features_comb = np.concatenate((features_comb,features_values[i]), axis=1)
 
-
-        self.data.add_points(params, time_series=trajectories, summary_stats=features_comb)
+        # Add data to DataSetMET container
+        labels = np.ones(len(res_params))*-1 #unlabeled instances as -1 
+        self.data.add_points(inputs=res_params, time_series=res_trajectories, 
+                                summary_stats=features_comb, user_labels=labels)
     
-    def explore(self, dr_method='umap', scaling=None, **kwargs):
+    def explore(self, dr_method='umap', scaling=None, kwargs={}):
         if scaling is not None:
             assert hasattr(scaling, 'fit_transform'), "%r.fit_transform does not exist" % scaling
             data = scaling.fit_transform(self.data.s)
         else:
             data = self.data.s
         
-        data, model = _do_dimension_reduction(data, dr_method, kwargs)
-        interactive_scatter(data, self.data) #TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
+        data, model = _do_dimension_reduction(data, dr_method, **kwargs)
+        interative_scatter(data, self.data) #TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
         
 
 
