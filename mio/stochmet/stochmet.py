@@ -4,10 +4,16 @@ from mio.designs.random_sampling import RandomSampling
 from mio.visualize.interactive_scatter import interative_scatter
 from tsfresh.feature_extraction import MinimalFCParameters
 from sklearn.manifold import t_sne
+from dask.distributed import Client
 from sklearn.decomposition import PCA, KernelPCA
 from mio.data.dataset import DataSet
+from toolz import partition_all
 import numpy as np
 import umap
+
+
+def _wrapper(chunks, **kwargs):
+        return [(x, **kwargs) for x in chunks]
 
 def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
         n_iter = 1000, lr = 200, rs= None):
@@ -146,6 +152,23 @@ class StochMET():
         self.data.add_points(inputs=res_params, time_series=res_trajectories, 
                                 summary_stats=features_comb, user_labels=labels)
     
+    def distribute(self, adress=None, n_points=10, chunk_size=10, **kwargs):
+        if not hasattr(self, 'client'):
+            if adress is not None:
+                self.client = Client(address=adress)
+            else:
+                self.client = Client()
+        
+        # Draw parameter points 
+        params = self.sampling.generate(n_points)
+        params_chunks = partition_all(chunk_size, params)
+        iterators = _wrapper(params, **kwargs)
+        print(iterators)
+        return self.client.map(self.simulator, *iterators)
+
+
+
+    
     def explore(self, dr_method='umap', scaling=None, kwargs={}):
         if scaling is not None:
             assert hasattr(scaling, 'fit_transform'), "%r.fit_transform does not exist" % scaling
@@ -156,7 +179,6 @@ class StochMET():
         data, model = _do_dimension_reduction(data, dr_method, **kwargs)
         interative_scatter(data, self.data) #TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
         
-
 
 
 
