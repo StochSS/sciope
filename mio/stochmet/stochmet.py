@@ -12,8 +12,7 @@ import numpy as np
 import umap
 
 
-def _wrapper(chunks, **kwargs):
-        return [(x, **kwargs) for x in chunks]
+
 
 def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
         n_iter = 1000, lr = 200, rs= None):
@@ -158,14 +157,12 @@ class StochMET():
                 self.client = Client(address=adress)
             else:
                 self.client = Client()
-        
+
         # Draw parameter points 
         params = self.sampling.generate(n_points)
         params_chunks = partition_all(chunk_size, params)
-        iterators = _wrapper(params, **kwargs)
-        print(iterators)
-        return self.client.map(self.simulator, *iterators)
-
+        f = self.client.map(self.simulator, params_chunks)
+        return f
 
 
     
