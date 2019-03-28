@@ -56,8 +56,6 @@ def _do_dimension_reduction(X, method, kwargs={}):
     else:
         return _do_kpca(X, **kwargs)
     
-class EventFired(Exception):
-    pass
 
 class SummariesTSFRESH(SummaryBase):
     """
@@ -69,7 +67,7 @@ class SummariesTSFRESH(SummaryBase):
         self.features = None
         super(SummariesTSFRESH, self).__init__(self.name)
 
-    def compute(self, data, features=MinimalFCParameters()):
+    def compute(self, data, features=MinimalFCParameters(), dask_client=None, chunk_size=1):
         self.features = features
         num_species = data.shape[2]
         num_points = data.shape[0]
@@ -77,7 +75,8 @@ class SummariesTSFRESH(SummaryBase):
         #here we aggregate features from several species into one feature vector
         feature_values = []
         for i in range(num_species):
-            feature_values.append(generate_tsfresh_features(data[:,:,i], features))
+            feature_values.append(generate_tsfresh_features(data[:,:,i], features, 
+                                    dask_client, chunk_size))
         
         # ToDo: Check for NaNs
         return feature_values
@@ -151,19 +150,29 @@ class StochMET():
         self.data.add_points(inputs=res_params, time_series=res_trajectories, 
                                 summary_stats=features_comb, user_labels=labels)
     
-    def distribute(self, adress=None, n_points=10, chunk_size=10, **kwargs):
-        if not hasattr(self, 'client'):
-            if adress is not None:
-                self.client = Client(address=adress)
-            else:
-                self.client = Client()
-
+    def distribute(self, n_points=10, dask_client=None, chunk_size=10, only_features=False):
+        
         # Draw parameter points 
         params = self.sampling.generate(n_points)
         params_chunks = partition_all(chunk_size, params)
-        f = self.client.map(self.simulator, params_chunks)
-        return f
+        
+        f = dask_client.map(self.simulator, params_chunks)
+        if only_features:
+            f_features = generate_tsfresh_features(f, features=self.features, 
+                                dask_client=dask_client, chunk_size=chunk_size)
 
+        else:
+            print("hej")
+            #res_ts = dask_client.gather(f)
+            #f_features = generate_tsfresh_features(res_ts, features=self.features, 
+                                #dask_client=dask_client, chunk_size=chunk_size)
+
+        #res_features = dask_client.gather(f_features)
+        if only_features:
+            return list(res_features)
+        else:
+           #return list(res_features), list(res_ts)
+            return f
 
     
     def explore(self, dr_method='umap', scaling=None, kwargs={}):
