@@ -8,8 +8,11 @@ from dask.distributed import Client
 from sklearn.decomposition import PCA, KernelPCA
 from mio.data.dataset import DataSet
 from toolz import partition_all
+import dask.array as da
+from dask import delayed
 import numpy as np
 import umap
+from itertools import combinations
 
 
 
@@ -80,6 +83,26 @@ class SummariesTSFRESH(SummaryBase):
         
         # ToDo: Check for NaNs
         return feature_values
+
+    def distribute(self, p, n_species):
+            f = MinimalFCParameters()
+            f.pop('length')
+            #tot_features = []
+            for s in range(n_species):
+                trajectory = [p[:,s]]
+                yield generate_tsfresh_features(data=trajectory, features=f)[0]
+            
+            for s in combinations(range(n_species), 2):
+                x = p[:,s[0]]
+                y = p[:,s[1]]
+                yield [np.corrcoef(x,y)[0,1]]
+   
+    def reduce(self, seq):
+            tot = []
+            for s in seq:
+                for f in s:
+                    tot.append(f)
+            return tot
 
 class DataSetMET(DataSet):
 
@@ -162,17 +185,33 @@ class StochMET():
                                 dask_client=dask_client, chunk_size=chunk_size)
 
         else:
-            print("hej")
-            #res_ts = dask_client.gather(f)
-            #f_features = generate_tsfresh_features(res_ts, features=self.features, 
-                                #dask_client=dask_client, chunk_size=chunk_size)
+            res_ts = dask_client.gather(f)
+            f_features = generate_tsfresh_features(res_ts, features=self.features, 
+                                dask_client=dask_client, chunk_size=chunk_size)
 
-        #res_features = dask_client.gather(f_features)
+        res_features = dask_client.gather(f_features)
         if only_features:
             return list(res_features)
         else:
-           #return list(res_features), list(res_ts)
-            return f
+            return list(res_features), list(res_ts)
+
+    def delay(self, n_points, n_species):
+
+        da_params = da.asarray(self.sampling.generate(n_points))
+        simulator = delayed(self.simulator)
+        features = delayed(self.summaries.distribute)
+        reducer = delayed(self.summaries.reduce)
+        
+        processed = [simulator(g) for g in da_params]
+        all_features = [features(p, n_species) for p in processed]
+
+        reduced = [reducer(x) for x in all_features]
+        result = delayed(reduced)
+
+        return result.compute()
+
+
+
 
     
     def explore(self, dr_method='umap', scaling=None, kwargs={}):
