@@ -59,6 +59,8 @@ def _do_dimension_reduction(X, method, kwargs={}):
     else:
         return _do_kpca(X, **kwargs)
     
+class EventFired(Exception):
+    pass
 
 class SummariesTSFRESH(SummaryBase):
     """
@@ -84,25 +86,22 @@ class SummariesTSFRESH(SummaryBase):
         # ToDo: Check for NaNs
         return feature_values
 
-    def distribute(self, p, n_species):
+    def distribute(self, p):
             f = MinimalFCParameters()
             f.pop('length')
             #tot_features = []
-            for s in range(n_species):
-                trajectory = [p[:,s]]
-                yield generate_tsfresh_features(data=trajectory, features=f)[0]
-            
-            for s in combinations(range(n_species), 2):
-                x = p[:,s[0]]
-                y = p[:,s[1]]
-                yield [np.corrcoef(x,y)[0,1]]
-   
-    def reduce(self, seq):
-            tot = []
-            for s in seq:
-                for f in s:
-                    tot.append(f)
-            return tot
+            #for s in range(n_species):
+               # trajectory = [p[:,s]]
+               # yield generate_tsfresh_features(data=trajectory, features=f)[0]
+            return list(generate_tsfresh_features(data=[p], features=f)[0])
+            #for s in combinations(range(n_species), 2):
+            #    x = p[:,s[0]]
+            #    y = p[:,s[1]]
+            #    yield [np.corrcoef(x,y)[0,1]]
+
+    def correlation(self, x, y):
+        return [np.corrcoef(x,y)[0,1]]
+
 
 class DataSetMET(DataSet):
 
@@ -173,7 +172,7 @@ class StochMET():
         self.data.add_points(inputs=res_params, time_series=res_trajectories, 
                                 summary_stats=features_comb, user_labels=labels)
     
-    def distribute(self, n_points=10, dask_client=None, chunk_size=10, only_features=False):
+    def compute_futures(self, n_points=10, dask_client=None, chunk_size=10, only_features=False):
         
         # Draw parameter points 
         params = self.sampling.generate(n_points)
@@ -195,20 +194,51 @@ class StochMET():
         else:
             return list(res_features), list(res_ts)
 
-    def delay(self, n_points, n_species):
+    def compute_delay(self, n_points, n_species, join_features=True):
 
-        da_params = da.asarray(self.sampling.generate(n_points))
+        #da_params = da.asarray(self.sampling.generate(n_points))
+        sampler = delayed(self.sampling.generate) # according to best practice instead of passing a
+                                                  # dask collection to a delayed object
+        params = [sampler(1)[0] for x in range(n_points)]
+
         simulator = delayed(self.simulator)
-        features = delayed(self.summaries.distribute)
-        reducer = delayed(self.summaries.reduce)
         
-        processed = [simulator(g) for g in da_params]
-        all_features = [features(p, n_species) for p in processed]
+        features = delayed(self.summaries.distribute)
+            
+        processed = [simulator(g) for g in params]    
 
-        reduced = [reducer(x) for x in all_features]
-        result = delayed(reduced)
+        species_lst = range(n_species)
+        all_features = []
+        
+        for p in processed:
+            for s in species_lst:
+                traj = p[:,s] #get_item
+                all_features.append(features(traj))
 
-        return result.compute()
+            if hasattr(self.summaries, 'correlation'):
+                correlation = delayed(self.summaries.correlation)
+                for s in combinations(species_lst, 2):
+                    x = p[:, s[0]] #get_item
+                    y = p[:, s[1]] #get_item
+                    all_features.append(correlation(x,y))
+        
+        result = []
+        if join_features:
+            window_len = n_species + len(list(combinations(species_lst, 2)))
+            
+            @delayed
+            def join(lst):
+                joined = lst[0]
+                for item in lst[1:]:
+                    joined += item
+                return joined
+        
+            for j in range(0, len(all_features), window_len):
+                result.append(join(all_features[j:j+window_len]))
+        else:
+            result = all_features
+        
+        return result, params, processed, all_features
 
 
 
