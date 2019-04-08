@@ -8,8 +8,7 @@ from dask.distributed import Client
 from sklearn.decomposition import PCA, KernelPCA
 from mio.data.dataset import DataSet
 from toolz import partition_all
-import dask.array as da
-from dask import delayed
+from dask import persist, delayed
 import numpy as np
 import umap
 from itertools import combinations
@@ -211,7 +210,7 @@ class StochMET():
         all_features = []
         
         for p in processed:
-            for s in species_lst:
+            for s in species_lst: #try catch EventFired
                 traj = p[:,s] #get_item
                 all_features.append(features(traj))
 
@@ -238,13 +237,25 @@ class StochMET():
         else:
             result = all_features
         
-        return result, params, processed, all_features
-
-
-
-
+        #persist at workers, will run in background
+        params_res, processed_res, result_res = persist(params, processed, result)
+        #keep on workers until needed for local processing
+        self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res}
     
-    def explore(self, dr_method='umap', scaling=None, kwargs={}):
+    def explore(self, dr_method='umap', scaling=None, from_distributed=False, kwargs={}):
+        if from_distributed:
+            # collecting data from distributed RAM. TODO: "explore" should read only neccesary data 
+            for e, i in enumerate(self.futures['ts']):    
+                try:
+                    ts = np.array([i.compute()])
+                    param = np.array([self.futures['parameters'][e].compute()])
+                    feature = np.array([self.futures['features'][e].compute()])
+                    self.data.add_points(inputs=param, time_series=ts, 
+                                summary_stats=feature, user_labels=np.array([-1]))
+                except EventFired:
+                    continue
+            del self.futures
+
         if scaling is not None:
             assert hasattr(scaling, 'fit_transform'), "%r.fit_transform does not exist" % scaling
             data = scaling.fit_transform(self.data.s)
