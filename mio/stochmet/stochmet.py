@@ -244,7 +244,8 @@ class StochMET():
     
     def explore(self, dr_method='umap', scaling=None, from_distributed=False, kwargs={}):
         if from_distributed:
-            # collecting data from distributed RAM. TODO: "explore" should read only neccesary data 
+            # collecting data from distributed RAM. TODO: "explore" should read only neccesary data
+            assert hasattr(self, 'futures'), "There is no data on the cluster"
             for e, i in enumerate(self.futures['ts']):    
                 try:
                     ts = np.array([i.compute()])
@@ -263,6 +264,7 @@ class StochMET():
             data = self.data.s
         
         data, model = _do_dimension_reduction(data, dr_method, **kwargs)
+        self.dr_model = model
         interative_scatter(data, self.data) #TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
         
 

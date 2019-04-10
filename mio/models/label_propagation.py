@@ -30,6 +30,33 @@ def get_label_entropies(label_distribution):
 def get_average_label_entropy(label_distribution):
     return get_label_entropies(label_distribution).sum()/label_distribution.shape[0]
 
+# taken from documentation
+class Bounds(object):
+    def __init__(self, xmax, xmin):
+        self.xmax = np.array(xmax)
+        self.xmin = np.array(xmin)
+    def __call__(self, **kwargs):
+        x = kwargs["x_new"]
+        tmax = bool(np.all(x <= self.xmax))
+        tmin = bool(np.all(x >= self.xmin))
+        return tmax and tmin
+
+#taken from Stackoverflow: https://stackoverflow.com/questions/21670080/how-to-find-global-minimum-in-python-optimization-with-bounds
+class RandomDisplacementBounds(object):
+    """random displacement with bounds"""
+    def __init__(self, xmax, xmin, stepsize=0.5):
+        self.xmin = xmin
+        self.xmax = xmax
+        self.stepsize = stepsize
+
+    def __call__(self, x):
+        """take a random step but ensure the new position is within the bounds"""
+        while True:
+            # this could be done in a much more clever way, but it will work for example purposes
+            xnew = x + np.random.uniform(-self.stepsize, self.stepsize, np.shape(x))
+            if np.all(xnew < self.xmax) and np.all(xnew > self.xmin):
+                break
+        return xnew
 
 
 # Class definition
@@ -46,13 +73,17 @@ class LPModel(ModelBase):
         self.learning_rate = learning_rate
 
     # Tune parameters of the model
-    def optimize(self, min_, max_, niter=10):
+    def optimize(self, min_, max_, niter=10, stepsize = 0.1):
+        step_routine = RandomDisplacementBounds(xmax = max_, xmin = min_, stepsize=stepsize)
+        global_bounds = Bounds(xmax = max_, xmin = min_)
         start = np.random.uniform(min_, max_)
+
+        #minimizer_bounds = [(low, high) for low, high in zip(min_, max_)]
         minimizer_bounds = [(min_, max_)]
 
         minimizer_kwargs = dict(method = "L-BFGS-B", bounds = minimizer_bounds)
         res = basinhopping(self.objective, start, minimizer_kwargs=minimizer_kwargs,
-                   niter=niter, disp = False)
+                   niter=niter, accept_test=global_bounds, take_step = step_routine, disp = True)
         return res.x
 
     def objective(self, x):
@@ -60,16 +91,16 @@ class LPModel(ModelBase):
                 gamma=x)
         model.fit(self.x, self.y)
         label_prob = model.label_distributions_
-        return get_average_label_entropy(label_prob) + self.learning_rate*x**2
+        return get_average_label_entropy(label_prob) + self.learning_rate*x**2 
 
     # train the label propagation model given the data
-    def train(self, inputs, targets, min_=0.01, max_=30):
+    def train(self, inputs, targets, min_=0.01, max_=30, niter=10, stepsize=0.1):
         # Scale the training data
         self.x = inputs
         self.y = targets
 
         # Tune gamma in RBF using basinhopping 
-        self.gamma = self.optimize(min_=0.01, max_=30)[0]
+        self.gamma = self.optimize(min_, max_, niter, stepsize)[0]
 
         # Propogate labels
         self.model = label_propagation.LabelSpreading(kernel=self.kernel, alpha=self.alpha, 
