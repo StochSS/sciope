@@ -88,15 +88,8 @@ class SummariesTSFRESH(SummaryBase):
     def distribute(self, p):
             f = MinimalFCParameters()
             f.pop('length')
-            #tot_features = []
-            #for s in range(n_species):
-               # trajectory = [p[:,s]]
-               # yield generate_tsfresh_features(data=trajectory, features=f)[0]
             return list(generate_tsfresh_features(data=[p], features=f)[0])
-            #for s in combinations(range(n_species), 2):
-            #    x = p[:,s[0]]
-            #    y = p[:,s[1]]
-            #    yield [np.corrcoef(x,y)[0,1]]
+           
 
     def correlation(self, x, y):
         return [np.corrcoef(x,y)[0,1]]
@@ -193,7 +186,7 @@ class StochMET():
         else:
             return list(res_features), list(res_ts)
 
-    def compute_delay(self, n_points, n_species, join_features=True):
+    def compute_delay(self, n_points, n_species, join_features=True, predictor=None):
 
         #da_params = da.asarray(self.sampling.generate(n_points))
         sampler = delayed(self.sampling.generate) # according to best practice instead of passing a
@@ -237,24 +230,27 @@ class StochMET():
         else:
             result = all_features
         
-        #persist at workers, will run in background
-        params_res, processed_res, result_res = persist(params, processed, result)
-        #keep on workers until needed for local processing
-        self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res}
+        pred = []
+        if predictor is not None:
+            if callable(predictor):
+                predictor = delayed(predictor)
+                pred = [predictor(x) for x in result]
+            else:
+                raise ValueError("The predictor must be a callable function")
+            #persist at workers, will run in background
+            params_res, processed_res, result_res, pred_res = persist(params, processed, result, pred)
+            #keep on workers until needed for local processing
+            self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res,
+                            'prediction': pred_res}
+        else:
+            #TODO: avoid redundancy...
+            params_res, processed_res, result_res = persist(params, processed, result)
+            self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res} 
     
-    def explore(self, dr_method='umap', scaling=None, from_distributed=False, kwargs={}):
+    def explore(self, dr_method='umap', scaling=None, from_distributed=False, filter_func=None, kwargs={}):
         if from_distributed:
             # collecting data from distributed RAM. TODO: "explore" should read only neccesary data
-            assert hasattr(self, 'futures'), "There is no data on the cluster"
-            for e, i in enumerate(self.futures['ts']):    
-                try:
-                    ts = np.array([i.compute()])
-                    param = np.array([self.futures['parameters'][e].compute()])
-                    feature = np.array([self.futures['features'][e].compute()])
-                    self.data.add_points(inputs=param, time_series=ts, 
-                                summary_stats=feature, user_labels=np.array([-1]))
-                except EventFired:
-                    continue
+            self._collect_persisted(filter_func)
             del self.futures
 
         if scaling is not None:
@@ -263,12 +259,39 @@ class StochMET():
         else:
             data = self.data.s
         
+        data.astype(np.float32)
         data, model = _do_dimension_reduction(data, dr_method, **kwargs)
         self.dr_model = model
         interative_scatter(data, self.data) #TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
         
 
+    def _collect_persisted(self, filter_func):
+        assert hasattr(self, 'futures'), "There is no data on the cluster"
+        use_filter = False
+        if filter_func is not None:
+            if callable(filter_func):
+                use_filter = True
+            else:
+                raise ValueError("The filter must be a callable function returning"
+                                "True of False")
+        for e, i in enumerate(self.futures['ts']):    
+            try:
+                ts = np.array([i.compute()])
+                if 'prediction' in self.futures.keys():
+                    pred = self.futures['prediction'][e].compute()
+                    if use_filter:
+                        if filter_func(pred):
+                            self.data.add_points(targets=np.array([pred]))
+                        else:
+                            continue
 
+                param = np.array([self.futures['parameters'][e].compute()])
+                feature = np.array([self.futures['features'][e].compute()])
+               
+                self.data.add_points(inputs=param, time_series=ts, 
+                            summary_stats=feature, user_labels=np.array([-1]))
+            except EventFired:
+                continue
 
 
 
