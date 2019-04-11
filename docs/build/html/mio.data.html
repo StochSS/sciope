@@ -1,0 +1,170 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>mio.data package &#8212; mio 0.2.0 alpha documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="mio-data-package">
+<h1>mio.data package<a class="headerlink" href="#mio-data-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mio.data.dataset">
+<span id="mio-data-dataset-module"></span><h2>mio.data.dataset module<a class="headerlink" href="#module-mio.data.dataset" title="Permalink to this headline">¶</a></h2>
+<p>Dataset Class</p>
+<dl class="class">
+<dt id="mio.data.dataset.DataSet">
+<em class="property">class </em><code class="descclassname">mio.data.dataset.</code><code class="descname">DataSet</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/data/dataset.html#DataSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.data.dataset.DataSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Class for defining a dataset for a modeling/optimization/inference run</p>
+<p>Properties/variables:
+* x                                                     (inputs)
+* y                                                     (targets)
+* ts                                            (time series)
+* s                                             (summary statistics)
+* outlier_column_indices        (columns containing outliers)
+* size
+* configurations                        (OrderedDict with relavant information)</p>
+<p>Methods:
+* impute                                        (treat missing values in summary statistics data) 
+* get_size                                      (returns current size of the dataset)
+* add_points                            (add data to the dataset, data can be added incrementally)
+* process_outliers                      (check summary stats that contain outliers, and apply log scaling)</p>
+<dl class="method">
+<dt id="mio.data.dataset.DataSet.add_points">
+<code class="descname">add_points</code><span class="sig-paren">(</span><em>inputs=None</em>, <em>targets=None</em>, <em>time_series=None</em>, <em>summary_stats=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/data/dataset.html#DataSet.add_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.data.dataset.DataSet.add_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the dataset to include new points
+&#64;ToDo: Put in validation and exception handling. at the moment only support adding collections of points, i.e
+inputs = N x num_params, time_series = N x num_timepoints x num_species etc. N can be 1.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mio.data.dataset.DataSet.get_size">
+<code class="descname">get_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/data/dataset.html#DataSet.get_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.data.dataset.DataSet.get_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO:
+Returns the current number of points in the dataset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mio.data.dataset.DataSet.process_outliers">
+<code class="descname">process_outliers</code><span class="sig-paren">(</span><em>mode='zscore'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/data/dataset.html#DataSet.process_outliers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.data.dataset.DataSet.process_outliers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for outliers in calculated summary stats. Outliers are the few very high or very low values that can
+potentially introduce bias in tasks such as parameter inference. One can either remove them, replace with mean
+value, or use log scale for the statistic in question.
+&#64;ToDo: add removal and imputations as options in addition to iqr and z-score
+:param mode: either use ‘z-score’ or inter-quantile range ‘iqr’
+:return: -</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="mio.data.dataset.DataSet.sync_log_scaled_datasets">
+<em class="property">static </em><code class="descname">sync_log_scaled_datasets</code><span class="sig-paren">(</span><em>fixed_ds</em>, <em>sim_ds</em>, <em>sim_stats</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/data/dataset.html#DataSet.sync_log_scaled_datasets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.data.dataset.DataSet.sync_log_scaled_datasets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares the fixed and simulated datasets for outlier indices, and returns the union of outlier indices.
+:param fixed_ds: the fixed dataset
+:param sim_ds: the simulated dataset
+:param sim_stats: the simulated stats, subset of sim_ds
+:return: the indices of the fixed dataset that will need to be log-scaled based on outliers in both datasets</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mio.data">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mio.data" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">mio</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Prashant Singh, Fredrik Wrede, Andreas Hellander.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/mio.data.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

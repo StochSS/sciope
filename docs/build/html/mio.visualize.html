@@ -1,0 +1,149 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>mio.visualize package &#8212; mio 0.2.0 alpha documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="mio-visualize-package">
+<h1>mio.visualize package<a class="headerlink" href="#mio-visualize-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mio.visualize.interactive_scatter">
+<span id="mio-visualize-interactive-scatter-module"></span><h2>mio.visualize.interactive_scatter module<a class="headerlink" href="#module-mio.visualize.interactive_scatter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="mio.visualize.interactive_scatter.UserLabel">
+<em class="property">class </em><code class="descclassname">mio.visualize.interactive_scatter.</code><code class="descname">UserLabel</code><a class="reference internal" href="_modules/mio/visualize/interactive_scatter.html#UserLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.visualize.interactive_scatter.UserLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Class to keep track of highligted points, will be used for interactive labeling</p>
+<dl class="method">
+<dt id="mio.visualize.interactive_scatter.UserLabel.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/visualize/interactive_scatter.html#UserLabel.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.visualize.interactive_scatter.UserLabel.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mio.visualize.interactive_scatter.UserLabel.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/visualize/interactive_scatter.html#UserLabel.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.visualize.interactive_scatter.UserLabel.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="mio.visualize.interactive_scatter.annotate">
+<code class="descclassname">mio.visualize.interactive_scatter.</code><code class="descname">annotate</code><span class="sig-paren">(</span><em>axis</em>, <em>text</em>, <em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/visualize/interactive_scatter.html#annotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.visualize.interactive_scatter.annotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create annotation at position (x,y)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mio.visualize.interactive_scatter.draw_scatterplot">
+<code class="descclassname">mio.visualize.interactive_scatter.</code><code class="descname">draw_scatterplot</code><span class="sig-paren">(</span><em>axis</em>, <em>x_values</em>, <em>y_values</em>, <em>labels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/visualize/interactive_scatter.html#draw_scatterplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.visualize.interactive_scatter.draw_scatterplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot scatter with given values</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mio.visualize.interactive_scatter.interative_scatter">
+<code class="descclassname">mio.visualize.interactive_scatter.</code><code class="descname">interative_scatter</code><span class="sig-paren">(</span><em>scatter_data</em>, <em>data_class=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mio/visualize/interactive_scatter.html#interative_scatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mio.visualize.interactive_scatter.interative_scatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>interactive plot taken from:
+<a class="reference external" href="https://medium.com/&#64;gorjanz/data-analysis-in-python-interactive-scatterplot-with-matplotlib-6bb8ad2f1f18">https://medium.com/&#64;gorjanz/data-analysis-in-python-interactive-scatterplot-with-matplotlib-6bb8ad2f1f18</a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-mio.visualize">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mio.visualize" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">mio</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Prashant Singh, Fredrik Wrede, Andreas Hellander.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/mio.visualize.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
