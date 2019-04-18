@@ -126,8 +126,8 @@ class DataSetMET(DataSet):
 class StochMET():
 
     def __init__(self, simulator=None, sampling=None, features=None, default_batch_size=10):
-        assert simulator is not None, "simulator not defined" 
-        assert sampling is not None, "sampling not defined"
+        assert callable(simulator), "simulator must be a callable function" 
+        assert hasattr(sampling, 'generate'), "sampling class instance must have a callable function 'generate'"
         self.simulator = simulator
         self.sampling = sampling #TODO: check InitialDesignBase
         if features is None:
