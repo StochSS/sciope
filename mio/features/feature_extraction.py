@@ -17,9 +17,10 @@ Feature Extraction
 # Import
 from tsfresh.feature_extraction import feature_calculators
 import numpy as np
+from toolz import partition_all
 
 
-def generate_tsfresh_features(data, features=None):
+def generate_tsfresh_features(data, features=None, dask_client=None, chunk_size=10):
     """Method to generate time series features
         input: 
             data -  numpy array of shape 2D  N x T, where T is number of time points
@@ -52,7 +53,17 @@ def generate_tsfresh_features(data, features=None):
                 else:
                     res = func(x)
                     yield res
-    return np.array([list(_f(x)) for x in data])
+
+    def _wrapper(data):
+            return [list(_f(x)) for x in data]
+
+    if dask_client is None:
+        return np.array(_wrapper(data))
+    else:
+        
+        #data_chunks = partition_all(chunk_size, data)
+        futures = dask_client.map(_wrapper, data)
+        return futures
 
 
 def remove_nan_features(x, features):

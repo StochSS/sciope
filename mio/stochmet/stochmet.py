@@ -4,10 +4,17 @@ from mio.designs.random_sampling import RandomSampling
 from mio.visualize.interactive_scatter import interative_scatter
 from tsfresh.feature_extraction import MinimalFCParameters
 from sklearn.manifold import t_sne
+from dask.distributed import Client
 from sklearn.decomposition import PCA, KernelPCA
 from mio.data.dataset import DataSet
+from toolz import partition_all
+from dask import persist, delayed
 import numpy as np
 import umap
+from itertools import combinations
+
+
+
 
 def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
         n_iter = 1000, lr = 200, rs= None):
@@ -64,7 +71,7 @@ class SummariesTSFRESH(SummaryBase):
         self.features = None
         super(SummariesTSFRESH, self).__init__(self.name)
 
-    def compute(self, data, features=MinimalFCParameters()):
+    def compute(self, data, features=MinimalFCParameters(), dask_client=None, chunk_size=1):
         self.features = features
         num_species = data.shape[2]
         num_points = data.shape[0]
@@ -72,10 +79,21 @@ class SummariesTSFRESH(SummaryBase):
         #here we aggregate features from several species into one feature vector
         feature_values = []
         for i in range(num_species):
-            feature_values.append(generate_tsfresh_features(data[:,:,i], features))
+            feature_values.append(generate_tsfresh_features(data[:,:,i], features, 
+                                    dask_client, chunk_size))
         
         # ToDo: Check for NaNs
         return feature_values
+
+    def distribute(self, p):
+            f = MinimalFCParameters()
+            f.pop('length')
+            return list(generate_tsfresh_features(data=[p], features=f)[0])
+           
+
+    def correlation(self, x, y):
+        return [np.corrcoef(x,y)[0,1]]
+
 
 class DataSetMET(DataSet):
 
@@ -146,19 +164,134 @@ class StochMET():
         self.data.add_points(inputs=res_params, time_series=res_trajectories, 
                                 summary_stats=features_comb, user_labels=labels)
     
-    def explore(self, dr_method='umap', scaling=None, kwargs={}):
+    def compute_futures(self, n_points=10, dask_client=None, chunk_size=10, only_features=False):
+        
+        # Draw parameter points 
+        params = self.sampling.generate(n_points)
+        params_chunks = partition_all(chunk_size, params)
+        
+        f = dask_client.map(self.simulator, params_chunks)
+        if only_features:
+            f_features = generate_tsfresh_features(f, features=self.features, 
+                                dask_client=dask_client, chunk_size=chunk_size)
+
+        else:
+            res_ts = dask_client.gather(f)
+            f_features = generate_tsfresh_features(res_ts, features=self.features, 
+                                dask_client=dask_client, chunk_size=chunk_size)
+
+        res_features = dask_client.gather(f_features)
+        if only_features:
+            return list(res_features)
+        else:
+            return list(res_features), list(res_ts)
+
+    def compute_delay(self, n_points, n_species, join_features=True, predictor=None):
+
+        #da_params = da.asarray(self.sampling.generate(n_points))
+        sampler = delayed(self.sampling.generate) # according to best practice instead of passing a
+                                                  # dask collection to a delayed object
+        params = [sampler(1)[0] for x in range(n_points)]
+
+        simulator = delayed(self.simulator)
+        
+        features = delayed(self.summaries.distribute)
+            
+        processed = [simulator(g) for g in params]    
+
+        species_lst = range(n_species)
+        all_features = []
+        
+        for p in processed:
+            for s in species_lst: #try catch EventFired
+                traj = p[:,s] #get_item
+                all_features.append(features(traj))
+
+            if hasattr(self.summaries, 'correlation'):
+                correlation = delayed(self.summaries.correlation)
+                for s in combinations(species_lst, 2):
+                    x = p[:, s[0]] #get_item
+                    y = p[:, s[1]] #get_item
+                    all_features.append(correlation(x,y))
+        
+        result = []
+        if join_features:
+            window_len = n_species + len(list(combinations(species_lst, 2)))
+            
+            @delayed
+            def join(lst):
+                joined = lst[0]
+                for item in lst[1:]:
+                    joined += item
+                return joined
+        
+            for j in range(0, len(all_features), window_len):
+                result.append(join(all_features[j:j+window_len]))
+        else:
+            result = all_features
+        
+        pred = []
+        if predictor is not None:
+            if callable(predictor):
+                predictor = delayed(predictor)
+                pred = [predictor(x) for x in result]
+            else:
+                raise ValueError("The predictor must be a callable function")
+            #persist at workers, will run in background
+            params_res, processed_res, result_res, pred_res = persist(params, processed, result, pred)
+            #keep on workers until needed for local processing
+            self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res,
+                            'prediction': pred_res}
+        else:
+            #TODO: avoid redundancy...
+            params_res, processed_res, result_res = persist(params, processed, result)
+            self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res} 
+    
+    def explore(self, dr_method='umap', scaling=None, from_distributed=False, filter_func=None, kwargs={}):
+        if from_distributed:
+            # collecting data from distributed RAM. TODO: "explore" should read only neccesary data
+            self._collect_persisted(filter_func)
+            del self.futures
+
         if scaling is not None:
             assert hasattr(scaling, 'fit_transform'), "%r.fit_transform does not exist" % scaling
             data = scaling.fit_transform(self.data.s)
         else:
             data = self.data.s
         
+        data.astype(np.float32)
         data, model = _do_dimension_reduction(data, dr_method, **kwargs)
+        self.dr_model = model
         interative_scatter(data, self.data) #TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
         
 
+    def _collect_persisted(self, filter_func):
+        assert hasattr(self, 'futures'), "There is no data on the cluster"
+        use_filter = False
+        if filter_func is not None:
+            if callable(filter_func):
+                use_filter = True
+            else:
+                raise ValueError("The filter must be a callable function returning"
+                                "True of False")
+        for e, i in enumerate(self.futures['ts']):    
+            try:
+                ts = np.array([i.compute()])
+                if 'prediction' in self.futures.keys():
+                    pred = self.futures['prediction'][e].compute()
+                    if use_filter:
+                        if filter_func(pred):
+                            self.data.add_points(targets=np.array([pred]))
+                        else:
+                            continue
 
-
+                param = np.array([self.futures['parameters'][e].compute()])
+                feature = np.array([self.futures['features'][e].compute()])
+               
+                self.data.add_points(inputs=param, time_series=ts, 
+                            summary_stats=feature, user_labels=np.array([-1]))
+            except EventFired:
+                continue
 
 
 
