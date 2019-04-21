@@ -116,7 +116,7 @@ class SummariesTSFRESH(SummaryBase):
 
     def distribute(self, point):
         """
-        Computes features for one point (time series)
+        Computes features for one point (time series).
 
         Paramters
         ---------
@@ -133,10 +133,26 @@ class SummariesTSFRESH(SummaryBase):
         
 
     def correlation(self, x, y):
+        """
+        Computes the Pearson correlation coefficient between two time series
+        
+        Paramters
+        ---------
+
+        x : numpy.ndarray of shape n_timepoints x 1 
+
+        y: numpy.ndarray of shape n_timepoints x 1 
+
+        Returns
+        params : list with feature
+        """
         return [np.corrcoef(x,y)[0,1]]
 
 
 class DataSetMET(DataSet):
+    """ 
+    DataSet class
+    """
 
     def __init__(self):
         name = 'stochmet'
