@@ -72,19 +72,35 @@ def _do_dimension_reduction(X, method, kwargs={}):
         return _do_kpca(X, **kwargs)
     
 class EventFired(Exception):
+    """ 
+    Exception class to handle events in solvers
+    
+    """
     pass
 
 class SummariesTSFRESH(SummaryBase):
     """
-    An ensemble of different statistics from TSFRESH
+    Class for computing features/statistics on time series data.
+    An ensemble of different statistics from TSFRESH are supported.
     """
 
     def __init__(self):
         self.name = 'SummariesTSFRESH'
-        self.features = None
+        self.features = MinimalFCParameters()
+        self.features.pop('length')
         super(SummariesTSFRESH, self).__init__(self.name)
 
     def compute(self, data, features=MinimalFCParameters(), dask_client=None, chunk_size=1):
+        """ 
+        Generate features in local mode based on batches of parameter points
+
+        Parameters
+        ---------
+
+        data : numpy.ndarray of shape n_points x n_timepoints x n_species
+
+
+        """
         self.features = features
         num_species = data.shape[2]
         num_points = data.shape[0]
@@ -98,11 +114,23 @@ class SummariesTSFRESH(SummaryBase):
         # ToDo: Check for NaNs
         return feature_values
 
-    def distribute(self, p):
-            f = MinimalFCParameters()
-            f.pop('length')
-            return list(generate_tsfresh_features(data=[p], features=f)[0])
-           
+    def distribute(self, point):
+        """
+        Computes features for one point (time series)
+
+        Paramters
+        ---------
+
+        point : numpy.ndarray of shape n_timepoints x 1 
+        
+        Returns
+        params : list of features
+
+        """
+        #f = MinimalFCParameters()
+        #f.pop('length')
+        return list(generate_tsfresh_features(data=[point], features=self.features)[0])
+        
 
     def correlation(self, x, y):
         return [np.corrcoef(x,y)[0,1]]
@@ -124,6 +152,10 @@ class DataSetMET(DataSet):
                 self.user_labels = user_labels
 
 class StochMET():
+    """ 
+    Stochastic Model Exploration Toolkit (StochMET)
+
+    """
 
     def __init__(self, simulator=None, sampling=None, features=None, default_batch_size=10):
         assert callable(simulator), "simulator must be a callable function" 
