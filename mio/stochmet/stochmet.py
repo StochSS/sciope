@@ -118,7 +118,7 @@ class SummariesTSFRESH(SummaryBase):
         """
         Computes features for one point (time series).
 
-        Paramters
+        Parameters
         ---------
 
         point : numpy.ndarray of shape n_timepoints x 1 
@@ -187,67 +187,7 @@ class StochMET():
         self.data = DataSetMET()
         self.summaries = SummariesTSFRESH()
 
-    def compute(self, n_points=None, kwargs=None):
-        if n_points is None:
-            n_points = self.batch_size
-        
-        # Draw parameter points 
-        params = self.sampling.generate(n_points)
-        
-        # Containers for simulation output
-        res_trajectories = []
-        res_params = []
-
-        # Start simulations
-        for p in params:
-            try:
-                trajectories, param = self.simulator(p, **kwargs)
-            except EventFired:
-                continue #TODO: generalize
-            res_trajectories.append(trajectories)
-            res_params.append(param)
-
-        res_trajectories = np.array(res_trajectories)
-        res_params = np.array(res_params)
-        
-        # Compute features of result
-        features_values = self.summaries.compute(res_trajectories)
-
-        # Aggregate features from several species
-        features_values = np.array(features_values)
-        if len(features_values.shape) > 1:
-            features_comb = features_values[0]
-            for i in range(1, len(features_values)):
-                features_comb = np.concatenate((features_comb,features_values[i]), axis=1)
-
-        # Add data to DataSetMET container
-        labels = np.ones(len(res_params))*-1 #unlabeled instances as -1 
-        self.data.add_points(inputs=res_params, time_series=res_trajectories, 
-                                summary_stats=features_comb, user_labels=labels)
-    
-    def compute_futures(self, n_points=10, dask_client=None, chunk_size=10, only_features=False):
-        
-        # Draw parameter points 
-        params = self.sampling.generate(n_points)
-        params_chunks = partition_all(chunk_size, params)
-        
-        f = dask_client.map(self.simulator, params_chunks)
-        if only_features:
-            f_features = generate_tsfresh_features(f, features=self.features, 
-                                dask_client=dask_client, chunk_size=chunk_size)
-
-        else:
-            res_ts = dask_client.gather(f)
-            f_features = generate_tsfresh_features(res_ts, features=self.features, 
-                                dask_client=dask_client, chunk_size=chunk_size)
-
-        res_features = dask_client.gather(f_features)
-        if only_features:
-            return list(res_features)
-        else:
-            return list(res_features), list(res_ts)
-
-    def compute_delay(self, n_points, n_species, join_features=True, predictor=None):
+    def compute(self, n_points, n_species, join_features=True, predictor=None):
 
         #da_params = da.asarray(self.sampling.generate(n_points))
         sampler = delayed(self.sampling.generate) # according to best practice instead of passing a
@@ -308,6 +248,7 @@ class StochMET():
             params_res, processed_res, result_res = persist(params, processed, result)
             self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res} 
     
+
     def explore(self, dr_method='umap', scaling=None, from_distributed=False, filter_func=None, kwargs={}):
         if from_distributed:
             # collecting data from distributed RAM. TODO: "explore" should read only neccesary data
@@ -326,7 +267,7 @@ class StochMET():
         interative_scatter(data, self.data) #TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
         
 
-    def _collect_persisted(self, filter_func):
+    def _collect_persisted(self, filter_func=None):
         assert hasattr(self, 'futures'), "There is no data on the cluster"
         use_filter = False
         if filter_func is not None:
