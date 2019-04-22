@@ -90,29 +90,6 @@ class SummariesTSFRESH(SummaryBase):
         self.features.pop('length')
         super(SummariesTSFRESH, self).__init__(self.name)
 
-    def compute(self, data, features=MinimalFCParameters(), dask_client=None, chunk_size=1):
-        """ 
-        Generate features in local mode based on batches of parameter points
-
-        Parameters
-        ---------
-
-        data : numpy.ndarray of shape n_points x n_timepoints x n_species
-
-
-        """
-        self.features = features
-        num_species = data.shape[2]
-        num_points = data.shape[0]
-        
-        #here we aggregate features from several species into one feature vector
-        feature_values = []
-        for i in range(num_species):
-            feature_values.append(generate_tsfresh_features(data[:,:,i], features, 
-                                    dask_client, chunk_size))
-        
-        # ToDo: Check for NaNs
-        return feature_values
 
     def distribute(self, point):
         """
@@ -136,7 +113,7 @@ class SummariesTSFRESH(SummaryBase):
         """
         Computes the Pearson correlation coefficient between two time series
         
-        Paramters
+        Parameters
         ---------
 
         x : numpy.ndarray of shape n_timepoints x 1 
@@ -151,7 +128,7 @@ class SummariesTSFRESH(SummaryBase):
 
 class DataSetMET(DataSet):
     """ 
-    DataSet class
+    DataSet class. Container for keeping MET results in memory. 
     """
 
     def __init__(self):
