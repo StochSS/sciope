@@ -18,9 +18,7 @@ from mio.visualize.interactive_scatter import interative_scatter
 from tsfresh.feature_extraction import MinimalFCParameters
 from mio.data.dataset import DataSet
 from sklearn.manifold import t_sne
-from dask.distributed import Client
 from sklearn.decomposition import PCA, KernelPCA
-from toolz import partition_all
 from dask import persist, delayed
 import numpy as np
 import umap
