@@ -304,11 +304,11 @@ class StochMET():
                            will be raised complaining that no futures exists, set 
                            from_distributed to False in this case. 
                            TODO: future versions will simplify this
-                           
+
         filter_func : function, optional. A function that takes the output from "predictor" 
                       (if used in "compute") and filter persited data according to some 
                       criteria (e.g entropy for active learning or predicted class). 
-                      The function should return True if the creteria is statisfied for one
+                      The function should return True if the criteria is statisfied for one
                       individual point, and False otherwise.
         kwargs : TODO: parameters for dr_method 
         
@@ -331,6 +331,17 @@ class StochMET():
         
 
     def _collect_persisted(self, filter_func=None):
+        """
+        Collects data from persited storage and store it in StochMET.data
+        
+        Parameters
+        ----------
+        filter_func : function, optional. A function that takes the output from "predictor" 
+                      (if used in "compute") and filter persited data according to some 
+                      criteria (e.g entropy for active learning or predicted class). 
+                      The function should return True if the criteria is statisfied for one
+                      individual point, and False otherwise. By default None.
+        """
         assert hasattr(self, 'futures'), "There is no futures (data) to be collected"
         use_filter = False
         if filter_func is not None:
