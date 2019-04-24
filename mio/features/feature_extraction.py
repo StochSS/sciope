@@ -20,7 +20,7 @@ import numpy as np
 from toolz import partition_all
 
 
-def generate_tsfresh_features(data, features=None, dask_client=None, chunk_size=10):
+def generate_tsfresh_features(data, features=None):
     """Method to generate time series features
         input: 
             data -  numpy array of shape 2D  N x T, where T is number of time points
@@ -34,7 +34,7 @@ def generate_tsfresh_features(data, features=None, dask_client=None, chunk_size=
         """
 
     for key in features.keys():
-        assert hasattr(feature_calculators, key), "%s does not exist as a feature" % key
+        assert hasattr(feature_calculators, key), "%s does not exist as a feature supported by tsfresh" % key
 
     def _f(x):
         for function_name, parameter_list in features.items():
@@ -57,13 +57,8 @@ def generate_tsfresh_features(data, features=None, dask_client=None, chunk_size=
     def _wrapper(data):
             return [list(_f(x)) for x in data]
 
-    if dask_client is None:
-        return np.array(_wrapper(data))
-    else:
-        
-        #data_chunks = partition_all(chunk_size, data)
-        futures = dask_client.map(_wrapper, data)
-        return futures
+    return np.array(_wrapper(data))
+
 
 
 def remove_nan_features(x, features):
