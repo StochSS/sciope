@@ -17,7 +17,7 @@ Provides very basic profiling
 
 # Imports
 import time
-from mio.utilities.housekeeping import mio_logger as ml
+from sciope.utilities.housekeeping import sciope_logger as ml
 
 # Set up the logger
 logger = ml.MIOLogger().get_logger()

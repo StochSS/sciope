@@ -16,9 +16,9 @@ This summary statistic returns an ensemble of summaries calculated using time se
 """
 
 # Imports
-from mio.utilities.summarystats.summary_base import SummaryBase
+from sciope.utilities.summarystats.summary_base import SummaryBase
 import numpy as np
-from mio.features.feature_extraction import generate_tsfresh_features
+from sciope.features.feature_extraction import generate_tsfresh_features
 from tsfresh.feature_extraction import EfficientFCParameters, MinimalFCParameters
 
 

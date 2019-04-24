@@ -1,5 +1,5 @@
 from sklearn.datasets import load_iris
-from mio.models import label_propagation
+from sciope.models import label_propagation
 import numpy as np
 import pytest
 

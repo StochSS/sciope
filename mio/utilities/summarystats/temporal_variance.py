@@ -17,7 +17,7 @@ The temporal variance summary statistic
 
 # Imports
 import numpy as np
-from mio.utilities.summarystats.summary_base import SummaryBase
+from sciope.utilities.summarystats.summary_base import SummaryBase
 
 
 # Class definition: Temporal Variance Statistic

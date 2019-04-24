@@ -16,9 +16,9 @@ Michaelis-Menten Model: Approximate Bayesian Computation Test Run
 """
 
 # Imports
-from mio.utilities.priors import uniform_prior
-from mio.utilities.summarystats import burstiness as bs
-from mio.inference import abc_inference
+from sciope.utilities.priors import uniform_prior
+from sciope.utilities.summarystats import burstiness as bs
+from sciope.inference import abc_inference
 import numpy as np
 import mm
 from sklearn.metrics import mean_absolute_error

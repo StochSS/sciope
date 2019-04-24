@@ -16,14 +16,14 @@ Multi-Armed Bandit - Approximate Bayesian Computation
 """
 
 # Imports
-from mio.inference.abc_inference import ABC
+from sciope.inference.abc_inference import ABC
 import numpy as np
-from mio.data.dataset import DataSet
-from mio.utilities.distancefunctions import euclidean as euc
-from mio.utilities.summarystats import burstiness as bs
-from mio.utilities.mab import mab_direct as md
-from mio.utilities.housekeeping import mio_logger as ml
-from mio.utilities.housekeeping import mio_profiler
+from sciope.data.dataset import DataSet
+from sciope.utilities.distancefunctions import euclidean as euc
+from sciope.utilities.summarystats import burstiness as bs
+from sciope.utilities.mab import mab_direct as md
+from sciope.utilities.housekeeping import sciope_logger as ml
+from sciope.utilities.housekeeping import sciope_profiler
 
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
@@ -76,7 +76,7 @@ class BanditsABC(ABC):
 
         return normalized_distances[-1, :]
 
-    @mio_profiler.profile
+    @sciope_profiler.profile
     def rejection_sampling(self, num_samples):
         """
         * overrides rejection_sampling of ABC class *

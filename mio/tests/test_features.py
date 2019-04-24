@@ -1,4 +1,4 @@
-from mio.features.feature_extraction import generate_tsfresh_features
+from sciope.features.feature_extraction import generate_tsfresh_features
 from tsfresh.feature_extraction.settings import EfficientFCParameters
 import numpy as np
 import pytest

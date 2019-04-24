@@ -16,7 +16,7 @@ Gaussian Process Regression Surrogate Model using sklearn
 """
 
 # Imports
-from mio.models.model_base import ModelBase
+from sciope.models.model_base import ModelBase
 from sklearn.gaussian_process import GaussianProcessRegressor
 
 

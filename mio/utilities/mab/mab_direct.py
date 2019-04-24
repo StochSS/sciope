@@ -16,8 +16,8 @@ Multi-Armed Bandits: Direct Algorithm Solution Class
 """
 
 # Imports
-from mio.utilities.mab.mab_base import MABBase
-from mio.utilities.housekeeping import mio_logger as ml
+from sciope.utilities.mab.mab_base import MABBase
+from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
 import math
 

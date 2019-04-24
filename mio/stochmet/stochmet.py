@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from mio.utilities.summarystats.summary_base import SummaryBase
-from mio.features.feature_extraction import generate_tsfresh_features
-from mio.visualize.interactive_scatter import interative_scatter
+from sciope.utilities.summarystats.summary_base import SummaryBase
+from sciope.features.feature_extraction import generate_tsfresh_features
+from sciope.visualize.interactive_scatter import interative_scatter
 from tsfresh.feature_extraction import MinimalFCParameters
-from mio.data.dataset import DataSet
+from sciope.data.dataset import DataSet
 from sklearn.manifold import t_sne
 from sklearn.decomposition import PCA, KernelPCA
 from dask import persist, delayed

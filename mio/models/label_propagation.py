@@ -16,7 +16,7 @@ Semi-supervised Label Propagation Surrogate Model
 """
 
 # Imports
-from mio.models.model_base import ModelBase
+from sciope.models.model_base import ModelBase
 from sklearn.semi_supervised import label_propagation
 from scipy.optimize import basinhopping
 from scipy.stats.distributions import entropy

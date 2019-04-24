@@ -16,7 +16,7 @@ Artificial Neural Network (ANN) Regression Surrogate Model
 """
 
 # Imports
-from mio.models.model_base import ModelBase
+from sciope.models.model_base import ModelBase
 from sklearn.neural_network import MLPRegressor
 
 

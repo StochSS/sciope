@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Example: use the modules from mio to perform surrogate-based parameter inference from existing data
+Example: use the modules from sciope to perform surrogate-based parameter inference from existing data
 """
 # Imports
-import mio
+import sciope
 import numpy as np
 import mm_sim as m2s
-from mio.models import *
-from mio.designs import *
+from sciope.models import *
+from sciope.designs import *
 from sklearn.metrics import mean_squared_error
 
 # Domain
@@ -44,10 +44,10 @@ num_points = 200
 problem = obj
 
 # Instantiate
-mio_instance = mio.MIO(problem=obj, initial_design=lhd, initial_design_size=num_points, surrogate=ml_model)
+sciope_instance = sciope.MIO(problem=obj, initial_design=lhd, initial_design_size=num_points, surrogate=ml_model)
 
 # Train a surrogate
-mio_instance.model()
+sciope_instance.model()
 
 
 # Use the surrogate as an objective
@@ -56,17 +56,17 @@ mio_instance.model()
 def obj_surrogate(xt):
     n = xt.size
     x = xt.reshape(1, n)
-    return mio_instance.surrogate.predict(x)
+    return sciope_instance.surrogate.predict(x)
 
 
 # Optimize the surrogate
-mio_optimizer = mio.MIO(problem=obj_surrogate, initial_design=lhd, surrogate=ml_model)
-mio_optimizer.optimize()
+sciope_optimizer = sciope.MIO(problem=obj_surrogate, initial_design=lhd, surrogate=ml_model)
+sciope_optimizer.optimize()
 
 # Sanity check to verify that the model is accurate enough
 rnds = random_sampling.RandomSampling(dmin, dmax)
 xtest = rnds.generate(100)
 ytest = obj(xtest)
-ypredicted = mio_instance.surrogate.predict(xtest)
+ypredicted = sciope_instance.surrogate.predict(xtest)
 mse_svm = mean_squared_error(ytest, ypredicted)
 print('Mean Squared Error on 100 random test points = {0}'.format(mse_svm))

@@ -16,12 +16,12 @@ Approximate Bayesian Computation
 """
 
 # Imports
-from mio.inference.inference_base import InferenceBase
-from mio.utilities.distancefunctions import euclidean as euc
-from mio.utilities.summarystats import burstiness as bs
-from mio.utilities.housekeeping import mio_logger as ml
-from mio.utilities.housekeeping import mio_profiler
-from mio.data.dataset import DataSet
+from sciope.inference.inference_base import InferenceBase
+from sciope.utilities.distancefunctions import euclidean as euc
+from sciope.utilities.summarystats import burstiness as bs
+from sciope.utilities.housekeeping import sciope_logger as ml
+from sciope.utilities.housekeeping import sciope_profiler
+from sciope.data.dataset import DataSet
 import multiprocessing as mp
 import numpy as np
 
@@ -80,7 +80,7 @@ class ABC(InferenceBase):
 
         return normalized_distances[-1, :]
 
-    @mio_profiler.profile
+    @sciope_profiler.profile
     def rejection_sampling(self, num_samples):
         """
         Perform ABC inference according to initialized configuration.

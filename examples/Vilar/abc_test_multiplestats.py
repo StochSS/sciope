@@ -16,13 +16,13 @@ The Vilar Model: Multi-Armed Bandits based Approximate Bayesian Computation Test
 """
 
 # Imports
-from mio.utilities.priors import uniform_prior
-from mio.inference import abc_inference
+from sciope.utilities.priors import uniform_prior
+from sciope.inference import abc_inference
 import summaries_ensemble as se
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
-from mio.utilities.distancefunctions import naive_squared as ns
+from sciope.utilities.distancefunctions import naive_squared as ns
 
 # Load data
 data = np.loadtxt("datasets/vilar_dataset_specieA_100trajs_150time.dat", delimiter=",")

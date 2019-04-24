@@ -16,13 +16,13 @@ This summary statistic returns an ensemble of summaries calculated using existin
 """
 
 # Imports
-from mio.utilities.summarystats.summary_base import SummaryBase
+from sciope.utilities.summarystats.summary_base import SummaryBase
 import numpy as np
-from mio.utilities.summarystats import burstiness as bs
-from mio.utilities.summarystats import global_max as mx
-from mio.utilities.summarystats import global_min as mn
-from mio.utilities.summarystats import temporal_mean as tm
-from mio.utilities.summarystats import temporal_variance as tv
+from sciope.utilities.summarystats import burstiness as bs
+from sciope.utilities.summarystats import global_max as mx
+from sciope.utilities.summarystats import global_min as mn
+from sciope.utilities.summarystats import temporal_mean as tm
+from sciope.utilities.summarystats import temporal_variance as tv
 
 
 # Class definition: SummariesEnsemble

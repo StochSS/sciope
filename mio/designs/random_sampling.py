@@ -16,8 +16,8 @@ Random Sampling Initial Design
 """
 
 # Imports
-from mio.designs.initial_design_base import InitialDesignBase
-from mio.utilities.housekeeping import mio_logger as ml
+from sciope.designs.initial_design_base import InitialDesignBase
+from sciope.utilities.housekeeping import sciope_logger as ml
 import gpflowopt
 
 # Set up the logger

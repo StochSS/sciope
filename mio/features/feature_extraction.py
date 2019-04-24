@@ -17,7 +17,6 @@ Feature Extraction
 # Import
 from tsfresh.feature_extraction import feature_calculators
 import numpy as np
-from toolz import partition_all
 
 
 def generate_tsfresh_features(data, features=None):

@@ -17,9 +17,9 @@ Ranks monte-carlo samples such that minimum distance between them is maximized
 """
 
 # Imports
-from mio.sampling.sampling_base import SamplingBase
+from sciope.sampling.sampling_base import SamplingBase
 from scipy.spatial import distance_matrix
-from mio.utilities.housekeeping import mio_logger as ml
+from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
 
 # Set up the logger

@@ -18,7 +18,7 @@ The 'Burstiness' summary statistic
 # Imports
 import numpy as np
 import math as mt
-from mio.utilities.summarystats.summary_base import SummaryBase
+from sciope.utilities.summarystats.summary_base import SummaryBase
 
 
 # Class definition: Burstiness Statistic

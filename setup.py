@@ -1,4 +1,4 @@
-"""A setuptools based setup module for mio.
+"""A setuptools based setup module for sciope.
 See:
 http://hellanderlab.research.it.uu.se
 """
@@ -16,14 +16,14 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='mio',
+    name='sciope',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
     version='0.2',
 
-    description='The mio toolbox for surrogate modeling, likelihood-free parameter inference and black-box optimization.',
+    description='The sciope toolbox for surrogate modeling, likelihood-free parameter inference and black-box optimization.',
     long_description=long_description,
 
     # The project's main homepage.

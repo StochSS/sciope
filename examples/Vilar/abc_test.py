@@ -16,9 +16,9 @@ The Vilar Model: Approximate Bayesian Computation Test Run
 """
 
 # Imports
-from mio.utilities.priors import uniform_prior
-from mio.inference import abc_inference
-from mio.utilities.summarystats import burstiness as bs
+from sciope.utilities.priors import uniform_prior
+from sciope.inference import abc_inference
+from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
