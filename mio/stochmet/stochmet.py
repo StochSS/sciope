@@ -190,16 +190,16 @@ class StochMET():
         assert callable(simulator), "simulator must be a callable function" 
         assert hasattr(sampler, 'generate'), "sampling class instance must have a callable function 'generate'"
         self.simulator = simulator
-        self.sampling = sampler #TODO: check InitialDesignBase
+        self.sampling = sampler 
+        self.batch_size = default_batch_size
+        self.data = DataSetMET()
+        self.summaries = SummariesTSFRESH()
         if features is None:
             self.features = MinimalFCParameters()
             self.features.pop('length')
         else:
             self.features = features #TODO: check supported format
-        
-        self.batch_size = default_batch_size
-        self.data = DataSetMET()
-        self.summaries = SummariesTSFRESH()
+        self.summaries.features = self.features
 
     def compute(self, n_species, n_points=None, join_features=True, predictor=None):
         """
@@ -212,7 +212,7 @@ class StochMET():
                     species with index in the list range(n_species) based on the output from
                     simulator with shape (n_timepoints, n_species). If array-like, explicitly
                     set which indices to compute features on.
-                    TODO: add support for array-like
+                    
 
         n_points : int, optional. The batch size of the sweep. Defaults to default_batch_size.
         join_features : boolean. Wheather features of each species should be joined into a single
@@ -235,25 +235,26 @@ class StochMET():
         features = delayed(self.summaries.distribute)
             
         processed = [simulator(g) for g in params]    
-
-        species_lst = range(n_species) #TODO: add support for array-like n_species
+        
+        if type(n_species) is int:
+            n_species = range(n_species)
         all_features = []
         
         for p in processed:
-            for s in species_lst: #try catch EventFired
+            for s in n_species: #try catch EventFired
                 traj = p[:,s] #get_item
                 all_features.append(features(traj))
 
             if hasattr(self.summaries, 'correlation'):
                 correlation = delayed(self.summaries.correlation)
-                for s in combinations(species_lst, 2):
+                for s in combinations(n_species, 2):
                     x = p[:, s[0]] #get_item
                     y = p[:, s[1]] #get_item
                     all_features.append(correlation(x,y))
         
         result = []
         if join_features:
-            window_len = n_species + len(list(combinations(species_lst, 2)))
+            window_len = len(n_species) + len(list(combinations(n_species, 2)))
             
             @delayed
             def join(lst):
