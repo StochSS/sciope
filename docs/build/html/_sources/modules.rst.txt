@@ -1,7 +1,7 @@
-mio
+sciope
 ===
 
 .. toctree::
    :maxdepth: 4
 
-   mio
+   sciope

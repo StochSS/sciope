@@ -21,7 +21,7 @@ exploration by large-scale parameter sweeps.
 	- interactive labeling of paramater points in feature space according to the users preferences over the diversity of model behaviors
 	- supports semi-supervised learning and downstream classifiers
 	
-* Version 0.1
+* Version 0.2
 
 ### How do I get set up? ###
 
