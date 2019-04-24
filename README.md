@@ -1,8 +1,10 @@
 # README #
 
-The (M)odeling, (I)inference and (O)ptimization toolbox is a Python 2 package for performing model-assisted inference and optimization.
+Scalable inference, optimization and parameter exploration 
+is a Python 3 package for performing model-assisted inference and model
+exploration by large-scale parameter sweeps.
 
-### What can the MIO toolbox do? ###
+### What can the sciope toolbox do? ###
 
 * Surrogate Modeling: 
 	- train fast metamodels of computationally expensive problems
@@ -12,6 +14,12 @@ The (M)odeling, (I)inference and (O)ptimization toolbox is a Python 2 package fo
 	- perform efficient parameter sweeps based on statistical designs and sampling techniques
 * Optimization: 
 	- optimize a specified objective function or surrogate model using a variety of approaches
+
+* Model exploration: 
+	- perform large distributed parameter sweep applications for any black-box model/simulator which output time series data
+	- generates time series features/summary statistics on simulation output and visualize parameter points in feature space
+	- interactive labeling of paramater points in feature space according to the users preferences over the diversity of model behaviors
+	- supports semi-supervised learning and downstream classifiers
 	
 * Version 0.1
 
@@ -20,7 +28,7 @@ The (M)odeling, (I)inference and (O)ptimization toolbox is a Python 2 package fo
 * pip install . --process-dependency-links
 * Configuration
 * Dependencies
-	scikit-learn, SciPy, numpy, gpflowopt, ipywidgets, tsfresh, pandas
+	scikit-learn, SciPy, numpy, gpflowopt, ipywidgets, tsfresh, pandas and dask
 * How to run tests
 	test suite coming up
 
