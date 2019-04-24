@@ -1,45 +1,45 @@
-mio.models package
+sciope.models package
 ==================
 
 Submodules
 ----------
 
-mio.models.ann\_regressor module
+sciope.models.ann\_regressor module
 --------------------------------
 
-.. automodule:: mio.models.ann_regressor
+.. automodule:: sciope.models.ann_regressor
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.models.gp\_regressor module
+sciope.models.gp\_regressor module
 -------------------------------
 
-.. automodule:: mio.models.gp_regressor
+.. automodule:: sciope.models.gp_regressor
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.models.label\_propagation module
+sciope.models.label\_propagation module
 ------------------------------------
 
-.. automodule:: mio.models.label_propagation
+.. automodule:: sciope.models.label_propagation
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.models.model\_base module
+sciope.models.model\_base module
 -----------------------------
 
-.. automodule:: mio.models.model_base
+.. automodule:: sciope.models.model_base
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.models.svm\_regressor module
+sciope.models.svm\_regressor module
 --------------------------------
 
-.. automodule:: mio.models.svm_regressor
+.. automodule:: sciope.models.svm_regressor
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,7 +48,7 @@ mio.models.svm\_regressor module
 Module contents
 ---------------
 
-.. automodule:: mio.models
+.. automodule:: sciope.models
     :members:
     :undoc-members:
     :show-inheritance:

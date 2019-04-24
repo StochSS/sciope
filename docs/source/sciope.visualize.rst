@@ -1,13 +1,13 @@
-mio.visualize package
+sciope.visualize package
 =====================
 
 Submodules
 ----------
 
-mio.visualize.interactive\_scatter module
+sciope.visualize.interactive\_scatter module
 -----------------------------------------
 
-.. automodule:: mio.visualize.interactive_scatter
+.. automodule:: sciope.visualize.interactive_scatter
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ mio.visualize.interactive\_scatter module
 Module contents
 ---------------
 
-.. automodule:: mio.visualize
+.. automodule:: sciope.visualize
     :members:
     :undoc-members:
     :show-inheritance:

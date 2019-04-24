@@ -1,13 +1,13 @@
-mio.data package
+sciope.data package
 ================
 
 Submodules
 ----------
 
-mio.data.dataset module
+sciope.data.dataset module
 -----------------------
 
-.. automodule:: mio.data.dataset
+.. automodule:: sciope.data.dataset
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ mio.data.dataset module
 Module contents
 ---------------
 
-.. automodule:: mio.data
+.. automodule:: sciope.data
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,53 +1,53 @@
-mio.utilities.summarystats package
+sciope.utilities.summarystats package
 ==================================
 
 Submodules
 ----------
 
-mio.utilities.summarystats.burstiness module
+sciope.utilities.summarystats.burstiness module
 --------------------------------------------
 
-.. automodule:: mio.utilities.summarystats.burstiness
+.. automodule:: sciope.utilities.summarystats.burstiness
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.summarystats.global\_max module
+sciope.utilities.summarystats.global\_max module
 ---------------------------------------------
 
-.. automodule:: mio.utilities.summarystats.global_max
+.. automodule:: sciope.utilities.summarystats.global_max
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.summarystats.global\_min module
+sciope.utilities.summarystats.global\_min module
 ---------------------------------------------
 
-.. automodule:: mio.utilities.summarystats.global_min
+.. automodule:: sciope.utilities.summarystats.global_min
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.summarystats.summary\_base module
+sciope.utilities.summarystats.summary\_base module
 -----------------------------------------------
 
-.. automodule:: mio.utilities.summarystats.summary_base
+.. automodule:: sciope.utilities.summarystats.summary_base
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.summarystats.temporal\_mean module
+sciope.utilities.summarystats.temporal\_mean module
 ------------------------------------------------
 
-.. automodule:: mio.utilities.summarystats.temporal_mean
+.. automodule:: sciope.utilities.summarystats.temporal_mean
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.summarystats.temporal\_variance module
+sciope.utilities.summarystats.temporal\_variance module
 ----------------------------------------------------
 
-.. automodule:: mio.utilities.summarystats.temporal_variance
+.. automodule:: sciope.utilities.summarystats.temporal_variance
     :members:
     :undoc-members:
     :show-inheritance:
@@ -56,7 +56,7 @@ mio.utilities.summarystats.temporal\_variance module
 Module contents
 ---------------
 
-.. automodule:: mio.utilities.summarystats
+.. automodule:: sciope.utilities.summarystats
     :members:
     :undoc-members:
     :show-inheritance:

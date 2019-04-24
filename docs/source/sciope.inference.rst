@@ -1,29 +1,29 @@
-mio.inference package
+sciope.inference package
 =====================
 
 Submodules
 ----------
 
-mio.inference.abc\_inference module
+sciope.inference.abc\_inference module
 -----------------------------------
 
-.. automodule:: mio.inference.abc_inference
+.. automodule:: sciope.inference.abc_inference
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.inference.bandits\_abc module
+sciope.inference.bandits\_abc module
 ---------------------------------
 
-.. automodule:: mio.inference.bandits_abc
+.. automodule:: sciope.inference.bandits_abc
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.inference.inference\_base module
+sciope.inference.inference\_base module
 ------------------------------------
 
-.. automodule:: mio.inference.inference_base
+.. automodule:: sciope.inference.inference_base
     :members:
     :undoc-members:
     :show-inheritance:
@@ -32,7 +32,7 @@ mio.inference.inference\_base module
 Module contents
 ---------------
 
-.. automodule:: mio.inference
+.. automodule:: sciope.inference
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,9 +1,9 @@
-.. mio documentation master file, created by
+.. sciope documentation master file, created by
    sphinx-quickstart on Thu Apr 11 20:51:55 2019.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to mio's documentation!
+Welcome to sciope's documentation!
 ===============================
 
 .. toctree::

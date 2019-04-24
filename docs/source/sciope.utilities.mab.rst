@@ -1,45 +1,45 @@
-mio.utilities.mab package
+sciope.utilities.mab package
 =========================
 
 Submodules
 ----------
 
-mio.utilities.mab.mab\_base module
+sciope.utilities.mab.mab\_base module
 ----------------------------------
 
-.. automodule:: mio.utilities.mab.mab_base
+.. automodule:: sciope.utilities.mab.mab_base
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.mab.mab\_direct module
+sciope.utilities.mab.mab\_direct module
 ------------------------------------
 
-.. automodule:: mio.utilities.mab.mab_direct
+.. automodule:: sciope.utilities.mab.mab_direct
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.mab.mab\_halving module
+sciope.utilities.mab.mab\_halving module
 -------------------------------------
 
-.. automodule:: mio.utilities.mab.mab_halving
+.. automodule:: sciope.utilities.mab.mab_halving
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.mab.mab\_incremental module
+sciope.utilities.mab.mab\_incremental module
 -----------------------------------------
 
-.. automodule:: mio.utilities.mab.mab_incremental
+.. automodule:: sciope.utilities.mab.mab_incremental
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.mab.mab\_sar module
+sciope.utilities.mab.mab\_sar module
 ---------------------------------
 
-.. automodule:: mio.utilities.mab.mab_sar
+.. automodule:: sciope.utilities.mab.mab_sar
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,7 +48,7 @@ mio.utilities.mab.mab\_sar module
 Module contents
 ---------------
 
-.. automodule:: mio.utilities.mab
+.. automodule:: sciope.utilities.mab
     :members:
     :undoc-members:
     :show-inheritance:

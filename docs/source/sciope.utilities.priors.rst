@@ -1,21 +1,21 @@
-mio.utilities.priors package
+sciope.utilities.priors package
 ============================
 
 Submodules
 ----------
 
-mio.utilities.priors.prior\_base module
+sciope.utilities.priors.prior\_base module
 ---------------------------------------
 
-.. automodule:: mio.utilities.priors.prior_base
+.. automodule:: sciope.utilities.priors.prior_base
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.priors.uniform\_prior module
+sciope.utilities.priors.uniform\_prior module
 ------------------------------------------
 
-.. automodule:: mio.utilities.priors.uniform_prior
+.. automodule:: sciope.utilities.priors.uniform_prior
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,7 +24,7 @@ mio.utilities.priors.uniform\_prior module
 Module contents
 ---------------
 
-.. automodule:: mio.utilities.priors
+.. automodule:: sciope.utilities.priors
     :members:
     :undoc-members:
     :show-inheritance:

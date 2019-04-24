@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'mio'
+project = 'sciope'
 copyright = '2019, Prashant Singh, Fredrik Wrede, Andreas Hellander'
 author = 'Prashant Singh, Fredrik Wrede, Andreas Hellander'
 
@@ -109,7 +109,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'miodoc'
+htmlhelp_basename = 'sciopedoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -136,7 +136,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'mio.tex', 'mio Documentation',
+    (master_doc, 'sciope.tex', 'sciope Documentation',
      'Prashant Singh, Fredrik Wrede, Andreas Hellander', 'manual'),
 ]
 
@@ -146,7 +146,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'mio', 'mio Documentation',
+    (master_doc, 'sciope', 'sciope Documentation',
      [author], 1)
 ]
 
@@ -157,8 +157,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'mio', 'mio Documentation',
-     author, 'mio', 'One line description of project.',
+    (master_doc, 'sciope', 'sciope Documentation',
+     author, 'sciope', 'One line description of project.',
      'Miscellaneous'),
 ]
 

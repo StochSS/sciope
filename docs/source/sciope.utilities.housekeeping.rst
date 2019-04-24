@@ -1,21 +1,21 @@
-mio.utilities.housekeeping package
+sciope.utilities.housekeeping package
 ==================================
 
 Submodules
 ----------
 
-mio.utilities.housekeeping.mio\_logger module
+sciope.utilities.housekeeping.sciope\_logger module
 ---------------------------------------------
 
-.. automodule:: mio.utilities.housekeeping.mio_logger
+.. automodule:: sciope.utilities.housekeeping.sciope_logger
     :members:
     :undoc-members:
     :show-inheritance:
 
-mio.utilities.housekeeping.mio\_profiler module
+sciope.utilities.housekeeping.sciope\_profiler module
 -----------------------------------------------
 
-.. automodule:: mio.utilities.housekeeping.mio_profiler
+.. automodule:: sciope.utilities.housekeeping.sciope_profiler
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,7 +24,7 @@ mio.utilities.housekeeping.mio\_profiler module
 Module contents
 ---------------
 
-.. automodule:: mio.utilities.housekeeping
+.. automodule:: sciope.utilities.housekeeping
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,13 +1,13 @@
-mio.features package
+sciope.features package
 ====================
 
 Submodules
 ----------
 
-mio.features.feature\_extraction module
+sciope.features.feature\_extraction module
 ---------------------------------------
 
-.. automodule:: mio.features.feature_extraction
+.. automodule:: sciope.features.feature_extraction
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ mio.features.feature\_extraction module
 Module contents
 ---------------
 
-.. automodule:: mio.features
+.. automodule:: sciope.features
     :members:
     :undoc-members:
     :show-inheritance:
