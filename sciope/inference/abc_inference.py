@@ -29,7 +29,7 @@ import numpy as np
 normalized_distances = None
 
 # Set up the logger
-logger = ml.MIOLogger().get_logger()
+logger = ml.SciopeLogger().get_logger()
 
 
 # Class definition: multiprocessing ABC process

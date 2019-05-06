@@ -22,7 +22,7 @@ import gpflowopt
 
 # Set up the logger
 def get_logger():
-    return ml.MIOLogger().get_logger()
+    return ml.SciopeLogger().get_logger()
 
 
 # Class definition

@@ -21,7 +21,7 @@ from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
 
 # Set up the logger and profiler
-logger = ml.MIOLogger().get_logger()
+logger = ml.SciopeLogger().get_logger()
 
 
 # Class definition: SAR MAB arm selection

@@ -17,10 +17,10 @@ Provides very basic profiling
 
 # Imports
 import time
-from sciope.utilities.housekeeping import sciope_logger as ml
+from sciope.utilities.housekeeping import sciope_logger as sl
 
 # Set up the logger
-logger = ml.MIOLogger().get_logger()
+logger = sl.SciopeLogger().get_logger()
 
 
 # Very basic function run-time logging
