@@ -58,15 +58,21 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sciope.visualize.html#sciope.visualize.interactive_scatter.UserLabel.add">add() (sciope.visualize.interactive_scatter.UserLabel method)</a>
+      <li><a href="sciope.inference.html#sciope.inference.abc_inference.ABC">ABC (class in sciope.inference.abc_inference)</a>
 </li>
-      <li><a href="sciope.data.html#sciope.data.dataset.DataSet.add_points">add_points() (sciope.data.dataset.DataSet method)</a>
+      <li><a href="sciope.inference.html#sciope.inference.abc_inference.ABCProcess">ABCProcess (class in sciope.inference.abc_inference)</a>
+</li>
+      <li><a href="sciope.visualize.html#sciope.visualize.interactive_scatter.UserLabel.add">add() (sciope.visualize.interactive_scatter.UserLabel method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sciope.data.html#sciope.data.dataset.DataSet.add_points">add_points() (sciope.data.dataset.DataSet method)</a>
+</li>
       <li><a href="sciope.models.html#sciope.models.ann_regressor.ANNModel">ANNModel (class in sciope.models.ann_regressor)</a>
 </li>
       <li><a href="sciope.visualize.html#sciope.visualize.interactive_scatter.annotate">annotate() (in module sciope.visualize.interactive_scatter)</a>
+</li>
+      <li><a href="sciope.inference.html#sciope.inference.bandits_abc.arm_pull">arm_pull() (in module sciope.inference.bandits_abc)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -74,10 +80,12 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sciope.models.html#sciope.models.label_propagation.Bounds">Bounds (class in sciope.models.label_propagation)</a>
+      <li><a href="sciope.inference.html#sciope.inference.bandits_abc.BanditsABC">BanditsABC (class in sciope.inference.bandits_abc)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sciope.models.html#sciope.models.label_propagation.Bounds">Bounds (class in sciope.models.label_propagation)</a>
+</li>
       <li><a href="sciope.utilities.summarystats.html#sciope.utilities.summarystats.burstiness.Burstiness">Burstiness (class in sciope.utilities.summarystats.burstiness)</a>
 </li>
   </ul></td>
@@ -152,8 +160,12 @@
 </li>
       <li><a href="sciope.models.html#sciope.models.label_propagation.get_label_entropies">get_label_entropies() (in module sciope.models.label_propagation)</a>
 </li>
+      <li><a href="sciope.utilities.housekeeping.html#sciope.utilities.housekeeping.sciope_logger.SciopeLogger.get_log_dir_path">get_log_dir_path() (sciope.utilities.housekeeping.sciope_logger.SciopeLogger method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sciope.utilities.housekeeping.html#sciope.utilities.housekeeping.sciope_logger.SciopeLogger.get_logger">get_logger() (sciope.utilities.housekeeping.sciope_logger.SciopeLogger method)</a>
+</li>
       <li><a href="sciope.data.html#sciope.data.dataset.DataSet.get_size">get_size() (sciope.data.dataset.DataSet method)</a>
 </li>
       <li><a href="sciope.utilities.summarystats.html#sciope.utilities.summarystats.global_max.GlobalMax">GlobalMax (class in sciope.utilities.summarystats.global_max)</a>
@@ -168,12 +180,16 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sciope.inference.html#sciope.inference.inference_base.InferenceBase.infer">infer() (sciope.inference.inference_base.InferenceBase method)</a>
+      <li><a href="sciope.inference.html#sciope.inference.abc_inference.ABC.infer">infer() (sciope.inference.abc_inference.ABC method)</a>
+
+      <ul>
+        <li><a href="sciope.inference.html#sciope.inference.inference_base.InferenceBase.infer">(sciope.inference.inference_base.InferenceBase method)</a>
 </li>
-      <li><a href="sciope.inference.html#sciope.inference.inference_base.InferenceBase">InferenceBase (class in sciope.inference.inference_base)</a>
-</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sciope.inference.html#sciope.inference.inference_base.InferenceBase">InferenceBase (class in sciope.inference.inference_base)</a>
+</li>
       <li><a href="sciope.designs.html#sciope.designs.initial_design_base.InitialDesignBase">InitialDesignBase (class in sciope.designs.initial_design_base)</a>
 </li>
       <li><a href="sciope.visualize.html#sciope.visualize.interactive_scatter.interative_scatter">interative_scatter() (in module sciope.visualize.interactive_scatter)</a>
@@ -194,9 +210,19 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_base.MABBase">MABBase (class in sciope.utilities.mab.mab_base)</a>
 </li>
+      <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_direct.MABDirect">MABDirect (class in sciope.utilities.mab.mab_direct)</a>
+</li>
+      <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_halving.MABHalving">MABHalving (class in sciope.utilities.mab.mab_halving)</a>
+</li>
+      <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_incremental.MABIncremental">MABIncremental (class in sciope.utilities.mab.mab_incremental)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_sar.MABSAR">MABSAR (class in sciope.utilities.mab.mab_sar)</a>
+</li>
       <li><a href="sciope.utilities.distancefunctions.html#sciope.utilities.distancefunctions.manhattan.ManhattanDistance">ManhattanDistance (class in sciope.utilities.distancefunctions.manhattan)</a>
+</li>
+      <li><a href="Sc.sampling.html#sciope.sampling.maximin_sampling.MaximinSampling">MaximinSampling (class in sciope.sampling.maximin_sampling)</a>
 </li>
       <li><a href="sciope.models.html#sciope.models.model_base.ModelBase">ModelBase (class in sciope.models.model_base)</a>
 </li>
@@ -226,6 +252,8 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sciope.inference.html#sciope.inference.abc_inference.ABC.perform_abc">perform_abc() (sciope.inference.abc_inference.ABC method)</a>
+</li>
       <li><a href="sciope.models.html#sciope.models.ann_regressor.ANNModel.predict">predict() (sciope.models.ann_regressor.ANNModel method)</a>
 
       <ul>
@@ -244,6 +272,10 @@
 </li>
       <li><a href="sciope.data.html#sciope.data.dataset.DataSet.process_outliers">process_outliers() (sciope.data.dataset.DataSet method)</a>
 </li>
+      <li><a href="sciope.inference.html#sciope.inference.abc_inference.ABC.process_queue_outputs">process_queue_outputs() (sciope.inference.abc_inference.ABC method)</a>
+</li>
+      <li><a href="sciope.utilities.housekeeping.html#sciope.utilities.housekeeping.sciope_profiler.profile">profile() (in module sciope.utilities.housekeeping.sciope_profiler)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -252,9 +284,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sciope.models.html#sciope.models.label_propagation.RandomDisplacementBounds">RandomDisplacementBounds (class in sciope.models.label_propagation)</a>
 </li>
+      <li><a href="sciope.inference.html#sciope.inference.abc_inference.ABC.rejection_sampling">rejection_sampling() (sciope.inference.abc_inference.ABC method)</a>
+
+      <ul>
+        <li><a href="sciope.inference.html#sciope.inference.bandits_abc.BanditsABC.rejection_sampling">(sciope.inference.bandits_abc.BanditsABC method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sciope.features.html#sciope.features.feature_extraction.remove_nan_features">remove_nan_features() (in module sciope.features.feature_extraction)</a>
+</li>
+      <li><a href="sciope.inference.html#sciope.inference.abc_inference.ABCProcess.run">run() (sciope.inference.abc_inference.ABCProcess method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -264,6 +304,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Sc.sampling.html#sciope.sampling.sampling_base.SamplingBase">SamplingBase (class in sciope.sampling.sampling_base)</a>
 </li>
+      <li><a href="sciope.inference.html#sciope.inference.abc_inference.ABC.scale_distance">scale_distance() (sciope.inference.abc_inference.ABC method)</a>
+
+      <ul>
+        <li><a href="sciope.inference.html#sciope.inference.bandits_abc.BanditsABC.scale_distance">(sciope.inference.bandits_abc.BanditsABC method)</a>
+</li>
+      </ul></li>
       <li><a href="sciope.models.html#sciope.models.model_base.ModelBase.scale_training_data">scale_training_data() (sciope.models.model_base.ModelBase method)</a>
 </li>
       <li><a href="sciope.html#module-sciope">sciope (module)</a>
@@ -282,6 +328,10 @@
 </li>
       <li><a href="sciope.inference.html#module-sciope.inference">sciope.inference (module)</a>
 </li>
+      <li><a href="sciope.inference.html#module-sciope.inference.abc_inference">sciope.inference.abc_inference (module)</a>
+</li>
+      <li><a href="sciope.inference.html#module-sciope.inference.bandits_abc">sciope.inference.bandits_abc (module)</a>
+</li>
       <li><a href="sciope.inference.html#module-sciope.inference.inference_base">sciope.inference.inference_base (module)</a>
 </li>
       <li><a href="sciope.models.html#module-sciope.models">sciope.models (module)</a>
@@ -298,6 +348,8 @@
 </li>
       <li><a href="Sc.sampling.html#module-sciope.sampling">sciope.sampling (module)</a>
 </li>
+      <li><a href="Sc.sampling.html#module-sciope.sampling.maximin_sampling">sciope.sampling.maximin_sampling (module)</a>
+</li>
       <li><a href="Sc.sampling.html#module-sciope.sampling.sampling_base">sciope.sampling.sampling_base (module)</a>
 </li>
       <li><a href="sciope.utilities.html#module-sciope.utilities">sciope.utilities (module)</a>
@@ -308,17 +360,29 @@
 </li>
       <li><a href="sciope.utilities.distancefunctions.html#module-sciope.utilities.distancefunctions.euclidean">sciope.utilities.distancefunctions.euclidean (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sciope.utilities.distancefunctions.html#module-sciope.utilities.distancefunctions.manhattan">sciope.utilities.distancefunctions.manhattan (module)</a>
 </li>
       <li><a href="sciope.utilities.distancefunctions.html#module-sciope.utilities.distancefunctions.naive_squared">sciope.utilities.distancefunctions.naive_squared (module)</a>
 </li>
       <li><a href="sciope.utilities.housekeeping.html#module-sciope.utilities.housekeeping">sciope.utilities.housekeeping (module)</a>
 </li>
+      <li><a href="sciope.utilities.housekeeping.html#module-sciope.utilities.housekeeping.sciope_logger">sciope.utilities.housekeeping.sciope_logger (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sciope.utilities.housekeeping.html#module-sciope.utilities.housekeeping.sciope_profiler">sciope.utilities.housekeeping.sciope_profiler (module)</a>
+</li>
       <li><a href="sciope.utilities.mab.html#module-sciope.utilities.mab">sciope.utilities.mab (module)</a>
 </li>
       <li><a href="sciope.utilities.mab.html#module-sciope.utilities.mab.mab_base">sciope.utilities.mab.mab_base (module)</a>
+</li>
+      <li><a href="sciope.utilities.mab.html#module-sciope.utilities.mab.mab_direct">sciope.utilities.mab.mab_direct (module)</a>
+</li>
+      <li><a href="sciope.utilities.mab.html#module-sciope.utilities.mab.mab_halving">sciope.utilities.mab.mab_halving (module)</a>
+</li>
+      <li><a href="sciope.utilities.mab.html#module-sciope.utilities.mab.mab_incremental">sciope.utilities.mab.mab_incremental (module)</a>
+</li>
+      <li><a href="sciope.utilities.mab.html#module-sciope.utilities.mab.mab_sar">sciope.utilities.mab.mab_sar (module)</a>
 </li>
       <li><a href="sciope.utilities.priors.html#module-sciope.utilities.priors">sciope.utilities.priors (module)</a>
 </li>
@@ -344,11 +408,33 @@
 </li>
       <li><a href="sciope.visualize.html#module-sciope.visualize.interactive_scatter">sciope.visualize.interactive_scatter (module)</a>
 </li>
+      <li><a href="sciope.utilities.housekeeping.html#sciope.utilities.housekeeping.sciope_logger.SciopeLogger">SciopeLogger (class in sciope.utilities.housekeeping.sciope_logger)</a>
+</li>
       <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_base.MABBase.select">select() (sciope.utilities.mab.mab_base.MABBase method)</a>
+
+      <ul>
+        <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_direct.MABDirect.select">(sciope.utilities.mab.mab_direct.MABDirect method)</a>
 </li>
-      <li><a href="Sc.sampling.html#sciope.sampling.sampling_base.SamplingBase.select_point">select_point() (sciope.sampling.sampling_base.SamplingBase method)</a>
+        <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_halving.MABHalving.select">(sciope.utilities.mab.mab_halving.MABHalving method)</a>
 </li>
-      <li><a href="Sc.sampling.html#sciope.sampling.sampling_base.SamplingBase.select_points">select_points() (sciope.sampling.sampling_base.SamplingBase method)</a>
+        <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_incremental.MABIncremental.select">(sciope.utilities.mab.mab_incremental.MABIncremental method)</a>
+</li>
+        <li><a href="sciope.utilities.mab.html#sciope.utilities.mab.mab_sar.MABSAR.select">(sciope.utilities.mab.mab_sar.MABSAR method)</a>
+</li>
+      </ul></li>
+      <li><a href="Sc.sampling.html#sciope.sampling.maximin_sampling.MaximinSampling.select_point">select_point() (sciope.sampling.maximin_sampling.MaximinSampling method)</a>
+
+      <ul>
+        <li><a href="Sc.sampling.html#sciope.sampling.sampling_base.SamplingBase.select_point">(sciope.sampling.sampling_base.SamplingBase method)</a>
+</li>
+      </ul></li>
+      <li><a href="Sc.sampling.html#sciope.sampling.maximin_sampling.MaximinSampling.select_points">select_points() (sciope.sampling.maximin_sampling.MaximinSampling method)</a>
+
+      <ul>
+        <li><a href="Sc.sampling.html#sciope.sampling.sampling_base.SamplingBase.select_points">(sciope.sampling.sampling_base.SamplingBase method)</a>
+</li>
+      </ul></li>
+      <li><a href="sciope.utilities.housekeeping.html#sciope.utilities.housekeeping.sciope_logger.Singleton">Singleton (class in sciope.utilities.housekeeping.sciope_logger)</a>
 </li>
       <li><a href="sciope.utilities.summarystats.html#sciope.utilities.summarystats.summary_base.SummaryBase">SummaryBase (class in sciope.utilities.summarystats.summary_base)</a>
 </li>
