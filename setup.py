@@ -76,12 +76,11 @@ setup(
         'numpy',
         'scipy',
         'scikit-learn',
-        'pandas<0.24',
         'tsfresh',
-        'GPflow==0.5.0',
-        'GPflowOpt',
         'ipywidgets',
-        'dask'],
+        'dask',
+        'matplotlib',
+        'umap-learn'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
