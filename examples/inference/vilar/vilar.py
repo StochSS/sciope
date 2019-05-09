@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Example: The Vilar model
+Example: The vilar model
 """
 # Initialize
 import numpy as np
@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     # Here, we create the model object.
     # We could pass new parameter values to this model here if we wished.
-    model = model_doc.to_model("Vilar")
+    model = model_doc.to_model("vilar")
 
     # Specify the simulation density and sampling density
     num_trajectories = 10
@@ -97,7 +97,7 @@ def simulate(param):
     model_doc = gillespy2.StochMLDocument.from_file(config_file)
 
     # Here, we create the model object.
-    model = model_doc.to_model("Vilar")
+    model = model_doc.to_model("vilar")
     num_timestamps = 150
 
     # Set model parameters
@@ -168,7 +168,7 @@ def simulate_all_species(param):
     model_doc = gillespy2.StochMLDocument.from_file(config_file)
 
     # Here, we create the model object.
-    model = model_doc.to_model("Vilar")
+    model = model_doc.to_model("vilar")
     num_timestamps = 150
 
     # Set model parameters

@@ -12,17 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-The Vilar Model: Multi-Armed Bandits based Approximate Bayesian Computation Test Run
+The vilar Model: Approximate Bayesian Computation Test Run
 """
 
 # Imports
 from sciope.utilities.priors import uniform_prior
 from sciope.inference import abc_inference
-import summaries_ensemble as se
+from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
-from sciope.utilities.distancefunctions import naive_squared as ns
 
 # Load data
 data = np.loadtxt("datasets/vilar_dataset_specieA_100trajs_150time.dat", delimiter=",")
@@ -31,11 +30,11 @@ data = np.loadtxt("datasets/vilar_dataset_specieA_100trajs_150time.dat", delimit
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
+bs_stat = bs.Burstiness(mean_trajectories=False)
 
 # Set up ABC
 abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
-                                 distance_function=ns.NaiveSquaredDistance(),
-                                 summaries_function=se.SummariesEnsemble())
+                                 summaries_function=bs_stat)
 
 # Perform ABC; require 30 samples
 abc_instance.infer(30)
