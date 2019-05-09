@@ -5,7 +5,6 @@ import pytest
 
 
 def test_generate_tsfresh_features():
-    X = np.random.randn(2,100)
+    X = np.random.randn(2, 100)
     features = EfficientFCParameters()
     test = generate_tsfresh_features(X, features)
-    
