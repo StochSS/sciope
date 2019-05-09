@@ -31,16 +31,16 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class MIOLogger(object, metaclass=Singleton):
+class SciopeLogger(object, metaclass=Singleton):
     _logger = None
 
     def __init__(self, log_level=logging.DEBUG):
-        self._logger = logging.getLogger("MIOLogger")
+        self._logger = logging.getLogger("SciopeLogger")
         self._logger.setLevel(log_level)
         log_format = logging.Formatter('\n%(asctime)s \t [%(levelname)-8s | %(filename)-12s:%(lineno)s] : %(message)s')
 
         now = datetime.datetime.now()
-        log_path = os.path.join(tempfile.gettempdir(), "MIO_logs")
+        log_path = os.path.join(tempfile.gettempdir(), "Sciope_logs")
         self._log_dir_path = log_path
 
         if not os.path.isdir(log_path):
@@ -56,7 +56,7 @@ class MIOLogger(object, metaclass=Singleton):
         self._logger.addHandler(stream_handler)
         self._logger.propagate = False          # To stop duplicate logging
 
-        print("MIO Logger is now ready. Log directory is {}".format(log_path))
+        print("Sciope logger is now ready. Log directory is {}".format(log_path))
 
     def get_logger(self):
         return self._logger

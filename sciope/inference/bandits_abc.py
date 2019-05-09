@@ -30,7 +30,7 @@ from sciope.utilities.housekeeping import sciope_profiler
 normalized_distances = None
 
 # Set up the logger and profiler
-logger = ml.MIOLogger().get_logger()
+logger = ml.SciopeLogger().get_logger()
 
 
 def arm_pull(arm_idx):

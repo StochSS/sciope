@@ -22,7 +22,7 @@ import numpy as np
 import math
 
 # Set up the logger and profiler
-logger = ml.MIOLogger().get_logger()
+logger = ml.SciopeLogger().get_logger()
 
 
 # Class definition: HALVING MAB arm selection

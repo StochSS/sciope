@@ -5,3 +5,8 @@ dist
 mio
 *egg-info
 build
+_build
+_static
+_templates
+.idea
+.DS_Store
