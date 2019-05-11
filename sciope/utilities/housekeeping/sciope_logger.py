@@ -46,7 +46,7 @@ class SciopeLogger(object, metaclass=Singleton):
         if not os.path.isdir(log_path):
             os.mkdir(log_path)
 
-        filename = logging.FileHandler(log_path + "/log_" + now.strftime("%Y-%m-%d_%H:%M:%S.%f") + ".log")
+        filename = logging.FileHandler(log_path + "/log_" + now.strftime("%Y-%m-%d_%H_%M_%S.%f") + ".log")
         stream_handler = logging.StreamHandler()
 
         filename.setFormatter(log_format)
