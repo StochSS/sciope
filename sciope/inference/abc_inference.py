@@ -22,7 +22,9 @@ from sciope.utilities.summarystats import burstiness as bs
 from sciope.utilities.housekeeping import sciope_logger as ml
 from sciope.utilities.housekeeping import sciope_profiler
 from sciope.data.dataset import DataSet
-import multiprocessing as mp
+from dask import delayed
+from toolz import partition_all
+import multiprocessing as mp #remove dependency 
 import numpy as np
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
@@ -51,13 +53,32 @@ class ABC(InferenceBase):
     * InferenceBase.infer()
     """
 
-    def __init__(self, data, sim, prior_function, epsilon=0.1, parallel_mode=True, summaries_function=bs.Burstiness(),
+    def __init__(self, data, sim, prior_function, epsilon=0.1, parallel_mode=False, summaries_function=bs.Burstiness(),
                  distance_function=euc.EuclideanDistance()):
+        """[summary]
+        
+        Parameters
+        ----------
+        data : [type]
+            [description]
+        sim : [type]
+            [description]
+        prior_function : [type]
+            [description]
+        epsilon : float, optional
+            [description], by default 0.1
+        parallel_mode : bool, optional
+            [description], by default False
+        summaries_function : [type], optional
+            [description], by default bs.Burstiness()
+        distance_function : [type], optional
+            [description], by default euc.EuclideanDistance()
+        """
         self.name = 'ABC'
         self.epsilon = epsilon
         self.summaries_function = summaries_function
-        self.prior_function = prior_function
-        self.distance_function = distance_function
+        self.prior_function = delayed(prior_function)
+        self.distance_function = delayed(distance_function)
         self.parallel_mode = parallel_mode
         self.historical_distances = []
         super(ABC, self).__init__(self.name, data, sim)
@@ -81,7 +102,7 @@ class ABC(InferenceBase):
         return normalized_distances[-1, :]
 
     @sciope_profiler.profile
-    def rejection_sampling(self, num_samples):
+    def rejection_sampling(self, num_samples, chunk_size):
         """
         Perform ABC inference according to initialized configuration.
         :return:
@@ -96,7 +117,12 @@ class ABC(InferenceBase):
         distances = []
         fixed_dataset = DataSet('Fixed Data')
         sim_dataset = DataSet('Simulated Data')
-        fixed_dataset.add_points(targets=self.data, summary_stats=self.summaries_function.compute(self.data))
+        
+        data_chunked = partition_all(chunk_size)
+        stats = [self.summaries_function.compute(x) for x in data_chunked]
+        stats_mean = delayed(np.mean)(stats).compute()
+        
+        fixed_dataset.add_points(targets=self.data, summary_stats=stats_mean.reshape(1,1))
 
         while accepted_count < num_samples:
             # Rejection sampling
