@@ -18,10 +18,7 @@ Factorial Initial Design
 # Imports
 from sciope.designs.initial_design_base import InitialDesignBase
 from sciope.utilities.housekeeping import sciope_logger as ml
-import gpflowopt
-
-# Set up the logger
-logger = ml.SciopeLogger().get_logger()
+import numpy as np
 
 
 # Class definition
@@ -32,22 +29,26 @@ class FactorialDesign(InitialDesignBase):
     * InitialDesignBase.generate(n)
     """
 
-    def __init__(self, xmin, xmax):
+    def __init__(self, levels, xmin, xmax, use_logger=True):
         name = 'FactorialDesign'
-        super(FactorialDesign, self).__init__(name, xmin, xmax)
-        logger.info("Factorial design in {0} dimensions initialized".format(len(self.xmin)))
+        super(FactorialDesign, self).__init__(name, xmin, xmax, use_logger)
+        self.levels = levels
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Factorial design in {0} dimensions initialized".format(len(self.xmin)))
 
-    def generate(self, n):
+    def generate(self):
         """
-        Sub-classable method for generating a factorial design of 'n' levels in the given 'domain'.
-        The number of generated points is n^d.
+        Sub-classable method for generating a factorial design of specified 'levels' in the given domain.
+        The number of generated points is levels^d.
         """
-        num_variables = len(self.xmin)
-        gpf_domain = gpflowopt.domain.ContinuousParameter('x0', self.xmin[0], self.xmax[0])
-        for i in range(1, num_variables):
-            var_name = 'x' + repr(i)
-            gpf_domain = gpf_domain + gpflowopt.domain.ContinuousParameter(var_name, self.xmin[i], self.xmax[i])
+        # Get grid coordinates
+        grid_coords = [np.linspace(lb, ub, self.levels) for lb, ub in zip(self.xmin, self.xmax)]
 
-        design = gpflowopt.design.FactorialDesign(n, gpf_domain)
-        logger.info("Factorial design: generated {0} points in {1} dimensions".format(n, num_variables))
-        return design.generate()
+        # Generate the full grid
+        x = np.meshgrid(*grid_coords)
+        dim_idx = [item.ravel() for item in x]
+        x = np.vstack(dim_idx).T
+        if self.use_logger:
+            self.logger.info("Factorial design: generated {0} points in {1} dimensions".format(len(x), len(self.xmin)))
+        return x

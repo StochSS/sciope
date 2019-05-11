@@ -18,11 +18,7 @@ Random Sampling Initial Design
 # Imports
 from sciope.designs.initial_design_base import InitialDesignBase
 from sciope.utilities.housekeeping import sciope_logger as ml
-import gpflowopt
-
-# Set up the logger
-def get_logger():
-    return ml.SciopeLogger().get_logger()
+import numpy as np
 
 
 # Class definition
@@ -37,7 +33,7 @@ class RandomSampling(InitialDesignBase):
         name = 'RandomSampling'
         super(RandomSampling, self).__init__(name, xmin, xmax, use_logger)
         if self.use_logger:
-            self.logger = get_logger()
+            self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Random design in {0} dimensions initialized".format(len(self.xmin)))
 
     def generate(self, n):
@@ -45,12 +41,12 @@ class RandomSampling(InitialDesignBase):
         Sub-classable method for generating 'n' points in the given 'domain'.
         """
         num_variables = len(self.xmin)
-        gpf_domain = gpflowopt.domain.ContinuousParameter('x0', self.xmin[0], self.xmax[0])
-        for i in range(1, num_variables):
-            var_name = 'x' + repr(i)
-            gpf_domain = gpf_domain + gpflowopt.domain.ContinuousParameter(var_name, self.xmin[i], self.xmax[i])
 
-        design = gpflowopt.design.RandomDesign(n, gpf_domain)
+        # Generate in [0,1] space
+        x = np.random.rand(n, num_variables)
+
+        # Scale from [0,1] to [self.xmin, self.xmax]
+        x_scaled = self.scale_to_new_domain(x, self.xmin, self.xmax)
         if self.use_logger:
             self.logger.info("Random design: generated {0} points in {1} dimensions".format(n, num_variables))
-        return design.generate()
+        return x_scaled
