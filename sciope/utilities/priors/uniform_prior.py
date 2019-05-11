@@ -38,6 +38,7 @@ class UniformPrior(PriorBase):
         self.ub = space_max
         super(UniformPrior, self).__init__(self.name)
 
+    @delayed
     def draw(self, n=1):
         """
         Draw 'n' samples within self.lb and self.ub
