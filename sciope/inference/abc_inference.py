@@ -77,11 +77,12 @@ class ABC(InferenceBase):
         self.name = 'ABC'
         self.epsilon = epsilon
         self.summaries_function = summaries_function
-        self.prior_function = delayed(prior_function)
+        self.prior_function = prior_function
         self.distance_function = delayed(distance_function)
         self.parallel_mode = parallel_mode
         self.historical_distances = []
         super(ABC, self).__init__(self.name, data, sim)
+        self.sim = delayed(sim)
         logger.info("Approximate Bayesian Computation initialized")
 
     def scale_distance(self, dist):
@@ -136,7 +137,7 @@ class ABC(InferenceBase):
             sim_stats = self.summaries_function.compute(sim_result)
 
             # Set/Update simulated dataset
-            sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
+            #sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
 
             # Calculate the distance between the dataset and the simulated result
             sim_dist = self.distance_function.compute(fixed_dataset.s, sim_stats)

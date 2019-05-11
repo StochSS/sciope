@@ -17,6 +17,7 @@ The Uniform Prior
 
 # Imports
 from sciope.utilities.priors.prior_base import PriorBase
+from dask import delayed
 import numpy as np
 
 
