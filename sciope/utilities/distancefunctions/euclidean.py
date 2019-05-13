@@ -17,6 +17,7 @@ The Euclidean distance function
 
 # Imports
 from sciope.utilities.distancefunctions.distance_base import DistanceBase
+from dask import delayed
 import numpy as np
 
 
@@ -36,6 +37,7 @@ class EuclideanDistance(DistanceBase):
         super(EuclideanDistance, self).__init__(self.name)
 
     @staticmethod
+    @delayed
     def compute(data, sim):
         """
         The arguments should either be provided with the function call or during instantiation.

@@ -19,17 +19,19 @@ Approximate Bayesian Computation
 from sciope.inference.inference_base import InferenceBase
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
-from sciope.utilities.housekeeping import sciope_logger as ml
-from sciope.utilities.housekeeping import sciope_profiler
+#from sciope.utilities.housekeeping import sciope_logger as ml
+#from sciope.utilities.housekeeping import sciope_profiler
 from sciope.data.dataset import DataSet
-import multiprocessing as mp
+from toolz import partition_all
+import multiprocessing as mp #remove dependency 
 import numpy as np
+import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
 
 # Set up the logger
-logger = ml.SciopeLogger().get_logger()
+#logger = ml.SciopeLogger().get_logger()
 
 
 # Class definition: multiprocessing ABC process
@@ -51,8 +53,27 @@ class ABC(InferenceBase):
     * InferenceBase.infer()
     """
 
-    def __init__(self, data, sim, prior_function, epsilon=0.1, parallel_mode=True, summaries_function=bs.Burstiness(),
+    def __init__(self, data, sim, prior_function, epsilon=0.1, parallel_mode=False, summaries_function=bs.Burstiness(),
                  distance_function=euc.EuclideanDistance()):
+        """[summary]
+        
+        Parameters
+        ----------
+        data : [type]
+            [description]
+        sim : [type]
+            [description]
+        prior_function : [type]
+            [description]
+        epsilon : float, optional
+            [description], by default 0.1
+        parallel_mode : bool, optional
+            [description], by default False
+        summaries_function : [type], optional
+            [description], by default bs.Burstiness()
+        distance_function : [type], optional
+            [description], by default euc.EuclideanDistance()
+        """
         self.name = 'ABC'
         self.epsilon = epsilon
         self.summaries_function = summaries_function
@@ -61,8 +82,10 @@ class ABC(InferenceBase):
         self.parallel_mode = parallel_mode
         self.historical_distances = []
         super(ABC, self).__init__(self.name, data, sim)
-        logger.info("Approximate Bayesian Computation initialized")
+        self.sim = dask.delayed(sim)
+        #logger.info("Approximate Bayesian Computation initialized")
 
+    @dask.delayed
     def scale_distance(self, dist):
         """
         Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
@@ -80,8 +103,8 @@ class ABC(InferenceBase):
 
         return normalized_distances[-1, :]
 
-    @sciope_profiler.profile
-    def rejection_sampling(self, num_samples):
+    #@sciope_profiler.profile
+    def rejection_sampling(self, num_samples, chunk_size, batch_size):
         """
         Perform ABC inference according to initialized configuration.
         :return:
@@ -96,42 +119,52 @@ class ABC(InferenceBase):
         distances = []
         fixed_dataset = DataSet('Fixed Data')
         sim_dataset = DataSet('Simulated Data')
-        fixed_dataset.add_points(targets=self.data, summary_stats=self.summaries_function.compute(self.data))
+        
+        data_chunked = partition_all(chunk_size, self.data)
+        stats = [self.summaries_function.compute(x) for x in data_chunked]
+        stats_mean = np.array(dask.delayed(np.mean)(stats).compute())      # mean
+        
+        fixed_dataset.add_points(targets=self.data, summary_stats=stats_mean.reshape(1,1)) #why shape (1,1)
 
         while accepted_count < num_samples:
             # Rejection sampling
             # Draw from the prior
-            trial_param = self.prior_function.draw()
+            trial_param = [self.prior_function.draw() for x in range(batch_size)]
 
             # Perform the trial
-            sim_result = self.sim(trial_param)
+            sim_result = [self.sim(param) for param in trial_param]
 
             # Get the statistic(s)
-            sim_stats = self.summaries_function.compute(sim_result)
+            sim_stats = [self.summaries_function.compute(sim) for sim in sim_result]
 
             # Set/Update simulated dataset
-            sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
+            # Do at end
+            #sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
 
             # Calculate the distance between the dataset and the simulated result
-            sim_dist = self.distance_function.compute(fixed_dataset.s, sim_stats)
+            sim_dist = [self.distance_function.compute(fixed_dataset.s, stats) for stats in sim_stats]
 
             # Normalize distances between [0,1]
-            sim_dist_scaled = self.scale_distance(sim_dist)
+            sim_dist_scaled = [self.scale_distance(dist) for dist in sim_dist]
 
             # Take the norm to combine the distances
-            combined_distance = np.linalg.norm(sim_dist_scaled)
-            logger.debug("Rejection Sampling: trial parameter = [{0}], distance = [{1}]".format(trial_param,
-                                                                                                combined_distance))
+            combined_distance = [dask.delayed(np.linalg.norm)(scaled) for scaled in sim_dist_scaled]
+            
+
+            res_param, res_dist, res_combined = dask.compute(trial_param, sim_dist, combined_distance)
 
             # Accept/Reject
-            if combined_distance <= self.epsilon:
-                accepted_samples.append(trial_param)
-                distances.append(sim_dist)
-                accepted_count += 1
-                logger.info("Rejection Sampling: accepted a new sample, total accepted samples = {0}".
-                            format(len(accepted_samples)))
+            for e, res in enumerate(res_combined):
+                #logger.debug("Rejection Sampling: trial parameter = [{0}], distance = [{1}]".format(res_param[e],
+                #                                                                               res))
+                if res <= self.epsilon:
+                    accepted_samples.append(res_param[e])
+                    distances.append(res_dist[e])
+                    accepted_count += 1
+                    #logger.info("Rejection Sampling: accepted a new sample, total accepted samples = {0}".
+                     #           format(len(accepted_samples)))
 
-            trial_count += 1
+            trial_count += batch_size
 
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
                    'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
