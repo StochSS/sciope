@@ -18,6 +18,7 @@ The Manhattan distance function
 # Imports
 from sciope.utilities.distancefunctions.distance_base import DistanceBase
 from scipy.spatial.distance import cityblock
+import numpy as np
 
 
 # Class definition: Manhattan distance function
@@ -47,8 +48,8 @@ class ManhattanDistance(DistanceBase):
         data = np.asarray(data)
         sim = np.asarray(data)
 
-        # Reshape to 1 x dim
-        data = data.reshape(1, data.size)
-        sim = sim.reshape(1, sim.size)
+        # Check that we have equal shapes
+        np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the \
+                                                       arguments.")
 
         return cityblock(data, sim)

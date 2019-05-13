@@ -47,8 +47,8 @@ class NaiveSquaredDistance(DistanceBase):
         data = np.asarray(data)
         sim = np.asarray(sim)
 
-        # Reshape to 1 x dim
-        data = data.reshape(1, data.size)
-        sim = sim.reshape(1, sim.size)
+        # Check that we have equal shapes
+        np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the \
+                                                       arguments.")
 
         return (data - sim) ** 2
