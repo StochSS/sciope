@@ -36,9 +36,9 @@ class EuclideanDistance(DistanceBase):
         self.name = 'Euclidean'
         super(EuclideanDistance, self).__init__(self.name)
 
-    @staticmethod
+
     @delayed
-    def compute(data, sim):
+    def compute(self, data, sim):
         """
         The arguments should either be provided with the function call or during instantiation.
         :param data: as in init

@@ -120,38 +120,39 @@ class ABC(InferenceBase):
         fixed_dataset = DataSet('Fixed Data')
         sim_dataset = DataSet('Simulated Data')
         
+        #if data is large make chunks
         data_chunked = partition_all(chunk_size, self.data)
+        #compute summary stats on fixed data
         stats = [self.summaries_function.compute(x) for x in data_chunked]
-        stats_mean = np.array(dask.delayed(np.mean)(stats).compute())      # mean
-        
-        fixed_dataset.add_points(targets=self.data, summary_stats=stats_mean.reshape(1,1)) #why shape (1,1)
+        #compute mean
+        stats_mean = dask.delayed(np.mean)(stats, keepdims=True) 
 
-        while accepted_count < num_samples:
-            # Rejection sampling
-            # Draw from the prior
-            trial_param = [self.prior_function.draw() for x in range(batch_size)]
+        # Rejection sampling with batch size = batch_size 
 
-            # Perform the trial
-            sim_result = [self.sim(param) for param in trial_param]
+        # Draw from the prior
+        trial_param = [self.prior_function.draw() for x in range(batch_size)]
 
-            # Get the statistic(s)
-            sim_stats = [self.summaries_function.compute(sim) for sim in sim_result]
+        # Perform the trial
+        sim_result = [self.sim(param) for param in trial_param]
 
-            # Set/Update simulated dataset
-            # Do at end
-            #sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
+        # Get the statistic(s)
+        sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
 
-            # Calculate the distance between the dataset and the simulated result
-            sim_dist = [self.distance_function.compute(fixed_dataset.s, stats) for stats in sim_stats]
+        # Calculate the distance between the dataset and the simulated result
+        sim_dist = [self.distance_function.compute(fixed_dataset.s, stats) for stats in sim_stats]
 
-            # Normalize distances between [0,1]
-            sim_dist_scaled = [self.scale_distance(dist) for dist in sim_dist]
+        # Normalize distances between [0,1]
+        sim_dist_scaled = [self.scale_distance(dist) for dist in sim_dist]
 
-            # Take the norm to combine the distances
-            combined_distance = [dask.delayed(np.linalg.norm)(scaled) for scaled in sim_dist_scaled]
+        # Take the norm to combine the distances
+        combined_distance = [dask.delayed(np.linalg.norm)(scaled) for scaled in sim_dist_scaled]
             
+        while accepted_count < num_samples:
 
             res_param, res_dist, res_combined = dask.compute(trial_param, sim_dist, combined_distance)
+
+            # Set/Update simulated dataset
+            #sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats) # this is never returned?
 
             # Accept/Reject
             for e, res in enumerate(res_combined):
