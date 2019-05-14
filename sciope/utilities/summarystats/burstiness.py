@@ -20,6 +20,7 @@ import numpy as np
 import math as mt
 from dask import delayed
 from sciope.utilities.summarystats.summary_base import SummaryBase
+from sciope.utilities.housekeeping import sciope_logger as ml
 
 
 # Class definition: Burstiness Statistic
