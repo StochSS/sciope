@@ -153,7 +153,7 @@ class ABC(InferenceBase):
                 combined_distance = [dask.delayed(np.linalg.norm)(scaled, axis=1) for scaled in sim_dist_scaled]
                 result, = dask.compute(combined_distance)
             else:
-                result = sim_dist_scaled
+                result = sim_dist_scaled.ravel()
 
             # Accept/Reject
             for e, res in enumerate(result):
