@@ -54,8 +54,8 @@ class ManhattanDistance(DistanceBase):
         sim = np.asarray(data)
 
         # Check that we have equal shapes
-        np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the \
-                                                       arguments.")
+        np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the "
+                                                       "arguments.")
 
         res = cityblock(data, sim)
 

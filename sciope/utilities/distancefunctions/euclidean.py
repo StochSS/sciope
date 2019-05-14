@@ -53,8 +53,8 @@ class EuclideanDistance(DistanceBase):
         sim = np.asarray(sim)
 
         # Check that we have equal shapes
-        np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the \
-                                                       arguments.")
+        np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the "
+                                                       "arguments.")
 
         res = np.linalg.norm(data - sim)
 
