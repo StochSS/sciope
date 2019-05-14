@@ -38,6 +38,13 @@ class LatinHypercube(InitialDesignBase):
     """
 
     def __init__(self, xmin, xmax, use_logger=True, seed_size=None):
+        """
+        LatinHypercube constructor
+        :param xmin: lower bounds for domain in form of a np array containing one value per dimension/variable
+        :param xmax: upper bounds, as above
+        :param use_logger: enable/disable logging to file and console output
+        :param seed_size: number of points in the LHS seed design
+        """
         name = 'LatinHypercube'
         super(LatinHypercube, self).__init__(name, xmin, xmax, use_logger)
         self._seed_size = len(xmin) if seed_size is None else seed_size
