@@ -85,7 +85,6 @@ class ABC(InferenceBase):
         self.sim = dask.delayed(sim)
         #logger.info("Approximate Bayesian Computation initialized")
 
-    @dask.delayed
     def scale_distance(self, dist):
         """
         Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
