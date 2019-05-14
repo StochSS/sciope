@@ -91,6 +91,7 @@ class ABC(InferenceBase):
         :param dist: a distance value or vector
         :return: scaled distance value or vector
         """
+        dist = np.asarray(dist)
         global normalized_distances
         self.historical_distances.append(dist.ravel())
         all_distances = np.array(self.historical_distances)
@@ -145,14 +146,14 @@ class ABC(InferenceBase):
             res_param, res_dist, res_combined = dask.compute(trial_param, sim_dist, combined_distance)
 
             # Normalize distances between [0,1]
-            sim_dist_scaled = [self.scale_distance(dist) for dist in res_dist]
+            sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
 
-            # Take the norm to combine the distances
-            combined_distance = [dask.delayed(np.linalg.norm)(scaled) for scaled in sim_dist_scaled]
-            result, = dask.compute(combined_distance)
-
-            # Set/Update simulated dataset
-            #sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats) # this is never returned?
+            # Take the norm to combine the distances, if more than one summary is used
+            if sim_dist_scaled.shape[1] > 1:
+                combined_distance = [dask.delayed(np.linalg.norm)(scaled, axis=1) for scaled in sim_dist_scaled]
+                result, = dask.compute(combined_distance)
+            else:
+                result = sim_dist_scaled
 
             # Accept/Reject
             for e, res in enumerate(result):
