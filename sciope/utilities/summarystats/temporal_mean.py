@@ -27,9 +27,9 @@ class TemporalMean(SummaryBase):
     Simply the mean taken over the entire time span
     """
 
-    def __init__(self, mean_trajectories=True):
+    def __init__(self, mean_trajectories=True, use_logger=True):
         self.name = 'TemporalMean'
-        super(TemporalMean, self).__init__(self.name, mean_trajectories)
+        super(TemporalMean, self).__init__(self.name, mean_trajectories, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("TemporalMean summary statistic initialized")

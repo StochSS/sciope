@@ -31,7 +31,7 @@ class Burstiness(SummaryBase):
     Ref: Burstiness and memory in complex systems, Europhys. Let., 81, pp. 48002, 2008.
     """
 
-    def __init__(self, mean_trajectories=True, improvement=False):
+    def __init__(self, mean_trajectories=True, improvement=False, use_logger=True):
         """
         [summary]
         
@@ -44,7 +44,10 @@ class Burstiness(SummaryBase):
         """
         self.name = 'Burstiness'
         self.improvement = improvement
-        super(Burstiness, self).__init__(self.name, mean_trajectories)
+        super(Burstiness, self).__init__(self.name, mean_trajectories, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Burstiness summary statistic initialized")
 
     @delayed
     def compute(self, data):
@@ -78,6 +81,11 @@ class Burstiness(SummaryBase):
             trajs.append(out)
 
         out = np.array(trajs)
-        np.testing.assert_equal(out.size, data_arr.shape[0], "Burstiness: expected summaries count mismatch!")
-        return np.reshape(out, (out.size, 1))
+        res = np.reshape(out, (out.size, 1))
+
+        if self.use_logger:
+            self.logger.info("Burstiness summary statistic: processed data matrix of shape {0} and generated summaries"
+                             " of shape {1}".format(data.shape, res.shape))
+        np.testing.assert_equal(res.shape[0], data_arr.shape[0], "Burstiness: expected summaries count mismatch!")
+        return res
 

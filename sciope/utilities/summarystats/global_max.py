@@ -27,9 +27,9 @@ class GlobalMax(SummaryBase):
     The maximum value observed across the entire time span
     """
 
-    def __init__(self, mean_trajectories=True):
+    def __init__(self, mean_trajectories=True, use_logger=True):
         self.name = 'GlobalMax'
-        super(GlobalMax, self).__init__(self.name, mean_trajectories)
+        super(GlobalMax, self).__init__(self.name, mean_trajectories, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("GlobalMax summary statistic initialized")

@@ -17,8 +17,10 @@ The Manhattan distance function
 
 # Imports
 from sciope.utilities.distancefunctions.distance_base import DistanceBase
+from sciope.utilities.housekeeping import sciope_logger as ml
 from scipy.spatial.distance import cityblock
 import numpy as np
+from dask import delayed
 
 
 # Class definition: Manhattan distance function
@@ -29,15 +31,18 @@ class ManhattanDistance(DistanceBase):
     * DistanceBase.compute()
     """
 
-    def __init__(self):
+    def __init__(self, use_logger=True):
         """
         We just set the name here and call the superclass constructor.
         """
         self.name = 'Manhattan'
-        super(ManhattanDistance, self).__init__(self.name)
+        super(ManhattanDistance, self).__init__(self.name, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("ManhattanDistance distance function initialized")
 
-    @staticmethod
-    def compute(data, sim):
+    @delayed
+    def compute(self, data, sim):
         """
         The arguments should either be provided with the function call or during instantiation.
         :param data: as in init
@@ -52,4 +57,9 @@ class ManhattanDistance(DistanceBase):
         np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the \
                                                        arguments.")
 
-        return cityblock(data, sim)
+        res = cityblock(data, sim)
+
+        if self.use_logger:
+            self.logger.info("ManhattanDistance: processed data matrices of shape {0} and calculated distance"
+                             " of {1}".format(data.shape, res))
+        return res
