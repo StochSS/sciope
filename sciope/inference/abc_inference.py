@@ -140,22 +140,23 @@ class ABC(InferenceBase):
 
         # Calculate the distance between the dataset and the simulated result
         sim_dist = [self.distance_function.compute(fixed_dataset.s, stats) for stats in sim_stats]
-
-        # Normalize distances between [0,1]
-        sim_dist_scaled = [self.scale_distance(dist) for dist in sim_dist]
-
-        # Take the norm to combine the distances
-        combined_distance = [dask.delayed(np.linalg.norm)(scaled) for scaled in sim_dist_scaled]
             
         while accepted_count < num_samples:
 
             res_param, res_dist, res_combined = dask.compute(trial_param, sim_dist, combined_distance)
 
+            # Normalize distances between [0,1]
+            sim_dist_scaled = [self.scale_distance(dist) for dist in res_dist]
+
+            # Take the norm to combine the distances
+            combined_distance = [dask.delayed(np.linalg.norm)(scaled) for scaled in sim_dist_scaled]
+            result, = dask.compute(combined_distance)
+
             # Set/Update simulated dataset
             #sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats) # this is never returned?
 
             # Accept/Reject
-            for e, res in enumerate(res_combined):
+            for e, res in enumerate(result):
                 #logger.debug("Rejection Sampling: trial parameter = [{0}], distance = [{1}]".format(res_param[e],
                 #                                                                               res))
                 if res <= self.epsilon:
