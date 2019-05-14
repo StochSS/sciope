@@ -30,8 +30,9 @@ class DistanceBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name):
+    def __init__(self, name, use_logger=True):
         self.name = name
+        self.use_logger = use_logger
 
     @abstractmethod
     def compute(self, data, sim):

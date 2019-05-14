@@ -18,6 +18,7 @@ The temporal mean summary statistic
 # Imports
 import numpy as np
 from sciope.utilities.summarystats.summary_base import SummaryBase
+from sciope.utilities.housekeeping import sciope_logger as ml
 
 
 # Class definition: Temporal Mean Statistic
@@ -26,9 +27,12 @@ class TemporalMean(SummaryBase):
     Simply the mean taken over the entire time span
     """
 
-    def __init__(self, mean_trajectories=True):
+    def __init__(self, mean_trajectories=True, use_logger=True):
         self.name = 'TemporalMean'
-        super(TemporalMean, self).__init__(self.name, mean_trajectories)
+        super(TemporalMean, self).__init__(self.name, mean_trajectories, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("TemporalMean summary statistic initialized")
 
     def compute(self, data):
         """
@@ -37,6 +41,14 @@ class TemporalMean(SummaryBase):
         :return: computed statistic value
         """
         if self.mean_trajectories:
-            return np.asarray(np.mean(np.mean(data, axis=1), axis=0)).reshape(1, 1)
+            res = np.asarray(np.mean(np.mean(data, axis=1), axis=0))  # returns a scalar, so we cast it
         else:
-            return np.asarray(np.mean(data, axis=1)).reshape(1, 1)
+            res = np.mean(data, axis=1)  # returns a np array
+
+        res = np.reshape(res, (res.size, 1))  # reshape to proper dimensions
+
+        if self.use_logger:
+            self.logger.info("TemporalMean summary statistic: processed data matrix of shape {0} and generated "
+                             "summaries of shape {1}".format(data.shape, res.shape))
+        np.testing.assert_equal(res.size, data.shape[0], "TemporalMean: expected summaries count mismatch!")
+        return res

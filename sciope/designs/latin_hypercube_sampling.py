@@ -118,7 +118,7 @@ class LatinHypercube(InitialDesignBase):
                 seed = seed + d
                 x = np.vstack((x, seed))
 
-        assert (x.shape == (np_star, self._nv))
+        np.testing.assert_equal(x.shape, (np_star, self._nv))
         return x
 
     def _resize_tplhd(self, x, np_star, n):
@@ -145,7 +145,7 @@ class LatinHypercube(InitialDesignBase):
         # remove spaces
         x_sorted = np.argsort(x, axis=0)
         x[x_sorted, np.arange(self._nv)] = np.tile(np.arange(1, n + 1), (self._nv, 1)).T
-        assert (x.shape[0] == n)
+        np.testing.assert_equal(x.shape[0], n)
         return x
 
     def generate(self, n):

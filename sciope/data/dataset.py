@@ -75,12 +75,16 @@ class DataSet(object):
 
         if inputs is not None:
             if self.x is not None:
+                np.testing.assert_equal(self.x.shape[1], inputs.shape[1], "Please validate the values and ensure the \
+                                                                          shape equality of new samples to be added.")
                 self.x = np.concatenate((self.x, inputs), axis=0)
             else:
                 self.x = inputs
 
         if targets is not None:
             if self.y is not None:
+                np.testing.assert_equal(self.y.shape[1], targets.shape[1], "Please validate the values and ensure the \
+                                                                           shape equality of new samples to be added.")
                 self.y = np.concatenate((self.y, targets), axis=0)
             else:
                 self.y = targets
@@ -92,10 +96,10 @@ class DataSet(object):
                 self.ts = time_series
 
         if summary_stats is not None:
-            if self.outlier_detection and self.outlier_column_indices is not None:
-                summary_stats[:, self.outlier_column_indices] = np.log(summary_stats[:, self.outlier_column_indices])
-
             if self.s is not None:
+                np.testing.assert_equal(self.s.shape[1], summary_stats.shape[1], "Please validate the values and \
+                                                                                 ensure the shape equality of new \
+                                                                                 samples to be added.")
                 self.s = np.concatenate((self.s, summary_stats), axis=0)
             else:
                 self.s = summary_stats

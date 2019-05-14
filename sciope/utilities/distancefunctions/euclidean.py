@@ -17,6 +17,7 @@ The Euclidean distance function
 
 # Imports
 from sciope.utilities.distancefunctions.distance_base import DistanceBase
+from sciope.utilities.housekeeping import sciope_logger as ml
 from dask import delayed
 import numpy as np
 
@@ -29,13 +30,15 @@ class EuclideanDistance(DistanceBase):
     * DistanceBase.compute()
     """
 
-    def __init__(self):
+    def __init__(self, use_logger=True):
         """
         We just set the name here and call the superclass constructor.
         """
         self.name = 'Euclidean'
-        super(EuclideanDistance, self).__init__(self.name)
-
+        super(EuclideanDistance, self).__init__(self.name, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("EuclideanDistance distance function initialized")
 
     @delayed
     def compute(self, data, sim):
@@ -49,8 +52,13 @@ class EuclideanDistance(DistanceBase):
         data = np.asarray(data)
         sim = np.asarray(sim)
 
-        # Reshape to 1 x dim
-        data = data.reshape(1, data.size)
-        sim = sim.reshape(1, sim.size)
+        # Check that we have equal shapes
+        np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the \
+                                                       arguments.")
 
-        return np.linalg.norm(data - sim)
+        res = np.linalg.norm(data - sim)
+
+        if self.use_logger:
+            self.logger.info("EuclideanDistance: processed data matrices of shape {0} and calculated distance"
+                             " of {1}".format(data.shape, res))
+        return res

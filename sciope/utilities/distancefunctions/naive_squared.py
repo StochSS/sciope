@@ -17,7 +17,9 @@ The naive squared function: (a-b ** 2)
 
 # Imports
 from sciope.utilities.distancefunctions.distance_base import DistanceBase
+from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
+from dask import delayed
 
 
 # Class definition: NaiveSquared distance function
@@ -28,15 +30,18 @@ class NaiveSquaredDistance(DistanceBase):
     * DistanceBase.compute()
     """
 
-    def __init__(self):
+    def __init__(self, use_logger=True):
         """
         We just set the name here and call the superclass constructor.
         """
-        self.name = 'Euclidean'
-        super(NaiveSquaredDistance, self).__init__(self.name)
+        self.name = 'NaiveSquared'
+        super(NaiveSquaredDistance, self).__init__(self.name, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("NaiveSquaredDistance distance function initialized")
 
-    @staticmethod
-    def compute(data, sim):
+    @delayed
+    def compute(self, data, sim):
         """
         The arguments should either be provided with the function call or during instantiation.
         :param data: as in init
@@ -47,8 +52,13 @@ class NaiveSquaredDistance(DistanceBase):
         data = np.asarray(data)
         sim = np.asarray(sim)
 
-        # Reshape to 1 x dim
-        data = data.reshape(1, data.size)
-        sim = sim.reshape(1, sim.size)
+        # Check that we have equal shapes
+        np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the \
+                                                       arguments.")
 
-        return (data - sim) ** 2
+        res = (data - sim) ** 2
+
+        if self.use_logger:
+            self.logger.info("NaiveSquaredDistance: processed data matrices of shape {0} and calculated distance"
+                             " of {1}".format(data.shape, res))
+        return res
