@@ -117,8 +117,6 @@ class ABC(InferenceBase):
         trial_count = 0
         accepted_samples = []
         distances = []
-        fixed_dataset = DataSet('Fixed Data')
-        sim_dataset = DataSet('Simulated Data')
         
         #if data is large make chunks
         data_chunked = partition_all(chunk_size, self.data)
@@ -128,7 +126,7 @@ class ABC(InferenceBase):
         mean = dask.delayed(np.mean)
         stats_mean = mean(stats, axis=0)
         #reducer 2 mean over batches 
-        stats_mean = mean(stats_mean, keepdims=True) 
+        stats_mean = mean(stats_mean, keepdims=True).compute() 
 
         # Rejection sampling with batch size = batch_size 
 
@@ -142,7 +140,7 @@ class ABC(InferenceBase):
         sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
 
         # Calculate the distance between the dataset and the simulated result
-        sim_dist = [self.distance_function.compute(fixed_dataset.s, stats) for stats in sim_stats]
+        sim_dist = [self.distance_function.compute(stats_mean, stats) for stats in sim_stats]
             
         while accepted_count < num_samples:
 
