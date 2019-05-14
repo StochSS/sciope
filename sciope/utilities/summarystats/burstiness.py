@@ -78,5 +78,6 @@ class Burstiness(SummaryBase):
             trajs.append(out)
 
         out = np.array(trajs)
-        return out
+        np.testing.assert_equal(out.size, data_arr.shape[0], "Burstiness: expected summaries count mismatch!")
+        return np.reshape(out, (out.size, 1))
 

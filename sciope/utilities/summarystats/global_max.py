@@ -18,6 +18,7 @@ The global maximum summary statistic
 # Imports
 import numpy as np
 from sciope.utilities.summarystats.summary_base import SummaryBase
+from sciope.utilities.housekeeping import sciope_logger as ml
 
 
 # Class definition: Global Min Statistic
@@ -29,6 +30,9 @@ class GlobalMax(SummaryBase):
     def __init__(self, mean_trajectories=True):
         self.name = 'GlobalMax'
         super(GlobalMax, self).__init__(self.name, mean_trajectories)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("GlobalMax summary statistic initialized")
 
     def compute(self, data):
         """
@@ -37,6 +41,14 @@ class GlobalMax(SummaryBase):
         :return: computed statistic value
         """
         if self.mean_trajectories:
-            return np.asarray(np.mean(np.max(data, axis=1))).reshape(1, 1)
+            res = np.asarray(np.mean(np.max(data, axis=1)))  # returns a scalar, so we cast it
         else:
-            return np.asarray(np.max(data, axis=1)).reshape(1, 1)
+            res = np.max(data, axis=1)  # returns a numpy array
+
+        res = np.reshape(res, (res.size, 1))  # reshape to proper dimensions
+
+        if self.use_logger:
+            self.logger.info("GlobalMax summary statistic: processed data matrix of shape {0} and generated summaries"
+                             " of shape {1}".format(data.shape, res.shape))
+        np.testing.assert_equal(res.shape[0], data.shape[0], "GlobalMax: expected summaries count mismatch!")
+        return res
