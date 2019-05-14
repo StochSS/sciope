@@ -124,8 +124,11 @@ class ABC(InferenceBase):
         data_chunked = partition_all(chunk_size, self.data)
         #compute summary stats on fixed data
         stats = [self.summaries_function.compute(x) for x in data_chunked]
-        #compute mean
-        stats_mean = dask.delayed(np.mean)(stats, keepdims=True) 
+        #reducer 1 mean for each batch
+        mean = dask.delayed(np.mean)
+        stats_mean = mean(stats, axis=0)
+        #reducer 2 mean over batches 
+        stats_mean = mean(stats_mean, keepdims=True) 
 
         # Rejection sampling with batch size = batch_size 
 
@@ -143,7 +146,7 @@ class ABC(InferenceBase):
             
         while accepted_count < num_samples:
 
-            res_param, res_dist, res_combined = dask.compute(trial_param, sim_dist, combined_distance)
+            res_param, res_dist = dask.compute(trial_param, sim_dist)
 
             # Normalize distances between [0,1]
             sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
