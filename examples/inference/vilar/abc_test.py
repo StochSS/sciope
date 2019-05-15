@@ -24,7 +24,7 @@ import vilar
 from sklearn.metrics import mean_absolute_error
 
 # Load data
-data = np.loadtxt("datasets/vilar_dataset_specieA_100trajs_150time.dat", delimiter=",")
+data = np.loadtxt("vilar_TSF_FD_EfficientFeatures_specieA_50trajs_15time.dat", delimiter=",")
 
 # Set up the prior
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
@@ -37,7 +37,7 @@ abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_functi
                                  summaries_function=bs_stat)
 
 # Perform ABC; require 30 samples
-abc_instance.infer(30)
+abc_instance.rejection_sampling(30, 10, 10)
 
 # Results
 true_params = [[50.0, 100.0, 50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 1.0, 10.0, 0.5, 0.2, 1.0, 2.0, 1.0]]
