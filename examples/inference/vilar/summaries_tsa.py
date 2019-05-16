@@ -17,23 +17,38 @@ This summary statistic returns an ensemble of summaries calculated using time se
 
 # Imports
 from sciope.utilities.summarystats.summary_base import SummaryBase
-import numpy as np
+import dask
 from sciope.features.feature_extraction import generate_tsfresh_features
 from tsfresh.feature_extraction import EfficientFCParameters, MinimalFCParameters
 
 
-# Class definition: SummariesEnsemble
+# Summary statistics from TSFRESH
 class SummariesTSFRESH(SummaryBase):
     """
-    An ensemble of different statistics from TSFRESH
+    Class for computing features/statistics on time series data.
+    An ensemble of different statistics from TSFRESH are supported.
     """
 
     def __init__(self):
         self.name = 'SummariesTSFRESH'
-        self.features = None
+        self.features = MinimalFCParameters()
+        self.features.pop('length')
         super(SummariesTSFRESH, self).__init__(self.name)
 
-    def compute(self, data, features=EfficientFCParameters()):
-        self.features = features
-        feature_values = generate_tsfresh_features(data, features)
-        return feature_values.reshape(1, feature_values.size)
+    @dask.delayed
+    def compute(self, point):
+        """
+        Computes features for one point (time series).
+
+        Parameters
+        ---------
+
+        point : numpy.ndarray of shape n_timepoints x 1
+
+        Returns
+        params : list of features
+
+        """
+        # f = MinimalFCParameters()
+        # f.pop('length')
+        return list(generate_tsfresh_features(data=point, features=self.features))

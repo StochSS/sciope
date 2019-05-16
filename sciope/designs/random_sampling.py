@@ -19,6 +19,7 @@ Random Sampling Initial Design
 from sciope.designs.initial_design_base import InitialDesignBase
 from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
+from dask import delayed
 
 
 # Class definition
@@ -36,6 +37,7 @@ class RandomSampling(InitialDesignBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Random design in {0} dimensions initialized".format(len(self.xmin)))
 
+    @delayed
     def generate(self, n):
         """
         Sub-classable method for generating 'n' points in the given 'domain'.

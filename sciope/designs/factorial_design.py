@@ -19,6 +19,7 @@ Factorial Initial Design
 from sciope.designs.initial_design_base import InitialDesignBase
 from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
+from dask import delayed
 
 
 # Class definition
@@ -37,6 +38,7 @@ class FactorialDesign(InitialDesignBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Factorial design in {0} dimensions initialized".format(len(self.xmin)))
 
+    @delayed
     def generate(self):
         """
         Sub-classable method for generating a factorial design of specified 'levels' in the given domain.
