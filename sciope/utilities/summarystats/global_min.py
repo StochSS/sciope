@@ -19,6 +19,7 @@ The global minimum summary statistic
 import numpy as np
 from sciope.utilities.summarystats.summary_base import SummaryBase
 from sciope.utilities.housekeeping import sciope_logger as ml
+from dask import delayed
 
 
 # Class definition: Global Min Statistic
@@ -33,7 +34,8 @@ class GlobalMin(SummaryBase):
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("GlobalMin summary statistic initialized")
-
+            
+    @delayed
     def compute(self, data):
         """
         Calculate the value(s) of the summary statistic(s)

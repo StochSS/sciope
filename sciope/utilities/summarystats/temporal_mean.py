@@ -19,6 +19,7 @@ The temporal mean summary statistic
 import numpy as np
 from sciope.utilities.summarystats.summary_base import SummaryBase
 from sciope.utilities.housekeeping import sciope_logger as ml
+from dask import delayed
 
 
 # Class definition: Temporal Mean Statistic
@@ -33,7 +34,7 @@ class TemporalMean(SummaryBase):
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("TemporalMean summary statistic initialized")
-
+    @delayed
     def compute(self, data):
         """
         Calculate the value(s) of the summary statistic(s)

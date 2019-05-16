@@ -19,7 +19,7 @@ The temporal variance summary statistic
 import numpy as np
 from sciope.utilities.summarystats.summary_base import SummaryBase
 from sciope.utilities.housekeeping import sciope_logger as ml
-
+from dask import delayed
 
 # Class definition: Temporal Variance Statistic
 class TemporalVariance(SummaryBase):
@@ -33,7 +33,8 @@ class TemporalVariance(SummaryBase):
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("TemporalVariance summary statistic initialized")
-
+    
+    @delayed
     def compute(self, data):
         """
         Calculate the value(s) of the summary statistic(s)
