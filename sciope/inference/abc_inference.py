@@ -83,7 +83,6 @@ class ABC(InferenceBase):
         self.parallel_mode = parallel_mode
         self.historical_distances = []
         self.fixed_mean = []
-        self.fixed_chunk_size = 10
         super(ABC, self).__init__(self.name, data, sim)
         self.sim = dask.delayed(sim)
         #logger.info("Approximate Bayesian Computation initialized")
@@ -115,7 +114,7 @@ class ABC(InferenceBase):
 
         return normalized_distances[-1, :]
     
-    def compute_fixed_mean(self, chunk_size=self.fixed_chunk_size):
+    def compute_fixed_mean(self, chunk_size):
         """
         Computes the mean over summary statistics on fixed data
         
@@ -130,7 +129,7 @@ class ABC(InferenceBase):
         ndarray
             scaled distance
         """
-        
+
         #assumed data is large, make chunks
         data_chunked = partition_all(chunk_size, self.data)
         #compute summary stats on fixed data
@@ -178,7 +177,7 @@ class ABC(InferenceBase):
         
 
     #@sciope_profiler.profile
-    def rejection_sampling(self, num_samples, batch_size):
+    def rejection_sampling(self, num_samples, batch_size, chunk_size):
         """
         Perform ABC inference according to initialized configuration.
 
@@ -188,6 +187,9 @@ class ABC(InferenceBase):
             The number of required accepted samples
         batch_size : int
             The batch size of samples for performing rejection sampling
+        chunk_size : int
+            the partition size when splitting the fixed data. For avoiding many individual tasks
+            in dask if the data is large.
         
         Returns
         -------
@@ -206,7 +208,7 @@ class ABC(InferenceBase):
         
         #if fixed_mean has not been computed
         if not self.fixed_mean:
-            self.compute_fixed_mean()
+            self.compute_fixed_mean(chunk_size)
 
         #Get dask graph
         graph_dict = get_dask_graph(batch_size)
@@ -240,7 +242,7 @@ class ABC(InferenceBase):
         return self.results
 
 
-    def infer(self, num_samples, batch_size):
+    def infer(self, num_samples, batch_size, chunk_size=10):
         """
         Wrapper for rejection sampling. Performs ABC rejection sampling
         
@@ -250,6 +252,9 @@ class ABC(InferenceBase):
             The number of required accepted samples
         batch_size : int
             The batch size of samples for performing rejection sampling
+        chunk_size : int
+            the partition size when splitting the fixed data. For avoiding many individual tasks
+            in dask if the data is large. Default 10.
         
         Returns
         -------
@@ -262,5 +267,5 @@ class ABC(InferenceBase):
             'inferred_parameters': The mean of accepted parameter samples
         """
         
-        return self.rejection_sampling(num_samples, batch_size)
+        return self.rejection_sampling(num_samples, batch_size, chunk_size)
         
