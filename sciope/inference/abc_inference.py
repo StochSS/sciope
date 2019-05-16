@@ -211,7 +211,7 @@ class ABC(InferenceBase):
             self.compute_fixed_mean(chunk_size)
 
         #Get dask graph
-        graph_dict = get_dask_graph(batch_size)
+        graph_dict = self.get_dask_graph(batch_size)
 
         #do rejection sampling    
         while accepted_count < num_samples:
