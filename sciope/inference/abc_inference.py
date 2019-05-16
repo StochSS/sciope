@@ -126,7 +126,7 @@ class ABC(InferenceBase):
         mean = dask.delayed(np.mean)
         stats_mean = mean(stats, axis=0)
         #reducer 2 mean over batches 
-        stats_mean = mean(stats_mean, keepdims=True).compute() 
+        stats_mean = mean(stats_mean, axis=0, keepdims=True).compute() 
 
         # Rejection sampling with batch size = batch_size 
 
