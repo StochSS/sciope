@@ -47,6 +47,13 @@ class DataSet(object):
     """
 
     def __init__(self, name):
+        """[summary]
+        
+        Parameters
+        ----------
+        name : [type]
+            [description]
+        """
         self.name = name
         self.x = None
         self.y = None
@@ -59,16 +66,34 @@ class DataSet(object):
 
     def get_size(self):
         """
-        TODO:
         Returns the current number of points in the dataset
+        
+        Returns
+        -------
+        int
+            The current number of points in the dataset
         """
         return self.size
 
     def add_points(self, inputs=None, targets=None, time_series=None, summary_stats=None):
         """
         Updates the dataset to include new points
-        @ToDo: At the moment only support adding collections of points, i.e
-        inputs = N x num_params, time_series = N x num_timepoints x num_species etc. N can be 1.
+        
+        Parameters
+        ----------
+        inputs : ndarray, optional
+            Usually parameter points, by default None
+        targets : ndarray, optional
+            The target for inferene/optimazation/exploration, by default None
+        time_series : ndarray, optional
+            Simulation output trajectories, by default None
+        summary_stats : ndarray, optional
+            The summary statistics, by default None
+        
+        Raises
+        ------
+        ValueError
+            If all function args are None
         """
         if all(v is None for v in [inputs, targets, time_series, summary_stats]):
             raise ValueError('Dataset:add_points: no arguments specified.')
@@ -112,8 +137,16 @@ class DataSet(object):
         Check for outliers in calculated summary stats. Outliers are the few very high or very low values that can
         potentially introduce bias in tasks such as parameter inference. One can either remove them, replace with mean
         value, or use log scale for the statistic in question. This choice is left to the user.
-        :param mode: either use 'z-score' or inter-quantile range 'iqr'
-        :return: indices of dataset.s columns containing outliers
+        
+        Parameters
+        ----------
+        mode : str, optional
+            Either use 'z-score' or inter-quantile range 'iqr', by default 'zscore'
+        
+        Returns
+        -------
+        array
+            Indices of dataset.s columns containing outliers
         """
         if mode == 'zscore':
             # This will give us per-feature/per-statistic z-scores
@@ -148,10 +181,25 @@ class DataSet(object):
     def apply_func_to_columns(func, matrix, idx):
         """
         Applies a transformation function to selected column indices of a matrix
-        :param func: the transformation function
-        :param matrix: matrix to be processed
-        :param idx: indices of the matrix to be transformed
-        :return: the transformed matrix
+        
+        Parameters
+        ----------
+        func : callable
+            the transformation function
+        matrix : ndarray
+            matrix to be processed
+        idx : ndarray
+            indices of the matrix to be transformed
+        
+        Returns
+        -------
+        ndarray
+            the transformed matrix
+        
+        Raises
+        ------
+        ValueError
+            [description]
         """
         if any(v is None for v in [func, matrix, idx]):
             raise ValueError('Dataset:apply_func_to_columns: all three function arguments are required.')
