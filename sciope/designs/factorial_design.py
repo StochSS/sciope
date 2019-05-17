@@ -18,8 +18,8 @@ Factorial Initial Design
 # Imports
 from sciope.designs.initial_design_base import InitialDesignBase
 from sciope.utilities.housekeeping import sciope_logger as ml
-import numpy as np
 from dask import delayed
+import dask.array as da
 
 
 # Class definition
@@ -45,12 +45,12 @@ class FactorialDesign(InitialDesignBase):
         The number of generated points is levels^d.
         """
         # Get grid coordinates
-        grid_coords = [np.linspace(lb, ub, self.levels) for lb, ub in zip(self.xmin, self.xmax)]
+        grid_coords = [da.linspace(lb, ub, self.levels) for lb, ub in zip(self.xmin, self.xmax)]
 
         # Generate the full grid
-        x = np.meshgrid(*grid_coords)
+        x = da.meshgrid(*grid_coords)
         dim_idx = [item.ravel() for item in x]
-        x = np.vstack(dim_idx).T
+        x = da.vstack(dim_idx).T
         if self.use_logger:
             self.logger.info("Factorial design: generated {0} points in {1} dimensions".format(len(x), len(self.xmin)))
         return x

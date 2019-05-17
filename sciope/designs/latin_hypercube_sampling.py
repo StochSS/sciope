@@ -27,6 +27,7 @@ from sciope.designs.initial_design_base import InitialDesignBase
 from sciope.utilities.housekeeping import sciope_logger as ml
 from scipy.spatial.distance import cdist, pdist
 import numpy as np
+from dask import delayed
 
 
 # Class definition
@@ -54,6 +55,7 @@ class LatinHypercube(InitialDesignBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Latin hypercube design in {0} dimensions initialized".format(len(self.xmin)))
 
+    @delayed
     def _tplhsdesign(self, n, seed, ns):
         """
         Creates a LH using translational propagation.
@@ -74,17 +76,18 @@ class LatinHypercube(InitialDesignBase):
         np_star = nb * ns
 
         # Reshape the seed to properly create the first design
-        seed = self._reshape_seed(seed, ns, np_star, nd_star)
+        seed = self._reshape_seed(seed, ns, np_star, nd_star).compute()
 
         # Create a TPLHD with np_star points
-        x = self._create_tplhd(seed, np_star, nd_star)
+        x = self._create_tplhd(seed, np_star, nd_star).compute()
 
         # Resize if necessary
         if np_star > n:
-            x = self._resize_tplhd(x, np_star, n)
+            x = self._resize_tplhd(x, np_star, n).compute()
 
         return x
 
+    @delayed
     def _reshape_seed(self, seed, ns, np_star, nd_star):
         """
         Scales the seed design as needed.
@@ -104,6 +107,7 @@ class LatinHypercube(InitialDesignBase):
             b = ut - a * uf
             return np.round(a * seed + b)
 
+    @delayed
     def _create_tplhd(self, seed, np_star, nd_star):
         """
         Generate a TP LHD
@@ -128,6 +132,7 @@ class LatinHypercube(InitialDesignBase):
         np.testing.assert_equal(x.shape, (np_star, self._nv))
         return x
 
+    @delayed
     def _resize_tplhd(self, x, np_star, n):
         """
         In case the design is larger than requested, resize it. Else, return unchanged.
@@ -155,6 +160,7 @@ class LatinHypercube(InitialDesignBase):
         np.testing.assert_equal(x.shape[0], n)
         return x
 
+    @delayed
     def generate(self, n):
         """
         Sub-classable method for generating 'n' points in the given 'domain'.
@@ -170,11 +176,11 @@ class LatinHypercube(InitialDesignBase):
                 seed = np.arange(1, i + 1)[:, None] * np.ones(shape=(1, nv))
             else:
                 # Larger seeds using recursive division
-                seed = LatinHypercube(self.xmin, self.xmax, self.use_logger, seed_size=i - 1).generate(i)
+                seed = LatinHypercube(self.xmin, self.xmax, self.use_logger, seed_size=i - 1).generate(i).compute()
 
         # Create candidate designs and compute inter-site distance
         ns = seed.shape[0]
-        x = self._tplhsdesign(n, seed, ns)
+        x = self._tplhsdesign(n, seed, ns).compute()
         candidates.append(x)
         scores.append(np.min(pdist(x)))
 
