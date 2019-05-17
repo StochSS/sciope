@@ -19,19 +19,29 @@ from tsfresh.feature_extraction import feature_calculators
 import numpy as np
 
 
-def generate_tsfresh_features(data, features=None):
-    """Method to generate time series features
-        input: 
-            data -  numpy array of shape 2D  N x T, where T is number of time points
-            features - dict containing tsfresh features
-                       
-                       for exempel:  features = {'variance': None,
+def generate_tsfresh_features(data, features):
+    """
+    Generates time series features from TSFRESH library
+
+    Parameters
+    ----------
+    data : ndarray
+        time series collections of shape N x T, where T is number of time points
+    features : dict, optional
+        dict containing tsfresh features
+        for exempel:  features = {'variance': None,
                                                 'absolute_sum_of_changes': None,
                                                 'agg_autocorrelation': [{'f_agg': 'mean'},
                                                                         {'f_agg': 'var'}]}
-        return: numpy array of shape N x (Nr of total features)
-        """
-
+        
+        See TSFRESH documentation for full set of supported features:
+        https://tsfresh.readthedocs.io/en/latest/text/feature_extraction_settings.html
+    
+    Returns
+    -------
+    ndarray
+        shape N x (Nr of total features)
+    """
     for key in features.keys():
         assert hasattr(feature_calculators, key), "%s does not exist as a feature supported by tsfresh" % key
 
