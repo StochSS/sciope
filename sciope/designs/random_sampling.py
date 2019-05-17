@@ -31,6 +31,17 @@ class RandomSampling(InitialDesignBase):
     """
 
     def __init__(self, xmin, xmax, use_logger=True):
+        """[summary]
+        
+        Parameters
+        ----------
+        xmin : [type]
+            [description]
+        xmax : [type]
+            [description]
+        use_logger : bool, optional
+            [description], by default True
+        """
         name = 'RandomSampling'
         super(RandomSampling, self).__init__(name, xmin, xmax, use_logger)
         if self.use_logger:
@@ -41,6 +52,16 @@ class RandomSampling(InitialDesignBase):
     def generate(self, n):
         """
         Sub-classable method for generating 'n' points in the given 'domain'.
+        
+        Parameters
+        ----------
+        n : [type]
+            [description]
+        
+        Returns
+        -------
+        [type]
+            [description]
         """
         num_variables = len(self.xmin)
 
