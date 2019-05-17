@@ -25,12 +25,25 @@ import dask.array as da
 # Class definition
 class FactorialDesign(InitialDesignBase):
     """
-    Factorial design implemented through gpflowopt
+    Factorial design
 
     * InitialDesignBase.generate(n)
     """
 
     def __init__(self, levels, xmin, xmax, use_logger=True):
+        """[summary]
+        
+        Parameters
+        ----------
+        levels : [type]
+            [description]
+        xmin : [type]
+            [description]
+        xmax : [type]
+            [description]
+        use_logger : bool, optional
+            [description], by default True
+        """
         name = 'FactorialDesign'
         super(FactorialDesign, self).__init__(name, xmin, xmax, use_logger)
         self.levels = levels
@@ -43,6 +56,11 @@ class FactorialDesign(InitialDesignBase):
         """
         Sub-classable method for generating a factorial design of specified 'levels' in the given domain.
         The number of generated points is levels^d.
+        
+        Returns
+        -------
+        dask.delayed
+            
         """
         # Get grid coordinates
         grid_coords = [da.linspace(lb, ub, self.levels) for lb, ub in zip(self.xmin, self.xmax)]
