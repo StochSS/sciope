@@ -41,6 +41,15 @@ class MaximinSampling(SamplingBase):
     """
 
     def __init__(self, xmin, xmax):
+        """[summary]
+        
+        Parameters
+        ----------
+        xmin : [type]
+            [description]
+        xmax : [type]
+            [description]
+        """
         name = 'MaximinSampling'
         super(MaximinSampling, self).__init__(name, xmin, xmax)
         logger.info("Maximin sequential sampler in {0} dimensions initialized".format(len(self.xmin)))
@@ -51,6 +60,16 @@ class MaximinSampling(SamplingBase):
     def select_point(self, x):
         """
         Get top ranked candidate according to maximin sampling to add to current samples x
+        
+        Parameters
+        ----------
+        x : [type]
+            [description]
+        
+        Returns
+        -------
+        [type]
+            [description]
         """
         # Set up stuff
         num_samples = x.shape[0]
@@ -78,6 +97,18 @@ class MaximinSampling(SamplingBase):
     def select_points(self, x, n):
         """
         Get 'n' top ranked candidates according to maximin sampling to add to current samples x
+        
+        Parameters
+        ----------
+        x : [type]
+            [description]
+        n : [type]
+            [description]
+        
+        Returns
+        -------
+        ndarray
+            [description]
         """
         c = []
         for idx in range(0, n):
