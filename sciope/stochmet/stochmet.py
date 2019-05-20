@@ -29,6 +29,25 @@ from itertools import combinations
 
 def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
         n_iter = 1000, lr = 200, rs= None):
+        """[summary]
+        
+        Parameters
+        ----------
+        data : [type]
+            [description]
+        nr_components : int, optional
+            [description], by default 2
+        init : str, optional
+            [description], by default 'random'
+        plex : int, optional
+            [description], by default 30
+        n_iter : int, optional
+            [description], by default 1000
+        lr : int, optional
+            [description], by default 200
+        rs : [type], optional
+            [description], by default None
+        """
 
     tsne = t_sne.TSNE(n_components=nr_components, init=init,
             perplexity=plex, random_state=rs, n_iter=n_iter, learning_rate=lr)
@@ -36,22 +55,73 @@ def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
     return tsne.fit_transform(data), tsne
 
 def _do_pca(data, nr_components = 2, rs = None):
+    """[summary]
+    
+    Parameters
+    ----------
+    data : [type]
+        [description]
+    nr_components : int, optional
+        [description], by default 2
+    rs : [type], optional
+        [description], by default None
+    """
     pca = PCA(n_components=nr_components , random_state = rs)
     return pca.fit_transform(data), pca
 
 def _do_kpca(data , nr_components  = 2 , kernel  = 'rbf', gamma = 0.01,
         degree = 3):
+    """[summary]
+    
+    Parameters
+    ----------
+    data : [type]
+        [description]
+    nr_components : int, optional
+        [description], by default 2
+    kernel : str, optional
+        [description], by default 'rbf'
+    gamma : float, optional
+        [description], by default 0.01
+    degree : int, optional
+        [description], by default 3
+    """
 
     kpca = KernelPCA(n_components = nr_components, kernel = kernel, gamma = gamma,
             degree = degree)
     return kpca.fit_transform(data), kpca
 
 def _do_umap(data, nr_components = 2, nr_neighbors = 10, min_dist = 0.1):
+    """[summary]
+    
+    Parameters
+    ----------
+    data : [type]
+        [description]
+    nr_components : int, optional
+        [description], by default 2
+    nr_neighbors : int, optional
+        [description], by default 10
+    min_dist : float, optional
+        [description], by default 0.1
+    """
     rd = umap.UMAP(n_components = nr_components, n_neighbors = nr_neighbors,
             min_dist = min_dist)
     return rd.fit_transform(data), rd
 
 def _validate_dr_method(method):
+    """[summary]
+    
+    Parameters
+    ----------
+    method : [type]
+        [description]
+    
+    Raises
+    ------
+    ValueError
+        [description]
+    """
         allowed_methods = ["umap", "t_sne", "pca", "kpca"]
         if method not in allowed_methods:
             raise ValueError("Implemented dimension reduction methods are: {0} "
@@ -59,6 +129,17 @@ def _validate_dr_method(method):
                                                         method))
 
 def _do_dimension_reduction(X, method, kwargs={}):
+    """[summary]
+    
+    Parameters
+    ----------
+    X : [type]
+        [description]
+    method : [type]
+        [description]
+    kwargs : dict, optional
+        [description], by default {}
+    """
     _validate_dr_method(method)
     if method == 'umap':
         return _do_umap(X, **kwargs)
@@ -92,34 +173,36 @@ class SummariesTSFRESH(SummaryBase):
     def distribute(self, point):
         """
         Computes features for one point (time series).
-
-        Parameters
-        ---------
-
-        point : numpy.ndarray of shape n_timepoints x 1 
         
-        Returns
-        params : list of features
+        Parameters
+        ----------
+        point : ndarray
+            trajectory of shape n_timepoints x 1
 
+        Returns
+        -------
+        list
+            list of generated features 
         """
-        #f = MinimalFCParameters()
-        #f.pop('length')
         return list(generate_tsfresh_features(data=[point], features=self.features)[0])
         
 
     def correlation(self, x, y):
         """
-        Computes the Pearson correlation coefficient between two time series
+        Computes the Pearson correlation coefficient between two trajectories
         
         Parameters
         ---------
 
-        x : numpy.ndarray of shape n_timepoints x 1 
+        x : ndarray 
+            Trajectory of shape n_timepoints x 1 
 
-        y: numpy.ndarray of shape n_timepoints x 1 
+        y: ndarray 
+            Trajectory of shape n_timepoints x 1 
 
         Returns
-        params : list with feature
+        list
+            list of generated feature
         """
         return [np.corrcoef(x,y)[0,1]]
 
