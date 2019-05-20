@@ -36,6 +36,17 @@ class SamplingBase(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, name, xmin, xmax):
+        """[summary]
+        
+        Parameters
+        ----------
+        name : [type]
+            [description]
+        xmin : [type]
+            [description]
+        xmax : [type]
+            [description]
+        """
         self.name = name
         np.testing.assert_array_less(xmin, xmax, err_msg=("Please validate the values and ensure shape equality of "
                                                           "domain lower and upper bounds."))
@@ -45,11 +56,23 @@ class SamplingBase(object):
     @abstractmethod
     def select_point(self, x):
         """
-        Sub-classable method for selecting one new point to X. Each derived class must implement.
+        Sub-classable method for selecting one new point to X. Each derived class must implement
+        
+        Parameters
+        ----------
+        x : [type]
+            [description]
         """
 
     @abstractmethod
     def select_points(self, x, n):
         """
         Sub-classable method for selecting 'n' new points to X. Each derived class must implement.
+        
+        Parameters
+        ----------
+        x : [type]
+            [description]
+        n : [type]
+            [description]
         """
