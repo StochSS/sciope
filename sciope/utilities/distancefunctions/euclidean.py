@@ -43,10 +43,19 @@ class EuclideanDistance(DistanceBase):
     @delayed
     def compute(self, data, sim):
         """
-        The arguments should either be provided with the function call or during instantiation.
-        :param data: as in init
-        :param sim: as in init
-        :return: the distance calculated using numpy (found to be more efficient than scipy.distance)
+        Summary
+        
+        Parameters
+        ----------
+        data : [type]
+            [description]
+        sim : [type]
+            [description]
+        
+        Returns
+        -------
+        [type]
+            [description]
         """
         # Make sure we have numpy arrays
         data = np.asarray(data)

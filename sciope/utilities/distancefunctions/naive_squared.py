@@ -42,11 +42,19 @@ class NaiveSquaredDistance(DistanceBase):
 
     @delayed
     def compute(self, data, sim):
-        """
-        The arguments should either be provided with the function call or during instantiation.
-        :param data: as in init
-        :param sim: as in init
-        :return: the squared element-wise distance
+        """[summary]
+        
+        Parameters
+        ----------
+        data : [type]
+            [description]
+        sim : [type]
+            [description]
+        
+        Returns
+        -------
+        [type]
+            the squared element-wise distance
         """
         # Make sure we have numpy arrays
         data = np.asarray(data)

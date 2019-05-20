@@ -31,6 +31,15 @@ class DistanceBase(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, name, use_logger=True):
+        """[summary]
+        
+        Parameters
+        ----------
+        name : [type]
+            [description]
+        use_logger : bool, optional
+            [description], by default True
+        """
         self.name = name
         self.use_logger = use_logger
 
@@ -39,4 +48,11 @@ class DistanceBase(object):
         """
         Sub-classable method for calculating distances between fixed and simulated data.
         Each derived class must implement.
+
+        Parameters
+        ----------
+        data : [type]
+            [description]
+        sim : [type]
+            [description]
         """

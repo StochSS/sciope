@@ -43,11 +43,19 @@ class ManhattanDistance(DistanceBase):
 
     @delayed
     def compute(self, data, sim):
-        """
-        The arguments should either be provided with the function call or during instantiation.
-        :param data: as in init
-        :param sim: as in init
-        :return: the cityblock distance calculated using scipy
+        """[summary]
+        
+        Parameters
+        ----------
+        data : [type]
+            [description]
+        sim : [type]
+            [description]
+        
+        Returns
+        -------
+        [type]
+            the cityblock distance calculated using scipy
         """
         # Make sure we have numpy arrays
         data = np.asarray(data)
