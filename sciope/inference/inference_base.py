@@ -31,6 +31,17 @@ class InferenceBase(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, name, data, sim):
+        """[summary]
+        
+        Parameters
+        ----------
+        name : [type]
+            [description]
+        data : [type]
+            [description]
+        sim : [type]
+            [description]
+        """
         self.name = name
         # ToDo: implement assertions here
         self.data = data
