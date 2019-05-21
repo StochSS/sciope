@@ -123,11 +123,11 @@ def _validate_dr_method(method):
     ValueError
         [description]
     """
-        allowed_methods = ["umap", "t_sne", "pca", "kpca"]
-        if method not in allowed_methods:
-            raise ValueError("Implemented dimension reduction methods are: {0} "
-                             " got dr_method={1}".format(allowed_methods,
-                                                        method))
+    allowed_methods = ["umap", "t_sne", "pca", "kpca"]
+    if method not in allowed_methods:
+        raise ValueError("Implemented dimension reduction methods are: {0} "
+                            " got dr_method={1}".format(allowed_methods,
+                                                    method))
 
 def _do_dimension_reduction(X, method, kwargs={}):
     """[summary]
