@@ -29,25 +29,26 @@ from itertools import combinations
 
 def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
         n_iter = 1000, lr = 200, rs= None):
-        """[summary]
-        
-        Parameters
-        ----------
-        data : [type]
-            [description]
-        nr_components : int, optional
-            [description], by default 2
-        init : str, optional
-            [description], by default 'random'
-        plex : int, optional
-            [description], by default 30
-        n_iter : int, optional
-            [description], by default 1000
-        lr : int, optional
-            [description], by default 200
-        rs : [type], optional
-            [description], by default None
-        """
+    
+    """[summary]
+    
+    Parameters
+    ----------
+    data : [type]
+        [description]
+    nr_components : int, optional
+        [description], by default 2
+    init : str, optional
+        [description], by default 'random'
+    plex : int, optional
+        [description], by default 30
+    n_iter : int, optional
+        [description], by default 1000
+    lr : int, optional
+        [description], by default 200
+    rs : [type], optional
+        [description], by default None
+    """
 
     tsne = t_sne.TSNE(n_components=nr_components, init=init,
             perplexity=plex, random_state=rs, n_iter=n_iter, learning_rate=lr)
