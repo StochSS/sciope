@@ -106,7 +106,7 @@ class ABC(InferenceBase):
         global normalized_distances
         self.historical_distances.append(dist.ravel())
         all_distances = np.array(self.historical_distances)
-        divisor = np.asarray(all_distances.max(axis=0))
+        divisor = np.asarray(np.nanmax(all_distances, axis=0))
         normalized_distances = all_distances
         for j in range(0, len(divisor), 1):
             if divisor[j] > 0:

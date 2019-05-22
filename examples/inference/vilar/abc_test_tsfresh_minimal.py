@@ -43,7 +43,8 @@ abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_functi
 inf_res = abc_instance.infer(num_samples=200, batch_size=100)
 
 # Compare results
-true_params = [[50.0, 100.0, 50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 1.0, 10.0, 0.5, 0.2, 1.0, 2.0, 1.0]]
+true_value = np.array(['50.0', '500.0', '0.01', '50.0', '50.0', '5.0', '10.0', '0.5', '1.0', '0.2', '1.0', '1.0', '2.0'
+                          , '50.0', '100.0'], dtype=float)
 print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
 print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
 print('Trial count:', abc_instance.results['trial_count'])
