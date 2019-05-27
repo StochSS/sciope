@@ -80,5 +80,5 @@ class MABHalving(MABBase):
             epsilon_i = 3 / 4 * epsilon_i
             delta_i = delta_i / 2
 
-        logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[r]))
+        logger.debug("MABHalving: selected top {} arm(s) with distances {}".format(k, mean_rewards[r]))
         return r

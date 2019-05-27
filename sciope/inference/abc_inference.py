@@ -19,19 +19,20 @@ Approximate Bayesian Computation
 from sciope.inference.inference_base import InferenceBase
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
-#from sciope.utilities.housekeeping import sciope_logger as ml
-#from sciope.utilities.housekeeping import sciope_profiler
+# from sciope.utilities.housekeeping import sciope_logger as ml
+# from sciope.utilities.housekeeping import sciope_profiler
 from sciope.data.dataset import DataSet
 from toolz import partition_all
-import multiprocessing as mp #remove dependency 
+import multiprocessing as mp  # remove dependency
 import numpy as np
 import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
 
+
 # Set up the logger
-#logger = ml.SciopeLogger().get_logger()
+# logger = ml.SciopeLogger().get_logger()
 
 
 # Class definition: multiprocessing ABC process
@@ -85,7 +86,7 @@ class ABC(InferenceBase):
         self.fixed_mean = []
         super(ABC, self).__init__(self.name, data, sim)
         self.sim = dask.delayed(sim)
-        #logger.info("Approximate Bayesian Computation initialized")
+        # logger.info("Approximate Bayesian Computation initialized")
 
     def scale_distance(self, dist):
         """
@@ -101,7 +102,7 @@ class ABC(InferenceBase):
         ndarray
             scaled distance
         """
-        
+
         dist = np.asarray(dist)
         global normalized_distances
         self.historical_distances.append(dist.ravel())
@@ -113,7 +114,7 @@ class ABC(InferenceBase):
                 normalized_distances[:, j] = normalized_distances[:, j] / divisor[j]
 
         return normalized_distances[-1, :]
-    
+
     def compute_fixed_mean(self, chunk_size):
         """
         Computes the mean over summary statistics on fixed data
@@ -130,19 +131,19 @@ class ABC(InferenceBase):
             scaled distance
         """
 
-        #assumed data is large, make chunks
+        # assumed data is large, make chunks
         data_chunked = partition_all(chunk_size, self.data)
-        #compute summary stats on fixed data
+        # compute summary stats on fixed data
         stats = [self.summaries_function.compute(x) for x in data_chunked]
-        
+
         mean = dask.delayed(np.mean)
-        #reducer 1 mean for each batch
+        # reducer 1 mean for each batch
         stats_mean = mean(stats, axis=0)
-        #reducer 2 mean over batches 
-        stats_mean = mean(stats_mean, axis=0, keepdims=True).compute() 
+        # reducer 2 mean over batches
+        stats_mean = mean(stats_mean, axis=0, keepdims=True).compute()
         self.fixed_mean = np.copy(stats_mean)
         del stats_mean
-    
+
     def get_dask_graph(self, batch_size):
         """
         Constructs the dask computational graph invloving sampling, simulation, summary statistics
@@ -174,9 +175,8 @@ class ABC(InferenceBase):
         sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in sim_stats]
 
         return {"parameters": trial_param, "trajectories": sim_result, "summarystats": sim_stats, "distances": sim_dist}
-        
 
-    #@sciope_profiler.profile
+    # @sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size):
         """
         Perform ABC inference according to initialized configuration.
@@ -205,15 +205,15 @@ class ABC(InferenceBase):
         trial_count = 0
         accepted_samples = []
         distances = []
-        
-        #if fixed_mean has not been computed
+
+        # if fixed_mean has not been computed
         if not self.fixed_mean:
             self.compute_fixed_mean(chunk_size)
 
-        #Get dask graph
+        # Get dask graph
         graph_dict = self.get_dask_graph(batch_size)
 
-        #do rejection sampling    
+        # do rejection sampling
         while accepted_count < num_samples:
 
             res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
@@ -234,13 +234,12 @@ class ABC(InferenceBase):
                     accepted_samples.append(res_param[e])
                     distances.append(res_dist[e])
                     accepted_count += 1
-                    
+
             trial_count += batch_size
 
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
-                   'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
+                        'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
         return self.results
-
 
     def infer(self, num_samples, batch_size, chunk_size=10):
         """
@@ -266,6 +265,5 @@ class ABC(InferenceBase):
             'trial_count: The number of total trials performed in order to converge',
             'inferred_parameters': The mean of accepted parameter samples
         """
-        
+
         return self.rejection_sampling(num_samples, batch_size, chunk_size)
-        

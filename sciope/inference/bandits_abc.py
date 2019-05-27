@@ -17,20 +17,23 @@ Multi-Armed Bandit - Approximate Bayesian Computation
 
 # Imports
 from sciope.inference.abc_inference import ABC
-import numpy as np
-from sciope.data.dataset import DataSet
+from sciope.utilities.mab import mab_direct as md
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
-from sciope.utilities.mab import mab_direct as md
-from sciope.utilities.housekeeping import sciope_logger as ml
-from sciope.utilities.housekeeping import sciope_profiler
+# from sciope.utilities.housekeeping import sciope_logger as ml
+# from sciope.utilities.housekeeping import sciope_profiler
+from sciope.data.dataset import DataSet
+from toolz import partition_all
+import multiprocessing as mp  # remove dependency
+import numpy as np
+import dask
 
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
 
 # Set up the logger and profiler
-logger = ml.SciopeLogger().get_logger()
+#logger = ml.SciopeLogger().get_logger()
 
 
 def arm_pull(arm_idx):
@@ -57,18 +60,28 @@ class BanditsABC(ABC):
         self.name = 'BanditsABC'
         self.mab_variant = mab_variant
         self.k = k
-        logger.info("Multi-Armed Bandits Approximate Bayesian Computation initialized")
+        #logger.info("Multi-Armed Bandits Approximate Bayesian Computation initialized")
 
     def scale_distance(self, dist):
         """
-        Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
-        :param dist: a distance value or vector
-        :return: scaled distance value or vector
+         Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
+
+        Parameters
+        ----------
+        dist : ndarray, float
+            distance
+
+        Returns
+        -------
+        ndarray
+            scaled distance
         """
+
+        dist = np.asarray(dist)
         global normalized_distances
         self.historical_distances.append(dist.ravel())
         all_distances = np.array(self.historical_distances)
-        divisor = np.asarray(all_distances.max(axis=0))
+        divisor = np.asarray(np.nanmax(all_distances, axis=0))
         normalized_distances = all_distances
         for j in range(0, len(divisor), 1):
             if divisor[j] > 0:
@@ -76,47 +89,51 @@ class BanditsABC(ABC):
 
         return normalized_distances[-1, :]
 
-    @sciope_profiler.profile
-    def rejection_sampling(self, num_samples):
+    #@sciope_profiler.profile
+    def rejection_sampling(self, num_samples, batch_size, chunk_size):
         """
         * overrides rejection_sampling of ABC class *
-        Perform ABC inference with dynamic summary statistic selection using MABs.
-        :return:
-        posterior: The posterior distribution (samples)
-        distances: Accepted distance values
-        accepted_count: Number of accepted samples
-        trial_count: The number of total trials performed in order to converge
+        Perform ABC inference according to initialized configuration.
+
+        Parameters
+        ----------
+        num_samples : int
+            The number of required accepted samples
+        batch_size : int
+            The batch size of samples for performing rejection sampling
+        chunk_size : int
+            the partition size when splitting the fixed data. For avoiding many individual tasks
+            in dask if the data is large.
+
+        Returns
+        -------
+        dict
+            Keys
+            'accepted_samples: The accepted parameter values',
+            'distances: Accepted distance values',
+            'accepted_count: Number of accepted samples',
+            'trial_count: The number of total trials performed in order to converge',
+            'inferred_parameters': The mean of accepted parameter samples
         """
         accepted_count = 0
         trial_count = 0
         accepted_samples = []
         distances = []
-        fixed_dataset = DataSet('Fixed Data')
-        sim_dataset = DataSet('Simulated Data')
-        fixed_dataset.add_points(targets=self.data, summary_stats=self.summaries_function.compute(self.data))
 
+        # if fixed_mean has not been computed
+        if not self.fixed_mean:
+            self.compute_fixed_mean(chunk_size)
+
+        # Get dask graph
+        graph_dict = self.get_dask_graph(batch_size)
+
+        # do rejection sampling
         while accepted_count < num_samples:
-            # Rejection sampling
-            # Draw from the prior
-            trial_param = self.prior_function.draw()
 
-            # Perform the trial
-            sim_result = self.sim(trial_param)
-
-            # Get the statistic(s)
-            # In case of multiple summaries, a numpy array of k summaries should be returned
-            # ToDo: add exception handling to enforce it
-            sim_stats = self.summaries_function.compute(sim_result)
-
-            # Set/Update simulated dataset
-            sim_dataset.add_points(targets=sim_result, summary_stats=sim_stats)
-
-            # Calculate the distance between the dataset and the simulated result
-            # In case of multiple summaries, a numpy array of k distances should be returned
-            sim_dist = self.distance_function.compute(fixed_dataset.s, sim_stats)
+            res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
 
             # Normalize distances between [0,1]
-            sim_dist_scaled = self.scale_distance(sim_dist)
+            sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
 
             # Use MAB arm selection to identify the best 'k' arms or summary statistics
             num_arms = len(sim_dist_scaled)
@@ -124,22 +141,22 @@ class BanditsABC(ABC):
             top_k_arms_idx = self.mab_variant.select(arms, self.k)
             top_k_distances = np.asarray([sim_dist_scaled[i] for i in top_k_arms_idx])
 
-            # Take the norm to combine the top k distances
-            combined_distance = np.linalg.norm(top_k_distances)
-            logger.debug("Rejection Sampling: trial parameter = [{0}], distance = [{1}]".format(trial_param,
-                                                                                                combined_distance))
+            # Take the norm to combine the distances, if more than one summary is used
+            if top_k_distances.shape[1] > 1:
+                combined_distance = [dask.delayed(np.linalg.norm)(scaled, axis=1) for scaled in top_k_distances]
+                result, = dask.compute(combined_distance)
+            else:
+                result = top_k_distances.ravel()
 
             # Accept/Reject
-            if combined_distance <= self.epsilon:
-                accepted_samples.append(trial_param)
-                distances.append(sim_dist)
-                accepted_count += 1
-                logger.info("Rejection Sampling: accepted a new sample, total accepted samples = {0}".
-                            format(len(accepted_samples)))
+            for e, res in enumerate(result):
+                if res <= self.epsilon:
+                    accepted_samples.append(res_param[e])
+                    distances.append(res_dist[e])
+                    accepted_count += 1
 
-            trial_count += 1
+            trial_count += batch_size
 
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
         return self.results
-

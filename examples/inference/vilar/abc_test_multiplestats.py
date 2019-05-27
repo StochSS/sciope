@@ -25,7 +25,7 @@ from sklearn.metrics import mean_absolute_error
 from sciope.utilities.distancefunctions import naive_squared as ns
 
 # Load data
-data = np.loadtxt("datasets/vilar_dataset_specieA_100trajs_150time.dat", delimiter=",")
+data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
 
 # Set up the prior
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
@@ -38,11 +38,10 @@ abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_functi
                                  summaries_function=se.SummariesEnsemble())
 
 # Perform ABC; require 30 samples
-abc_instance.infer(30)
+test = abc_instance.infer(num_samples=200, batch_size=100)
 
 # Results
-true_value = np.array(['50.0', '500.0', '0.01', '50.0', '50.0', '5.0', '10.0', '0.5', '1.0', '0.2', '1.0', '1.0', '2.0'
-                          , '50.0', '100.0'], dtype=float)
+true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
 print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
 print('Trial count:', abc_instance.results['trial_count'])
