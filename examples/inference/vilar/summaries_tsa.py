@@ -20,6 +20,7 @@ from sciope.utilities.summarystats.summary_base import SummaryBase
 import dask
 from sciope.features.feature_extraction import generate_tsfresh_features
 from tsfresh.feature_extraction import EfficientFCParameters, MinimalFCParameters
+import numpy as np
 
 
 # Summary statistics from TSFRESH
@@ -51,4 +52,5 @@ class SummariesTSFRESH(SummaryBase):
         """
         # f = MinimalFCParameters()
         # f.pop('length')
-        return list(generate_tsfresh_features(data=point, features=self.features))
+        #return list(generate_tsfresh_features(data=point, features=self.features))
+        return np.asarray(generate_tsfresh_features(data=point, features=self.features))

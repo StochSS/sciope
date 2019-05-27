@@ -76,7 +76,6 @@ class BanditsABC(ABC):
         ndarray
             scaled distance
         """
-
         dist = np.asarray(dist)
         global normalized_distances
         self.historical_distances.append(dist.ravel())
@@ -136,14 +135,15 @@ class BanditsABC(ABC):
             sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
 
             # Use MAB arm selection to identify the best 'k' arms or summary statistics
-            num_arms = len(sim_dist_scaled)
+            num_arms = sim_dist_scaled.shape[1]
             arms = range(num_arms)
             top_k_arms_idx = self.mab_variant.select(arms, self.k)
-            top_k_distances = np.asarray([sim_dist_scaled[i] for i in top_k_arms_idx])
+            top_k_distances = np.asarray([sim_dist_scaled[:, i] for i in top_k_arms_idx])
+            top_k_distances = top_k_distances.transpose()
 
             # Take the norm to combine the distances, if more than one summary is used
             if top_k_distances.shape[1] > 1:
-                combined_distance = [dask.delayed(np.linalg.norm)(scaled, axis=1) for scaled in top_k_distances]
+                combined_distance = [dask.delayed(np.linalg.norm)(scaled) for scaled in top_k_distances]
                 result, = dask.compute(combined_distance)
             else:
                 result = top_k_distances.ravel()

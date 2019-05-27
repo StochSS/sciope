@@ -133,14 +133,18 @@ class ABC(InferenceBase):
 
         # assumed data is large, make chunks
         data_chunked = partition_all(chunk_size, self.data)
+
         # compute summary stats on fixed data
         stats = [self.summaries_function.compute(x) for x in data_chunked]
 
         mean = dask.delayed(np.mean)
+
         # reducer 1 mean for each batch
         stats_mean = mean(stats, axis=0)
+
         # reducer 2 mean over batches
         stats_mean = mean(stats_mean, axis=0, keepdims=True).compute()
+
         self.fixed_mean = np.copy(stats_mean)
         del stats_mean
 

@@ -34,7 +34,7 @@ data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
-euc = EuclideanDistance(use_logger=False)
+dist_fun = ns.NaiveSquaredDistance(use_logger=False)
 
 # Set up summaries
 sum_stats = tsa.SummariesTSFRESH()
@@ -44,8 +44,8 @@ mab_algo = mh.MABHalving(bandits_abc.arm_pull)
 
 
 # Set up ABC
-abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
-                                      distance_function=euc,
+abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
+                                      distance_function=dist_fun,
                                       summaries_function=sum_stats,
                                       mab_variant=mab_algo)
 
