@@ -173,10 +173,10 @@ class LatinHypercube(InitialDesignBase):
         for i in np.arange(1, min(n, self._seed_size) + 1):
             if i < 3:
                 # 1/2 points
-                seed = np.arange(1, i + 1)[:, None] * np.ones(shape=(1, nv))
+                seed = delayed(np.arange(1, i + 1)[:, None] * np.ones(shape=(1, nv)))
             else:
                 # Larger seeds using recursive division
-                seed = LatinHypercube(self.xmin, self.xmax, self.use_logger, seed_size=i - 1).generate(i).compute()
+                seed = LatinHypercube(self.xmin, self.xmax, self.use_logger, seed_size=i - 1).generate(i)
 
         # Create candidate designs and compute inter-site distance
         ns = seed.shape[0]
