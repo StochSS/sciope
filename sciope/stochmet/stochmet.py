@@ -20,6 +20,7 @@ from sciope.data.dataset import DataSet
 from sklearn.manifold import t_sne
 from sklearn.decomposition import PCA, KernelPCA
 from dask import persist, delayed
+from dask.distributed import wait
 import numpy as np
 import umap
 from itertools import combinations
@@ -361,12 +362,14 @@ class StochMET():
                 raise ValueError("The predictor must be a callable function")
             #persist at workers, will run in background
             params_res, processed_res, result_res, pred_res = persist(params, processed, result, pred)
+            wait(pred_res)
             #keep on workers until needed for local processing
             self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res,
                             'prediction': pred_res}
         else:
             #TODO: avoid redundancy...
             params_res, processed_res, result_res = persist(params, processed, result)
+            wait(result_res)
             self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res} 
     
 
