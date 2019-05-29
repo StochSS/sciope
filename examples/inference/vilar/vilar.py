@@ -98,7 +98,7 @@ def simulate(param):
 
     # Here, we create the model object.
     model = model_doc.to_model("vilar")
-    num_timestamps = 150
+    num_timestamps = 15
 
     # Set model parameters
     param = param.ravel()
