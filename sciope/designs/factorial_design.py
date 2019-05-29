@@ -20,6 +20,7 @@ from sciope.designs.initial_design_base import InitialDesignBase
 from sciope.utilities.housekeeping import sciope_logger as ml
 from dask import delayed
 import dask.array as da
+from numpy import float32
 
 
 # Class definition
@@ -63,7 +64,7 @@ class FactorialDesign(InitialDesignBase):
             
         """
         # Get grid coordinates
-        grid_coords = [da.linspace(lb, ub, self.levels) for lb, ub in zip(self.xmin, self.xmax)]
+        grid_coords = [da.linspace(lb, ub, num=self.levels) for lb, ub in zip(self.xmin, self.xmax)]
 
         # Generate the full grid
         x = da.meshgrid(*grid_coords)
