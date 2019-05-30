@@ -55,7 +55,7 @@ class ABC(InferenceBase):
     """
 
     def __init__(self, data, sim, prior_function, epsilon=0.1, parallel_mode=False, summaries_function=bs.Burstiness(),
-                 distance_function=euc.EuclideanDistance()):
+                 distance_function=euc.EuclideanDistance(use_logger=False)):
         """
         ABC class for rejection sampling
         

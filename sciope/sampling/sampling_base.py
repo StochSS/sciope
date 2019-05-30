@@ -35,7 +35,7 @@ class SamplingBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, xmin, xmax):
+    def __init__(self, name, xmin, xmax, use_logger):
         """[summary]
         
         Parameters
@@ -52,6 +52,7 @@ class SamplingBase(object):
                                                           "domain lower and upper bounds."))
         self.xmin = xmin
         self.xmax = xmax
+        self.use_logger = use_logger
 
     @abstractmethod
     def select_point(self, x):
