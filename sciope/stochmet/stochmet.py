@@ -20,7 +20,7 @@ from sciope.data.dataset import DataSet
 from sklearn.manifold import t_sne
 from sklearn.decomposition import PCA, KernelPCA
 from dask import persist, delayed
-from dask.distributed import wait
+from dask.distributed import as_completed, futures_of
 import numpy as np
 import umap
 from itertools import combinations
@@ -369,11 +369,30 @@ class StochMET():
         else:
             #TODO: avoid redundancy...
             params_res, processed_res, result_res = persist(params, processed, result)
-            wait(result_res)
-            self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res} 
+            
+            #convert to futures 
+            futures = futures_of(result_res)
+            #keep track of indices...
+            f_dict = {f.key:idx for idx,f in enumerate(futures)}
+            #..as we collect result on a "as completed" basis 
+            for f in as_completed(futures):
+                try:
+                    res = f.result()
+                    idx = f_dict[f.key]
+                    #get the parameter point
+                    param = np.array([params_res[idx].compute()])
+                    #get the trajatories 
+                    ts = np.array([processed_res[idx].compute()])
+                    #convert to numpy array
+                    feature = np.array([res])
+                    #add to data collection
+                    self.data.add_points(inputs=param, time_series=ts, 
+                            summary_stats=feature, user_labels=np.array([-1]))
+                except EventFired:
+                    pass
     
 
-    def explore(self, dr_method='umap', scaling=None, from_distributed=True, filter_func=None, kwargs={}):
+    def explore(self, dr_method='umap', scaling=None, from_distributed=False, filter_func=None, kwargs={}):
         """
         Visualize the results from the total parameter sweep.
 
