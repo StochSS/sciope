@@ -176,19 +176,7 @@ class ABC(InferenceBase):
         sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
 
         if ensemble_size > 1:
-
-            def window(iterable, size):
-                i = iter(iterable)
-                win = []
-                for e in range(0, size):
-                    win.append(next(i))
-                yield win
-                for e in i:
-                    win = win[1:] + [e]
-                    yield win
-            
-            w = window(sim_stats, ensemble_size)
-            stats_final = [dask.delayed(np.mean)(x, axis=0) for x in w]
+            stats_final = [dask.delayed(np.mean)(sim_stats[i:i+ensemble_size], axis=0) for i in range(0,len(sim_stats),ensemble_size)]
         else:
             stats_final = sim_stats
 
