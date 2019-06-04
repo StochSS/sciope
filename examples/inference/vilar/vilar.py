@@ -148,7 +148,7 @@ def simulate(param):
     temp_param.set_expression(param[14])
 
     # Set up simulation density
-    num_sim_trajectories = 10
+    num_sim_trajectories = 1
     model.tspan = np.linspace(1, 100, num_timestamps)
     simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
 

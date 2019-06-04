@@ -35,7 +35,7 @@ class SamplingBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, xmin, xmax, use_logger):
+    def __init__(self, name, xmin, xmax, use_logger=False):
         """[summary]
         
         Parameters

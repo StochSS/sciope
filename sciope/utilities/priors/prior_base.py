@@ -26,12 +26,13 @@ class PriorBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name):
+    def __init__(self, name, use_logger=False):
         """
         Set up local variables
         :param name: unique identifier for the prior
         """
         self.name = name
+        self.use_logger = use_logger
 
     @abstractmethod
     def draw(self, n=1):

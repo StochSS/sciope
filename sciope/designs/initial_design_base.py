@@ -31,7 +31,7 @@ class InitialDesignBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, xmin, xmax, use_logger=True):
+    def __init__(self, name, xmin, xmax, use_logger=False):
         self.name = name
         np.testing.assert_array_less(xmin, xmax, err_msg=("Please validate the values and ensure shape equality of "
                                                           "domain lower and upper bounds."))

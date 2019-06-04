@@ -30,7 +30,7 @@ class DistanceBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, use_logger=True):
+    def __init__(self, name, use_logger=False):
         """[summary]
         
         Parameters

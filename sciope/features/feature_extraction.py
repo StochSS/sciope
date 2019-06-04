@@ -53,7 +53,7 @@ def generate_tsfresh_features(data, features):
                 res = func(x, param=parameter_list)  ## returns a list of tuples with string and value
                 for item in res:
                     yield item[1]
-                
+
             else:
                 if parameter_list:
                     res = [func(x, **param) for param in parameter_list]
@@ -64,10 +64,9 @@ def generate_tsfresh_features(data, features):
                     yield res
 
     def _wrapper(data):
-            return [list(_f(x)) for x in data]
+        return [list(_f(x)) for x in data]
 
     return np.array(_wrapper(data))
-
 
 
 def remove_nan_features(x, features):

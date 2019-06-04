@@ -28,7 +28,7 @@ class TemporalMean(SummaryBase):
     Simply the mean taken over the entire time span
     """
 
-    def __init__(self, mean_trajectories=True, use_logger=True):
+    def __init__(self, mean_trajectories=False, use_logger=False):
         self.name = 'TemporalMean'
         super(TemporalMean, self).__init__(self.name, mean_trajectories, use_logger)
         if self.use_logger:
@@ -41,6 +41,7 @@ class TemporalMean(SummaryBase):
         :param data: simulated or data set
         :return: computed statistic value
         """
+        data = np.asarray(data)
         if self.mean_trajectories:
             res = np.asarray(np.mean(np.mean(data, axis=1), axis=0))  # returns a scalar, so we cast it
         else:
@@ -51,5 +52,10 @@ class TemporalMean(SummaryBase):
         if self.use_logger:
             self.logger.info("TemporalMean summary statistic: processed data matrix of shape {0} and generated "
                              "summaries of shape {1}".format(data.shape, res.shape))
-        np.testing.assert_equal(res.size, data.shape[0], "TemporalMean: expected summaries count mismatch!")
+
+        if self.mean_trajectories:
+            np.testing.assert_equal(res.shape[0], 1, "TemporalMean: expected summaries count mismatch!")
+        else:
+            np.testing.assert_equal(res.shape[0], data.shape[0], "TemporalMean: expected summaries count mismatch!")
+
         return res

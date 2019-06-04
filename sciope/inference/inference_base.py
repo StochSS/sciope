@@ -30,7 +30,7 @@ class InferenceBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, data, sim):
+    def __init__(self, name, data, sim, use_logger=False):
         """[summary]
         
         Parameters
@@ -46,6 +46,7 @@ class InferenceBase(object):
         # ToDo: implement assertions here
         self.data = data
         self.sim = sim
+        self.use_logger = use_logger
         self.results = dict()
 
     @abstractmethod

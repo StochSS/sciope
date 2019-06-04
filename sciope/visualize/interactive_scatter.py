@@ -7,13 +7,14 @@ import numpy as np
 from ipywidgets import widgets
 from IPython.display import display
 
+
 class UserLabel():
     def __init__(self):
         self.highlighted = []
 
     def clear(self):
         self.highlighted = []
-    
+
     def add(self, x):
         self.highlighted.append(x)
 
@@ -22,7 +23,8 @@ def annotate(axis, text, x, y):
     """Create annotation at position (x,y) """
     text_annotation = Annotation(text, xy=(x, y), xycoords='data')
     axis.add_artist(text_annotation)
-    
+
+
 def draw_scatterplot(axis, x_values, y_values, labels):
     "Plot scatter with given values"
     axis.scatter(
@@ -32,17 +34,18 @@ def draw_scatterplot(axis, x_values, y_values, labels):
         picker=True
     )
 
+
 class UserLabel():
     """Class to keep track of highligted points, will be used for interactive labeling"""
+
     def __init__(self):
         self.highlighted = []
 
     def clear(self):
         self.highlighted = []
-    
+
     def add(self, x):
         self.highlighted.append(x)
-
 
 
 def interative_scatter(scatter_data, data_class=None):
@@ -50,16 +53,18 @@ def interative_scatter(scatter_data, data_class=None):
     https://medium.com/@gorjanz/data-analysis-in-python-interactive-scatterplot-with-matplotlib-6bb8ad2f1f18
 
          """
-    assert hasattr(data_class, 'user_labels'), "For interative exploration to work the DataSet class need attribute 'user_labels'" 
-    assert scatter_data.shape[0] == data_class.user_labels.shape[0], "scatter_data and data contained in DataSet class need the same number of points"
-    
+    assert hasattr(data_class,
+                   'user_labels'), "For interative exploration to work the DataSet class need attribute 'user_labels'"
+    assert scatter_data.shape[0] == data_class.user_labels.shape[
+        0], "scatter_data and data contained in DataSet class need the same number of points"
+
     instances_colors = data_class.user_labels
-    axis_values_x = scatter_data[:,0]
-    axis_values_y = scatter_data[:,1]
+    axis_values_x = scatter_data[:, 0]
+    axis_values_y = scatter_data[:, 1]
     user_labels = UserLabel()
 
     # draw a subplots
-    fig, [[ax,ax2],[ax3,ax4]] = plt.subplots(2,2, figsize=(10, 8))
+    fig, [[ax, ax2], [ax3, ax4]] = plt.subplots(2, 2, figsize=(10, 8))
     plotting_axes = [ax2, ax3, ax4]
 
     # draw the initial scatterplot
@@ -72,8 +77,6 @@ def interative_scatter(scatter_data, data_class=None):
         axis.plot(ts_data)
         axis.figure.canvas.draw_idle()
 
-
-
     # define the behaviour -> what happens when you pick a dot on the scatterplot by clicking close to it
     def onpick(event):
         # step 1: take the index of the dot which was picked
@@ -84,7 +87,7 @@ def interative_scatter(scatter_data, data_class=None):
         label_pos_y = event.mouseevent.ydata
 
         # just in case two dots are very close, this offset will help the labels not appear one on top of each other
-        offset = 0.01 # TODO this offset has to be scaled to the data, or the data has to be scaled
+        offset = 0.01  # TODO this offset has to be scaled to the data, or the data has to be scaled
 
         # if the dots are to close one to another, a list of dots clicked is returned by the matplotlib library
         for i in ind:
@@ -98,12 +101,10 @@ def interative_scatter(scatter_data, data_class=None):
             # step 5: create and add the text annotation to the scatterplot
             annotate(
                 ax,
-                (i,label),
+                (i, label),
                 label_pos_x + offset,
                 label_pos_y + offset
             )
-
-
 
             # step 6: force re-draw
             ax.figure.canvas.draw_idle()
@@ -111,22 +112,19 @@ def interative_scatter(scatter_data, data_class=None):
             # alter the offset just in case there are more than one dots affected by the click
             offset += 0.01
 
-        #lastly lets draw the trajectory (we can only draw one, so we take the last in "ind")
-        
+        # lastly lets draw the trajectory (we can only draw one, so we take the last in "ind")
+
         for e, plots in enumerate(trajectory_plots):
             draw_trajectory(plotting_axes[e], ind[-1], int(plots.value))
-        
-
 
     # connect the click handler function to the scatterplot
     fig.canvas.mpl_connect('pick_event', onpick)
 
     # create the "clear all" button, and place it somewhere on the screen
-    #ax_clear_all = plt.axes([0.0, 0.0, 0.1, 0.05])
-    #button_clear_all = Button(ax_clear_all, 'Clear all')
+    # ax_clear_all = plt.axes([0.0, 0.0, 0.1, 0.05])
+    # button_clear_all = Button(ax_clear_all, 'Clear all')
     button_clear_all = widgets.Button(description='Clear all')
     display(button_clear_all)
-
 
     # define the "clear all" behaviour
     def onclick(event):
@@ -136,7 +134,7 @@ def interative_scatter(scatter_data, data_class=None):
         ax3.cla()
         ax4.cla()
 
-        #clear highlighted points
+        # clear highlighted points
         user_labels.clear()
 
         # step 2: we re-populate the scatterplot only with the dots not the labels
@@ -144,7 +142,6 @@ def interative_scatter(scatter_data, data_class=None):
 
         # step 3: we force re-draw
         ax.figure.canvas.draw_idle()
-
 
     # link the event handler function to the click event on the button
     button_clear_all.on_click(onclick)
@@ -160,12 +157,11 @@ def interative_scatter(scatter_data, data_class=None):
 
     button_submit.on_click(set_user_label)
 
-
     # Widgets for plotting trajectories
     species = {}
     if 'listOfSpecies' in data_class.configurations.keys():
         indices = data_class.configurations['listOfSpecies']
-        for e,s in enumerate(indices):
+        for e, s in enumerate(indices):
             species[s] = e
 
     else:
@@ -181,7 +177,7 @@ def interative_scatter(scatter_data, data_class=None):
             value=val,
             description='Species plot ' + str(val + 1),
             disabled=False,
-            )
+        )
         trajectory_plots.append(plot)
         display(plot)
 
@@ -189,15 +185,9 @@ def interative_scatter(scatter_data, data_class=None):
     plt.plot()
 
     # use option_context to limit display 
-    #with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     if 'listOfParameters' in data_class.configurations.keys():
         display(DataFrame(data_class.x, columns=data_class.configurations['listOfParameters']))
-    
-
 
     # present the scatterplot
     plt.show()
-
-
-
-    

@@ -21,9 +21,6 @@ from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
 import math
 
-# Set up the logger and profiler
-logger = ml.SciopeLogger().get_logger()
-
 
 # Class definition: DIRECT MAB arm selection
 class MABDirect(MABBase):
@@ -33,7 +30,7 @@ class MABDirect(MABBase):
     Ref: "Efficient Selection of Multiple Bandit Arms: Theory and Practice", Shivaram Kalyanakrishnan and Peter Stone
     """
 
-    def __init__(self, arm_pull, epsilon=1, delta=0.4):
+    def __init__(self, arm_pull, epsilon=1, delta=0.4, use_logger=False):
         """
         Set up local variables,
         :param arm_pull: function handle returning distance between fixed and simulated data for a sample from prior.
@@ -44,7 +41,10 @@ class MABDirect(MABBase):
         self.name = 'DIRECT'
         self.epsilon = epsilon  # defaults to 1
         self.delta = delta  # starting probability of 0.6 seems loose enough
-        super(MABDirect, self).__init__(self.name, arm_pull)
+        super(MABDirect, self).__init__(self.name, arm_pull, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("DIRECT MAB summary statistic selection initialized")
 
     def select(self, arms, k=1):
         """
@@ -68,8 +68,10 @@ class MABDirect(MABBase):
 
         # replace nan with inf
         mean_rewards[np.isnan(mean_rewards)] = -1 * np.inf
-        logger.debug("MABDirect: reward values are {}".format(mean_rewards))
+        if self.use_logger:
+            self.logger.debug("MABDirect: reward values are {}".format(mean_rewards))
 
         top_k_arms = np.argpartition(mean_rewards, -k)[-k:]
-        logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[top_k_arms]))
+        if self.use_logger:
+            self.logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[top_k_arms]))
         return top_k_arms

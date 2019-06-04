@@ -20,7 +20,6 @@ from sciope.designs.initial_design_base import InitialDesignBase
 from sciope.utilities.housekeeping import sciope_logger as ml
 from dask import delayed
 import dask.array as da
-from numpy import float32
 
 
 # Class definition
@@ -31,7 +30,7 @@ class FactorialDesign(InitialDesignBase):
     * InitialDesignBase.generate(n)
     """
 
-    def __init__(self, levels, xmin, xmax, use_logger=True):
+    def __init__(self, levels, xmin, xmax, use_logger=False):
         """[summary]
         
         Parameters

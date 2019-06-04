@@ -19,15 +19,14 @@ Provides very basic profiling
 import time
 from sciope.utilities.housekeeping import sciope_logger as sl
 
-# Set up the logger
-logger = sl.SciopeLogger().get_logger()
-
 
 # Very basic function run-time logging
-def profile(function_handle):
+def profile(function_handle, use_profiler=False):
     def wrap(*args, **kwargs):
-        start_time = time.time()
-        result = function_handle(*args, **kwargs)
-        logger.info("Function {0} run time = {1} seconds".format(function_handle, time.time() - start_time))
+        if use_profiler:
+            logger = sl.SciopeLogger().get_logger()
+            start_time = time.time()
+            result = function_handle(*args, **kwargs)
+            logger.info("Function {0} run time = {1} seconds".format(function_handle, time.time() - start_time))
         return result
     return wrap

@@ -26,7 +26,7 @@ class SummaryBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, mean_trajectories=True, use_logger=True):
+    def __init__(self, name, mean_trajectories=False, use_logger=False):
         """
         Set up local variables
         :param name: unique identifier for the statistic

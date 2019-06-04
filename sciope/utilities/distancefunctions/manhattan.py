@@ -31,7 +31,7 @@ class ManhattanDistance(DistanceBase):
     * DistanceBase.compute()
     """
 
-    def __init__(self, use_logger=True):
+    def __init__(self, use_logger=False):
         """
         We just set the name here and call the superclass constructor.
         """

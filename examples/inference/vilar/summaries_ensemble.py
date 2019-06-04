@@ -38,9 +38,15 @@ class SummariesEnsemble(SummaryBase):
     @staticmethod
     def compute(data):
         ensemble = []
-        ensemble.append(bs.Burstiness(mean_trajectories=False).compute(data))
-        ensemble.append(mx.GlobalMax().compute(data))
-        ensemble.append(mn.GlobalMin().compute(data))
-        ensemble.append(tm.TemporalMean().compute(data))
-        ensemble.append(tv.TemporalVariance().compute(data))
-        return np.asarray(ensemble).reshape(1, len(ensemble))
+        bs_vals = bs.Burstiness(mean_trajectories=True).compute(data).compute()
+        mx_vals = mx.GlobalMax(mean_trajectories=True).compute(data).compute()
+        mn_vals = mn.GlobalMin(mean_trajectories=True).compute(data).compute()
+        tm_vals = tm.TemporalMean(mean_trajectories=True).compute(data).compute()
+        tv_vals = tv.TemporalVariance(mean_trajectories=True).compute(data).compute()
+        ensemble.append(bs_vals)
+        ensemble.append(mx_vals)
+        ensemble.append(mn_vals)
+        ensemble.append(tm_vals)
+        ensemble.append(tv_vals)
+        ensemble = np.asarray(ensemble)
+        return ensemble.reshape(1, ensemble.size)

@@ -26,7 +26,7 @@ class MABBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, arm_pull):
+    def __init__(self, name, arm_pull, use_logger=False):
         """
         Set up local variables,
         :param name: should signify a flavour of MAB solution type
@@ -37,6 +37,7 @@ class MABBase(object):
         self.arm_pull = arm_pull
         # ToDo: implement assertions here
         self.num_pulls = 0
+        self.use_logger=use_logger
 
     @abstractmethod
     def select(self, arms, k=1):

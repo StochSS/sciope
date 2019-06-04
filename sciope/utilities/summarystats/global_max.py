@@ -28,7 +28,7 @@ class GlobalMax(SummaryBase):
     The maximum value observed across the entire time span
     """
 
-    def __init__(self, mean_trajectories=True, use_logger=True):
+    def __init__(self, mean_trajectories=False, use_logger=False):
         self.name = 'GlobalMax'
         super(GlobalMax, self).__init__(self.name, mean_trajectories, use_logger)
         if self.use_logger:
@@ -42,8 +42,9 @@ class GlobalMax(SummaryBase):
         :param data: simulated or data set
         :return: computed statistic value
         """
+        data = np.asarray(data)
         if self.mean_trajectories:
-            res = np.asarray(np.mean(np.max(data, axis=1)))  # returns a scalar, so we cast it
+            res = np.asarray(np.mean(np.max(data, axis=1), axis=0))  # returns a scalar, so we cast it
         else:
             res = np.max(data, axis=1)  # returns a numpy array
 
@@ -52,5 +53,9 @@ class GlobalMax(SummaryBase):
         if self.use_logger:
             self.logger.info("GlobalMax summary statistic: processed data matrix of shape {0} and generated summaries"
                              " of shape {1}".format(data.shape, res.shape))
-        np.testing.assert_equal(res.shape[0], data.shape[0], "GlobalMax: expected summaries count mismatch!")
+
+        if self.mean_trajectories:
+            np.testing.assert_equal(res.shape[0], 1, "GlobalMax: expected summaries count mismatch!")
+        else:
+            np.testing.assert_equal(res.shape[0], data.shape[0], "GlobalMax: expected summaries count mismatch!")
         return res

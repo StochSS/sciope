@@ -38,7 +38,7 @@ class LatinHypercube(InitialDesignBase):
     * InitialDesignBase.generate(n)
     """
 
-    def __init__(self, xmin, xmax, use_logger=True, seed_size=None):
+    def __init__(self, xmin, xmax, use_logger=False, seed_size=None):
         """
         LatinHypercube constructor
         :param xmin: lower bounds for domain in form of a np array containing one value per dimension/variable

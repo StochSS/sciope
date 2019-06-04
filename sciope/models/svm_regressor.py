@@ -19,6 +19,7 @@ Support Vector Machine Regression Surrogate Model
 from sciope.models.model_base import ModelBase
 from sklearn.svm import SVR
 from sklearn.model_selection import GridSearchCV
+from sciope.utilities.housekeeping import sciope_logger as ml
 
 
 # Class definition
@@ -27,8 +28,12 @@ class SVRModel(ModelBase):
     We use the sklearn SVM implementation here.
     """
 
-    def __init__(self):
+    def __init__(self, use_logger=False):
         self.name = 'SVRModel'
+        super(SVRModel, self).__init__(self.name, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Support Vector Regression model initialized")
 
     # Tune parameters of the model
     def tune_parameters(self, X, y, nfolds):
@@ -51,6 +56,8 @@ class SVRModel(ModelBase):
         # Train the model
         self.model = SVR(C=params['C'], gamma=params['gamma'])
         self.model.fit(self.x, self.y)
+        if self.use_logger:
+            self.logger.info("Support Vector Regression model trained with {} samples".format(len(self.y)))
 
     # Predict
     def predict(self, xt):
