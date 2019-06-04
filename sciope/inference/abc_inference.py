@@ -148,7 +148,7 @@ class ABC(InferenceBase):
         self.fixed_mean = np.copy(stats_mean)
         del stats_mean
 
-    def get_dask_graph(self, batch_size):
+    def get_dask_graph(self, batch_size, ensemble_size=1):
         """
         Constructs the dask computational graph invloving sampling, simulation, summary statistics
         and distances.
@@ -167,7 +167,7 @@ class ABC(InferenceBase):
         # Rejection sampling with batch size = batch_size 
 
         # Draw from the prior
-        trial_param = [self.prior_function.draw() for x in range(batch_size)]
+        trial_param = [self.prior_function.draw() for x in range(batch_size)]*ensemble_size
 
         # Perform the trial
         sim_result = [self.sim(param) for param in trial_param]
@@ -175,13 +175,29 @@ class ABC(InferenceBase):
         # Get the statistic(s)
         sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
 
-        # Calculate the distance between the dataset and the simulated result
-        sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in sim_stats]
+        if ensemble_size > 1:
 
-        return {"parameters": trial_param, "trajectories": sim_result, "summarystats": sim_stats, "distances": sim_dist}
+            def window(iterable, size):
+                i = iter(iterable)
+                win = []
+                for e in range(0, size):
+                    win.append(next(i))
+                yield win
+                for e in i:
+                    win = win[1:] + [e]
+                    yield win
+            
+            stats_final = [dask.delayed(np.mean)(x, axis=0) for x in window(sim_stats, ensemble_size)]
+        else:
+            stats_final = sim_stats
+
+        # Calculate the distance between the dataset and the simulated result
+        sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in stats_final]
+
+        return {"parameters": trial_param, "trajectories": sim_result, "summarystats": stats_final, "distances": sim_dist}
 
     # @sciope_profiler.profile
-    def rejection_sampling(self, num_samples, batch_size, chunk_size):
+    def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size):
         """
         Perform ABC inference according to initialized configuration.
 

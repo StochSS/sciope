@@ -370,26 +370,30 @@ class StochMET():
             #TODO: avoid redundancy...
             params_res, processed_res, result_res = persist(params, processed, result)
             
-            #convert to futures 
+           #convert to futures 
             futures = futures_of(result_res)
+            f_params = futures_of(params_res)
+            f_ts = futures_of(processed_res)
             #keep track of indices...
             f_dict = {f.key:idx for idx,f in enumerate(futures)}
             #..as we collect result on a "as completed" basis 
-            for f in as_completed(futures):
-                try:
-                    res = f.result()
-                    idx = f_dict[f.key]
-                    #get the parameter point
-                    param = np.array([params_res[idx].compute()])
-                    #get the trajatories 
-                    ts = np.array([processed_res[idx].compute()])
-                    #convert to numpy array
-                    feature = np.array([res])
+            for f,res in as_completed(futures, with_results=True):
+                #with_results = False needed to capture EventFirred
+                #try:
+                #res = f.result()
+
+                idx = f_dict[f.key]
+                #get the parameter point
+                param = np.array([f_params[idx].result()])
+                #get the trajatories 
+                ts = np.array([f_ts[idx].result()])
+                #convert to numpy array
+                feature = np.array([res])
                     #add to data collection
-                    self.data.add_points(inputs=param, time_series=ts, 
+                self.data.add_points(inputs=param, time_series=ts,
                             summary_stats=feature, user_labels=np.array([-1]))
-                except EventFired:
-                    pass
+               # except EventFired:
+               #     pass
     
 
     def explore(self, dr_method='umap', scaling=None, from_distributed=False, filter_func=None, kwargs={}):
