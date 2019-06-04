@@ -187,7 +187,8 @@ class ABC(InferenceBase):
                     win = win[1:] + [e]
                     yield win
             
-            stats_final = [dask.delayed(np.mean)(x, axis=0) for x in window(sim_stats, ensemble_size)]
+            w = window(sim_stats, ensemble_size)
+            stats_final = [dask.delayed(np.mean)(x, axis=0) for x in w]
         else:
             stats_final = sim_stats
 
