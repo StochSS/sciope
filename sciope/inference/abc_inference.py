@@ -183,7 +183,7 @@ class ABC(InferenceBase):
         # Calculate the distance between the dataset and the simulated result
         sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in stats_final]
 
-        return {"parameters": trial_param, "trajectories": sim_result, "summarystats": stats_final, "distances": sim_dist}
+        return {"parameters": trial_param[:batch_size], "trajectories": sim_result, "summarystats": stats_final, "distances": sim_dist}
 
     # @sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size=1):
