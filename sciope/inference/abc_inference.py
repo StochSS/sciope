@@ -197,7 +197,7 @@ class ABC(InferenceBase):
         return {"parameters": trial_param, "trajectories": sim_result, "summarystats": stats_final, "distances": sim_dist}
 
     # @sciope_profiler.profile
-    def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size):
+    def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size=1):
         """
         Perform ABC inference according to initialized configuration.
 
@@ -231,7 +231,7 @@ class ABC(InferenceBase):
             self.compute_fixed_mean(chunk_size)
 
         # Get dask graph
-        graph_dict = self.get_dask_graph(batch_size)
+        graph_dict = self.get_dask_graph(batch_size, ensemble_size)
 
         # do rejection sampling
         while accepted_count < num_samples:
@@ -261,7 +261,7 @@ class ABC(InferenceBase):
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
         return self.results
 
-    def infer(self, num_samples, batch_size, chunk_size=10):
+    def infer(self, num_samples, batch_size, chunk_size=10, ensemble_size=1):
         """
         Wrapper for rejection sampling. Performs ABC rejection sampling
         
@@ -286,4 +286,4 @@ class ABC(InferenceBase):
             'inferred_parameters': The mean of accepted parameter samples
         """
 
-        return self.rejection_sampling(num_samples, batch_size, chunk_size)
+        return self.rejection_sampling(num_samples, batch_size, chunk_size, ensemble_size)
