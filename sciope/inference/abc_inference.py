@@ -25,7 +25,7 @@ from sciope.data.dataset import DataSet
 from toolz import partition_all
 import multiprocessing as mp  # remove dependency
 import numpy as np
-from dask.distributed import futures_of, as_completed
+from dask.distributed import futures_of, as_completed, wait
 import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
@@ -149,7 +149,7 @@ class ABC(InferenceBase):
         self.fixed_mean = np.copy(stats_mean)
         del stats_mean
 
-    def get_dask_graph(self, batch_size, ensemble_size=1):
+    def get_dask_graph(self, batch_size, ensemble_size):
         """
         Constructs the dask computational graph invloving sampling, simulation, summary statistics
         and distances.
@@ -187,7 +187,7 @@ class ABC(InferenceBase):
         return {"parameters": trial_param[:batch_size], "trajectories": sim_result, "summarystats": stats_final, "distances": sim_dist}
 
     # @sciope_profiler.profile
-    def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size=1):
+    def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size, normalize):
         """
         Perform ABC inference according to initialized configuration.
 
@@ -228,22 +228,28 @@ class ABC(InferenceBase):
 
             res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
             futures_dist = futures_of(res_dist)
-            futures_params = futures_of(res_params)
+            futures_params = futures_of(res_param)
 
             keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
 
 
-            # Normalize distances between [0,1]
+            
             sim_dist_scaled = []
             params = []
             dists = []
+            
             for f, dist in as_completed(futures_dist, with_results=True):
                 dists.append(dist)
-                sim_dist_scaled.append(self.scale_distance(dist))
+                if normalize:
+                    # Normalize distances between [0,1]
+                    sim_dist_scaled.append(self.scale_distance(dist))
                 idx = keep_idx[f.key]
                 params.append(futures_params[idx].result())
-            
-            sim_dist_scaled = np.asarray(sim_dist_scaled)
+
+            if normalize:
+                sim_dist_scaled = np.asarray(sim_dist_scaled)
+            else:
+                sim_dist_scaled = np.asarray(dists)
 
             # Take the norm to combine the distances, if more than one summary is used
             if sim_dist_scaled.shape[1] > 1:
@@ -266,7 +272,7 @@ class ABC(InferenceBase):
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
         return self.results
 
-    def infer(self, num_samples, batch_size, chunk_size=10, ensemble_size=1):
+    def infer(self, num_samples, batch_size, chunk_size=10, ensemble_size=1, normalize=True):
         """
         Wrapper for rejection sampling. Performs ABC rejection sampling
         
@@ -291,4 +297,4 @@ class ABC(InferenceBase):
             'inferred_parameters': The mean of accepted parameter samples
         """
 
-        return self.rejection_sampling(num_samples, batch_size, chunk_size, ensemble_size)
+        return self.rejection_sampling(num_samples, batch_size, chunk_size, ensemble_size, normalize)
