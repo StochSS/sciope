@@ -25,6 +25,7 @@ from sciope.data.dataset import DataSet
 from toolz import partition_all
 import multiprocessing as mp  # remove dependency
 import numpy as np
+from dask.distributed import futures_of, as_completed
 import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
@@ -225,10 +226,24 @@ class ABC(InferenceBase):
         # do rejection sampling
         while accepted_count < num_samples:
 
-            res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
+            res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
+            futures_dist = futures_of(res_dist)
+            futures_params = futures_of(res_params)
+
+            keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
+
 
             # Normalize distances between [0,1]
-            sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
+            sim_dist_scaled = []
+            params = []
+            dists = []
+            for f, dist in as_completed(futures_dist, with_results=True):
+                dists.append(dist)
+                sim_dist_scaled.append(self.scale_distance(dist))
+                idx = keep_idx[f.key]
+                params.append(futures_params[idx].result())
+            
+            sim_dist_scaled = np.asarray(sim_dist_scaled)
 
             # Take the norm to combine the distances, if more than one summary is used
             if sim_dist_scaled.shape[1] > 1:
@@ -240,11 +255,12 @@ class ABC(InferenceBase):
             # Accept/Reject
             for e, res in enumerate(result):
                 if res <= self.epsilon:
-                    accepted_samples.append(res_param[e])
-                    distances.append(res_dist[e])
+                    accepted_samples.append(params[e])
+                    distances.append(dists[e])
                     accepted_count += 1
 
             trial_count += batch_size
+            del futures_dist, futures_params, res_param, res_dist
 
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
