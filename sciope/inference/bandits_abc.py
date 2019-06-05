@@ -89,7 +89,7 @@ class BanditsABC(ABC):
         return normalized_distances[-1, :]
 
     #@sciope_profiler.profile
-    def rejection_sampling(self, num_samples, batch_size, chunk_size):
+    def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size, normalize):
         """
         * overrides rejection_sampling of ABC class *
         Perform ABC inference according to initialized configuration.
@@ -129,10 +129,28 @@ class BanditsABC(ABC):
         # do rejection sampling
         while accepted_count < num_samples:
 
-            res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
+            res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
+            futures_dist = futures_of(res_dist)
+            futures_params = futures_of(res_param)
 
-            # Normalize distances between [0,1]
-            sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
+            keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
+
+            sim_dist_scaled = []
+            params = []
+            dists = []
+            
+            for f, dist in as_completed(futures_dist, with_results=True):
+                dists.append(dist)
+                if normalize:
+                    # Normalize distances between [0,1]
+                    sim_dist_scaled.append(self.scale_distance(dist))
+                idx = keep_idx[f.key]
+                params.append(futures_params[idx].result())
+
+            if normalize:
+                sim_dist_scaled = np.asarray(sim_dist_scaled)
+            else:
+                sim_dist_scaled = np.asarray(dists)
 
             # Use MAB arm selection to identify the best 'k' arms or summary statistics
             num_arms = sim_dist_scaled.shape[1]
@@ -151,8 +169,8 @@ class BanditsABC(ABC):
             # Accept/Reject
             for e, res in enumerate(result):
                 if res <= self.epsilon:
-                    accepted_samples.append(res_param[e])
-                    distances.append(res_dist[e])
+                    accepted_samples.append(params[e])
+                    distances.append(dists[e])
                     accepted_count += 1
 
             trial_count += batch_size

@@ -232,8 +232,6 @@ class ABC(InferenceBase):
 
             keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
 
-
-            
             sim_dist_scaled = []
             params = []
             dists = []
