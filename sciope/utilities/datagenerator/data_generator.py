@@ -78,12 +78,9 @@ sim = vilar.simulate
 dg = DataGenerator(prior_function=prior_function, sim=sim)
 [tp, sim_result] = dg.gen(batch_size=10)
 
-#graph_dict = dg.get_dask_graph(batch_size=10)
-#res_param, res_sim = dask.compute(graph_dict["parameters"], graph_dict["trajectories"])
 
 
-
-print("sim result shape: ",sim_result)
+print("sim result shape: ",sim_result.shape)
 
 
 
