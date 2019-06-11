@@ -16,13 +16,25 @@ The vilar Model: Approximate Bayesian Computation Test Run
 """
 
 # Imports
+import importlib
+import sciope
+importlib.reload(sciope)
+
 from sciope.utilities.priors import uniform_prior
 from sciope.inference import abc_inference
+from sciope.inference.abc_inference import word
+from sciope.inference.test_inf import wo
+
+
+
 from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
 
+
+word()
+wo()
 # Load data
 data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
 
@@ -33,9 +45,14 @@ mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 bs_stat = bs.Burstiness(mean_trajectories=True, use_logger=False)
 
 # Set up ABC
+
+#print data
+print("data: ", data)
+
 abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
                                  summaries_function=bs_stat)
 
+print("data 2",abc_instance.data)
 # Perform ABC; require 30 samples
 abc_instance.infer(num_samples=200, batch_size=100)
 

@@ -26,6 +26,33 @@ class DataGenerator():
         self.prior_function = prior_function
         self.sim = dask.delayed(sim)
         
+    def get_dask_graph(self, batch_size):
+        """
+        Constructs the dask computational graph invloving sampling, simulation, summary statistics
+        and distances.
+        
+        Parameters
+        ----------
+        batch_size : int
+            The number of points being sampled in each batch.
+        
+        Returns
+        -------
+        dict
+            with keys 'parameters', 'trajectories', 'summarystats' and 'distances'
+        """
+
+        # Rejection sampling with batch size = batch_size 
+
+        # Draw from the prior
+        trial_param = [self.prior_function.draw() for x in range(batch_size)]
+
+        # Perform the trial
+        sim_result = [self.sim(param) for param in trial_param]
+
+   
+        return {"parameters": trial_param, "trajectories": sim_result}
+        
     def gen(self,batch_size):
 
         # Draw from the prior
@@ -39,10 +66,12 @@ print("start")
 
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 sim = vilar.simulate
+
 dg = DataGenerator(prior_function = prior_function, sim = sim)
 print("type dg: ", type(dg))
 [tp,sim_result] = dg.gen(batch_size=10)
 #print([s.compute() for s in sim_result])
+
 
 
 
