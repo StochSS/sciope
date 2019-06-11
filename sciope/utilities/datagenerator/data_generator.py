@@ -56,11 +56,15 @@ class DataGenerator():
     def gen(self,batch_size):
 
         # Draw from the prior
-        trial_param = [self.prior_function.draw(self.prior_function) for x in range(batch_size)]        
+        #trial_param = [self.prior_function.draw(self.prior_function) for x in range(batch_size)]
         # Perform the trial
-        sim_result = [self.sim(param) for param in trial_param]        
-        return [trial_param,sim_result]
-    
+        #sim_result = [self.sim(param) for param in trial_param]
+        #return [trial_param,sim_result]
+
+        graph_dict = dg.get_dask_graph(batch_size=10)
+        res_param, res_sim = dask.compute(graph_dict["parameters"], graph_dict["trajectories"])
+
+        return res_param, res_sim
     
 print("start")
 
@@ -71,12 +75,12 @@ dg = DataGenerator(prior_function = prior_function, sim = sim)
 print("type dg: ", type(dg))
 [tp,sim_result] = dg.gen(batch_size=10)
 
-graph_dict = dg.get_dask_graph(batch_size=10)
-res_param, res_sim = dask.compute(graph_dict["parameters"], graph_dict["trajectories"])
+#graph_dict = dg.get_dask_graph(batch_size=10)
+#res_param, res_sim = dask.compute(graph_dict["parameters"], graph_dict["trajectories"])
 
 
 
-print("sim result shape: ",res_sim)
+print("sim result shape: ",sim_result)
 
 
 
