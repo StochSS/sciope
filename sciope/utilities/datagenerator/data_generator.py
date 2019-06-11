@@ -70,7 +70,7 @@ sim = vilar.simulate
 dg = DataGenerator(prior_function = prior_function, sim = sim)
 print("type dg: ", type(dg))
 [tp,sim_result] = dg.gen(batch_size=10)
-#print([s.compute() for s in sim_result])
+print("sim result shape: ",sim_result.shape)
 
 
 
