@@ -73,13 +73,9 @@ print("start")
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 sim = vilar.simulate
 
-pri = prior_function.draw().compute()
-print(pri)
-rr = vilar.simulate(pri)
-print("rr: ", rr)
+
 
 dg = DataGenerator(prior_function=prior_function, sim=sim)
-print("type dg: ", type(dg))
 [tp, sim_result] = dg.gen(batch_size=10)
 
 #graph_dict = dg.get_dask_graph(batch_size=10)
