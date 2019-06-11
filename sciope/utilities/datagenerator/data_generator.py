@@ -80,7 +80,7 @@ dg = DataGenerator(prior_function=prior_function, sim=sim)
 
 
 
-print("sim result shape: ",sim_result.shape)
+print("sim result shape: ",np.array(sim_result).shape)
 
 
 
