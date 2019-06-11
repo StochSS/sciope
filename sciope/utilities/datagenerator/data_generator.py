@@ -61,7 +61,9 @@ class DataGenerator:
         # return [trial_param,sim_result]
 
         graph_dict = self.get_dask_graph(batch_size=batch_size)
-        res_param, res_sim = dask.compute(graph_dict["parameters"])#, graph_dict["trajectories"])
+ #       res_param, res_sim = dask.compute(graph_dict["parameters"])#, graph_dict["trajectories"])
+        res_param, res_sim = dask.compute(graph_dict["trajectories"])
+
 
         return res_param, res_sim
     
