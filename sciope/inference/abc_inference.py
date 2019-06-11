@@ -27,14 +27,9 @@ import multiprocessing as mp  # remove dependency
 import numpy as np
 import dask
 
-
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
 
-
-
-def word():
-    print("gres")
 
 # Class definition: multiprocessing ABC process
 class ABCProcess(mp.Process):
@@ -51,7 +46,6 @@ class ABCProcess(mp.Process):
 class ABC(InferenceBase):
     """
     Approximate Bayesian Computation Rejection Sampler
-
     * InferenceBase.infer()
     """
 
@@ -59,7 +53,7 @@ class ABC(InferenceBase):
                  distance_function=euc.EuclideanDistance(), use_logger=False):
         """
         ABC class for rejection sampling
-        
+
         Parameters
         ----------
         data : [type]
@@ -95,12 +89,12 @@ class ABC(InferenceBase):
     def scale_distance(self, dist):
         """
          Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
-        
+
         Parameters
         ----------
         dist : ndarray, float
             distance
-        
+
         Returns
         -------
         ndarray
@@ -122,31 +116,29 @@ class ABC(InferenceBase):
     def compute_fixed_mean(self, chunk_size):
         """
         Computes the mean over summary statistics on fixed data
-        
+
         Parameters
         ----------
         chunk_size : int
             the partition size when splitting the fixed data. For avoiding many individual tasks
-            in dask if the data is large 
-        
+            in dask if the data is large
+
         Returns
         -------
         ndarray
             scaled distance
         """
-        print("data 3: ", self.data.shape)
+
         # assumed data is large, make chunks
         data_chunked = partition_all(chunk_size, self.data)
 
         # compute summary stats on fixed data
         stats = [self.summaries_function.compute(x) for x in data_chunked]
 
-        
         mean = dask.delayed(np.mean)
 
         # reducer 1 mean for each batch
-        stats_mean = mean(stats,axis=0)
-        
+        stats_mean = mean(stats, axis=0)
 
         # reducer 2 mean over batches
         stats_mean = mean(stats_mean, axis=0, keepdims=True).compute()
@@ -158,19 +150,19 @@ class ABC(InferenceBase):
         """
         Constructs the dask computational graph invloving sampling, simulation, summary statistics
         and distances.
-        
+
         Parameters
         ----------
         batch_size : int
             The number of points being sampled in each batch.
-        
+
         Returns
         -------
         dict
             with keys 'parameters', 'trajectories', 'summarystats' and 'distances'
         """
 
-        # Rejection sampling with batch size = batch_size 
+        # Rejection sampling with batch size = batch_size
 
         # Draw from the prior
         trial_param = [self.prior_function.draw() for x in range(batch_size)]
@@ -186,11 +178,10 @@ class ABC(InferenceBase):
 
         return {"parameters": trial_param, "trajectories": sim_result, "summarystats": sim_stats, "distances": sim_dist}
 
-    #@sciope_profiler.profile
+    # @sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size):
         """
         Perform ABC inference according to initialized configuration.
-
         Parameters
         ----------
         num_samples : int
@@ -200,13 +191,13 @@ class ABC(InferenceBase):
         chunk_size : int
             the partition size when splitting the fixed data. For avoiding many individual tasks
             in dask if the data is large.
-        
+
         Returns
         -------
         dict
             Keys
-            'accepted_samples: The accepted parameter values', 
-            'distances: Accepted distance values', 
+            'accepted_samples: The accepted parameter values',
+            'distances: Accepted distance values',
             'accepted_count: Number of accepted samples',
             'trial_count: The number of total trials performed in order to converge',
             'inferred_parameters': The mean of accepted parameter samples
@@ -261,7 +252,7 @@ class ABC(InferenceBase):
     def infer(self, num_samples, batch_size, chunk_size=10):
         """
         Wrapper for rejection sampling. Performs ABC rejection sampling
-        
+
         Parameters
         ----------
         num_samples : int
@@ -271,13 +262,13 @@ class ABC(InferenceBase):
         chunk_size : int
             the partition size when splitting the fixed data. For avoiding many individual tasks
             in dask if the data is large. Default 10.
-        
+
         Returns
         -------
         dict
             Keys
-            'accepted_samples: The accepted parameter values', 
-            'distances: Accepted distance values', 
+            'accepted_samples: The accepted parameter values',
+            'distances: Accepted distance values',
             'accepted_count: Number of accepted samples',
             'trial_count: The number of total trials performed in order to converge',
             'inferred_parameters': The mean of accepted parameter samples
