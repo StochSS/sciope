@@ -14,7 +14,7 @@ mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 n = 100
 #batch_size = 100
 
-theta = mm_prior.draw(mm_prior,n=n)
+theta = mm_prior.draw(n=n)
 
 
 theta.compute()
