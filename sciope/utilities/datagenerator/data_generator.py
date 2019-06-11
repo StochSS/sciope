@@ -73,6 +73,9 @@ print("start")
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 sim = vilar.simulate
 
+rr = sim(prior_function.draw())
+print("rr: ", rr)
+
 dg = DataGenerator(prior_function=prior_function, sim=sim)
 print("type dg: ", type(dg))
 [tp, sim_result] = dg.gen(batch_size=10)
