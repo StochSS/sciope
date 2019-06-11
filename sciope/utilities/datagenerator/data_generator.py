@@ -73,7 +73,7 @@ print("start")
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 sim = vilar.simulate
 
-pri = prior_function.draw()
+pri = prior_function.draw().compute()
 print(pri)
 rr = vilar.simulate(pri)
 print("rr: ", rr)
