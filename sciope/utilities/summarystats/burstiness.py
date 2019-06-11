@@ -51,7 +51,7 @@ class Burstiness(SummaryBase):
             self.logger.info("Burstiness summary statistic initialized")
 
     @delayed
-    def compute(self, data):
+    def computem(self, datas):
         """
         Calculate the value(s) of the summary statistic(s)
         
@@ -66,6 +66,7 @@ class Burstiness(SummaryBase):
             computed statistic value
         
         """
+        data=datas
         data_arr = np.array(data)
         trajs = []
         for i in range(np.shape(data)[0]):

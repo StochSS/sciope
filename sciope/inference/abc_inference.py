@@ -27,9 +27,14 @@ import multiprocessing as mp  # remove dependency
 import numpy as np
 import dask
 
+
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
 
+
+
+def word():
+    print("gres")
 
 # Class definition: multiprocessing ABC process
 class ABCProcess(mp.Process):
@@ -129,17 +134,19 @@ class ABC(InferenceBase):
         ndarray
             scaled distance
         """
-
+        print("data 3: ", self.data.shape)
         # assumed data is large, make chunks
         data_chunked = partition_all(chunk_size, self.data)
 
         # compute summary stats on fixed data
         stats = [self.summaries_function.compute(x) for x in data_chunked]
 
+        
         mean = dask.delayed(np.mean)
 
         # reducer 1 mean for each batch
-        stats_mean = mean(stats, axis=0)
+        stats_mean = mean(stats,axis=0)
+        
 
         # reducer 2 mean over batches
         stats_mean = mean(stats_mean, axis=0, keepdims=True).compute()
