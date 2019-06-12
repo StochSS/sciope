@@ -63,7 +63,7 @@ dg = DataGenerator(prior_function=prior_function, sim=sim)
 tp, sim_result = dg.gen(batch_size=10)
 dataset=DataSet(name='test dataset')
 dataset.add_points(inputs=tp, targets=None, time_series=sim_result, summary_stats=None)
-
+print("dataset size: ", dataset.get_size())
 
 print("sim result shape: ",np.array(sim_result).shape)
 
