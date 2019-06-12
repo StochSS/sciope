@@ -92,13 +92,6 @@ class Vilar:
         self.model.tspan = np.linspace(0, self.finaltime, self.num_timestamps)
 
     def simulate(self, param):
-        # Load the model definition
-        config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                           "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
-        model_doc = gillespy2.StochMLDocument.from_file(config_file)
-
-        # Here, we create the model object.
-        model = model_doc.to_model("vilar")
 
         # Set model parameters
         param = param.ravel()
@@ -148,7 +141,7 @@ class Vilar:
         temp_param.set_expression(param[14])
 
         # Run simulation
-        simple_trajectories = model.run(solver=StochKitSolver, show_labels=True,
+        simple_trajectories = self.model.run(solver=StochKitSolver, show_labels=True,
                                         number_of_trajectories=self.num_trajectories)
 
         # Extract the species
