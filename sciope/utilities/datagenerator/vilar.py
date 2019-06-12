@@ -90,7 +90,7 @@ if __name__ == '__main__':
     np.savetxt("vilar_dataset_specieA_10trajs_1500time.dat", s_trajectories, delimiter=",")
 
 
-def simulate(param):
+def simulate(param, num_timestamps=500, num_sim_trajectories=1, spiecies=['A']):
     # Load the model definition
     config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
@@ -98,7 +98,6 @@ def simulate(param):
 
     # Here, we create the model object.
     model = model_doc.to_model("vilar")
-    num_timestamps = 15
 
     # Set model parameters
     param = param.ravel()
@@ -148,15 +147,15 @@ def simulate(param):
     temp_param.set_expression(param[14])
 
     # Set up simulation density
-    num_sim_trajectories = 1
+
     model.tspan = np.linspace(1, 100, num_timestamps)
-    simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
+    simple_trajectories = model.run(solver=StochKitSolver, show_labels=True, number_of_trajectories=num_sim_trajectories)
 
     # extract time values
     #time = np.array(simple_trajectories[0][:, 0])
 
     # extract just the trajectories for Specie A with index 8 into a numpy array
-    s_trajectories = np.array([simple_trajectories[i][:, 8] for i in range(num_sim_trajectories)]).T
+    s_trajectories = np.array([simple_trajectories[i][spiecies, 8] for i in range(num_sim_trajectories)]).T
 
     return s_trajectories
 
