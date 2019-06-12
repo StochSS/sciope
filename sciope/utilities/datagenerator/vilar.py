@@ -148,7 +148,7 @@ def simulate(param, num_timestamps=500, num_sim_trajectories=1, spiecies=['A']):
 
     # Set up simulation density
 
-    model.tspan = np.linspace(1, 100, num_timestamps)
+    model.tspan = np.linspace(0, 100, num_timestamps)
     simple_trajectories = model.run(solver=StochKitSolver, show_labels=True, number_of_trajectories=num_sim_trajectories)
 
     # extract time values
