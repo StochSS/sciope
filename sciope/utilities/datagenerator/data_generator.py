@@ -1,7 +1,7 @@
 
 
 from sciope.utilities.priors import uniform_prior
-from sciope.data import dataset
+from sciope.data.dataset import DataSet
 import numpy as np
 import dask
 from vilar_class import Vilar
@@ -49,7 +49,6 @@ class DataGenerator:
 
         graph_dict = self.get_dask_graph(batch_size=batch_size)
         res_param, res_sim = dask.compute(graph_dict["parameters"], graph_dict["trajectories"])
-        print("res_param shape: ", np.array(res_param).shape)
         return res_param, res_sim
     
 
@@ -58,11 +57,11 @@ print("start")
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 vilar_model = Vilar()
 sim = vilar_model.simulate
-print("sim tspan: ", vilar_model.model.tspan)
+
 #Generating data
 dg = DataGenerator(prior_function=prior_function, sim=sim)
 tp, sim_result = dg.gen(batch_size=10)
-
+dataset=DataSet()
 
 
 print("sim result shape: ",np.array(sim_result).shape)
