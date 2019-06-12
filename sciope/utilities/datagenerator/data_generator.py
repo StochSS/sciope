@@ -39,6 +39,7 @@ class DataGenerator:
         # Draw from the prior
         trial_param = [self.prior_function.draw() for x in range(batch_size)]
 
+
         # Perform the trial
         sim_result = [self.sim(param) for param in trial_param]
 
@@ -57,7 +58,7 @@ print("start")
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 vilar_model = Vilar()
 sim = vilar_model.simulate
-
+print("sim tspan: ", vilar_model.model.tspan)
 #Generating data
 dg = DataGenerator(prior_function=prior_function, sim=sim)
 tp, sim_result = dg.gen(batch_size=10)
