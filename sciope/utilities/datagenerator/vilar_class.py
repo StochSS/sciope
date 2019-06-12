@@ -152,9 +152,9 @@ class Vilar:
                                         number_of_trajectories=self.num_trajectories)
 
         # Extract the species
-        simple_trajectories = [simple_trajectories[:][self.species[i]] for i in range(len(self.species))]
+        s_trajectories=np.array([[simple_trajectories[i][self.species[j]] for j in range(len(self.species))] for i in range(self.num_trajectories)])
 
-        s_trajectories = np.array([simple_trajectories[i] for i in range(self.num_trajectories)]).T
+        #s_trajectories = np.array([simple_trajectories[i] for i in range(self.num_trajectories)]).T
 
         return s_trajectories
 
