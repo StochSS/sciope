@@ -4,7 +4,7 @@ from sciope.utilities.priors import uniform_prior
 from sciope.data import dataset
 import numpy as np
 import dask
-from vilar_class import vilar
+from vilar_class import Vilar
 
 
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
@@ -63,8 +63,8 @@ class DataGenerator:
 print("start")
 
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
-vilar = vilar()
-sim = vilar.simulate
+vilar_model = Vilar()
+sim = vilar_model.simulate
 
 
 
