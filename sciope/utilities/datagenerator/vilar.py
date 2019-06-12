@@ -90,7 +90,7 @@ if __name__ == '__main__':
     np.savetxt("vilar_dataset_specieA_10trajs_1500time.dat", s_trajectories, delimiter=",")
 
 
-def simulate(param, num_timestamps=500, num_sim_trajectories=1, spiecies=['A']):
+def simulate(param, num_timestamps=501, num_sim_trajectories=1, spiecies=['A']):
     # Load the model definition
     config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
