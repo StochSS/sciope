@@ -86,7 +86,7 @@ class Vilar:
         temp_param = self.model.get_parameter('Theta_r')
         temp_param.set_expression(100.0)
 
-        # Generate some data for parameter inference - we concentrate on specie A [index 8, index 0 is time]
+        # Set tspan
         self.model.tspan = np.linspace(0, self.finaltime, self.num_timestamps)
 
 
