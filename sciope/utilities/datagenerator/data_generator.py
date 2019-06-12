@@ -61,7 +61,7 @@ sim = vilar_model.simulate
 #Generating data
 dg = DataGenerator(prior_function=prior_function, sim=sim)
 tp, sim_result = dg.gen(batch_size=10)
-dataset=DataSet()
+dataset=DataSet(name='test dataset')
 
 
 print("sim result shape: ",np.array(sim_result).shape)
