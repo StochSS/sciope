@@ -24,7 +24,7 @@ import os
 
 class Vilar:
 
-    def __init__(self, num_trajectories=10, num_timestamps=501, final_time=100, species=['A']):
+    def __init__(self, num_trajectories=1, num_timestamps=501, final_time=100, species=['A','C']):
 
         # Load the model definition
         config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
