@@ -9,15 +9,7 @@ from vilar_class import Vilar
 
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
-mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 
-n = 100
-#batch_size = 100
-
-theta = mm_prior.draw(n=n)
-
-
-theta.compute()
 
 
 class DataGenerator:
@@ -39,7 +31,7 @@ class DataGenerator:
         Returns
         -------
         dict
-            with keys 'parameters', 'trajectories', 'summarystats' and 'distances'
+            with keys 'parameters', 'trajectories'
         """
 
         # Rejection sampling with batch size = batch_size 
@@ -56,7 +48,7 @@ class DataGenerator:
 
         graph_dict = self.get_dask_graph(batch_size=batch_size)
         res_param, res_sim = dask.compute(graph_dict["parameters"], graph_dict["trajectories"])
-
+        print("res_param shape: ", np.array(res_param).shape)
         return res_param, res_sim
     
 
@@ -66,10 +58,9 @@ prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 vilar_model = Vilar()
 sim = vilar_model.simulate
 
-
-
+#Generating data
 dg = DataGenerator(prior_function=prior_function, sim=sim)
-[tp, sim_result] = dg.gen(batch_size=10)
+tp, sim_result = dg.gen(batch_size=10)
 
 
 
