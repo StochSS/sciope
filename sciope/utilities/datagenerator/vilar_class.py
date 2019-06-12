@@ -40,7 +40,7 @@ class Vilar:
         # Specify the simulation density and sampling density
         self.num_trajectories = num_trajectories
         self.num_timestamps = num_timestamps
-        self.final_time = final_time
+        self.finaltime = final_time
 
         # Set parameters
         temp_param = self.model.get_parameter('alpha_A')
