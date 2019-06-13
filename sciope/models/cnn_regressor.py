@@ -37,12 +37,9 @@ class CNNModel(ModelBase):
                                                        mode='min')
     
         #train 40 epochs with batch size = 32
-        if 5==98:
+        if validation_inputs is not None:
             print("not None")
-           # history1 = self.model.fit(
-          #          inputs, targets, validation_data = (validation_inputs,
-         #           validation_targets), epochs=40, batch_size=32, shuffle=True,
-        #            callbacks=[mcp_save])
+
         else:
             print('None')
             history1 = self.model.fit(
