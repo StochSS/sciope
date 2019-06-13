@@ -62,7 +62,6 @@ prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 # Defining Vilar model as stochastic model
 stoch_model = Vilar(species='all')
 sim = stoch_model.simulate
-model_name = 'Vilar_model'
 
 
 # Defining DataGenerator
@@ -73,12 +72,12 @@ print("sim result shape: ",np.array(sim_result).shape)
 
 
 dataset=DataSet(name='test dataset')
-dataset.add_points(inputs=np.array(tp), targets=None, time_series=np.array(sim_result), summary_stats=None)
-print("dataset size: ", np.array(dataset.ts).shape)
 
-tp, sim_result = dg.gen(batch_size=10)
-dataset.add_points(inputs=np.array(tp), targets=None, time_series=np.array(sim_result), summary_stats=None)
-print("dataset size: ", np.array(dataset.ts).shape)
+
+for epoch in range(10):
+    tp, sim_result = dg.gen(batch_size=10)
+    dataset.add_points(inputs=np.array(tp), targets=None, time_series=np.array(sim_result), summary_stats=None)
+    print("dataset size: ", np.array(dataset.ts).shape)
 
 # Name the dataset
 dataset_name = 'ds_' + stoch_model.name
@@ -90,7 +89,6 @@ if os.path.exists(dataset_name):
         nr += 1
     # Save dataset
     pickle.dump(dataset, open(dataset_name+'/'+dataset_name + str(nr) + '.p', "wb"))
-
 else:
     os.mkdir(dataset_name)
     # Save dataset
