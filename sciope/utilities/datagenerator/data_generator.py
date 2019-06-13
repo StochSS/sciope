@@ -75,7 +75,7 @@ dataset=DataSet(name='test dataset')
 
 
 for epoch in range(10):
-    tp, sim_result = dg.gen(batch_size=10)
+    tp, sim_result = dg.gen(batch_size=1000)
     dataset.add_points(inputs=np.array(tp), targets=None, time_series=np.array(sim_result), summary_stats=None)
     print("dataset size: ", np.array(dataset.ts).shape)
 
