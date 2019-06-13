@@ -15,6 +15,8 @@ print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 theta = np.squeeze(theta, axis=1)
 ts = np.squeeze(ts, axis=1)
 
+print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
+
 # Define a CNN model
 CNN = CNNModel(input_shape=ts.shape,output_shape=theta.shape)
 
