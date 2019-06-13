@@ -10,7 +10,7 @@ data_path = '/home/ubuntu/sciope/sciope/utilities/datagenerator/ds_vilar_ft100_t
 
 
 for filename in os.listdir(data_path):
-    dataset = pickle.load(open(filename, "rb" ) )
+    dataset = pickle.load(open(data_path + '/' + filename, "rb" ) )
     if theta is not None:
         theta = np.append(theta, dataset.x, axis=0)
         ts = np.append(ts, dataset.ts, axis=0)
