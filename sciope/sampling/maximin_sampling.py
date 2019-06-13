@@ -21,9 +21,7 @@ from sciope.sampling.sampling_base import SamplingBase
 from scipy.spatial import distance_matrix
 from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
-
-# Set up the logger
-logger = ml.SciopeLogger().get_logger()
+from dask import delayed
 
 
 # Class definition
@@ -40,7 +38,7 @@ class MaximinSampling(SamplingBase):
     Journal of statistical planning and inference 26.2 (1990): 131-148.
     """
 
-    def __init__(self, xmin, xmax):
+    def __init__(self, xmin, xmax, use_logger=False):
         """[summary]
         
         Parameters
@@ -51,12 +49,15 @@ class MaximinSampling(SamplingBase):
             [description]
         """
         name = 'MaximinSampling'
-        super(MaximinSampling, self).__init__(name, xmin, xmax)
-        logger.info("Maximin sequential sampler in {0} dimensions initialized".format(len(self.xmin)))
+        super(MaximinSampling, self).__init__(name, xmin, xmax, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Maximin sequential sampler in {0} dimensions initialized".format(len(self.xmin)))
 
     # Example call:
     # ms = MaximinSampling([0,0], [1,1])
     # new_points = ms.select_point(X)
+    @delayed
     def select_point(self, x):
         """
         Get top ranked candidate according to maximin sampling to add to current samples x
@@ -91,9 +92,11 @@ class MaximinSampling(SamplingBase):
         idx = np.argsort(-ranking)
 
         # ta-da!
-        logger.info("Maximin sequential design: selected one new sample")
+        if self.use_logger:
+            self.logger.info("Maximin sequential design: selected one new sample")
         return c[idx[0], :]
 
+    @delayed
     def select_points(self, x, n):
         """
         Get 'n' top ranked candidates according to maximin sampling to add to current samples x
@@ -112,8 +115,11 @@ class MaximinSampling(SamplingBase):
         """
         c = []
         for idx in range(0, n):
-            c_new = self.selectPoint(x)
-            x = np.vstack((x, c_new))
-            c.append(c_new)
-        logger.info("Maximin sequential design: selected {0} new samples".format(n))
+            c_new = delayed(self.select_point(x))
+            c_new_p = c_new.compute()
+            x = np.vstack((x, c_new_p))
+            c.append(c_new_p)
+
+        if self.use_logger:
+            self.logger.info("Maximin sequential design: selected {0} new samples".format(n))
         return np.array(c)

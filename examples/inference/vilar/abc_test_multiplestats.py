@@ -38,7 +38,7 @@ abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_functi
                                  summaries_function=se.SummariesEnsemble())
 
 # Perform ABC; require 30 samples
-test = abc_instance.infer(num_samples=200, batch_size=100)
+test = abc_instance.infer(num_samples=200, batch_size=50)
 
 # Results
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]

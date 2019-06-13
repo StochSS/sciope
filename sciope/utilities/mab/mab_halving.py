@@ -21,9 +21,6 @@ from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
 import math
 
-# Set up the logger and profiler
-logger = ml.SciopeLogger().get_logger()
-
 
 # Class definition: HALVING MAB arm selection
 class MABHalving(MABBase):
@@ -34,7 +31,7 @@ class MABHalving(MABBase):
     Ref: "Efficient Selection of Multiple Bandit Arms: Theory and Practice", Shivaram Kalyanakrishnan and Peter Stone
     """
 
-    def __init__(self, arm_pull, epsilon=1, delta=0.4):
+    def __init__(self, arm_pull, epsilon=1, delta=0.4, use_logger=False):
         """
         Set up local variables,
         :param arm_pull: function handle returning distance between fixed and simulated data for a sample from prior.
@@ -45,7 +42,10 @@ class MABHalving(MABBase):
         self.name = 'HALVING'
         self.epsilon = epsilon  # defaults to 1
         self.delta = delta  # starting probability of 0.6 seems loose enough
-        super(MABHalving, self).__init__(self.name, arm_pull)
+        super(MABHalving, self).__init__(self.name, arm_pull, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Halving MAB summary statistic selection initialized")
 
     def select(self, arms, k=1):
         """
@@ -72,7 +72,8 @@ class MABHalving(MABBase):
 
             # replace nan with inf
             mean_rewards[np.isnan(mean_rewards)] = -1 * np.inf
-            logger.debug("MABDirect: reward values are {}".format(mean_rewards))
+            if self.use_logger:
+                self.logger.debug("MABDirect: reward values are {}".format(mean_rewards))
 
             halving_point = int(min(np.ceil(len(r) / 2), k))
             top_half_arms = np.argpartition(mean_rewards, -halving_point)[-halving_point:]
@@ -80,5 +81,6 @@ class MABHalving(MABBase):
             epsilon_i = 3 / 4 * epsilon_i
             delta_i = delta_i / 2
 
-        logger.debug("MABHalving: selected top {} arm(s) with distances {}".format(k, mean_rewards[r]))
+        if self.use_logger:
+            self.logger.debug("MABHalving: selected top {} arm(s) with distances {}".format(k, mean_rewards[r]))
         return r

@@ -17,6 +17,7 @@ The Uniform Prior
 
 # Imports
 from sciope.utilities.priors.prior_base import PriorBase
+from sciope.utilities.housekeeping import sciope_logger as ml
 from dask import delayed
 import numpy as np
 
@@ -28,7 +29,7 @@ class UniformPrior(PriorBase):
     [min_i, max_i], i=1..d
     """
 
-    def __init__(self, space_min, space_max):
+    def __init__(self, space_min, space_max, use_logger=False):
         """
         Set up a uniform prior corresponding to the space bounded by:
         :param space_min: the lowerbound of each variable/dimension
@@ -37,7 +38,10 @@ class UniformPrior(PriorBase):
         self.name = 'Uniform'
         self.lb = space_min
         self.ub = space_max
-        super(UniformPrior, self).__init__(self.name)
+        super(UniformPrior, self).__init__(self.name, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Uniform prior in {} dimensions initialized".format(len(self.lb)))
 
     @delayed
     def draw(self, n=1):
@@ -56,5 +60,8 @@ class UniformPrior(PriorBase):
         for j in range(0, d):
             scaled_values[:, j] = abs((((generated_samples[:, j] + 1) *
                                         (self.ub[j] - self.lb[j])) / 2) + self.lb[j])
+
+        if self.use_logger:
+            self.logger.info("Uniform Prior: sampled {} points in {} dimensions".format(n, len(self.lb)))
 
         return scaled_values

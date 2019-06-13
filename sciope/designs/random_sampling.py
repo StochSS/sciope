@@ -30,7 +30,7 @@ class RandomSampling(InitialDesignBase):
     * InitialDesignBase.generate(n)
     """
 
-    def __init__(self, xmin, xmax, use_logger=True):
+    def __init__(self, xmin, xmax, use_logger=False):
         """[summary]
         
         Parameters

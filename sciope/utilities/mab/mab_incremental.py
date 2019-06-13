@@ -21,9 +21,6 @@ from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
 import math
 
-# Set up the logger and profiler
-logger = ml.SciopeLogger().get_logger()
-
 
 # Class definition: HALVING MAB arm selection
 class MABIncremental(MABBase):
@@ -34,7 +31,7 @@ class MABIncremental(MABBase):
     Ref: "Efficient Selection of Multiple Bandit Arms: Theory and Practice", Shivaram Kalyanakrishnan and Peter Stone
     """
 
-    def __init__(self, arm_pull, epsilon=1, delta=0.4):
+    def __init__(self, arm_pull, epsilon=1, delta=0.4, use_logger=False):
         """
         Set up local variables,
         :param arm_pull: function handle returning distance between fixed and simulated data for a sample from prior.
@@ -45,7 +42,10 @@ class MABIncremental(MABBase):
         self.name = 'INCREMENTAL'
         self.epsilon = epsilon  # defaults to 1
         self.delta = delta  # starting probability of 0.6 seems loose enough
-        super(MABIncremental, self).__init__(self.name, arm_pull)
+        super(MABIncremental, self).__init__(self.name, arm_pull, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Incremental MAB summary statistic selection initialized")
 
     def select(self, arms, k=1):
         """
@@ -75,7 +75,8 @@ class MABIncremental(MABBase):
 
                 # replace nan with inf
                 mean_rewards[np.isnan(mean_rewards)] = -1 * np.inf
-                logger.debug("MABDirect: reward values are {}".format(mean_rewards))
+                if self.use_logger:
+                    self.logger.debug("MABDirect: reward values are {}".format(mean_rewards))
 
                 # remove all arms with mean rewards < median_value
                 r_new = []
@@ -90,5 +91,6 @@ class MABIncremental(MABBase):
             s.append(r_i[0])
             r.remove(r_i[0])
 
-        logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[s]))
+        if self.use_logger:
+            self.logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[s]))
         return s

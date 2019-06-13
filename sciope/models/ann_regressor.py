@@ -18,6 +18,7 @@ Artificial Neural Network (ANN) Regression Surrogate Model
 # Imports
 from sciope.models.model_base import ModelBase
 from sklearn.neural_network import MLPRegressor
+from sciope.utilities.housekeeping import sciope_logger as ml
 
 
 # Class definition
@@ -26,8 +27,12 @@ class ANNModel(ModelBase):
     We use the sklearn MLP Regressor implementation here.
     """
 
-    def __init__(self):
+    def __init__(self, use_logger=False):
         self.name = 'ANNModel'
+        super(ANNModel, self).__init__(self.name, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Artificial Neural Network regression model initialized")
 
     # train the ANN model given the data
     def train(self, inputs, targets):
@@ -38,6 +43,8 @@ class ANNModel(ModelBase):
         self.model = MLPRegressor(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(200, 2), max_iter=50000,
                                   learning_rate='adaptive', activation='logistic')
         self.model.fit(self.x, self.y)
+        if self.use_logger:
+            self.logger.info("Artificial Neural Network regression model trained with {} samples".format(len(self.y)))
 
     # Predict
     def predict(self, xt):

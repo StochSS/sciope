@@ -31,7 +31,7 @@ class ManhattanDistance(DistanceBase):
     * DistanceBase.compute()
     """
 
-    def __init__(self, use_logger=True):
+    def __init__(self, use_logger=False):
         """
         We just set the name here and call the superclass constructor.
         """
@@ -59,7 +59,7 @@ class ManhattanDistance(DistanceBase):
         """
         # Make sure we have numpy arrays
         data = np.asarray(data)
-        sim = np.asarray(data)
+        sim = np.asarray(sim)
 
         # Check that we have equal shapes
         np.testing.assert_equal(sim.shape, data.shape, "Please validate the values and ensure shape equality of the "

@@ -20,9 +20,6 @@ from sciope.utilities.mab.mab_base import MABBase
 from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
 
-# Set up the logger and profiler
-logger = ml.SciopeLogger().get_logger()
-
 
 # Class definition: SAR MAB arm selection
 class MABSAR(MABBase):
@@ -33,7 +30,7 @@ class MABSAR(MABBase):
     Ref: "Multiple Identifications in Multiple-Armed Bandits", Bubeck, Wang and Vishwanathan (2012)
     """
 
-    def __init__(self, arm_pull, p, b):
+    def __init__(self, arm_pull, p, b, use_logger=False):
         """
         Set up local variables,
         :param arm_pull: function handle returning distance between fixed and simulated data for a sample from prior.
@@ -44,7 +41,10 @@ class MABSAR(MABBase):
         self.name = 'SAR'
         self.p = p
         self.b = b
-        super(MABSAR, self).__init__(self.name, arm_pull)
+        super(MABSAR, self).__init__(self.name, arm_pull, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("SAR MAB summary statistic selection initialized")
 
     def select(self, arms, k=1):
         """
@@ -83,7 +83,8 @@ class MABSAR(MABBase):
                     self.num_pulls += 1
 
             mean_rewards = np.nanmean(rewards, axis=0)
-            logger.debug("MABDirect: reward values are {}".format(mean_rewards))
+            if self.use_logger:
+                self.logger.debug("MABDirect: reward values are {}".format(mean_rewards))
 
             # replace nan with inf
             mean_rewards[np.isnan(mean_rewards)] = -1 * np.inf
@@ -118,5 +119,6 @@ class MABSAR(MABBase):
             # increment ...
             n_prev = n_x
 
-        logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[selected_arms]))
+        if self.use_logger:
+            self.logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[selected_arms]))
         return selected_arms

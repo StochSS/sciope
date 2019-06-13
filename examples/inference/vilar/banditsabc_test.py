@@ -19,13 +19,11 @@ The vilar Model: Multi-Armed Bandits based Approximate Bayesian Computation Test
 from sciope.utilities.priors import uniform_prior
 from sciope.inference import bandits_abc
 from sciope.utilities.distancefunctions import naive_squared as ns
-import summaries_ensemble as se
 import summaries_tsa as tsa
 from sciope.utilities.mab import mab_halving as mh
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
-from sciope.utilities.distancefunctions.euclidean import EuclideanDistance
 
 # Load data
 data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
@@ -50,7 +48,7 @@ abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_f
                                       mab_variant=mab_algo)
 
 # Perform ABC; require 30 samples
-abc_instance.infer(num_samples=200, batch_size=100)
+abc_instance.infer(num_samples=200, batch_size=50)
 
 # Results
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]

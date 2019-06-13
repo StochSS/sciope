@@ -20,8 +20,8 @@ from sciope.inference.abc_inference import ABC
 from sciope.utilities.mab import mab_direct as md
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
-# from sciope.utilities.housekeeping import sciope_logger as ml
-# from sciope.utilities.housekeeping import sciope_profiler
+from sciope.utilities.housekeeping import sciope_logger as ml
+from sciope.utilities.housekeeping import sciope_profiler
 from sciope.data.dataset import DataSet
 from toolz import partition_all
 import multiprocessing as mp  # remove dependency
@@ -31,9 +31,6 @@ import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
-
-# Set up the logger and profiler
-#logger = ml.SciopeLogger().get_logger()
 
 
 def arm_pull(arm_idx):
@@ -55,12 +52,14 @@ class BanditsABC(ABC):
     """
 
     def __init__(self, data, sim, prior_function, mab_variant=md.MABDirect(arm_pull), k=1, epsilon=0.1,
-                 parallel_mode=True, summaries_function=bs.Burstiness(), distance_function=euc.EuclideanDistance()):
-        super().__init__(data, sim, prior_function, epsilon, parallel_mode, summaries_function, distance_function)
+                 summaries_function=bs.Burstiness(), distance_function=euc.EuclideanDistance(), use_logger=False):
+        super().__init__(data, sim, prior_function, epsilon, summaries_function, distance_function, use_logger)
         self.name = 'BanditsABC'
         self.mab_variant = mab_variant
         self.k = k
-        #logger.info("Multi-Armed Bandits Approximate Bayesian Computation initialized")
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Multi-Armed Bandits Approximate Bayesian Computation initialized")
 
     def scale_distance(self, dist):
         """
@@ -168,10 +167,16 @@ class BanditsABC(ABC):
 
             # Accept/Reject
             for e, res in enumerate(result):
+                if self.use_logger:
+                    self.logger.debug("Bandits-ABC Rejection Sampling: trial parameter(s) = {}".format(res_param[e]))
+                    self.logger.debug("Bandits-ABC Rejection Sampling: trial distance(s) = {}".format(res_dist[e]))
                 if res <= self.epsilon:
                     accepted_samples.append(params[e])
                     distances.append(dists[e])
                     accepted_count += 1
+                    if self.use_logger:
+                        self.logger.info("Bandits-ABC Rejection Sampling: accepted a new sample, "
+                                         "total accepted samples = {0}".format(accepted_count))
 
             trial_count += batch_size
 

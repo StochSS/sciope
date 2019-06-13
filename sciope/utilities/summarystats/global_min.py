@@ -28,7 +28,7 @@ class GlobalMin(SummaryBase):
     The minimum value observed across the entire time span
     """
 
-    def __init__(self, mean_trajectories=True, use_logger=True):
+    def __init__(self, mean_trajectories=False, use_logger=False):
         self.name = 'GlobalMin'
         super(GlobalMin, self).__init__(self.name, mean_trajectories, use_logger)
         if self.use_logger:
@@ -42,8 +42,9 @@ class GlobalMin(SummaryBase):
         :param data: simulated or data set
         :return: computed statistic value
         """
+        data = np.asarray(data)
         if self.mean_trajectories:
-            res = np.asarray(np.mean(np.min(data, axis=1)))  # returns a scalar
+            res = np.asarray(np.mean(np.min(data, axis=1), axis=0))  # returns a scalar
         else:
             res = np.min(data, axis=1)  # returns a np array
 
@@ -52,5 +53,10 @@ class GlobalMin(SummaryBase):
         if self.use_logger:
             self.logger.info("GlobalMin summary statistic: processed data matrix of shape {0} and generated summaries"
                              " of shape {1}".format(data.shape, res.shape))
-        np.testing.assert_equal(res.shape[0], data.shape[0], "GlobalMin: expected summaries count mismatch!")
+
+        if self.mean_trajectories:
+            np.testing.assert_equal(res.shape[0], 1, "GlobalMin: expected summaries count mismatch!")
+        else:
+            np.testing.assert_equal(res.shape[0], data.shape[0], "GlobalMin: expected summaries count mismatch!")
+
         return res

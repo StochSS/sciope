@@ -18,6 +18,7 @@ Gaussian Process Regression Surrogate Model using sklearn
 # Imports
 from sciope.models.model_base import ModelBase
 from sklearn.gaussian_process import GaussianProcessRegressor
+from sciope.utilities.housekeeping import sciope_logger as ml
 
 
 # Class definition
@@ -26,8 +27,12 @@ class GPRModel(ModelBase):
     We use the sklearn GP Regressor implementation here.
     """
 
-    def __init__(self):
+    def __init__(self, use_logger=False):
         self.name = 'GPRModel'
+        super(GPRModel, self).__init__(self.name, use_logger)
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Gaussian Process regression model initialized")
 
     # train the GP model given the data
     def train(self, inputs, targets):
@@ -37,6 +42,8 @@ class GPRModel(ModelBase):
         # Train the model
         self.model = GaussianProcessRegressor(n_restarts_optimizer=100)
         self.model.fit(self.x, self.y)
+        if self.use_logger:
+            self.logger.info("Gaussian Process regression model trained with {} samples".format(len(self.y)))
 
     # Predict
     # * NOTE *

@@ -19,8 +19,8 @@ Approximate Bayesian Computation
 from sciope.inference.inference_base import InferenceBase
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
-# from sciope.utilities.housekeeping import sciope_logger as ml
-# from sciope.utilities.housekeeping import sciope_profiler
+from sciope.utilities.housekeeping import sciope_logger as ml
+from sciope.utilities.housekeeping import sciope_profiler
 from sciope.data.dataset import DataSet
 from toolz import partition_all
 import multiprocessing as mp  # remove dependency
@@ -30,10 +30,6 @@ import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
-
-
-# Set up the logger
-# logger = ml.SciopeLogger().get_logger()
 
 
 def get_futures(lst):
@@ -51,6 +47,7 @@ def get_futures(lst):
         f.append(futures_of(i)[0])
     return f
 
+  
 # Class definition: multiprocessing ABC process
 class ABCProcess(mp.Process):
     """
@@ -70,8 +67,8 @@ class ABC(InferenceBase):
     * InferenceBase.infer()
     """
 
-    def __init__(self, data, sim, prior_function, epsilon=0.1, parallel_mode=False, summaries_function=bs.Burstiness(),
-                 distance_function=euc.EuclideanDistance()):
+    def __init__(self, data, sim, prior_function, epsilon=0.1, summaries_function=bs.Burstiness(),
+                 distance_function=euc.EuclideanDistance(), use_logger=False):
         """
         ABC class for rejection sampling
         
@@ -97,12 +94,15 @@ class ABC(InferenceBase):
         self.summaries_function = summaries_function
         self.prior_function = prior_function
         self.distance_function = distance_function
-        self.parallel_mode = parallel_mode
         self.historical_distances = []
         self.fixed_mean = []
-        super(ABC, self).__init__(self.name, data, sim)
+        self.use_logger = use_logger
+        super(ABC, self).__init__(self.name, data, sim, self.use_logger)
         self.sim = dask.delayed(sim)
-        # logger.info("Approximate Bayesian Computation initialized")
+
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Approximate Bayesian Computation initialized")
 
     def scale_distance(self, dist):
         """
@@ -266,17 +266,24 @@ class ABC(InferenceBase):
 
             # Take the norm to combine the distances, if more than one summary is used
             if sim_dist_scaled.shape[1] > 1:
-                combined_distance = [dask.delayed(np.linalg.norm)(scaled, axis=1) for scaled in sim_dist_scaled]
+                combined_distance = [dask.delayed(np.linalg.norm)(scaled.reshape(1, scaled.size), axis=1)
+                                     for scaled in sim_dist_scaled]
                 result, = dask.compute(combined_distance)
             else:
                 result = sim_dist_scaled.ravel()
 
             # Accept/Reject
             for e, res in enumerate(result):
+                if self.use_logger:
+                    self.logger.debug("ABC Rejection Sampling: trial parameter(s) = {}".format(res_param[e]))
+                    self.logger.debug("ABC Rejection Sampling: trial distance(s) = {}".format(res_dist[e]))
                 if res <= self.epsilon:
                     accepted_samples.append(params[e])
                     distances.append(dists[e])
                     accepted_count += 1
+                    if self.use_logger:
+                        self.logger.info("ABC Rejection Sampling: accepted a new sample, "
+                                         "total accepted samples = {0}".format(accepted_count))
 
             trial_count += batch_size
             del futures_dist, futures_params, res_param, res_dist

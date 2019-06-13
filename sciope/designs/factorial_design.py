@@ -30,7 +30,7 @@ class FactorialDesign(InitialDesignBase):
     * InitialDesignBase.generate(n)
     """
 
-    def __init__(self, levels, xmin, xmax, use_logger=True):
+    def __init__(self, levels, xmin, xmax, use_logger=False):
         """[summary]
         
         Parameters
@@ -63,7 +63,7 @@ class FactorialDesign(InitialDesignBase):
             
         """
         # Get grid coordinates
-        grid_coords = [da.linspace(lb, ub, self.levels) for lb, ub in zip(self.xmin, self.xmax)]
+        grid_coords = [da.linspace(lb, ub, num=self.levels) for lb, ub in zip(self.xmin, self.xmax)]
 
         # Generate the full grid
         x = da.meshgrid(*grid_coords)

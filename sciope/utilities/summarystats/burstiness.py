@@ -32,7 +32,7 @@ class Burstiness(SummaryBase):
     Ref: Burstiness and memory in complex systems, Europhys. Let., 81, pp. 48002, 2008.
     """
 
-    def __init__(self, mean_trajectories=True, improvement=False, use_logger=True):
+    def __init__(self, mean_trajectories=False, improvement=False, use_logger=False):
         """
         [summary]
         
@@ -84,9 +84,15 @@ class Burstiness(SummaryBase):
         out = np.array(trajs)
         res = np.reshape(out, (out.size, 1))
 
+        if self.mean_trajectories:
+            res = np.asarray(np.mean(res, axis=0))  # returns a scalar, so we cast it as an array
+
         if self.use_logger:
             self.logger.info("Burstiness summary statistic: processed data matrix of shape {0} and generated summaries"
                              " of shape {1}".format(data.shape, res.shape))
-        np.testing.assert_equal(res.shape[0], data_arr.shape[0], "Burstiness: expected summaries count mismatch!")
+        if self.mean_trajectories:
+            np.testing.assert_equal(res.shape[0], 1, "Burstiness: expected summaries count mismatch!")
+        else:
+            np.testing.assert_equal(res.shape[0], data_arr.shape[0], "Burstiness: expected summaries count mismatch!")
         return res
 

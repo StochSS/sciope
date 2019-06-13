@@ -1,0 +1,57 @@
+# Copyright 2019 Prashant Singh, Fredrik Wrede and Andreas Hellander
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""
+Test suite for initial designs
+"""
+from sciope.designs import latin_hypercube_sampling as lhs
+from sciope.designs import random_sampling as rs
+from sciope.designs import factorial_design as fd
+import numpy as np
+import pytest
+
+
+def test_lhs_functional():
+    lb = np.asarray([1, 1, 1])
+    ub = np.asarray([9, 9, 9])
+    num_points = 30
+    num_dims = lb.size
+    lhs_obj = lhs.LatinHypercube(lb, ub, use_logger=False)
+    lhs_delayed = lhs_obj.generate(num_points)
+    lhs_points = lhs_delayed.compute()
+    assert lhs_points.shape[0] == num_points, "LatinHypercube test failed, dimensions mismatch"
+    assert lhs_points.shape[1] == num_dims, "LatinHypercube test failed, dimensions mismatch"
+
+
+def test_random_functional():
+    lb = np.asarray([1, 1, 1])
+    ub = np.asarray([9, 9, 9])
+    num_points = 30
+    num_dims = lb.size
+    rs_obj = rs.RandomSampling(lb, ub, use_logger=False)
+    rs_delayed = rs_obj.generate(num_points)
+    rs_points = rs_delayed.compute()
+    assert rs_points.shape[0] == num_points, "RandomSampling test failed, dimensions mismatch"
+    assert rs_points.shape[1] == num_dims, "RandomSampling test failed, dimensions mismatch"
+
+
+def test_factorial_functional():
+    lb = np.asarray([1, 1, 1])
+    ub = np.asarray([9, 9, 9])
+    num_levels = 3
+    num_dims = lb.size
+    fd_obj = fd.FactorialDesign(num_levels, lb, ub, use_logger=False)
+    fd_delayed = fd_obj.generate()
+    fd_points = fd_delayed.compute()
+    assert fd_points.shape[0] == np.power(num_levels, num_dims), "FactorialDesign test failed, dimensions mismatch"
+    assert fd_points.shape[1] == num_dims, "FactorialDesign test failed, dimensions mismatch"

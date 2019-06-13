@@ -25,7 +25,6 @@ import numpy as np
 import umap
 from itertools import combinations
 
-
 def get_futures(lst):
     """ Loop through items in list to keep order of delayed objects
         when transforming to futures. firect call of futures_of does not keep the order
@@ -44,7 +43,6 @@ def get_futures(lst):
 
 def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
         n_iter = 1000, lr = 200, rs= None):
-    
     """[summary]
     
     Parameters
@@ -66,11 +64,12 @@ def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
     """
 
     tsne = t_sne.TSNE(n_components=nr_components, init=init,
-            perplexity=plex, random_state=rs, n_iter=n_iter, learning_rate=lr)
+                      perplexity=plex, random_state=rs, n_iter=n_iter, learning_rate=lr)
 
     return tsne.fit_transform(data), tsne
 
-def _do_pca(data, nr_components = 2, rs = None):
+
+def _do_pca(data, nr_components=2, rs=None):
     """[summary]
     
     Parameters
@@ -82,11 +81,12 @@ def _do_pca(data, nr_components = 2, rs = None):
     rs : [type], optional
         [description], by default None
     """
-    pca = PCA(n_components=nr_components , random_state = rs)
+    pca = PCA(n_components=nr_components, random_state=rs)
     return pca.fit_transform(data), pca
 
-def _do_kpca(data , nr_components  = 2 , kernel  = 'rbf', gamma = 0.01,
-        degree = 3):
+
+def _do_kpca(data, nr_components=2, kernel='rbf', gamma=0.01,
+             degree=3):
     """[summary]
     
     Parameters
@@ -103,11 +103,12 @@ def _do_kpca(data , nr_components  = 2 , kernel  = 'rbf', gamma = 0.01,
         [description], by default 3
     """
 
-    kpca = KernelPCA(n_components = nr_components, kernel = kernel, gamma = gamma,
-            degree = degree)
+    kpca = KernelPCA(n_components=nr_components, kernel=kernel, gamma=gamma,
+                     degree=degree)
     return kpca.fit_transform(data), kpca
 
-def _do_umap(data, nr_components = 2, nr_neighbors = 10, min_dist = 0.1):
+
+def _do_umap(data, nr_components=2, nr_neighbors=10, min_dist=0.1):
     """[summary]
     
     Parameters
@@ -121,9 +122,10 @@ def _do_umap(data, nr_components = 2, nr_neighbors = 10, min_dist = 0.1):
     min_dist : float, optional
         [description], by default 0.1
     """
-    rd = umap.UMAP(n_components = nr_components, n_neighbors = nr_neighbors,
-            min_dist = min_dist)
+    rd = umap.UMAP(n_components=nr_components, n_neighbors=nr_neighbors,
+                   min_dist=min_dist)
     return rd.fit_transform(data), rd
+
 
 def _validate_dr_method(method):
     """[summary]
@@ -141,8 +143,9 @@ def _validate_dr_method(method):
     allowed_methods = ["umap", "t_sne", "pca", "kpca"]
     if method not in allowed_methods:
         raise ValueError("Implemented dimension reduction methods are: {0} "
-                            " got dr_method={1}".format(allowed_methods,
-                                                    method))
+                         " got dr_method={1}".format(allowed_methods,
+                                                     method))
+
 
 def _do_dimension_reduction(X, method, kwargs={}):
     """[summary]
@@ -165,13 +168,15 @@ def _do_dimension_reduction(X, method, kwargs={}):
         return _do_pca(X, **kwargs)
     else:
         return _do_kpca(X, **kwargs)
-    
+
+
 class EventFired(Exception):
     """ 
     Exception class to handle events in solvers
     
     """
     pass
+
 
 class SummariesTSFRESH(SummaryBase):
     """
@@ -184,7 +189,6 @@ class SummariesTSFRESH(SummaryBase):
         self.features = MinimalFCParameters()
         self.features.pop('length')
         super(SummariesTSFRESH, self).__init__(self.name)
-
 
     def distribute(self, point):
         """
@@ -201,7 +205,6 @@ class SummariesTSFRESH(SummaryBase):
             list of generated features 
         """
         return list(generate_tsfresh_features(data=[point], features=self.features)[0])
-        
 
     def correlation(self, x, y):
         """
@@ -220,7 +223,7 @@ class SummariesTSFRESH(SummaryBase):
         list
             list of generated feature
         """
-        return [np.corrcoef(x,y)[0,1]]
+        return [np.corrcoef(x, y)[0, 1]]
 
 
 class DataSetMET(DataSet):
@@ -240,6 +243,7 @@ class DataSetMET(DataSet):
                 self.user_labels = np.concatenate((self.user_labels, user_labels), axis=0)
             else:
                 self.user_labels = user_labels
+
 
 class StochMET():
     """ 
@@ -286,10 +290,10 @@ class StochMET():
     """
 
     def __init__(self, simulator=None, sampler=None, features=None, default_batch_size=10):
-        assert callable(simulator), "simulator must be a callable function" 
+        assert callable(simulator), "simulator must be a callable function"
         assert hasattr(sampler, 'generate'), "sampling class instance must have a callable function 'generate'"
         self.simulator = simulator
-        self.sampling = sampler 
+        self.sampling = sampler
         self.batch_size = default_batch_size
         self.data = DataSetMET()
         self.summaries = SummariesTSFRESH()
@@ -297,7 +301,7 @@ class StochMET():
             self.features = MinimalFCParameters()
             self.features.pop('length')
         else:
-            self.features = features #TODO: check supported format
+            self.features = features  # TODO: check supported format
         self.summaries.features = self.features
 
     def compute(self, n_species, n_points=None, join_features=True, predictor=None):
@@ -324,49 +328,49 @@ class StochMET():
         """
         if n_points is None:
             n_points = self.default_batch_size
-        #da_params = da.asarray(self.sampling.generate(n_points))
-        sampler = delayed(self.sampling.generate) # according to best practice instead of passing a
-                                                  # dask collection to a delayed object
+        # da_params = da.asarray(self.sampling.generate(n_points))
+        sampler = delayed(self.sampling.generate)  # according to best practice instead of passing a
+        # dask collection to a delayed object
         params = [sampler(1)[0] for x in range(n_points)]
 
         simulator = delayed(self.simulator)
-        
+
         features = delayed(self.summaries.distribute)
-            
-        processed = [simulator(g) for g in params]    
-        
+
+        processed = [simulator(g) for g in params]
+
         if type(n_species) is int:
             n_species = range(n_species)
         all_features = []
-        
+
         for p in processed:
-            for s in n_species: #try catch EventFired
-                traj = p[:,s] #get_item
+            for s in n_species:  # try catch EventFired
+                traj = p[:, s]  # get_item
                 all_features.append(features(traj))
 
             if hasattr(self.summaries, 'correlation'):
                 correlation = delayed(self.summaries.correlation)
                 for s in combinations(n_species, 2):
-                    x = p[:, s[0]] #get_item
-                    y = p[:, s[1]] #get_item
-                    all_features.append(correlation(x,y))
-        
+                    x = p[:, s[0]]  # get_item
+                    y = p[:, s[1]]  # get_item
+                    all_features.append(correlation(x, y))
+
         result = []
         if join_features:
             window_len = len(n_species) + len(list(combinations(n_species, 2)))
-            
+
             @delayed
             def join(lst):
                 joined = lst[0]
                 for item in lst[1:]:
                     joined += item
                 return joined
-        
+
             for j in range(0, len(all_features), window_len):
-                result.append(join(all_features[j:j+window_len]))
+                result.append(join(all_features[j:j + window_len]))
         else:
             result = all_features
-        
+
         pred = []
         if predictor is not None:
             if callable(predictor):
@@ -374,14 +378,14 @@ class StochMET():
                 pred = [predictor(x) for x in result]
             else:
                 raise ValueError("The predictor must be a callable function")
-            #persist at workers, will run in background
+            # persist at workers, will run in background
             params_res, processed_res, result_res, pred_res = persist(params, processed, result, pred)
             wait(pred_res)
-            #keep on workers until needed for local processing
+            # keep on workers until needed for local processing
             self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res,
                             'prediction': pred_res}
         else:
-            #TODO: avoid redundancy...
+            # TODO: avoid redundancy...
             params_res, processed_res, result_res = persist(params, processed, result)
             
            #convert to futures 
@@ -409,7 +413,6 @@ class StochMET():
                             summary_stats=feature, user_labels=np.array([-1]))
                # except EventFired:
                #     pass
-    
 
     def explore(self, dr_method='umap', scaling=None, from_distributed=False, filter_func=None, kwargs={}):
         """
@@ -447,12 +450,12 @@ class StochMET():
             data = scaling.fit_transform(self.data.s)
         else:
             data = self.data.s
-        
+
         data.astype(np.float32)
         data, model = _do_dimension_reduction(data, dr_method, **kwargs)
         self.dr_model = model
-        interative_scatter(data, self.data) #TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
-        
+        interative_scatter(data,
+                           self.data)  # TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
 
     def _collect_persisted(self, filter_func=None):
         """
@@ -473,8 +476,8 @@ class StochMET():
                 use_filter = True
             else:
                 raise ValueError("The filter must be a callable function returning"
-                                "True of False")
-        for e, i in enumerate(self.futures['ts']):    
+                                 "True of False")
+        for e, i in enumerate(self.futures['ts']):
             try:
                 ts = np.array([i.compute()])
                 if 'prediction' in self.futures.keys():
@@ -487,13 +490,8 @@ class StochMET():
 
                 param = np.array([self.futures['parameters'][e].compute()])
                 feature = np.array([self.futures['features'][e].compute()])
-               
-                self.data.add_points(inputs=param, time_series=ts, 
-                            summary_stats=feature, user_labels=np.array([-1]))
+
+                self.data.add_points(inputs=param, time_series=ts,
+                                     summary_stats=feature, user_labels=np.array([-1]))
             except EventFired:
                 continue
-
-
-
-        
-

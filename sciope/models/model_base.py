@@ -40,8 +40,10 @@ class ModelBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name):
+    def __init__(self, name, use_logger=False):
         self.name = name
+        self.model = None
+        self.use_logger = use_logger
 
     # pre-process training data
     def scale_training_data(self, x, y):
