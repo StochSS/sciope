@@ -73,7 +73,7 @@ def test_ann_model():
     model = ann_regressor.ANNModel()
     model.train(x_train, y_train.reshape(y_train.size, 1))
     mse = mean_squared_error(y_test, model.predict(x_test))
-    assert mse < 15, "ANN regressor test fail, test error too high"
+    assert mse < 30, "ANN regressor test fail, test error too high"
 
 
 def test_svr_model():
