@@ -47,14 +47,13 @@ print("input_shape: ", input_shape, ", output_shape: ", output_shape)
 CNN = CNNModel(input_shape=input_shape,output_shape=output_shape)
 
 # Split data into training and validation
-theta_train = theta[0:-2000]
-ts_train = ts[0:-2000]
-
-theta_val = theta[-2000:]
-ts_val = ts[-2000:]
+#theta_train = theta[0:-2000]
+#ts_train = ts[0:-2000]
+#
+#theta_val = theta[-2000:]
+#ts_val = ts[-2000:]
 
 
 
 # Train the CNN model
-CNN.train(inputs=ts_train, targets = theta_train,validation_inputs=ts_val,validation_targets=theta_val,
-              save_as='test')
+CNN.train(inputs=ts_train, targets=theta_train, save_as='test')

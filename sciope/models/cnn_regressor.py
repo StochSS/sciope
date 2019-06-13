@@ -28,8 +28,8 @@ class CNNModel(ModelBase):
         self.model = construct_model(input_shape,output_shape)
     
     # train the CNN model given the data
-    def train(self, inputs, targets,validation_inputs,validation_targets,
-              save_as=None,plot_training_progress=False):
+    def train(self, inputs, targets,validation_inputs=None, validation_targets=None,
+              save_as=None, plot_training_progress=False):
         if save_as:
             mcp_save = keras.callbacks.ModelCheckpoint(save_as+'.hdf5', 
                                                        save_best_only=True, 
@@ -37,21 +37,31 @@ class CNNModel(ModelBase):
                                                        mode='min')
     
         #train 40 epochs with batch size = 32
-        history1 = self.model.fit(
-                inputs, targets, validation_data = (validation_inputs,
-                validation_targets), epochs=40,batch_size=32,shuffle=True,
+        if validation_inputs is not None:
+            history1 = self.model.fit(
+                    inputs, targets, validation_data = (validation_inputs,
+                    validation_targets), epochs=40, batch_size=32, shuffle=True,
+                    callbacks=[mcp_save])
+        else:
+            history1 = self.model.fit(
+                inputs, targets, validation_split=0.1, epochs=40, batch_size=32, shuffle=True,
                 callbacks=[mcp_save])
         
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
         if save_as:
             self.model = keras.models.load_model(save_as+'.hdf5')
-        #train 5 epochs with batch size 4096        
-        history2 = self.model.fit(
-                inputs, targets, validation_data = (validation_inputs,
-                validation_targets), epochs=5,batch_size=4096,shuffle=True,
+
+        # train 5 epochs with batch size 4096
+        if validation_inputs is not None:
+            history2 = self.model.fit(
+                    inputs, targets, validation_data = (validation_inputs,
+                    validation_targets), epochs=5,batch_size=4096,shuffle=True,
+                    callbacks=[mcp_save])
+        else:
+            history2 = self.model.fit(
+                inputs, targets, validation_split=0.1, epochs=5, batch_size=4096, shuffle=True,
                 callbacks=[mcp_save])
-                
                 
         #TODO: concatenate history1 and history2 to plot all the training 
         #progress       
@@ -70,10 +80,10 @@ def construct_model(input_shape,output_shape):
     dense_activation = 'relu'
     padding = 'same'
     poolpadding = 'valid'
-    con_len = 6
+    con_len = 2
     lay_size = [int(64*1.5**i) for i in range(10)]
     maxpool = con_len
-    levels=3
+    levels=1
     batch_mom = 0.99
     reg = None
     pool = keras.layers.MaxPooling1D
