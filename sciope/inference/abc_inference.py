@@ -25,12 +25,29 @@ from sciope.data.dataset import DataSet
 from toolz import partition_all
 import multiprocessing as mp  # remove dependency
 import numpy as np
+from dask.distributed import futures_of, as_completed, wait
 import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
 
 
+def get_futures(lst):
+    """ Loop through items in list to keep order of delayed objects
+        when transforming to futures. firect call of futures_of does not keep the order
+        of the objects
+    
+    Parameters
+    ----------
+    lst : array-like
+        array containing delayed objects
+    """
+    f = []
+    for i in lst:
+        f.append(futures_of(i)[0])
+    return f
+
+  
 # Class definition: multiprocessing ABC process
 class ABCProcess(mp.Process):
     """
@@ -147,7 +164,7 @@ class ABC(InferenceBase):
         self.fixed_mean = np.copy(stats_mean)
         del stats_mean
 
-    def get_dask_graph(self, batch_size):
+    def get_dask_graph(self, batch_size, ensemble_size):
         """
         Constructs the dask computational graph invloving sampling, simulation, summary statistics
         and distances.
@@ -166,7 +183,7 @@ class ABC(InferenceBase):
         # Rejection sampling with batch size = batch_size 
 
         # Draw from the prior
-        trial_param = [self.prior_function.draw() for x in range(batch_size)]
+        trial_param = [self.prior_function.draw() for x in range(batch_size)]*ensemble_size
 
         # Perform the trial
         sim_result = [self.sim(param) for param in trial_param]
@@ -174,13 +191,18 @@ class ABC(InferenceBase):
         # Get the statistic(s)
         sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
 
+        if ensemble_size > 1:
+            stats_final = [dask.delayed(np.mean)(sim_stats[i:i+ensemble_size], axis=0) for i in range(0,len(sim_stats),ensemble_size)]
+        else:
+            stats_final = sim_stats
+
         # Calculate the distance between the dataset and the simulated result
-        sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in sim_stats]
+        sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in stats_final]
 
-        return {"parameters": trial_param, "trajectories": sim_result, "summarystats": sim_stats, "distances": sim_dist}
+        return {"parameters": trial_param[:batch_size], "trajectories": sim_result, "summarystats": stats_final, "distances": sim_dist}
 
-    #@sciope_profiler.profile
-    def rejection_sampling(self, num_samples, batch_size, chunk_size):
+    # @sciope_profiler.profile
+    def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size, normalize):
         """
         Perform ABC inference according to initialized configuration.
 
@@ -214,15 +236,33 @@ class ABC(InferenceBase):
             self.compute_fixed_mean(chunk_size)
 
         # Get dask graph
-        graph_dict = self.get_dask_graph(batch_size)
+        graph_dict = self.get_dask_graph(batch_size, ensemble_size)
 
         # do rejection sampling
         while accepted_count < num_samples:
 
-            res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
+            res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
+            futures_dist = get_futures(res_dist)
+            futures_params = get_futures(res_param)
 
-            # Normalize distances between [0,1]
-            sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
+            keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
+
+            sim_dist_scaled = []
+            params = []
+            dists = []
+            
+            for f, dist in as_completed(futures_dist, with_results=True):
+                dists.append(dist)
+                if normalize:
+                    # Normalize distances between [0,1]
+                    sim_dist_scaled.append(self.scale_distance(dist))
+                idx = keep_idx[f.key]
+                params.append(futures_params[idx].result())
+
+            if normalize:
+                sim_dist_scaled = np.asarray(sim_dist_scaled)
+            else:
+                sim_dist_scaled = np.asarray(dists)
 
             # Take the norm to combine the distances, if more than one summary is used
             if sim_dist_scaled.shape[1] > 1:
@@ -238,20 +278,21 @@ class ABC(InferenceBase):
                     self.logger.debug("ABC Rejection Sampling: trial parameter(s) = {}".format(res_param[e]))
                     self.logger.debug("ABC Rejection Sampling: trial distance(s) = {}".format(res_dist[e]))
                 if res <= self.epsilon:
-                    accepted_samples.append(res_param[e])
-                    distances.append(res_dist[e])
+                    accepted_samples.append(params[e])
+                    distances.append(dists[e])
                     accepted_count += 1
                     if self.use_logger:
                         self.logger.info("ABC Rejection Sampling: accepted a new sample, "
                                          "total accepted samples = {0}".format(accepted_count))
 
             trial_count += batch_size
+            del futures_dist, futures_params, res_param, res_dist
 
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
         return self.results
 
-    def infer(self, num_samples, batch_size, chunk_size=10):
+    def infer(self, num_samples, batch_size, chunk_size=10, ensemble_size=1, normalize=True):
         """
         Wrapper for rejection sampling. Performs ABC rejection sampling
         
@@ -276,4 +317,4 @@ class ABC(InferenceBase):
             'inferred_parameters': The mean of accepted parameter samples
         """
 
-        return self.rejection_sampling(num_samples, batch_size, chunk_size)
+        return self.rejection_sampling(num_samples, batch_size, chunk_size, ensemble_size, normalize)

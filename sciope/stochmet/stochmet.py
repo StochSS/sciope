@@ -20,14 +20,29 @@ from sciope.data.dataset import DataSet
 from sklearn.manifold import t_sne
 from sklearn.decomposition import PCA, KernelPCA
 from dask import persist, delayed
-from dask.distributed import wait
+from dask.distributed import as_completed, futures_of
 import numpy as np
 import umap
 from itertools import combinations
 
+def get_futures(lst):
+    """ Loop through items in list to keep order of delayed objects
+        when transforming to futures. firect call of futures_of does not keep the order
+        of the objects
+    
+    Parameters
+    ----------
+    lst : array-like
+        array containing delayed objects
+    """
+    f = []
+    for i in lst:
+        f.append(futures_of(i)[0])
+    return f
 
-def _do_tsne(data, nr_components=2, init='random', plex=30,
-             n_iter=1000, lr=200, rs=None):
+
+def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
+        n_iter = 1000, lr = 200, rs= None):
     """[summary]
     
     Parameters
@@ -372,10 +387,34 @@ class StochMET():
         else:
             # TODO: avoid redundancy...
             params_res, processed_res, result_res = persist(params, processed, result)
-            wait(result_res)
-            self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res}
+            
+           #convert to futures 
+            futures = get_futures(result_res)
+            f_params = get_futures(params_res)
+            f_ts = get_futures(processed_res)
+            
+            #keep track of indices...
+            f_dict = {f.key:idx for idx,f in enumerate(futures)}
+            #..as we collect result on a "as completed" basis 
+            for f,res in as_completed(futures, with_results=True):
+                #with_results = False needed to capture EventFirred
+                #try:
+                #res = f.result()
 
-    def explore(self, dr_method='umap', scaling=None, from_distributed=True, filter_func=None, kwargs={}):
+                idx = f_dict[f.key]
+                #get the parameter point
+                param = np.array([f_params[idx].result()])
+                #get the trajatories 
+                ts = np.array([f_ts[idx].result()])
+                #convert to numpy array
+                feature = np.array([res])
+                    #add to data collection
+                self.data.add_points(inputs=param, time_series=ts,
+                            summary_stats=feature, user_labels=np.array([-1]))
+               # except EventFired:
+               #     pass
+
+    def explore(self, dr_method='umap', scaling=None, from_distributed=False, filter_func=None, kwargs={}):
         """
         Visualize the results from the total parameter sweep.
 
