@@ -27,7 +27,8 @@ for t in range(len(dmin)):
     theta[:,t]=(theta[:,t]-dmin[t]) / (dmax[t] - dmin[t])
 
 # Quick check if all values are between 0-1
-print("theta min: ", np.min(theta), "theta max: ", np.max(theta))
+print("theta min: ", np.min(theta), ", theta max: ", np.max(theta),
+      ", theta mean: ", np.mean(theta), ", theta std: ", np.std(theta))
 
 
 # Define a CNN model
