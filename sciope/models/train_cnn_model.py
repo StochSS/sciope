@@ -15,10 +15,12 @@ print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 theta = np.squeeze(theta, axis=1)
 ts = np.squeeze(ts, axis=1)
 
+print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
+
 #transpose the dimension of ts to match the CNN
 ts = np.transpose(ts,(1,0))
 
-print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
+
 
 # Define a CNN model
 input_shape = ts.shape[1:]
