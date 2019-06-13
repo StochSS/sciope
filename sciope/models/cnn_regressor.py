@@ -28,8 +28,8 @@ class CNNModel(ModelBase):
         self.model = construct_model(input_shape,output_shape)
     
     # train the CNN model given the data
-    def train(self, inputs, targets, validation_inputs=None, validation_targets=None,
-              save_as=None, plot_training_progress=False):
+    def train(self, inputs, targets,validation_inputs,validation_targets,
+              save_as=None,plot_training_progress=False):
         if save_as:
             mcp_save = keras.callbacks.ModelCheckpoint(save_as+'.hdf5', 
                                                        save_best_only=True, 
@@ -37,22 +37,21 @@ class CNNModel(ModelBase):
                                                        mode='min')
     
         #train 40 epochs with batch size = 32
-
-
         history1 = self.model.fit(
-            inputs, targets, validation_split=0.1, epochs=40, batch_size=32, shuffle=True,
-            callbacks=[mcp_save])
+                inputs, targets, validation_data = (validation_inputs,
+                validation_targets), epochs=40,batch_size=32,shuffle=True,
+                callbacks=[mcp_save])
         
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
         if save_as:
             self.model = keras.models.load_model(save_as+'.hdf5')
-
-        # train 5 epochs with batch size 4096
-
+        #train 5 epochs with batch size 4096
         history2 = self.model.fit(
-            inputs, targets, validation_split=0.1, epochs=5, batch_size=4096, shuffle=True,
-            callbacks=[mcp_save])
+                inputs, targets, validation_data = (validation_inputs,
+                validation_targets), epochs=5,batch_size=4096,shuffle=True,
+                callbacks=[mcp_save])
+
                 
         #TODO: concatenate history1 and history2 to plot all the training 
         #progress       
