@@ -28,7 +28,7 @@ class CNNModel(ModelBase):
         self.model = construct_model(input_shape,output_shape)
     
     # train the CNN model given the data
-    def train(self, inputs, targets,validation_inputs=None, validation_targets=None,
+    def train(self, inputs, targets, validation_inputs=None, validation_targets=None,
               save_as=None, plot_training_progress=False):
         if save_as:
             mcp_save = keras.callbacks.ModelCheckpoint(save_as+'.hdf5', 
