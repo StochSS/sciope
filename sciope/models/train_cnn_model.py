@@ -47,11 +47,11 @@ print("input_shape: ", input_shape, ", output_shape: ", output_shape)
 CNN = CNNModel(input_shape=input_shape,output_shape=output_shape)
 
 # Split data into training and validation
-theta_train = theta[0:39000]
-ts_train = ts[0:39000]
+theta_train = theta[0:-2000]
+ts_train = ts[0:-2000]
 
-theta_val = theta[39000:]
-ts_val = ts[39000:]
+theta_val = theta[-2000:]
+ts_val = ts[-2000:]
 
 
 
