@@ -56,4 +56,4 @@ CNN = CNNModel(input_shape=input_shape,output_shape=output_shape)
 
 
 # Train the CNN model
-CNN.train(inputs=ts, targets=theta, save_as='test')
+CNN.train(inputs=ts, targets=theta, validation_inputs=None, validation_targets=None, save_as='test')
