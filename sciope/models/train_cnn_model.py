@@ -1,5 +1,6 @@
 
 import pickle
+import numpy as np
 from sciope.models.cnn_regressor import CNNModel
 
 # Get the data
@@ -9,6 +10,10 @@ theta = dataset.x
 ts = dataset.ts
 
 print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
+
+# Remove trajectory dimension
+theta = np.squeeze(theta, axis=1)
+ts = np.squeeze(ts, axis=1)
 
 # Define a CNN model
 CNN = CNNModel(input_shape=ts.shape,output_shape=theta.shape)
