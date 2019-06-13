@@ -55,7 +55,7 @@ class DataGenerator:
 print("start")
 
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
-vilar_model = Vilar()
+vilar_model = Vilar(species='all')
 sim = vilar_model.simulate
 
 #Generating data
