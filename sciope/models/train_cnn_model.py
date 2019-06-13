@@ -20,6 +20,7 @@ print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 # Define a CNN model
 input_shape = ts.shape[1:]
 output_shape = theta.shape[1]
+print("input_shape: ", input_shape, ", output_shape: ", output_shape)
 CNN = CNNModel(input_shape=input_shape,output_shape=output_shape)
 
 # Split data into training and validation
