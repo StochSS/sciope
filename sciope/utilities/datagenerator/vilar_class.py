@@ -42,6 +42,9 @@ class Vilar:
         self.num_timestamps = num_timestamps
         self.final_time = final_time
 
+        self.name = 'vilar_ft' + self.final_time + '_ts' + self.num_timestamps + '_tr' + self.num_trajectories \
+        + '_species' + self.species
+
         # Set parameters
         temp_param = self.model.get_parameter('alpha_A')
         temp_param.set_expression(50.0)

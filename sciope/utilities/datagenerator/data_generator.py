@@ -5,6 +5,7 @@ from sciope.data.dataset import DataSet
 import numpy as np
 import dask
 import pickle
+import os
 from vilar_class import Vilar
 
 
@@ -59,8 +60,10 @@ print("start")
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 
 # Defining Vilar model as stochastic model
-vilar_model = Vilar(species='all')
-sim = vilar_model.simulate
+stoch_model = Vilar(species='all')
+sim = stoch_model.simulate
+model_name = 'Vilar_model'
+
 
 # Defining DataGenerator
 dg = DataGenerator(prior_function=prior_function, sim=sim)
@@ -77,9 +80,25 @@ tp, sim_result = dg.gen(batch_size=10)
 dataset.add_points(inputs=np.array(tp), targets=None, time_series=np.array(sim_result), summary_stats=None)
 print("dataset size: ", np.array(dataset.ts).shape)
 
-#Save dataset
+# Name the dataset
+dataset_name = 'ds_' + stoch_model.name
 
-pickle.dump(dataset, open("dataset.p", "wb"))
+
+if os.path.exists(dataset_name):
+    nr = 0
+    while os.path.exists(dataset_name+'/'+dataset_name + str(nr) + '.p'):
+        nr += 1
+    # Save dataset
+    pickle.dump(dataset, open(dataset_name+'/'+dataset_name + str(nr) + '.p', "wb"))
+
+else:
+    os.mkdir(dataset_name)
+    # Save dataset
+    pickle.dump(dataset, open(dataset_name + '/' + dataset_name + str(0) + '.p', "wb"))
+
+
+
+
 
 
 
