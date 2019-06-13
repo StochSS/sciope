@@ -7,7 +7,7 @@ from sciope.models.cnn_regressor import CNNModel
 # Get the data
 data_path = '/home/ubuntu/sciope/sciope/utilities/datagenerator/ds_vilar_ft100_ts501_tr1_speciesall' #/ds_vilar_ft100_ts501_tr1_speciesall0.p'
 
-
+theta = None
 
 for filename in os.listdir(data_path):
     dataset = pickle.load(open(data_path + '/' + filename, "rb" ) )
