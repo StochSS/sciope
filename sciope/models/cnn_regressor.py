@@ -37,14 +37,11 @@ class CNNModel(ModelBase):
                                                        mode='min')
     
         #train 40 epochs with batch size = 32
-        if validation_inputs is not None:
-            print("not None")
 
-        else:
-            print('None')
-            history1 = self.model.fit(
-                inputs, targets, validation_split=0.1, epochs=40, batch_size=32, shuffle=True,
-                callbacks=[mcp_save])
+
+        history1 = self.model.fit(
+            inputs, targets, validation_split=0.1, epochs=40, batch_size=32, shuffle=True,
+            callbacks=[mcp_save])
         
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
@@ -52,12 +49,10 @@ class CNNModel(ModelBase):
             self.model = keras.models.load_model(save_as+'.hdf5')
 
         # train 5 epochs with batch size 4096
-        if validation_inputs is not None:
-            print("not suppose to happen")
-        else:
-            history2 = self.model.fit(
-                inputs, targets, validation_split=0.1, epochs=5, batch_size=4096, shuffle=True,
-                callbacks=[mcp_save])
+
+        history2 = self.model.fit(
+            inputs, targets, validation_split=0.1, epochs=5, batch_size=4096, shuffle=True,
+            callbacks=[mcp_save])
                 
         #TODO: concatenate history1 and history2 to plot all the training 
         #progress       
