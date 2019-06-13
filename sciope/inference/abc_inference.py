@@ -36,6 +36,21 @@ normalized_distances = None
 # logger = ml.SciopeLogger().get_logger()
 
 
+def get_futures(lst):
+    """ Loop through items in list to keep order of delayed objects
+        when transforming to futures. firect call of futures_of does not keep the order
+        of the objects
+    
+    Parameters
+    ----------
+    lst : array-like
+        array containing delayed objects
+    """
+    f = []
+    for i in lst:
+        f.append(futures_of(i)[0])
+    return f
+
 # Class definition: multiprocessing ABC process
 class ABCProcess(mp.Process):
     """
@@ -227,8 +242,8 @@ class ABC(InferenceBase):
         while accepted_count < num_samples:
 
             res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
-            futures_dist = futures_of(res_dist)
-            futures_params = futures_of(res_param)
+            futures_dist = get_futures(res_dist)
+            futures_params = get_futures(res_param)
 
             keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
 

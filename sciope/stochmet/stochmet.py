@@ -26,6 +26,20 @@ import umap
 from itertools import combinations
 
 
+def get_futures(lst):
+    """ Loop through items in list to keep order of delayed objects
+        when transforming to futures. firect call of futures_of does not keep the order
+        of the objects
+    
+    Parameters
+    ----------
+    lst : array-like
+        array containing delayed objects
+    """
+    f = []
+    for i in lst:
+        f.append(futures_of(i)[0])
+    return f
 
 
 def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
@@ -371,9 +385,10 @@ class StochMET():
             params_res, processed_res, result_res = persist(params, processed, result)
             
            #convert to futures 
-            futures = futures_of(result_res)
-            f_params = futures_of(params_res)
-            f_ts = futures_of(processed_res)
+            futures = get_futures(result_res)
+            f_params = get_futures(params_res)
+            f_ts = get_futures(processed_res)
+            
             #keep track of indices...
             f_dict = {f.key:idx for idx,f in enumerate(futures)}
             #..as we collect result on a "as completed" basis 
