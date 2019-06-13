@@ -66,9 +66,7 @@ sim = stoch_model.simulate
 
 # Defining DataGenerator
 dg = DataGenerator(prior_function=prior_function, sim=sim)
-tp, sim_result = dg.gen(batch_size=10)
 
-print("sim result shape: ",np.array(sim_result).shape)
 
 
 dataset=DataSet(name='test dataset')
