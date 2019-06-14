@@ -280,7 +280,7 @@ class ABC():
             'trial_count: The number of total trials performed in order to converge',
             'inferred_parameters': The mean of accepted parameter samples
         """
-        print("welcome to infer")
+        print("welcome to inf")
         print("time series shape: ", self.time_series.shape)
         data_s = [x for x in self.time_series]
         print("data_s shape: ", np.array(data_s).shape)
