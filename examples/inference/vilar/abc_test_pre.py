@@ -66,7 +66,7 @@ ts = ts[:,:,7]
 
 
 # Set up ABC
-abc_instance = abc_inference_pre.ABC(data,param=theta,time_series=ts, vilar.simulate, epsilon=0.1,
+abc_instance = abc_inference_pre.ABC(data,param=theta,time_series=ts, epsilon=0.1,
                                  summaries_function=bs_stat)
 
 # Perform ABC; require 30 samples
