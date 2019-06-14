@@ -9,6 +9,7 @@ install:
   - python3 -m pip install gillespy2
   - pip install pytest
   - pip install pytest-cov
+  - pip install codecov
   - pip install .
 # tests should run from the tests directory
 before_script:
