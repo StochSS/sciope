@@ -35,6 +35,10 @@ mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 bs_stat = bs.Burstiness(mean_trajectories=True, use_logger=False)
 
 
+#test bs_stat
+print("data shape: ", data.shape)
+print("bs_stat of data: ", bs_stat.compute(data))
+
 # Get the data
 data_path = '/home/ubuntu/sciope/sciope/utilities/datagenerator/ds_vilar_ft100_ts501_tr1_speciesall' #/ds_vilar_ft100_ts501_tr1_speciesall0.p'
 
