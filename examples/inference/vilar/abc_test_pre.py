@@ -21,6 +21,7 @@ from sciope.inference import abc_inference_pre
 from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
 import os
+import pickle
 import vilar
 from sklearn.metrics import mean_absolute_error
 
