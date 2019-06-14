@@ -26,6 +26,7 @@ class CNNModel(ModelBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
         self.model = construct_model(input_shape,output_shape)
+        self.model.summary()
     
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets,
