@@ -122,6 +122,7 @@ def test_abc_with_logging():
 
 
 def test_bandits_abc_with_logging():
+    mab_algo = mh.MABHalving(arm_pull=bandits_abc.arm_pull, use_logger=True)
     abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
                                           distance_function=dist_fun,
                                           summaries_function=sum_stats,
@@ -135,7 +136,7 @@ def test_bandits_abc_with_logging():
 
 
 def test_bandits_abc_functional_direct_with_logging():
-    mab_algo = md.MABDirect(bandits_abc.arm_pull)
+    mab_algo = md.MABDirect(arm_pull=bandits_abc.arm_pull, use_logger=True)
     abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
                                           distance_function=dist_fun,
                                           summaries_function=sum_stats,
@@ -149,7 +150,7 @@ def test_bandits_abc_functional_direct_with_logging():
 
 
 def test_bandits_abc_functional_sar_with_logging():
-    mab_algo = sar.MABSAR(arm_pull=bandits_abc.arm_pull, p=50, b=500)
+    mab_algo = sar.MABSAR(arm_pull=bandits_abc.arm_pull, p=50, b=500, use_logger=True)
     abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
                                           distance_function=dist_fun,
                                           summaries_function=sum_stats,
