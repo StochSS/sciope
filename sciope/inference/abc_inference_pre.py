@@ -49,7 +49,7 @@ class ABC():
     * InferenceBase.infer()
     """
 
-    def __init__(self, data, data_set, epsilon=0.1, summaries_function=bs.Burstiness(),
+    def __init__(self, data, param, time_series, epsilon=0.1, summaries_function=bs.Burstiness(),
                  distance_function=euc.EuclideanDistance(), use_logger=False):
         """
         ABC class for rejection sampling
@@ -78,7 +78,9 @@ class ABC():
         self.fixed_mean = []
         self.use_logger = use_logger
 
-        self.data_set = data_set
+        self.time_series = time_series
+        self.param = param
+        self.data = data
 
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
@@ -276,8 +278,17 @@ class ABC():
             'trial_count: The number of total trials performed in order to converge',
             'inferred_parameters': The mean of accepted parameter samples
         """
+        data_s = self.summaries_function(self.time_series)
+        max_s = np.max(data_s, axis=1)
+        min_s = np.max(data_s, axis=1)
+        #normalized
+        data_s = (data_s-min_s)/(max_s-min_s)
+
+        obs_data_s = (self.summaries_function(self.data)-min_s)/(max_s-min_s)
+
+        distances = self.distance_function.compute(data_s, obs_data_s).compute()
+
+        print("distances shape: ", distances.shape)
 
 
 
-
-        return self.rejection_sampling(num_samples, batch_size, chunk_size)

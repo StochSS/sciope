@@ -11,7 +11,7 @@ theta = None
 
 file_nr=0
 for filename in os.listdir(data_path):
-    if file_nr<3:
+    if file_nr<5:
         file_nr+=1
         dataset = pickle.load(open(data_path + '/' + filename, "rb" ) )
         if theta is not None:
