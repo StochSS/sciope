@@ -278,7 +278,8 @@ class ABC():
             'trial_count: The number of total trials performed in order to converge',
             'inferred_parameters': The mean of accepted parameter samples
         """
-        data_s = self.summaries_function.compute(self.time_series)
+        print("time series shape: ", self.time_series.shape)
+        data_s = [self.summaries_function.compute(x) for x in self.time_series]
         max_s = np.max(data_s, axis=1)
         min_s = np.max(data_s, axis=1)
         #normalized
