@@ -37,7 +37,10 @@ for t in range(len(dmin)):
 
 
 #downsample ts
-ts = ts[:,]
+ts = ts[:,::5,:]
+
+print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
+
 
 # Quick check if all values are between 0-1
 print("theta min: ", np.min(theta), ", theta max: ", np.max(theta),
