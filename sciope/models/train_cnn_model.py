@@ -37,7 +37,7 @@ for t in range(len(dmin)):
 
 
 #downsample ts
-ts = ts[:,::5,:]
+#ts = ts[:,::5,:]
 
 print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 

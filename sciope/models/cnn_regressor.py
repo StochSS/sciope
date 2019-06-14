@@ -72,7 +72,7 @@ def construct_model(input_shape,output_shape):
     padding = 'same'
     poolpadding = 'valid'
     con_len = 2
-    lay_size = [int(64*1.5**i) for i in range(10)]
+    lay_size = [int(128*1.5**i) for i in range(10)]
     maxpool = con_len
     levels=1
     batch_mom = 0.99
