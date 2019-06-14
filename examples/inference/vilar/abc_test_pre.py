@@ -62,11 +62,11 @@ print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 ts = np.transpose(ts, (0,2,1))
 
 
-ts = ts[:,:,6]
+ts = ts[:,:,7]
 
 
 # Set up ABC
-abc_instance = abc_inference_pre.ABC(data,param,time_series, vilar.simulate, epsilon=0.1,
+abc_instance = abc_inference_pre.ABC(data,param=theta,time_series=ts, vilar.simulate, epsilon=0.1,
                                  summaries_function=bs_stat)
 
 # Perform ABC; require 30 samples
