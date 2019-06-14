@@ -288,11 +288,11 @@ class ABC():
         #normalized
         data_s = (data_s-min_s)/(max_s-min_s)
 
-        obs_data_s = (self.summaries_function.compute(self.data)-min_s)/(max_s-min_s)
+        #obs_data_s = (self.summaries_function.compute(self.data)-min_s)/(max_s-min_s)
 
-        distances = self.distance_function.compute(data_s, obs_data_s).compute()
+        #distances = self.distance_function.compute(data_s, obs_data_s).compute()
 
-        print("distances shape: ", distances.shape)
+        #print("distances shape: ", distances.shape)
 
 
 
