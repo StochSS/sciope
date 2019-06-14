@@ -279,7 +279,10 @@ class ABC():
             'inferred_parameters': The mean of accepted parameter samples
         """
         print("time series shape: ", self.time_series.shape)
-        data_s = [self.summaries_function.compute(x) for x in self.time_series]
+        data_s = [x for x in self.time_series]
+        print("data_s shape: ", np.array(data_s).shape)
+
+        #data_s = [self.summaries_function.compute(x) for x in self.time_series]
         max_s = np.max(data_s, axis=1)
         min_s = np.max(data_s, axis=1)
         #normalized
