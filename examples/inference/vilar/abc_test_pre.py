@@ -72,7 +72,7 @@ abc_instance = abc_inference_pre.ABC(data,param=theta,time_series=ts, epsilon=0.
                                  summaries_function=bs_stat)
 
 
-print("before infer")
+print("before dddinfer")
 # Perform ABC; require 200 samples
 abc_instance.infer(num_samples=200)
 
