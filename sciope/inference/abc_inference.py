@@ -25,7 +25,7 @@ from sciope.data.dataset import DataSet
 from toolz import partition_all
 import multiprocessing as mp  # remove dependency
 import numpy as np
-from dask.distributed import futures_of, as_completed, wait
+from dask.distributed import futures_of, as_completed, get_client
 import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
@@ -37,8 +37,6 @@ def get_futures(lst):
         when transforming to futures. firect call of futures_of does not keep the order
         of the objects
 
-        Obs. only used for dask cluster
-    
     Parameters
     ----------
     lst : array-like
@@ -48,6 +46,13 @@ def get_futures(lst):
     for i in lst:
         f.append(futures_of(i)[0])
     return f
+
+def _cluster_mode():
+    try:
+        get_client()
+        return True
+    except ValueError:
+        return False
 
   
 # Class definition: multiprocessing ABC process
@@ -202,6 +207,7 @@ class ABC(InferenceBase):
         sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in stats_final]
 
         return {"parameters": trial_param[:batch_size], "trajectories": sim_result, "summarystats": stats_final, "distances": sim_dist}
+            
 
     # @sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size, normalize):
@@ -239,29 +245,44 @@ class ABC(InferenceBase):
 
         # Get dask graph
         graph_dict = self.get_dask_graph(batch_size, ensemble_size)
+        
+        cluster_mode = _cluster_mode()
 
         # do rejection sampling
         while accepted_count < num_samples:
-
-            res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
-            print(len(res_param), len(res_dist))
-            futures_dist = get_futures(res_dist)
-            futures_params = get_futures(res_param)
-
-            keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
-
+            
             sim_dist_scaled = []
             params = []
             dists = []
             
-            for f, dist in as_completed(futures_dist, with_results=True):
-                dists.append(dist)
-                if normalize:
-                    # Normalize distances between [0,1]
-                    sim_dist_scaled.append(self.scale_distance(dist))
-                idx = keep_idx[f.key]
-                params.append(futures_params[idx].result())
+            #If dask cluster is used, use persist and futures, and scale as result is completed
+            if cluster_mode: 
+                print("running in cluster mode")
+                res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
+                
+                futures_dist = get_futures(res_dist)
+                futures_params = get_futures(res_param)
 
+                keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
+
+                for f, dist in as_completed(futures_dist, with_results=True):
+                    dists.append(dist)
+                    if normalize:
+                        # Normalize distances between [0,1]
+                        sim_dist_scaled.append(self.scale_distance(dist))
+                    idx = keep_idx[f.key]
+                    params.append(futures_params[idx].result())
+                    
+                del futures_dist, futures_params, res_param, res_dist
+            
+            #else use multiprocessing mode
+            else:
+                print("running in parallel mode")
+                params, dists = dask.compute(graph_dict["parameters"], graph_dict["distances"])
+                if normalize:
+                    for dist in dists:
+                        sim_dist_scaled.append(self.scale_distance(dist))
+                        
             if normalize:
                 sim_dist_scaled = np.asarray(sim_dist_scaled)
             else:
@@ -289,7 +310,6 @@ class ABC(InferenceBase):
                                          "total accepted samples = {0}".format(accepted_count))
 
             trial_count += batch_size
-            del futures_dist, futures_params, res_param, res_dist
 
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}

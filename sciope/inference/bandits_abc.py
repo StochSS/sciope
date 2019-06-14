@@ -16,13 +16,14 @@ Multi-Armed Bandit - Approximate Bayesian Computation
 """
 
 # Imports
-from sciope.inference.abc_inference import ABC, get_futures
+from sciope.inference.abc_inference import ABC, get_futures, _cluster_mode
 from sciope.utilities.mab import mab_direct as md
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
 from sciope.utilities.housekeeping import sciope_logger as ml
 from sciope.utilities.housekeeping import sciope_profiler
 from sciope.data.dataset import DataSet
+from dask.distributed import futures_of, as_completed, get_client
 from toolz import partition_all
 import multiprocessing as mp  # remove dependency
 import numpy as np
@@ -31,7 +32,6 @@ import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
-
 
 def arm_pull(arm_idx):
     """
@@ -124,28 +124,41 @@ class BanditsABC(ABC):
 
         # Get dask graph
         graph_dict = self.get_dask_graph(batch_size, ensemble_size)
+        cluster_mode = _cluster_mode()
 
         # do rejection sampling
         while accepted_count < num_samples:
 
-            res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
-            futures_dist = get_futures(res_dist)
-            futures_params = get_futures(res_param)
-
-            keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
-
             sim_dist_scaled = []
             params = []
             dists = []
-            
-            for f, dist in as_completed(futures_dist, with_results=True):
-                dists.append(dist)
-                if normalize:
-                    # Normalize distances between [0,1]
-                    sim_dist_scaled.append(self.scale_distance(dist))
-                idx = keep_idx[f.key]
-                params.append(futures_params[idx].result())
 
+            if cluster_mode: 
+                print("running in cluster mode")
+                res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
+
+                futures_dist = get_futures(res_dist)
+                futures_params = get_futures(res_param)
+
+                keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
+
+                for f, dist in as_completed(futures_dist, with_results=True):
+                    dists.append(dist)
+                    if normalize:
+                        # Normalize distances between [0,1]
+                        sim_dist_scaled.append(self.scale_distance(dist))
+                    idx = keep_idx[f.key]
+                    params.append(futures_params[idx].result())
+
+                del futures_dist, futures_params, res_param, res_dist
+
+            else:
+                print("running in parallel mode")
+                params, dists = dask.compute(graph_dict["parameters"], graph_dict["distances"])
+                if normalize:
+                    for dist in dists:
+                        sim_dist_scaled.append(self.scale_distance(dist))
+            
             if normalize:
                 sim_dist_scaled = np.asarray(sim_dist_scaled)
             else:
