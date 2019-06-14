@@ -278,13 +278,13 @@ class ABC():
             'trial_count: The number of total trials performed in order to converge',
             'inferred_parameters': The mean of accepted parameter samples
         """
-        data_s = self.summaries_function(self.time_series)
+        data_s = self.summaries_function.compute(self.time_series)
         max_s = np.max(data_s, axis=1)
         min_s = np.max(data_s, axis=1)
         #normalized
         data_s = (data_s-min_s)/(max_s-min_s)
 
-        obs_data_s = (self.summaries_function(self.data)-min_s)/(max_s-min_s)
+        obs_data_s = (self.summaries_function.compute(self.data)-min_s)/(max_s-min_s)
 
         distances = self.distance_function.compute(data_s, obs_data_s).compute()
 
