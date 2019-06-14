@@ -253,6 +253,8 @@ class ABC():
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
         return self.results
+    def infer2(self,num_samples):
+        print("infer2")
 
     def infer(self, num_samples):
         """
