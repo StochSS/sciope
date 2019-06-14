@@ -36,6 +36,8 @@ def get_futures(lst):
     """ Loop through items in list to keep order of delayed objects
         when transforming to futures. firect call of futures_of does not keep the order
         of the objects
+
+        Obs. only used for dask cluster
     
     Parameters
     ----------
@@ -242,6 +244,7 @@ class ABC(InferenceBase):
         while accepted_count < num_samples:
 
             res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
+            print(len(res_param), len(res_dist))
             futures_dist = get_futures(res_dist)
             futures_params = get_futures(res_param)
 

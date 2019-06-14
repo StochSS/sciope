@@ -16,7 +16,7 @@ Multi-Armed Bandit - Approximate Bayesian Computation
 """
 
 # Imports
-from sciope.inference.abc_inference import ABC
+from sciope.inference.abc_inference import ABC, get_futures
 from sciope.utilities.mab import mab_direct as md
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
@@ -123,14 +123,14 @@ class BanditsABC(ABC):
             self.compute_fixed_mean(chunk_size)
 
         # Get dask graph
-        graph_dict = self.get_dask_graph(batch_size)
+        graph_dict = self.get_dask_graph(batch_size, ensemble_size)
 
         # do rejection sampling
         while accepted_count < num_samples:
 
             res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
-            futures_dist = futures_of(res_dist)
-            futures_params = futures_of(res_param)
+            futures_dist = get_futures(res_dist)
+            futures_params = get_futures(res_param)
 
             keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
 
