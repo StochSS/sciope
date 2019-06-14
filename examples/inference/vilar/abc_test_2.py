@@ -22,29 +22,34 @@ import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
 from sciope.utilities.distancefunctions.euclidean import EuclideanDistance
-from dask.distributed import Client
+from distributed import Client, LocalCluster
 
-# Load data and check dim
-data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
-print(data.shape)
+if __name__ == '__main__':
+    # Load data and check dim
+    data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
+    print(data.shape)
 
-dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
-dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
-mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
-bs_stat = bs.Burstiness(mean_trajectories=False, use_logger=False)
-euc = EuclideanDistance(use_logger=False)
+    dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
+    dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
+    mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
+    bs_stat = bs.Burstiness(mean_trajectories=False, use_logger=False)
+    euc = EuclideanDistance(use_logger=False)
 
-# Set up ABC
-abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
-                                 summaries_function=bs_stat, distance_function=euc)
+    # Set up dask
+    cluster = LocalCluster()
+    client = Client(cluster)
 
-test = abc_instance.rejection_sampling(num_samples=50, chunk_size=10, batch_size=100)
+    # Set up ABC
+    abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
+                                     summaries_function=bs_stat, distance_function=euc)
 
-# Results
-true_value = np.array(['50.0', '500.0', '0.01', '50.0', '50.0', '5.0', '10.0', '0.5', '1.0', '0.2', '1.0', '1.0', '2.0'
-                          , '50.0', '100.0'], dtype=float)
-print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
-print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
-print('Trial count:', abc_instance.results['trial_count'])
+    test = abc_instance.rejection_sampling(num_samples=50, chunk_size=10, batch_size=100)
 
-np.abs(abc_instance.results["inferred_parameters"] - true_params)
+    # Results
+    true_value = np.array(['50.0', '500.0', '0.01', '50.0', '50.0', '5.0', '10.0', '0.5', '1.0', '0.2', '1.0', '1.0', '2.0'
+                              , '50.0', '100.0'], dtype=float)
+    print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
+    print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
+    print('Trial count:', abc_instance.results['trial_count'])
+
+    np.abs(abc_instance.results["inferred_parameters"] - true_params)

@@ -79,6 +79,7 @@ setup(
         'tsfresh',
         'ipywidgets',
         'dask',
+        'distributed',
         'matplotlib',
         'umap-learn'],
 

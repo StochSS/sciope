@@ -190,7 +190,7 @@ class ABC(InferenceBase):
         # Rejection sampling with batch size = batch_size 
 
         # Draw from the prior
-        trial_param = [self.prior_function.draw() for x in range(batch_size)]*ensemble_size
+        trial_param = [self.prior_function.draw() for x in range(batch_size)] * ensemble_size
 
         # Perform the trial
         sim_result = [self.sim(param) for param in trial_param]
@@ -199,15 +199,16 @@ class ABC(InferenceBase):
         sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
 
         if ensemble_size > 1:
-            stats_final = [dask.delayed(np.mean)(sim_stats[i:i+ensemble_size], axis=0) for i in range(0,len(sim_stats),ensemble_size)]
+            stats_final = [dask.delayed(np.mean)(sim_stats[i:i + ensemble_size], axis=0) for i in
+                           range(0, len(sim_stats), ensemble_size)]
         else:
             stats_final = sim_stats
 
         # Calculate the distance between the dataset and the simulated result
         sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in stats_final]
 
-        return {"parameters": trial_param[:batch_size], "trajectories": sim_result, "summarystats": stats_final, "distances": sim_dist}
-            
+        return {"parameters": trial_param[:batch_size], "trajectories": sim_result, "summarystats": stats_final,
+                "distances": sim_dist}
 
     # @sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size, normalize):
