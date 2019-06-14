@@ -16,6 +16,7 @@ The vilar Model: Approximate Bayesian Computation Test Run
 """
 
 # Imports
+from sciope.utilities.datagenerator.vilar_class import Vilar
 from sciope.utilities.priors import uniform_prior
 from sciope.inference import abc_inference_pre
 from sciope.utilities.summarystats import burstiness as bs
@@ -34,6 +35,10 @@ dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 bs_stat = bs.Burstiness(mean_trajectories=True, use_logger=False)
 
+true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+stoch_model = Vilar(species='all')
+sim = stoch_model.simulate
+data = sim(true_params)
 
 #test bs_stat
 print("data shape: ", data.shape)
