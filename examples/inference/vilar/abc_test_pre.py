@@ -74,7 +74,7 @@ abc_instance = abc_inference_pre.ABC(data,param=theta,time_series=ts, epsilon=0.
 
 print("before infer")
 # Perform ABC; require 200 samples
-abc_instance.infer(num_samples=200)
+abc_instance.infer2(num_samples=200)
 
 # Results
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
