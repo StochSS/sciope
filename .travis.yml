@@ -18,4 +18,5 @@ before_script:
   - cd ..
   - cd sciope/tests
 # command to run tests
-script: py.test
+script: py.test  --cov-report term --cov
+after_success: codecov

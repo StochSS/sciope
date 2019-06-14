@@ -24,7 +24,7 @@ import numpy as np
 
 
 # Summary statistics from TSFRESH
-class SummariesTSFRESH(SummaryBase):
+class SummariesTSFRESH(SummaryBase):    # pragma: no cover
     """
     Class for computing features/statistics on time series data.
     An ensemble of different statistics from TSFRESH are supported.

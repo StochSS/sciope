@@ -20,8 +20,6 @@ from sciope.inference.inference_base import InferenceBase
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
 from sciope.utilities.housekeeping import sciope_logger as ml
-from sciope.utilities.housekeeping import sciope_profiler
-from sciope.data.dataset import DataSet
 from toolz import partition_all
 import multiprocessing as mp  # remove dependency
 import numpy as np
@@ -54,17 +52,6 @@ def _cluster_mode():
         return True
     except ValueError:
         return False
-
-
-# Class definition: multiprocessing ABC process
-class ABCProcess(mp.Process):
-    """
-    The process class used to distribute the sampling process
-    """
-
-    def run(self):
-        if self._target:
-            self._target(*self._args, **self._kwargs)
 
 
 # Class definition: ABC rejection sampling
@@ -174,13 +161,15 @@ class ABC(InferenceBase):
 
     def get_dask_graph(self, batch_size, ensemble_size):
         """
-        Constructs the dask computational graph invloving sampling, simulation, summary statistics
+        Constructs the dask computational graph involving sampling, simulation, summary statistics
         and distances.
         
         Parameters
         ----------
         batch_size : int
             The number of points being sampled in each batch.
+        ensemble_size : int
+
         
         Returns
         -------
@@ -328,8 +317,12 @@ class ABC(InferenceBase):
         batch_size : int
             The batch size of samples for performing rejection sampling
         chunk_size : int
-            the partition size when splitting the fixed data. For avoiding many individual tasks
+            The partition size when splitting the fixed data. For avoiding many individual tasks
             in dask if the data is large. Default 10.
+        ensemble_size : int
+            In case we have an ensemble of responses
+        normalize : bool
+            Whether summary statistics should be normalized and epsilon be interpreted as a percentage
         
         Returns
         -------
