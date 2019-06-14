@@ -63,5 +63,5 @@ ts_val = ts[-2000:]
 
 
 # Train the CNN model
-CNN.train(inputs=ts_train, targets = theta_train,validation_inputs=ts_val,validation_targets=theta_val,
-              save_as='test')
+#CNN.train(inputs=ts_train, targets = theta_train,validation_inputs=ts_val,validation_targets=theta_val,
+#              save_as='test')
