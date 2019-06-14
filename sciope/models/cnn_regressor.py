@@ -90,9 +90,12 @@ def construct_model(input_shape,output_shape):
     model.add(keras.layers.Conv1D(lay_size[0],con_len, strides=1, 
                                   padding=padding, activity_regularizer=reg))
     model.add(keras.layers.Activation(activation))
+    model.add(keras.layers.Conv1D(lay_size[0], con_len, strides=1,
+                                  padding=padding, activity_regularizer=reg))
+    model.add(keras.layers.Activation(activation))
     model.add(pool(maxpool,padding=poolpadding))
     if padding == 'valid':
-        depth-=(con_len-1)*2
+        depth-=(con_len-1)*3
     depth=depth//maxpool
     
     for i in range(1,levels):
