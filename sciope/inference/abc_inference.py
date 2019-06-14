@@ -21,7 +21,6 @@ from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
 from sciope.utilities.housekeeping import sciope_logger as ml
 from toolz import partition_all
-import multiprocessing as mp  # remove dependency
 import numpy as np
 from dask.distributed import futures_of, as_completed, get_client
 import dask

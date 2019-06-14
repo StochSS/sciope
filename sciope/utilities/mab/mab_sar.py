@@ -120,5 +120,5 @@ class MABSAR(MABBase):
             n_prev = n_x
 
         if self.use_logger:
-            self.logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards[selected_arms]))
+            self.logger.debug("MABDirect: selected top {} arm(s) with distances {}".format(k, mean_rewards))
         return selected_arms

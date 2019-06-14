@@ -71,9 +71,9 @@ def test_lp_model(iris_data):
 
 def test_ann_model():
     model = ann_regressor.ANNModel()
-    model.train(x_train, y_train.reshape(y_train.size, 1))
-    mse = mean_squared_error(y_test, model.predict(x_test))
-    assert mse < 30, "ANN regressor test fail, test error too high"
+    model.train(x_gp, y_gp.reshape(y_train.size, 1))
+    mse = mean_squared_error(y_gp_test, model.predict(x_gp_test))
+    assert mse < 10, "ANN regressor test fail, test error too high"
 
 
 def test_svr_model():
@@ -92,9 +92,9 @@ def test_gpr_model():
 
 def test_ann_model_with_logging():
     model = ann_regressor.ANNModel(use_logger=True)
-    model.train(x_train, y_train.reshape(y_train.size, 1))
-    mse = mean_squared_error(y_test, model.predict(x_test))
-    assert mse < 30, "ANN regressor test fail, test error too high"
+    model.train(x_gp, y_gp.reshape(y_train.size, 1))
+    mse = mean_squared_error(y_gp_test, model.predict(x_gp_test))
+    assert mse < 10, "ANN regressor test fail, test error too high"
 
 
 def test_svr_model_with_logging():
