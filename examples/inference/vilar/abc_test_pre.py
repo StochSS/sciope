@@ -43,7 +43,7 @@ data = sim(np.array(true_params))[0,7,:]
 
 #test bs_stat
 print("data shape: ", data.shape)
-print("bs_stat of data: ", bs_stat.compute(data))
+print("bs_stat of data: ", bs_stat.compute(data).compute())
 
 # Get the data
 data_path = '/home/ubuntu/sciope/sciope/utilities/datagenerator/ds_vilar_ft100_ts501_tr1_speciesall' #/ds_vilar_ft100_ts501_tr1_speciesall0.p'
