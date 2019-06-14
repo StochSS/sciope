@@ -9,14 +9,17 @@ data_path = '/home/ubuntu/sciope/sciope/utilities/datagenerator/ds_vilar_ft100_t
 
 theta = None
 
+file_nr=0
 for filename in os.listdir(data_path):
-    dataset = pickle.load(open(data_path + '/' + filename, "rb" ) )
-    if theta is not None:
-        theta = np.append(theta, dataset.x, axis=0)
-        ts = np.append(ts, dataset.ts, axis=0)
-    else:
-        theta = dataset.x
-        ts = dataset.ts
+    if file_nr<3:
+        file_nr+=1
+        dataset = pickle.load(open(data_path + '/' + filename, "rb" ) )
+        if theta is not None:
+            theta = np.append(theta, dataset.x, axis=0)
+            ts = np.append(ts, dataset.ts, axis=0)
+        else:
+            theta = dataset.x
+            ts = dataset.ts
 
 print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 
