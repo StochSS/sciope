@@ -280,14 +280,14 @@ class ABC():
         """
         print("welcome to infer")
         #print("time series shape: ", self.time_series.shape)
-        data_s = [x for x in self.time_series]
-        print("data_s shape: ", np.array(data_s).shape)
+        #data_s = [x for x in self.time_series]
+        #print("data_s shape: ", np.array(data_s).shape)
 
         #data_s = [self.summaries_function.compute(x) for x in self.time_series]
-        max_s = np.max(data_s, axis=1)
-        min_s = np.max(data_s, axis=1)
+        #max_s = np.max(data_s, axis=1)
+        #min_s = np.max(data_s, axis=1)
         #normalized
-        data_s = (data_s-min_s)/(max_s-min_s)
+        #data_s = (data_s-min_s)/(max_s-min_s)
 
         #obs_data_s = (self.summaries_function.compute(self.data)-min_s)/(max_s-min_s)
 
