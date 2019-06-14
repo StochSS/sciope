@@ -39,7 +39,7 @@ bs_stat = bs.Burstiness(mean_trajectories=True, use_logger=False)
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 stoch_model = Vilar(species='all')
 sim = stoch_model.simulate
-data = sim(np.array(true_params))
+data = sim(np.array(true_params))[0,7,:]
 
 #test bs_stat
 print("data shape: ", data.shape)
