@@ -18,6 +18,7 @@ Example: The vilar model
 import numpy as np
 import gillespy2
 from gillespy2.solvers.stochkit import StochKitSolver
+from gillespy2.solvers.cython import CythonSSASolver
 
 import os
 
@@ -83,7 +84,7 @@ if __name__ == '__main__':
 
     # Generate some data for parameter inference - we concentrate on specie A [index 8, index 0 is time]
     model.tspan = np.linspace(1, 100, num_timestamps)
-    res = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_trajectories)
+    res = model.run(solver=CythonSSASolver, show_labels=False, number_of_trajectories=num_trajectories)
     s_trajectories = np.array([res[i][:, 8] for i in range(num_trajectories)]).T
 
     # Write it to file
@@ -150,7 +151,7 @@ def simulate(param):
     # Set up simulation density
     num_sim_trajectories = 1
     model.tspan = np.linspace(1, 100, num_timestamps)
-    simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
+    simple_trajectories = model.run(solver=CythonSSASolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
 
     # extract time values
     #time = np.array(simple_trajectories[0][:, 0])
@@ -221,6 +222,6 @@ def simulate_all_species(param):
     # Set up simulation density
     num_sim_trajectories = 1
     model.tspan = np.linspace(1, 100, num_timestamps)
-    simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
+    simple_trajectories = model.run(solver=CythonSSASolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
 
     return np.asarray(simple_trajectories)

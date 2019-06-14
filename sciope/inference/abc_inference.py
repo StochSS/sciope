@@ -47,6 +47,7 @@ def get_futures(lst):
         f.append(futures_of(i)[0])
     return f
 
+
 def _cluster_mode():
     try:
         get_client()
@@ -54,7 +55,7 @@ def _cluster_mode():
     except ValueError:
         return False
 
-  
+
 # Class definition: multiprocessing ABC process
 class ABCProcess(mp.Process):
     """
@@ -246,25 +247,25 @@ class ABC(InferenceBase):
 
         # Get dask graph
         graph_dict = self.get_dask_graph(batch_size, ensemble_size)
-        
+
         cluster_mode = _cluster_mode()
 
         # do rejection sampling
         while accepted_count < num_samples:
-            
+
             sim_dist_scaled = []
             params = []
             dists = []
-            
-            #If dask cluster is used, use persist and futures, and scale as result is completed
-            if cluster_mode: 
+
+            # If dask cluster is used, use persist and futures, and scale as result is completed
+            if cluster_mode:
                 print("running in cluster mode")
                 res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
-                
+
                 futures_dist = get_futures(res_dist)
                 futures_params = get_futures(res_param)
 
-                keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
+                keep_idx = {f.key: idx for idx, f in enumerate(futures_dist)}
 
                 for f, dist in as_completed(futures_dist, with_results=True):
                     dists.append(dist)
@@ -273,17 +274,17 @@ class ABC(InferenceBase):
                         sim_dist_scaled.append(self.scale_distance(dist))
                     idx = keep_idx[f.key]
                     params.append(futures_params[idx].result())
-                    
+
                 del futures_dist, futures_params, res_param, res_dist
-            
-            #else use multiprocessing mode
+
+            # else use multiprocessing mode
             else:
                 print("running in parallel mode")
                 params, dists = dask.compute(graph_dict["parameters"], graph_dict["distances"])
                 if normalize:
                     for dist in dists:
                         sim_dist_scaled.append(self.scale_distance(dist))
-                        
+
             if normalize:
                 sim_dist_scaled = np.asarray(sim_dist_scaled)
             else:
