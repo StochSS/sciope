@@ -22,7 +22,7 @@ import tempfile
 import os
 
 
-class Singleton(type):
+class Singleton(type):  # pragma: no cover
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
@@ -31,7 +31,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class SciopeLogger(object, metaclass=Singleton):
+class SciopeLogger(object, metaclass=Singleton):    # pragma: no cover
     _logger = None
 
     def __init__(self, log_level=logging.DEBUG):

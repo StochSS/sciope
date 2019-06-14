@@ -22,7 +22,6 @@ import summaries_ensemble as se
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
-from sciope.utilities.distancefunctions import naive_squared as ns
 from distributed import Client, LocalCluster
 
 if __name__ == '__main__':
@@ -40,7 +39,6 @@ if __name__ == '__main__':
 
     # Set up ABC
     abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
-                                     distance_function=ns.NaiveSquaredDistance(),
                                      summaries_function=se.SummariesEnsemble())
 
     # Perform ABC; require 30 samples

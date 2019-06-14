@@ -38,3 +38,23 @@ def test_maximin_functional():
 
     assert ms_points.shape[0] == n_new_points, "MaximinSampling test error, dimensions mismatch"
     assert ms_points.shape[1] == n_dims, "MaximinSampling test error, dimensions mismatch"
+
+
+def test_maximin_functional_with_logging():
+    # Get 10 points from an initial design
+    lb = np.asarray([1, 1])
+    ub = np.asarray([9, 9])
+    n_dims = ub.size
+    n_initial_points = 10
+    lhs_obj = lhs.LatinHypercube(lb, ub, use_logger=True)
+    lhs_del = lhs_obj.generate(n_initial_points)
+    lhs_points = lhs_del.compute()
+
+    # Get 10 additional points using maximin sampling
+    n_new_points = 10
+    ms_obj = ms.MaximinSampling(lb, ub, use_logger=True)
+    ms_del = ms_obj.select_points(lhs_points, n_new_points)
+    ms_points = ms_del.compute()
+
+    assert ms_points.shape[0] == n_new_points, "MaximinSampling test error, dimensions mismatch"
+    assert ms_points.shape[1] == n_dims, "MaximinSampling test error, dimensions mismatch"

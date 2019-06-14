@@ -21,7 +21,7 @@ from sciope.utilities.housekeeping import sciope_logger as sl
 
 
 # Very basic function run-time logging
-def profile(function_handle, use_profiler=False):
+def profile(function_handle, use_profiler=False):   # pragma: no cover
     def wrap(*args, **kwargs):
         if use_profiler:
             logger = sl.SciopeLogger().get_logger()

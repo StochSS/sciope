@@ -88,3 +88,24 @@ def test_gpr_model():
     model.train(x_gp, y_gp)
     mse = mean_squared_error(y_gp_test, model.predict(x_gp_test)[0])
     assert mse < 10, "GP regressor test fail, test error too high"
+
+
+def test_ann_model_with_logging():
+    model = ann_regressor.ANNModel(use_logger=True)
+    model.train(x_train, y_train.reshape(y_train.size, 1))
+    mse = mean_squared_error(y_test, model.predict(x_test))
+    assert mse < 30, "ANN regressor test fail, test error too high"
+
+
+def test_svr_model_with_logging():
+    model = svm_regressor.SVRModel(use_logger=True)
+    model.train(x_train, y_train.reshape(y_train.size, 1))
+    mse = mean_squared_error(y_test, model.predict(x_test))
+    assert mse < 15, "SVM regressor test fail, test error too high"
+
+
+def test_gpr_model_with_logging():
+    model = gp_regressor.GPRModel(use_logger=True)
+    model.train(x_gp, y_gp)
+    mse = mean_squared_error(y_gp_test, model.predict(x_gp_test)[0])
+    assert mse < 10, "GP regressor test fail, test error too high"

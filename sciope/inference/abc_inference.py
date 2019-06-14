@@ -248,7 +248,8 @@ class ABC(InferenceBase):
 
             # If dask cluster is used, use persist and futures, and scale as result is completed
             if cluster_mode:
-                print("running in cluster mode")
+                if self.use_logger:
+                    self.logger.info("running in cluster mode")
                 res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
 
                 futures_dist = get_futures(res_dist)
@@ -268,7 +269,8 @@ class ABC(InferenceBase):
 
             # else use multiprocessing mode
             else:
-                print("running in parallel mode")
+                if self.use_logger:
+                    self.logger.info("running in parallel mode")
                 params, dists = dask.compute(graph_dict["parameters"], graph_dict["distances"])
                 if normalize:
                     for dist in dists:
@@ -290,8 +292,8 @@ class ABC(InferenceBase):
             # Accept/Reject
             for e, res in enumerate(result):
                 if self.use_logger:
-                    self.logger.debug("ABC Rejection Sampling: trial parameter(s) = {}".format(res_param[e]))
-                    self.logger.debug("ABC Rejection Sampling: trial distance(s) = {}".format(res_dist[e]))
+                    self.logger.debug("ABC Rejection Sampling: trial parameter(s) = {}".format(params[e]))
+                    self.logger.debug("ABC Rejection Sampling: trial distance(s) = {}".format(sim_dist_scaled[e]))
                 if res <= self.epsilon:
                     accepted_samples.append(params[e])
                     distances.append(dists[e])

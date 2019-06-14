@@ -27,6 +27,7 @@ import pytest
 sys.path.append('../../examples/inference/vilar')
 import vilar
 import summaries_tsa as tsa
+import summaries_ensemble as se
 from sklearn.metrics import mean_absolute_error
 from distributed import Client, LocalCluster
 
@@ -99,3 +100,63 @@ def test_bandits_abc_functional_sar():
         "Bandits ABC inference test failed, trial count out of bounds"
     assert mae_inference < 15, "Bandits ABC inference test failed, error too high"
 
+
+def test_simple_summary_stats():
+    abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
+                                     summaries_function=se.SummariesEnsemble())
+    abc_instance.infer(num_samples=30, batch_size=10)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 500, \
+        "ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 15, "ABC inference test failed, error too high"
+
+
+def test_abc_with_logging():
+    abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
+                                     summaries_function=bs_stat, use_logger=True)
+    abc_instance.infer(num_samples=30, batch_size=10)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 15, "ABC inference test failed, error too high"
+
+
+def test_bandits_abc_with_logging():
+    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
+                                          distance_function=dist_fun,
+                                          summaries_function=sum_stats,
+                                          mab_variant=mab_algo,
+                                          use_logger=True)
+    abc_instance.infer(num_samples=30, batch_size=10)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 15, "Bandits ABC inference test failed, error too high"
+
+
+def test_bandits_abc_functional_direct_with_logging():
+    mab_algo = md.MABDirect(bandits_abc.arm_pull)
+    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
+                                          distance_function=dist_fun,
+                                          summaries_function=sum_stats,
+                                          mab_variant=mab_algo,
+                                          use_logger=True)
+    abc_instance.infer(num_samples=30, batch_size=10)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 15, "Bandits ABC inference test failed, error too high"
+
+
+def test_bandits_abc_functional_sar_with_logging():
+    mab_algo = sar.MABSAR(arm_pull=bandits_abc.arm_pull, p=50, b=500)
+    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
+                                          distance_function=dist_fun,
+                                          summaries_function=sum_stats,
+                                          mab_variant=mab_algo,
+                                          use_logger=True)
+    abc_instance.infer(num_samples=30, batch_size=10)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 15, "Bandits ABC inference test failed, error too high"

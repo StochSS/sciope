@@ -62,3 +62,44 @@ def test_uniform_prior():
     axis_maxs = np.max(samples, 0)
     assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
         "UniformPrior functional test error, drawn samples out of bounds"
+
+
+def test_distance_functions_with_logging():
+    vec_length = 5
+    v1 = np.random.rand(1, vec_length)
+    v2 = np.random.rand(1, vec_length)
+
+    # calculate Euclidean distance using sciope and numpy
+    euc_func = euclidean.EuclideanDistance(use_logger=True)
+    euc_dist = euc_func.compute(v1, v2).compute()
+    validation_val = np.linalg.norm(v1 - v2)
+    assert euc_dist == validation_val, "EuclideanDistance functional test error, expected value mismatch"
+
+    # now for Manhattan distance
+    man_func = manhattan.ManhattanDistance(use_logger=True)
+    man_dist = man_func.compute(v1, v2).compute()
+    validation_val = cityblock(v1, v2)
+    assert man_dist == validation_val, "ManhattanDistance functional test error, expected value mismatch"
+
+    # ... and naive squared distance
+    ns_func = naive_squared.NaiveSquaredDistance(use_logger=True)
+    v3 = np.asarray([0, 0, 0])
+    v4 = np.asarray([1, 1, 1])
+    validation_val = v4
+    ns_dist = ns_func.compute(v3, v4).compute()
+    assert np.array_equal(ns_dist, validation_val), "NaiveSquaredDistance functional test error, " \
+                                                    "expected value mismatch"
+
+
+def test_uniform_prior_with_logging():
+    lb = np.asarray([1, 1])
+    ub = np.asarray([5, 5])
+    num_samples = 5
+    prior_func = uniform_prior.UniformPrior(lb, ub, use_logger=True)
+    samples = prior_func.draw(num_samples).compute()
+    assert samples.shape[0] == num_samples, "UniformPrior functional test error, expected sample count mismatch"
+    assert samples.shape[1] == len(lb), "UniformPrior functional test error, dimension mismatch"
+    axis_mins = np.min(samples, 0)
+    axis_maxs = np.max(samples, 0)
+    assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
+        "UniformPrior functional test error, drawn samples out of bounds"
