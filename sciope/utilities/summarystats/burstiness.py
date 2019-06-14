@@ -51,7 +51,7 @@ class Burstiness(SummaryBase):
             self.logger.info("Burstiness summary statistic initialized")
 
     @delayed
-    def computem(self, datas):
+    def compute(self, datas):
         """
         Calculate the value(s) of the summary statistic(s)
         
