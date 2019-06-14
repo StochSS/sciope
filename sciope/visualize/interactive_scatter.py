@@ -8,7 +8,7 @@ from ipywidgets import widgets
 from IPython.display import display
 
 
-class UserLabel():
+class UserLabel():  # pragma: no cover
     def __init__(self):
         self.highlighted = []
 
@@ -19,13 +19,13 @@ class UserLabel():
         self.highlighted.append(x)
 
 
-def annotate(axis, text, x, y):
+def annotate(axis, text, x, y): # pragma: no cover
     """Create annotation at position (x,y) """
     text_annotation = Annotation(text, xy=(x, y), xycoords='data')
     axis.add_artist(text_annotation)
 
 
-def draw_scatterplot(axis, x_values, y_values, labels):
+def draw_scatterplot(axis, x_values, y_values, labels): # pragma: no cover
     "Plot scatter with given values"
     axis.scatter(
         x_values,
@@ -35,7 +35,7 @@ def draw_scatterplot(axis, x_values, y_values, labels):
     )
 
 
-class UserLabel():
+class UserLabel():  # pragma: no cover
     """Class to keep track of highligted points, will be used for interactive labeling"""
 
     def __init__(self):
@@ -48,7 +48,7 @@ class UserLabel():
         self.highlighted.append(x)
 
 
-def interative_scatter(scatter_data, data_class=None):
+def interative_scatter(scatter_data, data_class=None):  # pragma: no cover
     """interactive plot taken from:
     https://medium.com/@gorjanz/data-analysis-in-python-interactive-scatterplot-with-matplotlib-6bb8ad2f1f18
 
@@ -71,14 +71,14 @@ def interative_scatter(scatter_data, data_class=None):
     draw_scatterplot(ax, axis_values_x, axis_values_y, instances_colors)
 
     # draw trajectory function
-    def draw_trajectory(axis, idx, species_idx):
+    def draw_trajectory(axis, idx, species_idx):    # pragma: no cover
         ts_data = data_class.ts[idx]
         ts_data = ts_data.T[species_idx]
         axis.plot(ts_data)
         axis.figure.canvas.draw_idle()
 
     # define the behaviour -> what happens when you pick a dot on the scatterplot by clicking close to it
-    def onpick(event):
+    def onpick(event):  # pragma: no cover
         # step 1: take the index of the dot which was picked
         ind = event.ind
 
@@ -127,7 +127,7 @@ def interative_scatter(scatter_data, data_class=None):
     display(button_clear_all)
 
     # define the "clear all" behaviour
-    def onclick(event):
+    def onclick(event): # pragma: no cover
         # step 1: we clear all artist object of the scatter plot
         ax.cla()
         ax2.cla()
@@ -147,7 +147,7 @@ def interative_scatter(scatter_data, data_class=None):
     button_clear_all.on_click(onclick)
 
     # For interactive labeling of highlighted points
-    def set_user_label(event):
+    def set_user_label(event):  # pragma: no cover
         instances_colors[user_labels.highlighted] = user_label_slider.value
         onclick('')
 

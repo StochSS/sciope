@@ -23,7 +23,8 @@ import math
 
 
 # Class definition: HALVING MAB arm selection
-class MABIncremental(MABBase):
+# Too slow for testing so not covered in unit tests for now
+class MABIncremental(MABBase):    # pragma: no cover
     """
     The incremental algorithm consists of 'k' rounds. In a given round l, S_l is the set of selected arms, while R_l is
     the set of arms remaining to be processed. During round l, an (epsilon,1) optimal arm in R_l is selected with high

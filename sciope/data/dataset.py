@@ -23,7 +23,8 @@ from scipy.stats import zscore
 
 
 # Class definition
-class DataSet(object):
+# Work in progress, no test case coverage for now
+class DataSet(object):  # pragma: no cover
     """
     Class for defining a dataset for a modeling/optimization/inference run
 
