@@ -22,25 +22,31 @@ from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
+from distributed import Client, LocalCluster
 
-# Load data
-data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
+if __name__ == '__main__':
+    # Load data
+    data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
 
-# Set up the prior
-dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
-dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
-mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
-bs_stat = bs.Burstiness(mean_trajectories=True, use_logger=False)
+    # Set up the prior
+    dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
+    dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
+    mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
+    bs_stat = bs.Burstiness(mean_trajectories=True, use_logger=False)
 
-# Set up ABC
-abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
-                                 summaries_function=bs_stat)
+    # Set up dask
+    cluster = LocalCluster()
+    client = Client(cluster)
 
-# Perform ABC; require 30 samples
-abc_instance.infer(num_samples=200, batch_size=100)
+    # Set up ABC
+    abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
+                                     summaries_function=bs_stat)
 
-# Results
-true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
-print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
-print('Trial count:', abc_instance.results['trial_count'])
+    # Perform ABC; require 30 samples
+    abc_instance.infer(num_samples=200, batch_size=100)
+
+    # Results
+    true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+    print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
+    print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
+    print('Trial count:', abc_instance.results['trial_count'])

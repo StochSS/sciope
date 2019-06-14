@@ -27,7 +27,7 @@ from toolz import partition_all
 import multiprocessing as mp  # remove dependency
 import numpy as np
 import dask
-
+from dask.distributed import futures_of, as_completed, wait
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
@@ -87,7 +87,7 @@ class BanditsABC(ABC):
 
         return normalized_distances[-1, :]
 
-    #@sciope_profiler.profile
+    # @sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size, normalize):
         """
         * overrides rejection_sampling of ABC class *
@@ -132,12 +132,12 @@ class BanditsABC(ABC):
             futures_dist = get_futures(res_dist)
             futures_params = get_futures(res_param)
 
-            keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
+            keep_idx = {f.key: idx for idx, f in enumerate(futures_dist)}
 
             sim_dist_scaled = []
             params = []
             dists = []
-            
+
             for f, dist in as_completed(futures_dist, with_results=True):
                 dists.append(dist)
                 if normalize:

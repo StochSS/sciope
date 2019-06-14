@@ -23,26 +23,31 @@ import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
 from sciope.utilities.distancefunctions import naive_squared as ns
+from distributed import Client, LocalCluster
 
-# Load data
-data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
+if __name__ == '__main__':
+    # Load data
+    data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
 
-# Set up the prior
-dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
-dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
-mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
+    # Set up the prior
+    dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
+    dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
+    mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 
-# Set up ABC
-abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
-                                 distance_function=ns.NaiveSquaredDistance(),
-                                 summaries_function=se.SummariesEnsemble())
+    # Set up dask
+    cluster = LocalCluster()
+    client = Client(cluster)
 
-# Perform ABC; require 30 samples
-test = abc_instance.infer(num_samples=200, batch_size=50)
+    # Set up ABC
+    abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
+                                     distance_function=ns.NaiveSquaredDistance(),
+                                     summaries_function=se.SummariesEnsemble())
 
-# Results
-true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
-print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
-print('Trial count:', abc_instance.results['trial_count'])
+    # Perform ABC; require 30 samples
+    test = abc_instance.infer(num_samples=200, batch_size=50)
 
+    # Results
+    true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+    print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
+    print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
+    print('Trial count:', abc_instance.results['trial_count'])

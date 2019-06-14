@@ -18,7 +18,12 @@ from sciope.designs import latin_hypercube_sampling as lhs
 from sciope.designs import random_sampling as rs
 from sciope.designs import factorial_design as fd
 import numpy as np
+from distributed import Client, LocalCluster
 import pytest
+
+# Set up dask
+cluster = LocalCluster()
+client = Client(cluster)
 
 
 def test_lhs_functional():
