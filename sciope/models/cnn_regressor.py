@@ -128,6 +128,7 @@ def construct_model(input_shape,output_shape):
     #Using Adam optimizer with learning rate 0.001 
     model.compile(optimizer=keras.optimizers.Adam(0.001), 
               loss='mean_squared_error',metrics=['mae'])
+    model.summary()
     return model  
     
     
