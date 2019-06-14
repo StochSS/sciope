@@ -286,6 +286,8 @@ class ABC():
         print("data_s len: ", len(data_s))
 
         data_s = [self.summaries_function.compute(x) for x in self.time_series]
+
+        print("data_s shape", np.array(data_s))
         max_s = np.max(data_s, axis=1)
         min_s = np.max(data_s, axis=1)
         #normalized
