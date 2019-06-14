@@ -30,7 +30,7 @@ class Vilar:
         #config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
          #                          "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
         config_file = os.path.dirname(
-                                   "/sciope/utilities/datagenerator/StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
+                                   "/home/ubuntu/sciope/sciope/utilities/datagenerator/StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
         model_doc = gillespy2.StochMLDocument.from_file(config_file)
 
         # Here, we create the model object.
