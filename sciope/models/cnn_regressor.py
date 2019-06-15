@@ -74,7 +74,7 @@ def construct_model(input_shape,output_shape):
     con_len = 2
     lay_size = [int(128*1.5**i) for i in range(10)]
     maxpool = con_len
-    levels=1
+    levels=3
     batch_mom = 0.99
     reg = None
     pool = keras.layers.MaxPooling1D
@@ -87,12 +87,10 @@ def construct_model(input_shape,output_shape):
                                   padding=padding, activity_regularizer=reg, 
                                   input_shape=input_shape))
     model.add(keras.layers.Activation(activation))
-    #model.add(keras.layers.Conv1D(lay_size[0],con_len, strides=1,
-     #                             padding=padding, activity_regularizer=reg))
-    #model.add(keras.layers.Activation(activation))
-    #model.add(keras.layers.Conv1D(lay_size[0], con_len, strides=1,
-     #                             padding=padding, activity_regularizer=reg))
-    #model.add(keras.layers.Activation(activation))
+    model.add(keras.layers.Conv1D(lay_size[0],con_len, strides=1,
+                                  padding=padding, activity_regularizer=reg))
+    model.add(keras.layers.Activation(activation))
+
     model.add(pool(maxpool,padding=poolpadding))
     if padding == 'valid':
         depth-=(con_len-1)*3
