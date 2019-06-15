@@ -284,14 +284,14 @@ class ABC():
         print("time series shape: ", self.time_series.shape)
 
 
-        data_s = [self.summaries_function.compute(x).compute() for x in self.time_series]
+        data_s = [self.summaries_function.compute(x) for x in self.time_series]
 
-
+        data_s = dask.compute(data_s)
 
         print("data_s shape", np.array(data_s).shape)
-        max_s = np.max(data_s, axis=1)
-        min_s = np.min(data_s, axis=1)
-        print("max s: ", max_s, "min s: ", min_s)
+        max_s = np.max(data_s, axis=0)
+        min_s = np.min(data_s, axis=0)
+        print("max s: ", max_s, ", min s: ", min_s)
         #normalized
         data_s = (data_s-min_s)/(max_s-min_s)
 
