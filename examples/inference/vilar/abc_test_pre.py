@@ -66,7 +66,7 @@ print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 
 # Remove trajectory dimension
 theta = np.squeeze(theta, axis=1)
-ts = np.squeeze(ts, axis=2)
+#ts = np.squeeze(ts, axis=2)
 
 print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 
