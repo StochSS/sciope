@@ -288,7 +288,8 @@ class ABC():
 
         data_s = dask.compute(data_s)
         print("data_s type: ", type(data_s))
-        print("data_s shape", np.array(data_s).shape)
+        data_s = np.array(data_s)
+        print("data_s shape", data_s.shape)
 
         data_s = np.squeeze(data_s, axis=0)
 
