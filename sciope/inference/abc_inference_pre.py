@@ -286,7 +286,7 @@ class ABC():
 
         data_s = np.array([self.summaries_function.compute(x) for x in self.time_series])
 
-        data_S.compute()
+        data_s.compute()
 
         print("data_s shape", data_s)
         max_s = np.max(data_s, axis=1)
