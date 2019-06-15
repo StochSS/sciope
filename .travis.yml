@@ -10,6 +10,8 @@ install:
   - pip install pytest
   - pip install pytest-cov
   - pip install codecov
+  - pip install sphinx
+  - pip install sphinx-rtd-theme
   - pip install .
 # tests should run from the tests directory
 before_script:
@@ -22,4 +24,15 @@ before_script:
   - cd sciope/tests
 # command to run tests
 script: travis_wait 30 py.test  --cov-report term --cov
-after_success: codecov
+after_success:
+  - codecov
+  - cd docs && make html
+# deploy to Github pages
+deploy:
+  provider: pages
+  skip-cleanup: true
+  keep-history: true
+  on:
+    branch: develop
+  local-dir: docs/build/html
+  committer-from-gh: true
