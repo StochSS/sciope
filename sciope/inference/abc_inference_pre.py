@@ -296,7 +296,7 @@ class ABC():
         data_s = (data_s-min_s)/(max_s-min_s)
         print("data_s shape", np.array(data_s).shape)
 
-        obs_data_s = (self.summaries_function.compute(self.data)-min_s)/(max_s-min_s)
+        obs_data_s = (self.summaries_function.compute(self.data).compute()-min_s)/(max_s-min_s)
         print("obs_data_s shape: ", obs_data_s.shape)
         distances = self.distance_function.compute(data_s, obs_data_s).compute()
 
