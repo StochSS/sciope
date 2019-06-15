@@ -305,7 +305,7 @@ class ABC():
         print("obs_data_s shape: ", obs_data_s.shape)
         distances = [self.distance_function.compute(ds, obs_data_s) for ds in data_s]
         print("after distances")
-        dist = dask.compute(distances)
+        dist = np.array( dask.compute(distances))
 
         print("distances shape: ", dist.shape)
 
