@@ -11,15 +11,15 @@ theta = None
 
 file_nr=0
 for filename in os.listdir(data_path):
-    if file_nr<5:
+    if file_nr<9:
         file_nr+=1
         dataset = pickle.load(open(data_path + '/' + filename, "rb" ) )
         if theta is not None:
             theta = np.append(theta, dataset.x, axis=0)
-            ts = np.append(ts, dataset.ts, axis=0)
+            ts = np.append(ts, dataset.ts[:,:,6:], axis=0)
         else:
             theta = dataset.x
-            ts = dataset.ts
+            ts = dataset.ts[:,:,6:]
 
 print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 
