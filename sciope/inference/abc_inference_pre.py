@@ -290,7 +290,7 @@ class ABC():
 
         print("data_s shape", np.array(data_s).shape)
         max_s = np.max(data_s, axis=1)
-        min_s = np.max(data_s, axis=1)
+        min_s = np.min(data_s, axis=1)
         #normalized
         data_s = (data_s-min_s)/(max_s-min_s)
 
