@@ -34,6 +34,6 @@ deploy:
   keep-history: true
   on:
     branch: develop
-  github-token: 6d7d090eb73419b5ba9da5340243e0f8c8b5411e
+  github-token: $GITHUB_TOKEN
   local-dir: docs/build/html
   committer-from-gh: true
