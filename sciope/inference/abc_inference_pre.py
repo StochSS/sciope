@@ -43,7 +43,7 @@ class ABCProcess(mp.Process):
 
 
 # Class definition: ABC rejection sampling
-class ABC():
+class ABC(InferenceBase):
     """
     Approximate Bayesian Computation Rejection Sampler
     * InferenceBase.infer()
@@ -77,10 +77,11 @@ class ABC():
         self.distance_function = distance_function
         self.fixed_mean = []
         self.use_logger = use_logger
-
+        super(ABC, self).__init__(self.name, data, None, self.use_logger)
         self.time_series = time_series
         self.param = param
         self.data = data
+
 
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
@@ -305,9 +306,16 @@ class ABC():
         print("obs_data_s shape: ", obs_data_s.shape)
         distances = [self.distance_function.compute(ds, obs_data_s) for ds in data_s]
         print("after distances")
-        dist = np.array( dask.compute(distances))
+        dist = np.squeeze(np.array(dask.compute(distances)))
 
         print("distances shape: ", dist.shape)
+        idx=np.argpartition(dist, num_samples)
+        accepted_samples = self.param[idx][:num_samples]
+        distances = dist[idx][:num_samples]
+        accepted_count = num_samples
+        trial_count = dist.shape[0]
+        self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
+                        'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
 
 
 
