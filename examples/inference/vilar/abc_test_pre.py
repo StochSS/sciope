@@ -57,7 +57,7 @@ for filename in os.listdir(data_path):
         dataset = pickle.load(open(data_path + '/' + filename, "rb" ) )
         if theta is not None:
             theta = np.append(theta, dataset.x, axis=0)
-            ts = np.append(ts, dataset.ts, axis=0)
+            ts = np.append(ts, dataset.ts[:,:,7,:], axis=0)
         else:
             theta = dataset.x
             ts = dataset.ts
@@ -66,7 +66,7 @@ print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 
 # Remove trajectory dimension
 theta = np.squeeze(theta, axis=1)
-ts = np.squeeze(ts, axis=1)
+ts = np.squeeze(ts, axis=2)
 
 print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 
@@ -74,7 +74,7 @@ print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 ts = np.transpose(ts, (0,2,1))
 
 
-ts = ts[:,:,7]
+#ts = ts[:,:,7]
 
 
 # Set up ABC
