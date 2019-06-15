@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sciope.inference.bandits_abc &mdash; sciope 0.2.0 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> sciope
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">sciope</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>sciope.inference.bandits_abc</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sciope.inference.bandits_abc</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2017 Prashant Singh, Fredrik Wrede and Andreas Hellander</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1"># http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Multi-Armed Bandit - Approximate Bayesian Computation</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Imports</span>
+<span class="kn">from</span> <span class="nn">sciope.inference.abc_inference</span> <span class="k">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">get_futures</span><span class="p">,</span> <span class="n">_cluster_mode</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.mab</span> <span class="k">import</span> <span class="n">mab_direct</span> <span class="k">as</span> <span class="n">md</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.distancefunctions</span> <span class="k">import</span> <span class="n">euclidean</span> <span class="k">as</span> <span class="n">euc</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.summarystats</span> <span class="k">import</span> <span class="n">burstiness</span> <span class="k">as</span> <span class="n">bs</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.housekeeping</span> <span class="k">import</span> <span class="n">sciope_logger</span> <span class="k">as</span> <span class="n">ml</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">dask</span>
+<span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="k">import</span> <span class="n">futures_of</span><span class="p">,</span> <span class="n">as_completed</span><span class="p">,</span> <span class="n">wait</span>
+
+<span class="c1"># The following variable stores n normalized distance values after n summary statistics have been calculated</span>
+<span class="n">normalized_distances</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="arm_pull"><a class="viewcode-back" href="../../../sciope.inference.html#sciope.inference.bandits_abc.arm_pull">[docs]</a><span class="k">def</span> <span class="nf">arm_pull</span><span class="p">(</span><span class="n">arm_idx</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Used by MAB algorithms; Each arm corresponds to a summary statistic and an arm pull is simply selection of one</span>
+<span class="sd">    (or more) summary statistics in inference. Here that corresponds to simply returning the desired arm.</span>
+<span class="sd">    :param arm_idx: The index into the vector of arms</span>
+<span class="sd">    :return: -1 * distance value from distances corresponding to the arm_idx, as reward is to be maximized according to</span>
+<span class="sd">    MABs but in inference we minimize distance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">normalized_distances</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">normalized_distances</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">arm_idx</span><span class="p">]</span></div>
+
+
+<span class="c1"># Class definition: Bandits-ABC rejection sampling</span>
+<div class="viewcode-block" id="BanditsABC"><a class="viewcode-back" href="../../../sciope.inference.html#sciope.inference.bandits_abc.BanditsABC">[docs]</a><span class="k">class</span> <span class="nc">BanditsABC</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ABC rejection sampling with dynamic multi-armed bandit (MAB) assisted summary statistic selection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">mab_variant</span><span class="o">=</span><span class="n">md</span><span class="o">.</span><span class="n">MABDirect</span><span class="p">(</span><span class="n">arm_pull</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                 <span class="n">summaries_function</span><span class="o">=</span><span class="n">bs</span><span class="o">.</span><span class="n">Burstiness</span><span class="p">(),</span> <span class="n">distance_function</span><span class="o">=</span><span class="n">euc</span><span class="o">.</span><span class="n">EuclideanDistance</span><span class="p">(),</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">summaries_function</span><span class="p">,</span> <span class="n">distance_function</span><span class="p">,</span> <span class="n">use_logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;BanditsABC&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mab_variant</span> <span class="o">=</span> <span class="n">mab_variant</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">ml</span><span class="o">.</span><span class="n">SciopeLogger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Multi-Armed Bandits Approximate Bayesian Computation initialized&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BanditsABC.scale_distance"><a class="viewcode-back" href="../../../sciope.inference.html#sciope.inference.bandits_abc.BanditsABC.scale_distance">[docs]</a>    <span class="k">def</span> <span class="nf">scale_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Performs scaling in [0,1] of a given distance vector/value with respect to historical distances</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dist : ndarray, float</span>
+<span class="sd">            distance</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ndarray</span>
+<span class="sd">            scaled distance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+        <span class="k">global</span> <span class="n">normalized_distances</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">historical_distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+        <span class="n">all_distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">historical_distances</span><span class="p">)</span>
+        <span class="n">divisor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">all_distances</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">normalized_distances</span> <span class="o">=</span> <span class="n">all_distances</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">divisor</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">divisor</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">normalized_distances</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalized_distances</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">/</span> <span class="n">divisor</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">normalized_distances</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span></div>
+
+    <span class="c1"># @sciope_profiler.profile</span>
+<div class="viewcode-block" id="BanditsABC.rejection_sampling"><a class="viewcode-back" href="../../../sciope.inference.html#sciope.inference.bandits_abc.BanditsABC.rejection_sampling">[docs]</a>    <span class="k">def</span> <span class="nf">rejection_sampling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">ensemble_size</span><span class="p">,</span> <span class="n">normalize</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        * overrides rejection_sampling of ABC class *</span>
+<span class="sd">        Perform ABC inference according to initialized configuration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        num_samples : int</span>
+<span class="sd">            The number of required accepted samples</span>
+<span class="sd">        batch_size : int</span>
+<span class="sd">            The batch size of samples for performing rejection sampling</span>
+<span class="sd">        chunk_size : int</span>
+<span class="sd">            the partition size when splitting the fixed data. For avoiding many individual tasks</span>
+<span class="sd">            in dask if the data is large.</span>
+<span class="sd">        ensemble_size : int</span>
+<span class="sd">            In case we have an ensemble of responses</span>
+<span class="sd">        normalize : bool</span>
+<span class="sd">            Whether summary statistics should be normalized and epsilon be interpreted as a percentage</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Keys</span>
+<span class="sd">            &#39;accepted_samples: The accepted parameter values&#39;,</span>
+<span class="sd">            &#39;distances: Accepted distance values&#39;,</span>
+<span class="sd">            &#39;accepted_count: Number of accepted samples&#39;,</span>
+<span class="sd">            &#39;trial_count: The number of total trials performed in order to converge&#39;,</span>
+<span class="sd">            &#39;inferred_parameters&#39;: The mean of accepted parameter samples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">accepted_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">trial_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">accepted_samples</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># if fixed_mean has not been computed</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixed_mean</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_fixed_mean</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">)</span>
+
+        <span class="c1"># Get dask graph</span>
+        <span class="n">graph_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dask_graph</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">ensemble_size</span><span class="p">)</span>
+        <span class="n">cluster_mode</span> <span class="o">=</span> <span class="n">_cluster_mode</span><span class="p">()</span>
+
+        <span class="c1"># do rejection sampling</span>
+        <span class="k">while</span> <span class="n">accepted_count</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">:</span>
+
+            <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">dists</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">if</span> <span class="n">cluster_mode</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running in cluster mode&quot;</span><span class="p">)</span>
+                <span class="n">res_param</span><span class="p">,</span> <span class="n">res_dist</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">])</span>
+
+                <span class="n">futures_dist</span> <span class="o">=</span> <span class="n">get_futures</span><span class="p">(</span><span class="n">res_dist</span><span class="p">)</span>
+                <span class="n">futures_params</span> <span class="o">=</span> <span class="n">get_futures</span><span class="p">(</span><span class="n">res_param</span><span class="p">)</span>
+
+                <span class="n">keep_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">futures_dist</span><span class="p">)}</span>
+
+                <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures_dist</span><span class="p">,</span> <span class="n">with_results</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+                        <span class="c1"># Normalize distances between [0,1]</span>
+                        <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_distance</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="n">keep_idx</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">key</span><span class="p">]</span>
+                    <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">futures_params</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>
+
+                <span class="k">del</span> <span class="n">futures_dist</span><span class="p">,</span> <span class="n">futures_params</span><span class="p">,</span> <span class="n">res_param</span><span class="p">,</span> <span class="n">res_dist</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running in parallel mode&quot;</span><span class="p">)</span>
+                <span class="n">params</span><span class="p">,</span> <span class="n">dists</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">dists</span><span class="p">:</span>
+                        <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_distance</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+                <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sim_dist_scaled</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dists</span><span class="p">)</span>
+
+            <span class="c1"># Use MAB arm selection to identify the best &#39;k&#39; arms or summary statistics</span>
+            <span class="n">num_arms</span> <span class="o">=</span> <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">arms</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_arms</span><span class="p">)</span>
+            <span class="n">top_k_arms_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mab_variant</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">arms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">top_k_distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">sim_dist_scaled</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_k_arms_idx</span><span class="p">])</span>
+            <span class="n">top_k_distances</span> <span class="o">=</span> <span class="n">top_k_distances</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+            <span class="c1"># Take the norm to combine the distances, if more than one summary is used</span>
+            <span class="k">if</span> <span class="n">top_k_distances</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">combined_distance</span> <span class="o">=</span> <span class="p">[</span><span class="n">dask</span><span class="o">.</span><span class="n">delayed</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">)(</span><span class="n">scaled</span><span class="p">)</span> <span class="k">for</span> <span class="n">scaled</span> <span class="ow">in</span> <span class="n">top_k_distances</span><span class="p">]</span>
+                <span class="n">result</span><span class="p">,</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">combined_distance</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">top_k_distances</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+            <span class="c1"># Accept/Reject</span>
+            <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Bandits-ABC Rejection Sampling: trial parameter(s) = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">e</span><span class="p">]))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Bandits-ABC Rejection Sampling: &quot;</span>
+                                      <span class="s2">&quot;trial distance(s) = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sim_dist_scaled</span><span class="p">[</span><span class="n">e</span><span class="p">]))</span>
+                <span class="k">if</span> <span class="n">res</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">:</span>
+                    <span class="n">accepted_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">e</span><span class="p">])</span>
+                    <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="n">e</span><span class="p">])</span>
+                    <span class="n">accepted_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Bandits-ABC Rejection Sampling: accepted a new sample, &quot;</span>
+                                         <span class="s2">&quot;total accepted samples = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accepted_count</span><span class="p">))</span>
+
+            <span class="n">trial_count</span> <span class="o">+=</span> <span class="n">batch_size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;accepted_samples&#39;</span><span class="p">:</span> <span class="n">accepted_samples</span><span class="p">,</span> <span class="s1">&#39;distances&#39;</span><span class="p">:</span> <span class="n">distances</span><span class="p">,</span> <span class="s1">&#39;accepted_count&#39;</span><span class="p">:</span> <span class="n">accepted_count</span><span class="p">,</span>
+                        <span class="s1">&#39;trial_count&#39;</span><span class="p">:</span> <span class="n">trial_count</span><span class="p">,</span> <span class="s1">&#39;inferred_parameters&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">accepted_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

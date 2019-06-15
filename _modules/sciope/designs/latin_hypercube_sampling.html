@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sciope.designs.latin_hypercube_sampling &mdash; sciope 0.2.0 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> sciope
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">sciope</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>sciope.designs.latin_hypercube_sampling</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sciope.designs.latin_hypercube_sampling</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2017 Prashant Singh, Fredrik Wrede and Andreas Hellander</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1"># http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Latin Hypercube Sampling Initial Design</span>
+<span class="sd">Implemented as a Translational Propagation LHD</span>
+<span class="sd">Implementation follows structure from the original reference below.</span>
+
+<span class="sd">Ref:</span>
+<span class="sd">Viana, Felipe AC, Gerhard Venter, and Vladimir Balabanov.</span>
+<span class="sd">&quot;An algorithm for fast optimal Latin hypercube design of experiments.&quot;</span>
+<span class="sd">International journal for numerical methods in engineering 82, no. 2 (2010): 135-156.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Imports</span>
+<span class="kn">from</span> <span class="nn">sciope.designs.initial_design_base</span> <span class="k">import</span> <span class="n">InitialDesignBase</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.housekeeping</span> <span class="k">import</span> <span class="n">sciope_logger</span> <span class="k">as</span> <span class="n">ml</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="k">import</span> <span class="n">cdist</span><span class="p">,</span> <span class="n">pdist</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">dask</span> <span class="k">import</span> <span class="n">delayed</span>
+
+
+<span class="c1"># Class definition</span>
+<div class="viewcode-block" id="LatinHypercube"><a class="viewcode-back" href="../../../sciope.designs.html#sciope.designs.latin_hypercube_sampling.LatinHypercube">[docs]</a><span class="k">class</span> <span class="nc">LatinHypercube</span><span class="p">(</span><span class="n">InitialDesignBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Translational Propagation Latin Hypercube Sampling</span>
+
+<span class="sd">    * InitialDesignBase.generate(n)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">seed_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        LatinHypercube constructor</span>
+<span class="sd">        :param xmin: lower bounds for domain in form of a np array containing one value per dimension/variable</span>
+<span class="sd">        :param xmax: upper bounds, as above</span>
+<span class="sd">        :param use_logger: enable/disable logging to file and console output</span>
+<span class="sd">        :param seed_size: number of points in the LHS seed design</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;LatinHypercube&#39;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LatinHypercube</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">use_logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seed_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xmin</span><span class="p">)</span> <span class="k">if</span> <span class="n">seed_size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">seed_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xmin</span><span class="p">)</span>  <span class="c1"># dimensionality / # variables</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_size</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xmin</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">ml</span><span class="o">.</span><span class="n">SciopeLogger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Latin hypercube design in </span><span class="si">{0}</span><span class="s2"> dimensions initialized&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">)))</span>
+
+    <span class="nd">@delayed</span>
+    <span class="k">def</span> <span class="nf">_tplhsdesign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">ns</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a LH using translational propagation.</span>
+<span class="sd">        :param n:      # of desired points</span>
+<span class="sd">        :param seed:    initial seed design</span>
+<span class="sd">        :param ns:      # of points in the seed design</span>
+<span class="sd">        :return:        generated LHD x</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Define the size of TPLHD</span>
+        <span class="c1"># Num. of divisions</span>
+        <span class="n">nd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">((</span><span class="n">n</span> <span class="o">/</span> <span class="n">ns</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">))</span>
+        <span class="n">nd_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">nd</span><span class="p">)</span>
+
+        <span class="c1"># if true, create bigger LHD, else not</span>
+        <span class="n">nb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">nd_star</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">)</span> <span class="k">if</span> <span class="n">nd_star</span> <span class="o">&gt;</span> <span class="n">nd</span> <span class="k">else</span> <span class="n">n</span> <span class="o">/</span> <span class="n">ns</span>
+
+        <span class="c1"># Size of TPLHD to be created</span>
+        <span class="n">np_star</span> <span class="o">=</span> <span class="n">nb</span> <span class="o">*</span> <span class="n">ns</span>
+
+        <span class="c1"># Reshape the seed to properly create the first design</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reshape_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">np_star</span><span class="p">,</span> <span class="n">nd_star</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+
+        <span class="c1"># Create a TPLHD with np_star points</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_tplhd</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">np_star</span><span class="p">,</span> <span class="n">nd_star</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+
+        <span class="c1"># Resize if necessary</span>
+        <span class="k">if</span> <span class="n">np_star</span> <span class="o">&gt;</span> <span class="n">n</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resize_tplhd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np_star</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="nd">@delayed</span>
+    <span class="k">def</span> <span class="nf">_reshape_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">np_star</span><span class="p">,</span> <span class="n">nd_star</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Scales the seed design as needed.</span>
+<span class="sd">        :param seed:    initial seed design (between 1 and ns)</span>
+<span class="sd">        :param ns:      # of points in the seed design</span>
+<span class="sd">        :param np_star: # of points in the LH</span>
+<span class="sd">        :param nd_star: # of divisions in the LH</span>
+<span class="sd">        :return:        the scaled design</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ns</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">seed</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">uf</span> <span class="o">=</span> <span class="n">ns</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">))</span>
+            <span class="n">ut</span> <span class="o">=</span> <span class="p">((</span><span class="n">np_star</span> <span class="o">/</span> <span class="n">nd_star</span><span class="p">)</span> <span class="o">-</span> <span class="n">nd_star</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nv</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">))</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">ut</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">uf</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">ut</span> <span class="o">-</span> <span class="n">a</span> <span class="o">*</span> <span class="n">uf</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">seed</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="nd">@delayed</span>
+    <span class="k">def</span> <span class="nf">_create_tplhd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">np_star</span><span class="p">,</span> <span class="n">nd_star</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a TP LHD</span>
+<span class="sd">        :param seed:    initial seed design</span>
+<span class="sd">        :param np_star: # points in the LH</span>
+<span class="sd">        :param nd_star: # divisions in the LH</span>
+<span class="sd">        :return:        generated design x</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">):</span>
+            <span class="c1"># propagate</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="n">x</span>
+
+            <span class="c1"># translate</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">nd_star</span><span class="p">,</span> <span class="n">c1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">((</span><span class="n">c1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))),</span> <span class="p">[</span><span class="n">np_star</span> <span class="o">/</span> <span class="n">nd_star</span><span class="p">],</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">nd_star</span><span class="p">,</span> <span class="n">c1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nv</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">((</span><span class="n">c1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
+
+            <span class="k">for</span> <span class="n">c2</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nd_star</span><span class="p">):</span>
+                <span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span> <span class="o">+</span> <span class="n">d</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">seed</span><span class="p">))</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="n">np_star</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="nd">@delayed</span>
+    <span class="k">def</span> <span class="nf">_resize_tplhd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">np_star</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In case the design is larger than requested, resize it. Else, return unchanged.</span>
+<span class="sd">        :param x:       initial design</span>
+<span class="sd">        :param np_star: # of initial design points</span>
+<span class="sd">        :param n:       # of desired design points</span>
+<span class="sd">        :return:        design x of correct dimensions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># centre of the design space</span>
+        <span class="n">centre</span> <span class="o">=</span> <span class="n">np_star</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.</span>
+
+        <span class="c1"># calculate distance between each point in x and the centre of the design space</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">centre</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+
+        <span class="c1"># correct the size of x</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">[:</span><span class="n">n</span><span class="p">],</span> <span class="p">:]</span>
+
+        <span class="c1"># re-establish LH conditions</span>
+        <span class="n">x</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># remove spaces</span>
+        <span class="n">x_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">x_sorted</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="nd">@delayed</span>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sub-classable method for generating &#39;n&#39; points in the given &#39;domain&#39;.</span>
+<span class="sd">        Generate several candidate designs, rank them based on inter-site distance and select the top-ranked candidate</span>
+<span class="sd">        Implementation similar to gpflowopt/LHD</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nv</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed_size</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="c1"># 1/2 points</span>
+                <span class="n">seed</span> <span class="o">=</span> <span class="n">delayed</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nv</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Larger seeds using recursive division</span>
+                <span class="n">seed</span> <span class="o">=</span> <span class="n">LatinHypercube</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">,</span> <span class="n">seed_size</span><span class="o">=</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="c1"># Create candidate designs and compute inter-site distance</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">seed</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tplhsdesign</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+        <span class="n">candidates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pdist</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+        <span class="c1"># Select the top-ranked candidate</span>
+        <span class="n">lhd</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)]</span>
+
+        <span class="c1"># Scale to [xmin, xmax]</span>
+        <span class="n">lhd_scaled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_to_new_domain</span><span class="p">(</span><span class="n">lhd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Latin hypercube design: generated </span><span class="si">{0}</span><span class="s2"> points in </span><span class="si">{1}</span><span class="s2"> dimensions&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">nv</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">lhd_scaled</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

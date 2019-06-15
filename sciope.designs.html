@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sciope.designs package &mdash; sciope 0.2.0 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> sciope
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">sciope.designs package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#sciope-designs-factorial-design-module">sciope.designs.factorial_design module</a></li>
+<li><a class="reference internal" href="#sciope-designs-initial-design-base-module">sciope.designs.initial_design_base module</a></li>
+<li><a class="reference internal" href="#sciope-designs-latin-hypercube-sampling-module">sciope.designs.latin_hypercube_sampling module</a></li>
+<li><a class="reference internal" href="#sciope-designs-random-sampling-module">sciope.designs.random_sampling module</a></li>
+<li><a class="reference internal" href="#module-sciope.designs">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sciope</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>sciope.designs package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/sciope.designs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sciope-designs-package">
+<h1>sciope.designs package<a class="headerlink" href="#sciope-designs-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="sciope-designs-factorial-design-module">
+<h2>sciope.designs.factorial_design module<a class="headerlink" href="#sciope-designs-factorial-design-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.designs.factorial_design"></span><p>Factorial Initial Design</p>
+<dl class="class">
+<dt id="sciope.designs.factorial_design.FactorialDesign">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.designs.factorial_design.</code><code class="sig-name descname">FactorialDesign</code><span class="sig-paren">(</span><em class="sig-param">levels</em>, <em class="sig-param">xmin</em>, <em class="sig-param">xmax</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/factorial_design.html#FactorialDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.designs.initial_design_base.InitialDesignBase" title="sciope.designs.initial_design_base.InitialDesignBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.designs.initial_design_base.InitialDesignBase</span></code></a></p>
+<p>Factorial design</p>
+<ul class="simple">
+<li><p>InitialDesignBase.generate(n)</p></li>
+</ul>
+<dl class="attribute">
+<dt id="sciope.designs.factorial_design.FactorialDesign.generate">
+<code class="sig-name descname">generate</code><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign.generate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-designs-initial-design-base-module">
+<h2>sciope.designs.initial_design_base module<a class="headerlink" href="#sciope-designs-initial-design-base-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.designs.initial_design_base"></span><p>Initial Design Base Class</p>
+<dl class="class">
+<dt id="sciope.designs.initial_design_base.InitialDesignBase">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.designs.initial_design_base.</code><code class="sig-name descname">InitialDesignBase</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">xmin</em>, <em class="sig-param">xmax</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for initial designs.
+Must not be used directly!
+Each initial design type must implement the methods described herein:</p>
+<ul class="simple">
+<li><p>InitialDesignBase.generate(n,domain)</p></li>
+</ul>
+<dl class="method">
+<dt id="sciope.designs.initial_design_base.InitialDesignBase.generate">
+<em class="property">abstract </em><code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for generating ‘n’ points within a given domain. Each derived class must implement.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.designs.initial_design_base.InitialDesignBase.scale_to_new_domain">
+<em class="property">static </em><code class="sig-name descname">scale_to_new_domain</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">new_min</em>, <em class="sig-param">new_max</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase.scale_to_new_domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase.scale_to_new_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scales a given array/matrix to a new range
+:param x:       given data matrix
+:param new_min: new min (np array - one element per dimension)
+:param new_max: new max (np array - one element per dimension)
+:return:        scaled x</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.designs.initial_design_base.InitialDesignBase.scale_variable">
+<em class="property">static </em><code class="sig-name descname">scale_variable</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">old_min</em>, <em class="sig-param">old_max</em>, <em class="sig-param">new_min</em>, <em class="sig-param">new_max</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase.scale_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase.scale_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scales a dimension from the specified old range to a new range.
+:param x:       vector representing a variable / dimension
+:param old_min: the old lower bound
+:param old_max: the old upper bound
+:param new_min: the new lower bound
+:param new_max: the new upper bound
+:return:        a vector scaled to the new range</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-designs-latin-hypercube-sampling-module">
+<h2>sciope.designs.latin_hypercube_sampling module<a class="headerlink" href="#sciope-designs-latin-hypercube-sampling-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.designs.latin_hypercube_sampling"></span><p>Latin Hypercube Sampling Initial Design
+Implemented as a Translational Propagation LHD
+Implementation follows structure from the original reference below.</p>
+<p>Ref:
+Viana, Felipe AC, Gerhard Venter, and Vladimir Balabanov.
+“An algorithm for fast optimal Latin hypercube design of experiments.”
+International journal for numerical methods in engineering 82, no. 2 (2010): 135-156.</p>
+<dl class="class">
+<dt id="sciope.designs.latin_hypercube_sampling.LatinHypercube">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.designs.latin_hypercube_sampling.</code><code class="sig-name descname">LatinHypercube</code><span class="sig-paren">(</span><em class="sig-param">xmin</em>, <em class="sig-param">xmax</em>, <em class="sig-param">use_logger=False</em>, <em class="sig-param">seed_size=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/latin_hypercube_sampling.html#LatinHypercube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.designs.initial_design_base.InitialDesignBase" title="sciope.designs.initial_design_base.InitialDesignBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.designs.initial_design_base.InitialDesignBase</span></code></a></p>
+<p>Translational Propagation Latin Hypercube Sampling</p>
+<ul class="simple">
+<li><p>InitialDesignBase.generate(n)</p></li>
+</ul>
+<dl class="attribute">
+<dt id="sciope.designs.latin_hypercube_sampling.LatinHypercube.generate">
+<code class="sig-name descname">generate</code><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube.generate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-designs-random-sampling-module">
+<h2>sciope.designs.random_sampling module<a class="headerlink" href="#sciope-designs-random-sampling-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.designs.random_sampling"></span><p>Random Sampling Initial Design</p>
+<dl class="class">
+<dt id="sciope.designs.random_sampling.RandomSampling">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.designs.random_sampling.</code><code class="sig-name descname">RandomSampling</code><span class="sig-paren">(</span><em class="sig-param">xmin</em>, <em class="sig-param">xmax</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/random_sampling.html#RandomSampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.random_sampling.RandomSampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.designs.initial_design_base.InitialDesignBase" title="sciope.designs.initial_design_base.InitialDesignBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.designs.initial_design_base.InitialDesignBase</span></code></a></p>
+<p>Random Sampling implemented through gpflowopt</p>
+<ul class="simple">
+<li><p>InitialDesignBase.generate(n)</p></li>
+</ul>
+<dl class="attribute">
+<dt id="sciope.designs.random_sampling.RandomSampling.generate">
+<code class="sig-name descname">generate</code><a class="headerlink" href="#sciope.designs.random_sampling.RandomSampling.generate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sciope.designs">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sciope.designs" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

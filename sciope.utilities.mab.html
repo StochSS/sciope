@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sciope.utilities.mab package &mdash; sciope 0.2.0 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> sciope
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">sciope.utilities.mab package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#sciope-utilities-mab-mab-base-module">sciope.utilities.mab.mab_base module</a></li>
+<li><a class="reference internal" href="#sciope-utilities-mab-mab-direct-module">sciope.utilities.mab.mab_direct module</a></li>
+<li><a class="reference internal" href="#sciope-utilities-mab-mab-halving-module">sciope.utilities.mab.mab_halving module</a></li>
+<li><a class="reference internal" href="#sciope-utilities-mab-mab-incremental-module">sciope.utilities.mab.mab_incremental module</a></li>
+<li><a class="reference internal" href="#sciope-utilities-mab-mab-sar-module">sciope.utilities.mab.mab_sar module</a></li>
+<li><a class="reference internal" href="#module-sciope.utilities.mab">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sciope</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>sciope.utilities.mab package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/sciope.utilities.mab.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sciope-utilities-mab-package">
+<h1>sciope.utilities.mab package<a class="headerlink" href="#sciope-utilities-mab-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="sciope-utilities-mab-mab-base-module">
+<h2>sciope.utilities.mab.mab_base module<a class="headerlink" href="#sciope-utilities-mab-mab-base-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.mab.mab_base"></span><p>Multi-Armed Bandit Solution Base Class</p>
+<dl class="class">
+<dt id="sciope.utilities.mab.mab_base.MABBase">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.mab.mab_base.</code><code class="sig-name descname">MABBase</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">arm_pull</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_base.html#MABBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_base.MABBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for MAB solutions like epsilon-first, DIRECT, Incremental, etc.</p>
+<dl class="method">
+<dt id="sciope.utilities.mab.mab_base.MABBase.select">
+<em class="property">abstract </em><code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param">arms</em>, <em class="sig-param">k=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_base.html#MABBase.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_base.MABBase.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select best ‘k’ arms (summary stats) from n=len(arms) total arms.
+:param arms: array of arm labels/indices
+:param k: scalar value; number of desired stats to be selected
+:return: k indices of selected arms</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-utilities-mab-mab-direct-module">
+<h2>sciope.utilities.mab.mab_direct module<a class="headerlink" href="#sciope-utilities-mab-mab-direct-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.mab.mab_direct"></span><p>Multi-Armed Bandits: Direct Algorithm Solution Class</p>
+<dl class="class">
+<dt id="sciope.utilities.mab.mab_direct.MABDirect">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.mab.mab_direct.</code><code class="sig-name descname">MABDirect</code><span class="sig-paren">(</span><em class="sig-param">arm_pull</em>, <em class="sig-param">epsilon=1</em>, <em class="sig-param">delta=0.4</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_direct.html#MABDirect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_direct.MABDirect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.mab.mab_base.MABBase" title="sciope.utilities.mab.mab_base.MABBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.mab.mab_base.MABBase</span></code></a></p>
+<p>The DIRECT algorithm pulls each arm a fixed number of times such that with high probability (1-delta), the k
+selected arms with highest empirical averages are all (epsilon, k)-optimal.
+Ref: “Efficient Selection of Multiple Bandit Arms: Theory and Practice”, Shivaram Kalyanakrishnan and Peter Stone</p>
+<dl class="method">
+<dt id="sciope.utilities.mab.mab_direct.MABDirect.select">
+<code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param">arms</em>, <em class="sig-param">k=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_direct.html#MABDirect.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_direct.MABDirect.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select k arms using the DIRECT algorithm.
+:param arms: array of arm labels/indices
+:param k: number of arms to select
+:return: k selected arms</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-utilities-mab-mab-halving-module">
+<h2>sciope.utilities.mab.mab_halving module<a class="headerlink" href="#sciope-utilities-mab-mab-halving-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.mab.mab_halving"></span><p>Multi-Armed Bandits: Halving Algorithm Solution Class</p>
+<dl class="class">
+<dt id="sciope.utilities.mab.mab_halving.MABHalving">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.mab.mab_halving.</code><code class="sig-name descname">MABHalving</code><span class="sig-paren">(</span><em class="sig-param">arm_pull</em>, <em class="sig-param">epsilon=1</em>, <em class="sig-param">delta=0.4</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_halving.html#MABHalving"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_halving.MABHalving" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.mab.mab_base.MABBase" title="sciope.utilities.mab.mab_base.MABBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.mab.mab_base.MABBase</span></code></a></p>
+<p>Halving improves over the incremental method by eliminating half of the arms from round l to the round l+1. Arms are
+sampled enough times in each round to ensure that at least k(epsilon, k)-optimal arms are likely to survive each
+round.
+Ref: “Efficient Selection of Multiple Bandit Arms: Theory and Practice”, Shivaram Kalyanakrishnan and Peter Stone</p>
+<dl class="method">
+<dt id="sciope.utilities.mab.mab_halving.MABHalving.select">
+<code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param">arms</em>, <em class="sig-param">k=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_halving.html#MABHalving.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_halving.MABHalving.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select k arms using the HALVING algorithm.
+:param arms: array of arm labels/indices
+:param k: number of arms to select
+:return: k selected arms</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-utilities-mab-mab-incremental-module">
+<h2>sciope.utilities.mab.mab_incremental module<a class="headerlink" href="#sciope-utilities-mab-mab-incremental-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.mab.mab_incremental"></span><p>Multi-Armed Bandits: Incremental Algorithm Solution Class</p>
+<dl class="class">
+<dt id="sciope.utilities.mab.mab_incremental.MABIncremental">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.mab.mab_incremental.</code><code class="sig-name descname">MABIncremental</code><span class="sig-paren">(</span><em class="sig-param">arm_pull</em>, <em class="sig-param">epsilon=1</em>, <em class="sig-param">delta=0.4</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_incremental.html#MABIncremental"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_incremental.MABIncremental" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.mab.mab_base.MABBase" title="sciope.utilities.mab.mab_base.MABBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.mab.mab_base.MABBase</span></code></a></p>
+<p>The incremental algorithm consists of ‘k’ rounds. In a given round l, S_l is the set of selected arms, while R_l is
+the set of arms remaining to be processed. During round l, an (epsilon,1) optimal arm in R_l is selected with high
+probability using the median elimination algorithm (Even-Dar et. al. 2006)
+Ref: “Efficient Selection of Multiple Bandit Arms: Theory and Practice”, Shivaram Kalyanakrishnan and Peter Stone</p>
+<dl class="method">
+<dt id="sciope.utilities.mab.mab_incremental.MABIncremental.select">
+<code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param">arms</em>, <em class="sig-param">k=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_incremental.html#MABIncremental.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_incremental.MABIncremental.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select k arms using the INCREMENTAL algorithm.
+:param arms: array of arm labels/indices
+:param k: number of arms to select
+:return: k selected arms</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-utilities-mab-mab-sar-module">
+<h2>sciope.utilities.mab.mab_sar module<a class="headerlink" href="#sciope-utilities-mab-mab-sar-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.mab.mab_sar"></span><p>Multi-Armed Bandits: Successive Accepts and Rejects (SAR) Algorithm Solution Class</p>
+<dl class="class">
+<dt id="sciope.utilities.mab.mab_sar.MABSAR">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.mab.mab_sar.</code><code class="sig-name descname">MABSAR</code><span class="sig-paren">(</span><em class="sig-param">arm_pull</em>, <em class="sig-param">p</em>, <em class="sig-param">b</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_sar.html#MABSAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_sar.MABSAR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.mab.mab_base.MABBase" title="sciope.utilities.mab.mab_base.MABBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.mab.mab_base.MABBase</span></code></a></p>
+<p>SAR divides n rounds into p-1 phases. At the end of each phase, the algorithm either accepts the arm with the
+highest empirical mean reward, or rejects the arm with the lowest empirical mean reward. The arm in question is
+deactivated. In the next phase, each active arm is pulled equally often.
+Ref: “Multiple Identifications in Multiple-Armed Bandits”, Bubeck, Wang and Vishwanathan (2012)</p>
+<dl class="method">
+<dt id="sciope.utilities.mab.mab_sar.MABSAR.select">
+<code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param">arms</em>, <em class="sig-param">k=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/mab/mab_sar.html#MABSAR.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.mab.mab_sar.MABSAR.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select k arms using the SAR algorithm.
+:param arms: array of arm labels/indices
+:param k: number of arms to select
+:return: k selected arms</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sciope.utilities.mab">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sciope.utilities.mab" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

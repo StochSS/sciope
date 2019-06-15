@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sciope.data package &mdash; sciope 0.2.0 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> sciope
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">sciope.data package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#sciope-data-dataset-module">sciope.data.dataset module</a></li>
+<li><a class="reference internal" href="#module-sciope.data">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sciope</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>sciope.data package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/sciope.data.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sciope-data-package">
+<h1>sciope.data package<a class="headerlink" href="#sciope-data-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="sciope-data-dataset-module">
+<h2>sciope.data.dataset module<a class="headerlink" href="#sciope-data-dataset-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.data.dataset"></span><p>Dataset Class</p>
+<dl class="class">
+<dt id="sciope.data.dataset.DataSet">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.data.dataset.</code><code class="sig-name descname">DataSet</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Class for defining a dataset for a modeling/optimization/inference run</p>
+<p>Properties/variables:
+* x                                                 (inputs)
+* y                                                 (targets)
+* ts                                                (time series)
+* s                                                 (summary statistics)
+* outlier_column_indices    (columns containing outliers)
+* size
+* configurations                    (OrderedDict with relavant information)</p>
+<p>Methods:
+* impute                                    (treat missing values in summary statistics data)
+* get_size                                  (returns current size of the dataset)
+* add_points                                (add data to the dataset, data can be added incrementally)
+* process_outliers                  (check summary stats that contain outliers, and apply log scaling)</p>
+<dl class="method">
+<dt id="sciope.data.dataset.DataSet.add_points">
+<code class="sig-name descname">add_points</code><span class="sig-paren">(</span><em class="sig-param">inputs=None</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">time_series=None</em>, <em class="sig-param">summary_stats=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.add_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.add_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the dataset to include new points</p>
+<dl class="simple">
+<dt>inputs<span class="classifier">ndarray, optional</span></dt><dd><p>Usually parameter points, by default None</p>
+</dd>
+<dt>targets<span class="classifier">ndarray, optional</span></dt><dd><p>The target for inferene/optimazation/exploration, by default None</p>
+</dd>
+<dt>time_series<span class="classifier">ndarray, optional</span></dt><dd><p>Simulation output trajectories, by default None</p>
+</dd>
+<dt>summary_stats<span class="classifier">ndarray, optional</span></dt><dd><p>The summary statistics, by default None</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If all function args are None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.data.dataset.DataSet.apply_func_to_columns">
+<em class="property">static </em><code class="sig-name descname">apply_func_to_columns</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">matrix</em>, <em class="sig-param">idx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.apply_func_to_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.apply_func_to_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a transformation function to selected column indices of a matrix</p>
+<dl class="simple">
+<dt>func<span class="classifier">callable</span></dt><dd><p>the transformation function</p>
+</dd>
+<dt>matrix<span class="classifier">ndarray</span></dt><dd><p>matrix to be processed</p>
+</dd>
+<dt>idx<span class="classifier">ndarray</span></dt><dd><p>indices of the matrix to be transformed</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>ndarray</dt><dd><p>the transformed matrix</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.data.dataset.DataSet.get_size">
+<code class="sig-name descname">get_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.get_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.get_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current number of points in the dataset</p>
+<dl class="simple">
+<dt>int</dt><dd><p>The current number of points in the dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.data.dataset.DataSet.process_outliers">
+<code class="sig-name descname">process_outliers</code><span class="sig-paren">(</span><em class="sig-param">mode='zscore'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.process_outliers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.process_outliers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check for outliers in calculated summary stats. Outliers are the few very high or very low values that can
+potentially introduce bias in tasks such as parameter inference. One can either remove them, replace with mean
+value, or use log scale for the statistic in question. This choice is left to the user.</p>
+<dl class="simple">
+<dt>mode<span class="classifier">str, optional</span></dt><dd><p>Either use ‘z-score’ or inter-quantile range ‘iqr’, by default ‘zscore’</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>array</dt><dd><p>Indices of dataset.s columns containing outliers</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sciope.data">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sciope.data" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

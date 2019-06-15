@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sciope.models package &mdash; sciope 0.2.0 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> sciope
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">sciope.models package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#sciope-models-ann-regressor-module">sciope.models.ann_regressor module</a></li>
+<li><a class="reference internal" href="#sciope-models-gp-regressor-module">sciope.models.gp_regressor module</a></li>
+<li><a class="reference internal" href="#sciope-models-label-propagation-module">sciope.models.label_propagation module</a></li>
+<li><a class="reference internal" href="#sciope-models-model-base-module">sciope.models.model_base module</a></li>
+<li><a class="reference internal" href="#sciope-models-svm-regressor-module">sciope.models.svm_regressor module</a></li>
+<li><a class="reference internal" href="#module-sciope.models">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sciope</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>sciope.models package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/sciope.models.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sciope-models-package">
+<h1>sciope.models package<a class="headerlink" href="#sciope-models-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="sciope-models-ann-regressor-module">
+<h2>sciope.models.ann_regressor module<a class="headerlink" href="#sciope-models-ann-regressor-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.models.ann_regressor"></span><p>Artificial Neural Network (ANN) Regression Surrogate Model</p>
+<dl class="class">
+<dt id="sciope.models.ann_regressor.ANNModel">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.models.ann_regressor.</code><code class="sig-name descname">ANNModel</code><span class="sig-paren">(</span><em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.models.model_base.ModelBase" title="sciope.models.model_base.ModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.models.model_base.ModelBase</span></code></a></p>
+<p>We use the sklearn MLP Regressor implementation here.</p>
+<dl class="method">
+<dt id="sciope.models.ann_regressor.ANNModel.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">xt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.models.ann_regressor.ANNModel.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-models-gp-regressor-module">
+<h2>sciope.models.gp_regressor module<a class="headerlink" href="#sciope-models-gp-regressor-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.models.gp_regressor"></span><p>Gaussian Process Regression Surrogate Model using sklearn</p>
+<dl class="class">
+<dt id="sciope.models.gp_regressor.GPRModel">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.models.gp_regressor.</code><code class="sig-name descname">GPRModel</code><span class="sig-paren">(</span><em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.models.model_base.ModelBase" title="sciope.models.model_base.ModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.models.model_base.ModelBase</span></code></a></p>
+<p>We use the sklearn GP Regressor implementation here.</p>
+<dl class="method">
+<dt id="sciope.models.gp_regressor.GPRModel.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">xt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.models.gp_regressor.GPRModel.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-models-label-propagation-module">
+<h2>sciope.models.label_propagation module<a class="headerlink" href="#sciope-models-label-propagation-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.models.label_propagation"></span><p>Semi-supervised Label Propagation Surrogate Model</p>
+<dl class="class">
+<dt id="sciope.models.label_propagation.Bounds">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.models.label_propagation.</code><code class="sig-name descname">Bounds</code><span class="sig-paren">(</span><em class="sig-param">xmax</em>, <em class="sig-param">xmin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#Bounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.Bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="sciope.models.label_propagation.LPModel">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.models.label_propagation.</code><code class="sig-name descname">LPModel</code><span class="sig-paren">(</span><em class="sig-param">kernel='rbf'</em>, <em class="sig-param">alpha=0.7</em>, <em class="sig-param">gamma=0.1</em>, <em class="sig-param">learning_rate=1.0</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.models.model_base.ModelBase" title="sciope.models.model_base.ModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.models.model_base.ModelBase</span></code></a></p>
+<p>We use the sklearn Label Spreading implementation here.</p>
+<dl class="method">
+<dt id="sciope.models.label_propagation.LPModel.objective">
+<code class="sig-name descname">objective</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.objective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.objective" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sciope.models.label_propagation.LPModel.optimize">
+<code class="sig-name descname">optimize</code><span class="sig-paren">(</span><em class="sig-param">min_</em>, <em class="sig-param">max_</em>, <em class="sig-param">niter=10</em>, <em class="sig-param">stepsize=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.optimize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sciope.models.label_propagation.LPModel.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">xp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.models.label_propagation.LPModel.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">targets</em>, <em class="sig-param">min_=0.01</em>, <em class="sig-param">max_=30</em>, <em class="sig-param">niter=10</em>, <em class="sig-param">stepsize=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sciope.models.label_propagation.RandomDisplacementBounds">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.models.label_propagation.</code><code class="sig-name descname">RandomDisplacementBounds</code><span class="sig-paren">(</span><em class="sig-param">xmax</em>, <em class="sig-param">xmin</em>, <em class="sig-param">stepsize=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#RandomDisplacementBounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.RandomDisplacementBounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>random displacement with bounds</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sciope.models.label_propagation.get_average_label_entropy">
+<code class="sig-prename descclassname">sciope.models.label_propagation.</code><code class="sig-name descname">get_average_label_entropy</code><span class="sig-paren">(</span><em class="sig-param">label_distribution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#get_average_label_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.get_average_label_entropy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sciope.models.label_propagation.get_label_entropies">
+<code class="sig-prename descclassname">sciope.models.label_propagation.</code><code class="sig-name descname">get_label_entropies</code><span class="sig-paren">(</span><em class="sig-param">label_distribution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#get_label_entropies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.get_label_entropies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="sciope-models-model-base-module">
+<h2>sciope.models.model_base module<a class="headerlink" href="#sciope-models-model-base-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.models.model_base"></span><p>Surrogate Model Base Class</p>
+<dl class="class">
+<dt id="sciope.models.model_base.ModelBase">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.models.model_base.</code><code class="sig-name descname">ModelBase</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for surrogate models.
+Must not be used directly!
+Each model type must implement the methods described herein:</p>
+<ul class="simple">
+<li><p>ModelBase.train(x,y)</p></li>
+<li><p>ModelBase.predict(xt)</p></li>
+</ul>
+<p>The following variables are available to derived classes:</p>
+<ul class="simple">
+<li><p>self.x                    (training inputs)</p></li>
+<li><p>self.y                    (training targets)</p></li>
+<li><p>self.my                   (mean for scaling)</p></li>
+<li><p>self.sy                   (std dev for scaling)</p></li>
+<li><p>self.n                    (num training points)</p></li>
+</ul>
+<dl class="method">
+<dt id="sciope.models.model_base.ModelBase.predict">
+<em class="property">abstract </em><code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">test_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.models.model_base.ModelBase.scale_training_data">
+<code class="sig-name descname">scale_training_data</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.scale_training_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.scale_training_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sciope.models.model_base.ModelBase.train">
+<em class="property">abstract </em><code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-models-svm-regressor-module">
+<h2>sciope.models.svm_regressor module<a class="headerlink" href="#sciope-models-svm-regressor-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.models.svm_regressor"></span><p>Support Vector Machine Regression Surrogate Model</p>
+<dl class="class">
+<dt id="sciope.models.svm_regressor.SVRModel">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.models.svm_regressor.</code><code class="sig-name descname">SVRModel</code><span class="sig-paren">(</span><em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.models.model_base.ModelBase" title="sciope.models.model_base.ModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.models.model_base.ModelBase</span></code></a></p>
+<p>We use the sklearn SVM implementation here.</p>
+<dl class="method">
+<dt id="sciope.models.svm_regressor.SVRModel.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">xt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.models.svm_regressor.SVRModel.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sciope.models.svm_regressor.SVRModel.tune_parameters">
+<code class="sig-name descname">tune_parameters</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">nfolds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.tune_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.tune_parameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sciope.models">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sciope.models" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sciope.utilities.summarystats package &mdash; sciope 0.2.0 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> sciope
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">sciope.utilities.summarystats package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#sciope-utilities-summarystats-burstiness-module">sciope.utilities.summarystats.burstiness module</a></li>
+<li><a class="reference internal" href="#sciope-utilities-summarystats-global-max-module">sciope.utilities.summarystats.global_max module</a></li>
+<li><a class="reference internal" href="#sciope-utilities-summarystats-global-min-module">sciope.utilities.summarystats.global_min module</a></li>
+<li><a class="reference internal" href="#sciope-utilities-summarystats-summary-base-module">sciope.utilities.summarystats.summary_base module</a></li>
+<li><a class="reference internal" href="#sciope-utilities-summarystats-temporal-mean-module">sciope.utilities.summarystats.temporal_mean module</a></li>
+<li><a class="reference internal" href="#sciope-utilities-summarystats-temporal-variance-module">sciope.utilities.summarystats.temporal_variance module</a></li>
+<li><a class="reference internal" href="#module-sciope.utilities.summarystats">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">sciope</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>sciope.utilities.summarystats package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/sciope.utilities.summarystats.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sciope-utilities-summarystats-package">
+<h1>sciope.utilities.summarystats package<a class="headerlink" href="#sciope-utilities-summarystats-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="sciope-utilities-summarystats-burstiness-module">
+<h2>sciope.utilities.summarystats.burstiness module<a class="headerlink" href="#sciope-utilities-summarystats-burstiness-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.summarystats.burstiness"></span><p>The ‘Burstiness’ summary statistic</p>
+<dl class="class">
+<dt id="sciope.utilities.summarystats.burstiness.Burstiness">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.burstiness.</code><code class="sig-name descname">Burstiness</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">improvement=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
+<p>Burstiness Summary statictics
+Burstiness = (sigma-mu)/(sigma+mu)</p>
+<p>Ref: Burstiness and memory in complex systems, Europhys. Let., 81, pp. 48002, 2008.</p>
+<dl class="attribute">
+<dt id="sciope.utilities.summarystats.burstiness.Burstiness.compute">
+<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness.compute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-utilities-summarystats-global-max-module">
+<h2>sciope.utilities.summarystats.global_max module<a class="headerlink" href="#sciope-utilities-summarystats-global-max-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.summarystats.global_max"></span><p>The global maximum summary statistic</p>
+<dl class="class">
+<dt id="sciope.utilities.summarystats.global_max.GlobalMax">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.global_max.</code><code class="sig-name descname">GlobalMax</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/global_max.html#GlobalMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.global_max.GlobalMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
+<p>The maximum value observed across the entire time span</p>
+<dl class="attribute">
+<dt id="sciope.utilities.summarystats.global_max.GlobalMax.compute">
+<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.global_max.GlobalMax.compute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-utilities-summarystats-global-min-module">
+<h2>sciope.utilities.summarystats.global_min module<a class="headerlink" href="#sciope-utilities-summarystats-global-min-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.summarystats.global_min"></span><p>The global minimum summary statistic</p>
+<dl class="class">
+<dt id="sciope.utilities.summarystats.global_min.GlobalMin">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.global_min.</code><code class="sig-name descname">GlobalMin</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/global_min.html#GlobalMin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.global_min.GlobalMin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
+<p>The minimum value observed across the entire time span</p>
+<dl class="attribute">
+<dt id="sciope.utilities.summarystats.global_min.GlobalMin.compute">
+<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.global_min.GlobalMin.compute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-utilities-summarystats-summary-base-module">
+<h2>sciope.utilities.summarystats.summary_base module<a class="headerlink" href="#sciope-utilities-summarystats-summary-base-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.summarystats.summary_base"></span><p>Base Class for Summary Statistics</p>
+<dl class="class">
+<dt id="sciope.utilities.summarystats.summary_base.SummaryBase">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.summary_base.</code><code class="sig-name descname">SummaryBase</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for summary statistics.</p>
+<dl class="method">
+<dt id="sciope.utilities.summarystats.summary_base.SummaryBase.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the summary statistic value for given ‘data’
+:param data: a fixed data set or simulation result
+:return: the computed summary statistic value</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-utilities-summarystats-temporal-mean-module">
+<h2>sciope.utilities.summarystats.temporal_mean module<a class="headerlink" href="#sciope-utilities-summarystats-temporal-mean-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.summarystats.temporal_mean"></span><p>The temporal mean summary statistic</p>
+<dl class="class">
+<dt id="sciope.utilities.summarystats.temporal_mean.TemporalMean">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.temporal_mean.</code><code class="sig-name descname">TemporalMean</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/temporal_mean.html#TemporalMean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.temporal_mean.TemporalMean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
+<p>Simply the mean taken over the entire time span</p>
+<dl class="attribute">
+<dt id="sciope.utilities.summarystats.temporal_mean.TemporalMean.compute">
+<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.temporal_mean.TemporalMean.compute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sciope-utilities-summarystats-temporal-variance-module">
+<h2>sciope.utilities.summarystats.temporal_variance module<a class="headerlink" href="#sciope-utilities-summarystats-temporal-variance-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-sciope.utilities.summarystats.temporal_variance"></span><p>The temporal variance summary statistic</p>
+<dl class="class">
+<dt id="sciope.utilities.summarystats.temporal_variance.TemporalVariance">
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.temporal_variance.</code><code class="sig-name descname">TemporalVariance</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/temporal_variance.html#TemporalVariance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.temporal_variance.TemporalVariance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
+<p>Simply the variance taken over the entire time span</p>
+<dl class="attribute">
+<dt id="sciope.utilities.summarystats.temporal_variance.TemporalVariance.compute">
+<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.temporal_variance.TemporalVariance.compute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-sciope.utilities.summarystats">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sciope.utilities.summarystats" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
