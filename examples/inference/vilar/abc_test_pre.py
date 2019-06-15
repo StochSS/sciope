@@ -22,6 +22,8 @@ from sciope.utilities.priors import uniform_prior
 from sciope.inference import abc_inference_pre
 from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
 import pickle
