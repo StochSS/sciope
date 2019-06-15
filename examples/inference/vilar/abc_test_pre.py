@@ -71,7 +71,7 @@ theta = np.squeeze(theta, axis=1)
 print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 
 # Transpose the dimension of ts to match the CNN
-ts = np.transpose(ts, (0,2,1))
+#ts = np.transpose(ts, (0,2,1))
 
 
 #ts = ts[:,:,7]
