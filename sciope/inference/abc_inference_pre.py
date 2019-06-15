@@ -298,9 +298,11 @@ class ABC():
 
         obs_data_s = (self.summaries_function.compute(self.data).compute()-min_s)/(max_s-min_s)
         print("obs_data_s shape: ", obs_data_s.shape)
-        distances = self.distance_function.compute(data_s, obs_data_s).compute()
+        distances = [self.distance_function.compute(ds, obs_data_s) for ds in data_s]
+        print("after distances")
+        dist = dask.compute(distances)
 
-        print("distances shape: ", distances.shape)
+        print("distances shape: ", dist.shape)
 
 
 
