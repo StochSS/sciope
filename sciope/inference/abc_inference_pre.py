@@ -289,8 +289,8 @@ class ABC():
         data_s = dask.compute(data_s)
 
         print("data_s shape", np.array(data_s).shape)
-        max_s = np.max(data_s, axis=0)
-        min_s = np.min(data_s, axis=0)
+        max_s = np.max(data_s, axis=1)
+        min_s = np.min(data_s, axis=1)
         print("max s: ", max_s, ", min s: ", min_s)
         #normalized
         data_s = (data_s-min_s)/(max_s-min_s)
