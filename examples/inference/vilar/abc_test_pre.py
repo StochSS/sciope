@@ -92,3 +92,15 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 #print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
 #print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
 #print('Trial count:', abc_instance.results['trial_count'])
+
+drange=dmax-dmin
+
+f, axes = plt.subplots(15, 1)
+f.set_figheight(10*5)
+f.set_figwidth(10)
+fontsize = 12
+bins = np.linspace(0,1,11)
+for i in range(15):
+    axes[i].hist(abc_instance.results['accepted_samples'][:, i])
+
+plt.savefig('histogram')
