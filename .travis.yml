@@ -26,7 +26,7 @@ before_script:
 script: travis_wait 30 py.test  --cov-report term --cov
 after_success:
   - codecov
-  - cd docs && make html
+  - cd ../../docs/ && make html
 # deploy to Github pages
 deploy:
   provider: pages
