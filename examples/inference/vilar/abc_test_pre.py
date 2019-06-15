@@ -22,6 +22,7 @@ from sciope.utilities.priors import uniform_prior
 from sciope.inference import abc_inference_pre
 from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
+import matplotlib.pyplot as plt
 import os
 import pickle
 import vilar
@@ -88,6 +89,6 @@ abc_instance.infer(num_samples=200)
 
 # Results
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-#print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
-#print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
-#print('Trial count:', abc_instance.results['trial_count'])
+print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
+print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
+print('Trial count:', abc_instance.results['trial_count'])
