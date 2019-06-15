@@ -107,7 +107,7 @@ fontsize = 12
 bins = np.linspace(0,1,11)
 for i in range(15):
     hist=axes[i].hist(abc_instance.results['accepted_samples'][:, i])
-    hist_max=np.max(hist)
+    hist_max=np.max(hist[0])
     axes[i].plot([dmin,dmin],[0,hist_max])
     axes[i].plot([dmin,dmin],[0,hist_max])
 
