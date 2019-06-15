@@ -282,12 +282,13 @@ class ABC():
         """
         print("welcome to inf")
         print("time series shape: ", self.time_series.shape)
-        data_s = [x for x in self.time_series]
-        print("data_s len: ", len(data_s))
 
-        data_s = [self.summaries_function.compute(x) for x in self.time_series]
 
-        print("data_s shape", np.array(data_s))
+        data_s = np.array([self.summaries_function.compute(x) for x in self.time_series])
+
+        data_S.compute()
+
+        print("data_s shape", data_s)
         max_s = np.max(data_s, axis=1)
         min_s = np.max(data_s, axis=1)
         #normalized
