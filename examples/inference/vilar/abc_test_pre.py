@@ -39,9 +39,12 @@ dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 bs_stat = bs.Burstiness(mean_trajectories=True, use_logger=False)
 
+# Define true parameters from which the observed data is simulated from
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+# Define the simulator
 stoch_model = Vilar(species='all')
 sim = stoch_model.simulate
+# Simulate a time_series from sim and extract species A (index 7)
 data = np.array([sim(np.array(true_params))[0,7,:]])
 
 #test bs_stat
@@ -103,6 +106,9 @@ f.set_figwidth(10)
 fontsize = 12
 bins = np.linspace(0,1,11)
 for i in range(15):
-    axes[i].hist(abc_instance.results['accepted_samples'][:, i])
+    hist=axes[i].hist(abc_instance.results['accepted_samples'][:, i])
+    hist_max=np.max(hist)
+    axes[i].plot([dmin,dmin],[0,hist_max)
+    axes[i].plot([dmin,dmin],[0,hist_max)
 
 plt.savefig('histogram')
