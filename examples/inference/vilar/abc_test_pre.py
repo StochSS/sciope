@@ -60,7 +60,7 @@ for filename in os.listdir(data_path):
             ts = np.append(ts, dataset.ts[:,:,7,:], axis=0)
         else:
             theta = dataset.x
-            ts = dataset.ts
+            ts = dataset.ts[:,:,7,:]
 
 print("theta shape: ", theta.shape, ", timeseries shape: ", ts.shape)
 
