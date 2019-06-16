@@ -3,6 +3,9 @@ import pickle
 import os
 import numpy as np
 from sciope.models.cnn_regressor import CNNModel
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 # Get the data
 data_path = '/home/ubuntu/sciope/sciope/utilities/datagenerator/ds_vilar_ft100_ts501_tr1_speciesall' #/ds_vilar_ft100_ts501_tr1_speciesall0.p'
@@ -39,6 +42,13 @@ for t in range(len(dmin)):
     theta[:,t]=(theta[:,t]-dmin[t]) / (dmax[t] - dmin[t])
 
 
+
+for i in range(3):
+    plt.plot(ts[0,:,i], label='nr'+str(i))
+
+plt.legend()
+plt.savefig('histogram')
+
 #downsample ts
 #ts = ts[:,::5,:]
 
@@ -62,6 +72,8 @@ ts_train = ts[0:-2000]
 
 theta_val = theta[-2000:]
 ts_val = ts[-2000:]
+
+
 
 
 

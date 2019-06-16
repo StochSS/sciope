@@ -100,7 +100,7 @@ def construct_model(input_shape,output_shape):
         model.add(keras.layers.Conv1D(lay_size[i], con_len, strides=1, 
                                       padding=padding, 
                                       activity_regularizer=reg))
-        model.add( keras.layers.Activation(activation))
+        model.add(keras.layers.Activation(activation))
         model.add(keras.layers.Conv1D(lay_size[i], con_len, strides=1, 
                                       padding=padding, 
                                       activity_regularizer=reg))
