@@ -73,9 +73,8 @@ dg = DataGenerator(prior_function=prior_function, sim=sim)
 
 
 
-dataset=DataSet(name='test dataset')
-
 for filenr in range(5):
+    dataset = DataSet(name='test dataset')
     for epoch in range(20):
         tp, sim_result = dg.gen(batch_size=1000)
         dataset.add_points(inputs=np.array(tp), targets=None, time_series=np.array(sim_result), summary_stats=None)
