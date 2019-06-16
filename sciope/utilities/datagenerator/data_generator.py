@@ -75,28 +75,28 @@ dg = DataGenerator(prior_function=prior_function, sim=sim)
 
 dataset=DataSet(name='test dataset')
 
+for filenr in range(5):
+    for epoch in range(20):
+        tp, sim_result = dg.gen(batch_size=1000)
+        dataset.add_points(inputs=np.array(tp), targets=None, time_series=np.array(sim_result), summary_stats=None)
+        print("dataset size: ", np.array(dataset.ts).shape)
 
-for epoch in range(20):
-    tp, sim_result = dg.gen(batch_size=1000)
-    dataset.add_points(inputs=np.array(tp), targets=None, time_series=np.array(sim_result), summary_stats=None)
-    print("dataset size: ", np.array(dataset.ts).shape)
-
-# Name the dataset
-dataset_name = 'ds_' + stoch_model.name
-
-
-if os.path.exists(dataset_name):
-    nr = 0
-    while os.path.exists(dataset_name+'/'+dataset_name + str(nr) + '.p'):
-        nr += 1
-    # Save dataset
-    pickle.dump(dataset, open(dataset_name+'/'+dataset_name + str(nr) + '.p', "wb"))
-else:
-    os.mkdir(dataset_name)
-    # Save dataset
-    pickle.dump(dataset, open(dataset_name + '/' + dataset_name + str(0) + '.p', "wb"))
+    # Name the dataset
+    dataset_name = 'ds_' + stoch_model.name
 
 
+    if os.path.exists(dataset_name):
+        nr = 0
+        while os.path.exists(dataset_name+'/'+dataset_name + str(nr) + '.p'):
+            nr += 1
+        # Save dataset
+        pickle.dump(dataset, open(dataset_name+'/'+dataset_name + str(nr) + '.p', "wb"))
+    else:
+        os.mkdir(dataset_name)
+        # Save dataset
+        pickle.dump(dataset, open(dataset_name + '/' + dataset_name + str(0) + '.p', "wb"))
+
+    print("complete file ", str(filenr))
 
 
 
