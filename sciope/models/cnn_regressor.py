@@ -71,7 +71,7 @@ def construct_model(input_shape,output_shape):
     dense_activation = 'relu'
     padding = 'same'
     poolpadding = 'valid'
-    con_len = 2
+    con_len = 6
     lay_size = [int(64*1.5**i) for i in range(10)]
     maxpool = con_len
     levels=3
