@@ -48,7 +48,7 @@ for i in range(3):
     plt.plot(ts[0,:,i], label='nr'+str(i))
 
 plt.legend()
-plt.savefig('histogram')
+plt.savefig('speciesplot')
 
 #downsample ts
 #ts = ts[:,::5,:]
