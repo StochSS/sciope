@@ -67,7 +67,7 @@ stoch_model = Vilar(final_time=200, species='all')
 sim = stoch_model.simulate
 
 print("species list: ", stoch_model.model.listOfSpecies.keys())
-
+print("stoch model name: ", stoch_model.name)
 # Defining DataGenerator
 dg = DataGenerator(prior_function=prior_function, sim=sim)
 
