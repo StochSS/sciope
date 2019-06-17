@@ -30,7 +30,7 @@ class CNNModel(ModelBase):
     
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets,
-              save_as=None,plot_training_progress=False):
+              save_as='saved_models/ver1',plot_training_progress=False):
         if save_as:
             mcp_save = keras.callbacks.ModelCheckpoint(save_as+'.hdf5', 
                                                        save_best_only=True, 
