@@ -63,7 +63,7 @@ print("start")
 prior_function = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 
 # Defining Vilar model as stochastic model
-stoch_model = Vilar(final_time=500, species='all')
+stoch_model = Vilar(final_time=200, species='all')
 sim = stoch_model.simulate
 
 print("species list: ", stoch_model.model.listOfSpecies.keys())

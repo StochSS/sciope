@@ -27,9 +27,10 @@ class Vilar:
     def __init__(self, num_trajectories=1, num_timestamps=501, final_time=100, species=['A','C']):
 
         # Load the model definition
-        config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
+
+
         config_file = '/home/ubuntu/sciope/sciope/utilities/datagenerator/StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml'
+        #config_file = 'documents/StochKit2/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml'
         print("config_file: ", config_file)
         model_doc = gillespy2.StochMLDocument.from_file(config_file)
 
