@@ -14,6 +14,9 @@
 
 from sciope.utilities.summarystats.summary_base import SummaryBase
 from sciope.features.feature_extraction import generate_tsfresh_features
+from sciope.designs.initial_design_base import InitialDesignBase
+from sciope.sampling.sampling_base import SamplingBase
+from sciope.utilities.priors.prior_base import PriorBase
 from sciope.visualize.interactive_scatter import interative_scatter
 from tsfresh.feature_extraction import MinimalFCParameters
 from sciope.data.dataset import DataSet
@@ -290,8 +293,12 @@ class StochMET():
     """
 
     def __init__(self, simulator=None, sampler=None, features=None, default_batch_size=10):
+        
         assert callable(simulator), "simulator must be a callable function"
-        assert hasattr(sampler, 'generate'), "sampling class instance must have a callable function 'generate'"
+
+        allowed_sampler = ["InitialDesignBase", "PriorBase", "SamplingBase"]
+        assert isinstance(sampler, (InitialDesignBase, PriorBase, SamplingBase)), "sampling must be an instance of: {0}".format(allowed_sampler)
+        
         self.simulator = simulator
         self.sampling = sampler
         self.batch_size = default_batch_size
