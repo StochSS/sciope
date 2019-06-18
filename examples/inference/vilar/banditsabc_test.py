@@ -47,7 +47,7 @@ if __name__ == '__main__':
     client = Client(cluster)
 
     # Set up ABC
-    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.005, prior_function=mm_prior, k=15,
+    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.005, prior_function=mm_prior, k=3,
                                           distance_function=dist_fun,
                                           summaries_function=sum_stats,
                                           mab_variant=mab_algo)
