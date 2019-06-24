@@ -175,6 +175,15 @@
 <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="k">import</span> <span class="n">cdist</span><span class="p">,</span> <span class="n">pdist</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">dask</span> <span class="k">import</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="k">import</span> <span class="n">wait</span><span class="p">,</span> <span class="n">get_client</span>
+<span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
+
+<span class="k">def</span> <span class="nf">_cluster_mode</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">get_client</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
 
 <span class="c1"># Class definition</span>
@@ -339,7 +348,56 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Latin hypercube design: generated </span><span class="si">{0}</span><span class="s2"> points in </span><span class="si">{1}</span><span class="s2"> dimensions&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">nv</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">lhd_scaled</span></div>
+
+        <span class="k">return</span> <span class="n">lhd_scaled</span>
+
+<div class="viewcode-block" id="LatinHypercube.draw"><a class="viewcode-back" href="../../../sciope.designs.html#sciope.designs.latin_hypercube_sampling.LatinHypercube.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">auto_redesign</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;generated&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">_cluster_mode</span><span class="p">:</span>
+                <span class="n">lhd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+                <span class="n">wait</span><span class="p">(</span><span class="n">lhd</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lhd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            
+            <span class="n">lhd_array</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_delayed</span><span class="p">(</span><span class="n">lhd</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generated</span> <span class="o">=</span> <span class="n">lhd_array</span> <span class="c1">#store for sampling of design</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;random_idx&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">random_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generated</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        
+        <span class="n">len_random</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_idx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">len_random</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">generated</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_idx</span>
+            <span class="k">if</span> <span class="n">auto_redesign</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> points left to draw form Latin hypercube design:</span><span class="se">\</span>
+<span class="s2">                    computing new design for </span><span class="si">{0}</span><span class="s2"> points&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> points left to draw form Latin hypercube design:</span><span class="se">\</span>
+<span class="s2">                 clearing design&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">len_random</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">n_samples</span> <span class="o">&gt;</span> <span class="n">len_random</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Only </span><span class="si">{0}</span><span class="s2"> points left to draw form Latin hypercube design:</span><span class="se">\</span>
+<span class="s2">                    setting n_samples to </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">len_random</span><span class="p">))</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">len_random</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>   
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">len_random</span><span class="p">),</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="n">delays</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">:</span>
+            <span class="n">rand_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">delay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generated</span><span class="p">[</span><span class="n">rand_idx</span><span class="p">]</span><span class="o">.</span><span class="n">to_delayed</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_idx</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>    
+
+        <span class="k">return</span> <span class="n">delays</span></div></div>
+
 </pre></div>
 
            </div>
