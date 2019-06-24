@@ -26,7 +26,7 @@ from sciope.utilities.summarystats import temporal_variance as tv
 
 
 # Class definition: SummariesEnsemble
-class SummariesEnsemble(SummaryBase):
+class SummariesEnsemble(SummaryBase):   # pragma: no cover
     """
     An ensemble of different statistics
     """

@@ -82,3 +82,39 @@ def test_factorial_functional():
     fd_points = fd_delayed.compute()
     assert fd_points.shape[0] == np.power(num_levels, num_dims), "FactorialDesign test failed, dimensions mismatch"
     assert fd_points.shape[1] == num_dims, "FactorialDesign test failed, dimensions mismatch"
+
+
+def test_lhs_functional_with_logging():
+    lb = np.asarray([1, 1, 1])
+    ub = np.asarray([9, 9, 9])
+    num_points = 30
+    num_dims = lb.size
+    lhs_obj = lhs.LatinHypercube(lb, ub, use_logger=True)
+    lhs_delayed = lhs_obj.generate(num_points)
+    lhs_points = lhs_delayed.compute()
+    assert lhs_points.shape[0] == num_points, "LatinHypercube test failed, dimensions mismatch"
+    assert lhs_points.shape[1] == num_dims, "LatinHypercube test failed, dimensions mismatch"
+
+
+def test_random_functional_with_logging():
+    lb = np.asarray([1, 1, 1])
+    ub = np.asarray([9, 9, 9])
+    num_points = 30
+    num_dims = lb.size
+    rs_obj = rs.RandomSampling(lb, ub, use_logger=True)
+    rs_delayed = rs_obj.generate(num_points)
+    rs_points = rs_delayed.compute()
+    assert rs_points.shape[0] == num_points, "RandomSampling test failed, dimensions mismatch"
+    assert rs_points.shape[1] == num_dims, "RandomSampling test failed, dimensions mismatch"
+
+
+def test_factorial_functional_with_logging():
+    lb = np.asarray([1, 1, 1])
+    ub = np.asarray([9, 9, 9])
+    num_levels = 3
+    num_dims = lb.size
+    fd_obj = fd.FactorialDesign(num_levels, lb, ub, use_logger=True)
+    fd_delayed = fd_obj.generate()
+    fd_points = fd_delayed.compute()
+    assert fd_points.shape[0] == np.power(num_levels, num_dims), "FactorialDesign test failed, dimensions mismatch"
+    assert fd_points.shape[1] == num_dims, "FactorialDesign test failed, dimensions mismatch"

@@ -19,7 +19,8 @@ from tsfresh.feature_extraction import feature_calculators
 import numpy as np
 
 
-def generate_tsfresh_features(data, features):
+# Work in progress, no test case coverage for now
+def generate_tsfresh_features(data, features):  # pragma: no cover
     """
     Generates time series features from TSFRESH library
 
@@ -69,7 +70,7 @@ def generate_tsfresh_features(data, features):
     return np.array(_wrapper(data))
 
 
-def remove_nan_features(x, features):
+def remove_nan_features(x, features):   # pragma: no cover
     """
     Method to remove features containing NaN values.
     :param x: numpy array of calculated features

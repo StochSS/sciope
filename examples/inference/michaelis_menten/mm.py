@@ -25,7 +25,7 @@ class MichaelisMenten(gillespy2.Model):
         gillespy2.Model.__init__(self, name="Michaelis_Menten")
 
         # parameters
-        params = parameter_values.ravel()
+        params = parameter_values
         rate1 = gillespy2.Parameter(name='rate1', expression=params[0])
         rate2 = gillespy2.Parameter(name='rate2', expression=params[1])
         rate3 = gillespy2.Parameter(name='rate3', expression=params[2])

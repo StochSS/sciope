@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/sciope/sciope.svg?branch=develop)](https://travis-ci.com/sciope/sciope)
+[![codecov](https://codecov.io/gh/sciope/sciope/branch/develop/graph/badge.svg)](https://codecov.io/gh/sciope/sciope)
+
 # README #
 
 Scalable inference, optimization and parameter exploration (sciope)

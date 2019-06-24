@@ -21,7 +21,7 @@ from gillespy2.solvers.stochkit import StochKitSolver
 
 import os
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     # Load the model definition
     config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     np.savetxt("vilar_dataset_specieA_10trajs_1500time.dat", s_trajectories, delimiter=",")
 
 
-def simulate(param):
+def simulate(param):    # pragma: no cover
     # Load the model definition
     config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
@@ -161,7 +161,7 @@ def simulate(param):
     return s_trajectories
 
 
-def simulate_all_species(param):
+def simulate_all_species(param):    # pragma: no cover
     # Load the model definition
     config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")

@@ -21,17 +21,13 @@ from sciope.utilities.mab import mab_direct as md
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
 from sciope.utilities.housekeeping import sciope_logger as ml
-from sciope.utilities.housekeeping import sciope_profiler
-from sciope.data.dataset import DataSet
-from dask.distributed import futures_of, as_completed, get_client
-from toolz import partition_all
-import multiprocessing as mp  # remove dependency
 import numpy as np
 import dask
 from dask.distributed import futures_of, as_completed, wait
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
+
 
 def arm_pull(arm_idx):
     """
@@ -102,6 +98,10 @@ class BanditsABC(ABC):
         chunk_size : int
             the partition size when splitting the fixed data. For avoiding many individual tasks
             in dask if the data is large.
+        ensemble_size : int
+            In case we have an ensemble of responses
+        normalize : bool
+            Whether summary statistics should be normalized and epsilon be interpreted as a percentage
 
         Returns
         -------
@@ -133,14 +133,15 @@ class BanditsABC(ABC):
             params = []
             dists = []
 
-            if cluster_mode: 
-                print("running in cluster mode")
+            if cluster_mode:
+                if self.use_logger:
+                    self.logger.info("running in cluster mode")
                 res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
 
                 futures_dist = get_futures(res_dist)
                 futures_params = get_futures(res_param)
 
-                keep_idx = {f.key:idx for idx,f in enumerate(futures_dist)}
+                keep_idx = {f.key: idx for idx, f in enumerate(futures_dist)}
 
                 for f, dist in as_completed(futures_dist, with_results=True):
                     dists.append(dist)
@@ -153,12 +154,13 @@ class BanditsABC(ABC):
                 del futures_dist, futures_params, res_param, res_dist
 
             else:
-                print("running in parallel mode")
+                if self.use_logger:
+                    self.logger.info("running in parallel mode")
                 params, dists = dask.compute(graph_dict["parameters"], graph_dict["distances"])
                 if normalize:
                     for dist in dists:
                         sim_dist_scaled.append(self.scale_distance(dist))
-            
+
             if normalize:
                 sim_dist_scaled = np.asarray(sim_dist_scaled)
             else:
@@ -181,8 +183,9 @@ class BanditsABC(ABC):
             # Accept/Reject
             for e, res in enumerate(result):
                 if self.use_logger:
-                    self.logger.debug("Bandits-ABC Rejection Sampling: trial parameter(s) = {}".format(res_param[e]))
-                    self.logger.debug("Bandits-ABC Rejection Sampling: trial distance(s) = {}".format(res_dist[e]))
+                    self.logger.debug("Bandits-ABC Rejection Sampling: trial parameter(s) = {}".format(params[e]))
+                    self.logger.debug("Bandits-ABC Rejection Sampling: "
+                                      "trial distance(s) = {}".format(sim_dist_scaled[e]))
                 if res <= self.epsilon:
                     accepted_samples.append(params[e])
                     distances.append(dists[e])
