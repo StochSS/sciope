@@ -28,6 +28,15 @@ from sciope.utilities.housekeeping import sciope_logger as ml
 from scipy.spatial.distance import cdist, pdist
 import numpy as np
 from dask import delayed
+from dask.distributed import wait, get_client
+import dask.array as da
+
+def _cluster_mode():
+    try:
+        get_client()
+        return True
+    except ValueError:
+        return False
 
 
 # Class definition
@@ -192,4 +201,53 @@ class LatinHypercube(InitialDesignBase):
 
         if self.use_logger:
             self.logger.info("Latin hypercube design: generated {0} points in {1} dimensions".format(n, nv))
+
         return lhd_scaled
+
+    def draw(self, n_samples, n=50, auto_redesign=True):
+
+        if not hasattr(self, 'generated'):
+            if _cluster_mode:
+                lhd = self.generate(n).persist()
+                wait(lhd)
+            else:
+                lhd = self.generate(n)
+            
+            lhd_array = da.from_delayed(lhd, shape=(n, self._nv), dtype=np.float)
+            self.generated = lhd_array #store for sampling of design
+
+
+        if not hasattr(self, 'random_idx'):
+            self.random_idx = np.arange(self.generated.shape[0])
+        
+        len_random = len(self.random_idx)
+        if len_random == 0:
+            del self.generated
+            del self.random_idx
+            if auto_redesign:
+                if self.use_logger:
+                    self.logger.info("{0} points left to draw form Latin hypercube design:\
+                    computing new design for {0} points".format(n))
+                return self.draw(n_samples, n)
+            else:
+                raise(ValueError)("{0} points left to draw form Latin hypercube design:\
+                 clearing design".format(len_random))
+
+        if n_samples > len_random: 
+            if self.use_logger:
+                self.logger.info("Only {0} points left to draw form Latin hypercube design:\
+                    setting n_samples to {0}".format(len_random))
+            idx = range(len_random)
+        else:   
+            idx = np.random.choice(range(len_random), n_samples, replace=False)
+        
+        delays = []
+        for i in idx:
+            rand_idx = self.random_idx[i]
+            delay = self.generated[rand_idx].to_delayed()[0]
+            delays.append(delay)
+            
+        self.random_idx = np.delete(self.random_idx, idx)    
+
+        return delays
+

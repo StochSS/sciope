@@ -37,6 +37,28 @@ def test_lhs_functional():
     assert lhs_points.shape[0] == num_points, "LatinHypercube test failed, dimensions mismatch"
     assert lhs_points.shape[1] == num_dims, "LatinHypercube test failed, dimensions mismatch"
 
+    num_samples = 10
+    samples = lhs_obj.draw(n=num_points, n_samples=num_samples)
+
+    assert len(samples) == 10, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(lhs_obj.random_idx) == 20, "LatinHypercube sampling test failed, dimensions mismatch"
+    for d in samples:
+         sample = d.compute()
+         assert sample.shape == (num_dims,)
+    
+    samples = lhs_obj.draw(n_samples=5)
+    assert len(samples) == 5, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(lhs_obj.random_idx) == 15, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    samples = lhs_obj.draw(n_samples=20)
+    assert len(samples) == 15, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(lhs_obj.random_idx) == 0, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    samples = lhs_obj.draw(n=num_points, n_samples=5)
+    assert len(samples) == 5, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(lhs_obj.random_idx) == 25, "LatinHypercube sampling test failed, dimensions mismatch"
+    
+
 
 def test_random_functional():
     lb = np.asarray([1, 1, 1])
