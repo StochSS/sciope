@@ -204,18 +204,20 @@ class LatinHypercube(InitialDesignBase):
 
         return lhd_scaled
 
+    def generate_array(self, n):
+        if _cluster_mode:
+            lhd = self.generate(n).persist()
+            wait(lhd)
+        else:
+            lhd = self.generate(n)
+            
+        lhd_array = da.from_delayed(lhd, shape=(n, self._nv), dtype=np.float)
+        self.generated = lhd_array #store for sampling of design
+
     def draw(self, n_samples, n=50, auto_redesign=True):
 
         if not hasattr(self, 'generated'):
-            if _cluster_mode:
-                lhd = self.generate(n).persist()
-                wait(lhd)
-            else:
-                lhd = self.generate(n)
-            
-            lhd_array = da.from_delayed(lhd, shape=(n, self._nv), dtype=np.float)
-            self.generated = lhd_array #store for sampling of design
-
+            self.generate_array(n)
 
         if not hasattr(self, 'random_idx'):
             self.random_idx = np.arange(self.generated.shape[0])
