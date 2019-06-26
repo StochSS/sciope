@@ -30,6 +30,7 @@ import numpy as np
 from dask import delayed
 from dask.distributed import wait, get_client
 import dask.array as da
+from toolz import partition_all
 
 def _cluster_mode():
     try:
@@ -204,7 +205,7 @@ class LatinHypercube(InitialDesignBase):
 
         return lhd_scaled
 
-    def generate_array(self, n):
+    def generate_array(self, n, chunk_size=('auto', 'auto')):
         if _cluster_mode:
             lhd = self.generate(n).persist()
             wait(lhd)
@@ -212,9 +213,10 @@ class LatinHypercube(InitialDesignBase):
             lhd = self.generate(n)
             
         lhd_array = da.from_delayed(lhd, shape=(n, self._nv), dtype=np.float)
+        lhd_array = lhd_array.rechunk(chunk_size)
         self.generated = lhd_array #store for sampling of design
 
-    def draw(self, n_samples, n=50, auto_redesign=True):
+    def draw(self, n_samples, n=50, chunk_size = 1, auto_redesign=True):
 
         if not hasattr(self, 'generated'):
             self.generate_array(n)
@@ -230,7 +232,7 @@ class LatinHypercube(InitialDesignBase):
                 if self.use_logger:
                     self.logger.info("{0} points left to draw form Latin hypercube design:\
                     computing new design for {0} points".format(n))
-                return self.draw(n_samples, n)
+                return self.draw(n_samples, n, chunk_size=chunk_size)
             else:
                 raise(ValueError)("{0} points left to draw form Latin hypercube design:\
                  clearing design".format(len_random))
@@ -243,11 +245,13 @@ class LatinHypercube(InitialDesignBase):
         else:   
             idx = np.random.choice(range(len_random), n_samples, replace=False)
         
+        idx_chunks = partition_all(chunk_size, idx)
         delays = []
-        for i in idx:
+        for i in idx_chunks:
+            i = list(i)
             rand_idx = self.random_idx[i]
             delay = self.generated[rand_idx].to_delayed()[0]
-            delays.append(delay)
+            delays.append(delay[0])
             
         self.random_idx = np.delete(self.random_idx, idx)    
 

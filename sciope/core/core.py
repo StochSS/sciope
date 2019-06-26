@@ -72,9 +72,10 @@ def get_graph_chunked(param_func, sim_func, summaries_func=None, dist_func=None,
     # worflow sampling with batch size = batch_size
 
     # Draw from the prior/design
-    trial_param = param_func(batch_size)
+    trial_param = param_func(batch_size, chunk_size=chunk_size)
 
-    params_chunked = partition_all(chunk_size, trial_param)
+    #params_chunked = partition_all(chunk_size, trial_param)
+    params_chunked = trial_param
 
     # Perform the simulation
 

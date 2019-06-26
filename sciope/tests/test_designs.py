@@ -37,6 +37,7 @@ def test_lhs_functional():
     assert lhs_points.shape[0] == num_points, "LatinHypercube test failed, dimensions mismatch"
     assert lhs_points.shape[1] == num_dims, "LatinHypercube test failed, dimensions mismatch"
 
+    # default chunk_size = 1 
     num_samples = 10
     samples = lhs_obj.draw(n=num_points, n_samples=num_samples)
 
@@ -44,18 +45,45 @@ def test_lhs_functional():
     assert len(lhs_obj.random_idx) == 20, "LatinHypercube sampling test failed, dimensions mismatch"
     for d in samples:
          sample = d.compute()
-         assert sample.shape == (num_dims,)
+         assert sample.shape == (1,num_dims)
     
     samples = lhs_obj.draw(n_samples=5)
     assert len(samples) == 5, "LatinHypercube sampling test failed, dimensions mismatch"
     assert len(lhs_obj.random_idx) == 15, "LatinHypercube sampling test failed, dimensions mismatch"
 
+    # n_samples > len(random_idx)
     samples = lhs_obj.draw(n_samples=20)
     assert len(samples) == 15, "LatinHypercube sampling test failed, dimensions mismatch"
     assert len(lhs_obj.random_idx) == 0, "LatinHypercube sampling test failed, dimensions mismatch"
 
+    # default auto_redesign = True
     samples = lhs_obj.draw(n=num_points, n_samples=5)
     assert len(samples) == 5, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(lhs_obj.random_idx) == 25, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    # chunk_size = 2 
+    num_samples = 10
+    lhs_obj = lhs.LatinHypercube(lb, ub, use_logger=False)
+    samples = lhs_obj.draw(n=num_points, n_samples=num_samples, chunk_size=2)
+
+    assert len(samples) == 5, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(lhs_obj.random_idx) == 20, "LatinHypercube sampling test failed, dimensions mismatch"
+    for d in samples:
+         sample = d.compute()
+         assert sample.shape == (2,num_dims)
+    
+    samples = lhs_obj.draw(n_samples=5, chunk_size=2)
+    assert len(samples) == 3, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(lhs_obj.random_idx) == 15, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    # n_samples > len(random_idx)
+    samples = lhs_obj.draw(n_samples=20, chunk_size=2)
+    assert len(samples) == 8, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(lhs_obj.random_idx) == 0, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    # default auto_redesign = True
+    samples = lhs_obj.draw(n=num_points, n_samples=5, chunk_size=2)
+    assert len(samples) == 3, "LatinHypercube sampling test failed, dimensions mismatch"
     assert len(lhs_obj.random_idx) == 25, "LatinHypercube sampling test failed, dimensions mismatch"
     
 

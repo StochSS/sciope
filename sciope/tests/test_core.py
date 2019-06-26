@@ -1,3 +1,4 @@
+from __future__ import division
 from dask.distributed import Client, get_client
 from sciope.utilities.priors import uniform_prior
 from sciope.designs.latin_hypercube_sampling import LatinHypercube
@@ -12,6 +13,7 @@ import gillespy2
 from gillespy2.solvers.numpy import NumPySSASolver
 import os
 import dask
+
 
 class ToggleSwitch(gillespy2.Model):
     """ Gardner et al. Nature (1999)
@@ -91,7 +93,13 @@ dmax = bound * 2.0
 uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 lhd = LatinHypercube(dmin, dmax)
 
-def simple_sampler(n):
+def simple_sampler_chunked(n, chunk_size=2):
+    res = []
+    for i in range(int(n/chunk_size)):
+        res.append(dask.delayed(np.random.randn(2,2)))
+    return res
+
+def simple_sampler_unchunked(n):
     res = []
     for i in range(n):
         res.append(dask.delayed(np.random.randn(2)))
@@ -113,7 +121,7 @@ except:
 
 def test_simple_unchunked():
     
-    graph_dict = core.get_graph_unchunked(param_func=simple_sampler, sim_func=simple_sim, 
+    graph_dict = core.get_graph_unchunked(param_func=simple_sampler_unchunked, sim_func=simple_sim, 
                                     summaries_func=simple_summ, batch_size=10, ensemble_size=1)
 
     assert len(graph_dict["parameters"]) == 10, "Core test failed, dimensions mismatch"
@@ -127,7 +135,7 @@ def test_simple_unchunked():
     assert len(summ) == 10, "Core test failed, dimensions mismatch"
 
 
-    graph_dict = core.get_graph_unchunked(param_func=simple_sampler, sim_func=simple_sim, 
+    graph_dict = core.get_graph_unchunked(param_func=simple_sampler_unchunked, sim_func=simple_sim, 
                                     summaries_func=simple_summ, batch_size=10, ensemble_size=2)
 
     assert len(graph_dict["parameters"]) == 10, "Core test failed, dimensions mismatch"
@@ -141,7 +149,7 @@ def test_simple_unchunked():
     assert len(summ) == 10, "Core test failed, dimensions mismatch"
 
 
-    graph_dict = core.get_graph_unchunked(param_func=simple_sampler, sim_func=simple_sim, 
+    graph_dict = core.get_graph_unchunked(param_func=simple_sampler_unchunked, sim_func=simple_sim, 
                                     batch_size=10, ensemble_size=2)
 
     assert len(graph_dict["parameters"]) == 10, "Core test failed, dimensions mismatch"
@@ -156,10 +164,10 @@ def test_simple_unchunked():
 
 def test_simple_chunked():
     
-    graph_dict = core.get_graph_chunked(param_func=simple_sampler, sim_func=simple_sim, 
+    graph_dict = core.get_graph_chunked(param_func=simple_sampler_chunked, sim_func=simple_sim, 
                                     summaries_func=simple_summ, batch_size=10, chunk_size=2)
 
-    assert len(graph_dict["parameters"]) == 10, "Core test failed, dimensions mismatch"
+    assert len(graph_dict["parameters"]) == 5, "Core test failed, dimensions mismatch"
     assert len(graph_dict["trajectories"]) == 5, "Core test failed, dimensions mismatch"
     assert len(graph_dict["summarystats"]) == 5, "Core test failed, dimensions mismatch"
 
@@ -167,24 +175,26 @@ def test_simple_chunked():
 
     sim = np.asarray(sim)
     summ = np.asarray(summ)
+    params = np.asarray(params)
 
-    assert len(params) == 10, "Core test failed, dimensions mismatch"
+    assert params.shape == (5, 2, 2), "Core test failed, dimensions mismatch"
     assert sim.shape == (5, 2, 2), "Core test failed, dimensions mismatch"
     assert summ.shape == (5, 2, 2), "Core test failed, dimensions mismatch"
 
 
-    graph_dict = core.get_graph_chunked(param_func=simple_sampler, sim_func=simple_sim, 
+    graph_dict = core.get_graph_chunked(param_func=simple_sampler_chunked, sim_func=simple_sim, 
                                     batch_size=10, chunk_size=2)
 
-    assert len(graph_dict["parameters"]) == 10, "Core test failed, dimensions mismatch"
+    assert len(graph_dict["parameters"]) == 5, "Core test failed, dimensions mismatch"
     assert len(graph_dict["trajectories"]) == 5, "Core test failed, dimensions mismatch"
     assert graph_dict["summarystats"] is None, "Core test failed, excpected None"
 
     params, sim = dask.compute(graph_dict["parameters"], graph_dict["trajectories"])
 
     sim = np.asarray(sim)
+    params = np.asarray(params)
 
-    assert len(params) == 10, "Core test failed, dimensions mismatch"
+    assert params.shape == (5, 2, 2), "Core test failed, dimensions mismatch"
     assert sim.shape == (5, 2, 2), "Core test failed, dimensions mismatch"
 
 def test_param_sim():
@@ -202,7 +212,7 @@ def test_param_sim():
     graph_dict = core.get_graph_chunked(
         param_func=lhd.draw, sim_func=simulator2, batch_size=n_points, chunk_size=2)
     assert len(graph_dict["parameters"]
-               ) == 10, "Core test failed, dimensions mismatch"
+               ) == 5, "Core test failed, dimensions mismatch"
     assert len(graph_dict["trajectories"]
                ) == 5, "Core test failed, dimensions mismatch"
     assert graph_dict["summarystats"] is None, "Core test failed, expected None"
@@ -212,6 +222,23 @@ def test_param_sim():
     sim = np.asarray(sim)
     params = np.asarray(params)
 
-    assert params.shape == (10,5), "Core test failed, dimensions mismatch"
+    assert params.shape == (5, 2, 5), "Core test failed, dimensions mismatch"
     assert sim.shape == (5, 2, 101, 2), "Core test failed, dimensions mismatch"
-    
+
+    # all points have been sampled from lhd, default auto_redesign = True
+
+    graph_dict = core.get_graph_chunked(
+        param_func=lhd.draw, sim_func=simulator2, batch_size=n_points, chunk_size=2)
+    assert len(graph_dict["parameters"]
+               ) == 5, "Core test failed, dimensions mismatch"
+    assert len(graph_dict["trajectories"]
+               ) == 5, "Core test failed, dimensions mismatch"
+    assert graph_dict["summarystats"] is None, "Core test failed, expected None"
+
+    params, sim = dask.compute(graph_dict["parameters"], graph_dict["trajectories"])
+
+    sim = np.asarray(sim)
+    params = np.asarray(params)
+
+    assert params.shape == (5, 2, 5), "Core test failed, dimensions mismatch"
+    assert sim.shape == (5, 2, 101, 2), "Core test failed, dimensions mismatch"
