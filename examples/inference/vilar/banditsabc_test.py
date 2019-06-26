@@ -40,10 +40,12 @@ sum_stats = tsa.SummariesTSFRESH()
 # Select MAB variant
 mab_algo = mh.MABHalving(bandits_abc.arm_pull)
 
+true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+
 
 #vilar test
-sim=vilar.simulate(1)
-print(sim)
+sim=vilar.simulate()
+print(true_params)
 
 
 
@@ -62,7 +64,6 @@ abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=epsilon, pri
 abc_instance.infer(num_samples=200, batch_size=50)
 
 # Results
-true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
 print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
 print('Trial count:', abc_instance.results['trial_count'])
