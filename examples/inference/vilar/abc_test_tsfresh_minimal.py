@@ -37,7 +37,7 @@ mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 euc = EuclideanDistance(use_logger=False)
 
 # Set up ABC
-abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
+abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.01, prior_function=mm_prior,
                                  summaries_function=sum_stats, distance_function=euc)
 
 inf_res = abc_instance.infer(num_samples=200, batch_size=100)
