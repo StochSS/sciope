@@ -55,6 +55,7 @@ class MABDirect(MABBase):
         """
         n = len(arms)
         num_pulls = int(np.ceil((2 / (self.epsilon ** 2)) * math.log(n / self.delta)))
+        print("num_pulls: ", num_pulls)
         rewards = np.empty([num_pulls, n])
 
         # pull arm 'a' 'num_pulls' times
