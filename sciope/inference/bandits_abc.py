@@ -138,7 +138,7 @@ class BanditsABC(ABC):
             arms = range(num_arms)
             top_k_arms_idx = self.mab_variant.select(arms, self.k)
 
-            print("top_k_arms_idx shape: ", np.array(top_k_arms_idx).shape)
+            print("top_k_arms_idx: ", top_k_arms_idx)
 
             top_k_distances = np.asarray([sim_dist_scaled[:, i] for i in top_k_arms_idx])
             top_k_distances = top_k_distances.transpose()
