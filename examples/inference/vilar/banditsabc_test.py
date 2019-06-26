@@ -44,8 +44,8 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 
 
 #vilar test
-sim=vilar.simulate()
-print(true_params)
+sim=vilar.simulate(true_params)
+print(sim)
 
 
 
