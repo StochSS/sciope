@@ -211,7 +211,7 @@ class ABC(InferenceBase):
         if not self.fixed_mean:
             self.compute_fixed_mean(chunk_size)
 
-        print("self.fixed_mean: ", self.fixed_mean)
+
 
         # Get dask graph
         graph_dict = self.get_dask_graph(batch_size)
