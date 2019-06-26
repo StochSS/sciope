@@ -45,8 +45,8 @@ mab_algo = mh.MABHalving(bandits_abc.arm_pull)
 epsilon=0.0001
 print("epsilon: ", epsilon)
 print("data shape: ", data.shape)
-ss=sum_stats.compute(data).compute()
-print("ss: ", ss)
+ss= [sum_stats.compute(d).compute() for d in data.T]
+print("ss: ", ss.shape, ss)
 abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=epsilon, prior_function=mm_prior, k=3,
                                       distance_function=dist_fun,
                                       summaries_function=sum_stats,
