@@ -142,7 +142,7 @@ class BanditsABC(ABC):
 
 
             #Mattias lines
-            print("top_k_distances shape: ",top_k_distances.shape)
+            print("top_k_distances shape: ", top_k_distances.shape)
             #
 
             # Take the norm to combine the distances, if more than one summary is used
