@@ -129,6 +129,7 @@ class ABC(InferenceBase):
             scaled distance
         """
         print("compute_fixed_mean start:")
+        print("self.data shape: ", self.data.shape)
         # assumed data is large, make chunks
         data_chunked = partition_all(chunk_size, self.data)
 
