@@ -117,7 +117,7 @@ class BanditsABC(ABC):
         trial_count = 0
         accepted_samples = []
         distances = []
-
+    print("start:")
         # if fixed_mean has not been computed
         if not self.fixed_mean:
             self.compute_fixed_mean(chunk_size)
