@@ -128,7 +128,7 @@ class ABC(InferenceBase):
         ndarray
             scaled distance
         """
-
+        print("compute_fixed_mean start:")
         # assumed data is large, make chunks
         data_chunked = partition_all(chunk_size, self.data)
 
@@ -145,6 +145,7 @@ class ABC(InferenceBase):
 
         self.fixed_mean = np.copy(stats_mean)
         del stats_mean
+        print("compute_fixed_mean end:")
 
     def get_dask_graph(self, batch_size):
         """
