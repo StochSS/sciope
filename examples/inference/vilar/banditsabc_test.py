@@ -42,9 +42,9 @@ mab_algo = mh.MABHalving(bandits_abc.arm_pull)
 
 
 # Set up ABC
-epsilon=0.00001
+epsilon=0.01
 print("epsilon: ", epsilon)
-abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=epsilon, prior_function=mm_prior, k=1,
+abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=epsilon, prior_function=mm_prior, k=5,
                                       distance_function=dist_fun,
                                       summaries_function=sum_stats,
                                       mab_variant=mab_algo)
