@@ -91,7 +91,7 @@ for j in range(5):
         axes[k][j].vlines(true_params[0][i], ax_ymin, ax_ymax, label='target')
         # axes[i].vlines(post_max, ax_ymin, ax_ymax,color='orange',label='maximum ABC posterior ')
         # axes[i].vlines(post_mean, ax_ymin, ax_ymax,color='red',label='mean ABC posterior ')
-        axes[k][j].vlines(abc_instance.results['inferred_parameters'][i], ax_ymin, ax_ymax, color='green', label='predicted')
+        axes[k][j].vlines(abc_instance.results['inferred_parameters'][0][i], ax_ymin, ax_ymax, color='green', label='predicted')
         axes[k][j].legend()
 
         i += 1
