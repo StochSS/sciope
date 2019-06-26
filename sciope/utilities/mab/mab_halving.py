@@ -76,6 +76,7 @@ class MABHalving(MABBase):
                 self.logger.debug("MABDirect: reward values are {}".format(mean_rewards))
 
             halving_point = int(min(np.ceil(len(r) / 2), k))
+            print("halving_point: ", halving_point)
             top_half_arms = np.argpartition(mean_rewards, -halving_point)[-halving_point:]
             r = top_half_arms.tolist()
             epsilon_i = 3 / 4 * epsilon_i
