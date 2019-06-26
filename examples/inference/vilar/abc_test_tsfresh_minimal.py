@@ -47,3 +47,58 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
 print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
 print('Trial count:', abc_instance.results['trial_count'])
+
+#added code
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+#shape = (sample,parameter)
+posterior = np.array(abc_instance.results['accepted_samples']).squeeze()
+
+f, axes = plt.subplots(3, 5)
+f.set_figheight(10 * 3)
+f.set_figwidth(10 * 5)
+fontsize = 46
+postmax_dev = []
+postmean_dev = []
+pred_dev = []
+i = 0
+for j in range(5):
+    for k in range(3):
+
+       # pk = para_k[i]
+        #pks = pk.split("_")
+        #if len(pks) > 1:
+        #    pk_p = "\hat{\\" + pks[0].lower() + "}_{" + pks[1].upper() + "}"
+        #    pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
+        #if len(pks) == 3:
+        #    print("len 3: ", pks[2])
+        #    if pks[2] == 'prime':
+        #        pk_p = pk_p + "'"
+        #        pk = pk + "'"
+
+        #para_name_p = "$" + pk_p + "$"
+        #para_name = "$\\" + pk + "$"
+
+        #axes[k][j].set_xlim(0, 1)
+        #axes[k][j].set_title('' + para_name, fontsize=fontsize)
+        axes[k][j].hist(posterior[:, i], 10, density=True)
+        t = np.linspace(0, 1, 100)
+
+        ax_ymin, ax_ymax = axes[k][j].get_ylim()
+        axes[k][j].vlines(true_params[0][i], ax_ymin, ax_ymax, label='target')
+        # axes[i].vlines(post_max, ax_ymin, ax_ymax,color='orange',label='maximum ABC posterior ')
+        # axes[i].vlines(post_mean, ax_ymin, ax_ymax,color='red',label='mean ABC posterior ')
+        axes[k][j].vlines(abc_instance.results['inferred_parameters'][i], ax_ymin, ax_ymax, color='green', label='predicted')
+        axes[k][j].legend()
+
+        i += 1
+
+        # print("i: ", i)
+# postmax_dev = np.array(postmax_dev)
+# postmean_dev = np.array(postmean_dev)
+# pred_dev = np.array(pred_dev)
+
+f.savefig('subplot_posteriorhistograms_tsfresh_minimal')

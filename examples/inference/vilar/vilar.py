@@ -94,7 +94,6 @@ def simulate(param):
     config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
     model_doc = gillespy2.StochMLDocument.from_file(config_file)
-    print("config file: ", config_file)
 
     # Here, we create the model object.
     model = model_doc.to_model("vilar")
