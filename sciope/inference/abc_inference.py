@@ -139,7 +139,7 @@ class ABC(InferenceBase):
 
         # reducer 1 mean for each batch
         stats_mean = mean(stats, axis=0)
-
+        print("before compute")
         # reducer 2 mean over batches
         stats_mean = mean(stats_mean, axis=0, keepdims=True).compute()
 
