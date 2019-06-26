@@ -41,6 +41,12 @@ sum_stats = tsa.SummariesTSFRESH()
 mab_algo = mh.MABHalving(bandits_abc.arm_pull)
 
 
+#vilar test
+sim=vilar.simulate(1)
+print(sim)
+
+
+
 # Set up ABC
 epsilon=0.0001
 print("epsilon: ", epsilon)
