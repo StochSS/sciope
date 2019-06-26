@@ -32,7 +32,7 @@ class SummariesTSFRESH(SummaryBase):
 
     def __init__(self):
         self.name = 'SummariesTSFRESH'
-        self.features = MinimalFCParameters()
+        self.features = EfficientFCParameters() # MinimalFCParameters()
         self.features.pop('length')
         super(SummariesTSFRESH, self).__init__(self.name)
 
