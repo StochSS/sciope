@@ -59,7 +59,7 @@ print("data shape: ", data.shape)
 ss= sum_stats.compute(data).compute()
 #ss = np.array([sum_stats.compute([data[:,i]]) for i in range(10)])
 print("ss shape: ", ss.shape)
-print("ss: ", ss)
+#print("ss: ", ss)
 print("sum_stats features: ", sum_stats.features.keys())
 
 
