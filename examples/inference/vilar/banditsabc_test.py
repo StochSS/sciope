@@ -54,8 +54,9 @@ epsilon=0.0001
 print("epsilon: ", epsilon)
 print("data shape: ", data.shape)
 print("sim[:,0] shape: ", sim[:,0].shape)
-ss= sum_stats.compute([data[:,0]]).compute()
-print("ss: ", ss.shape, ss)
+#ss= sum_stats.compute([data[:,0]]).compute()
+ss = np.array([sum_stats.compute([data[:,i]]) for i in range(10)])
+print("ss: ", ss.shape)
 abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=epsilon, prior_function=mm_prior, k=3,
                                       distance_function=dist_fun,
                                       summaries_function=sum_stats,
