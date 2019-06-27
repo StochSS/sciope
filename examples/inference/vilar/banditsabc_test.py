@@ -26,7 +26,7 @@ import vilar
 from sklearn.metrics import mean_absolute_error
 
 # Load data
-data = np.loadtxt("datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
+data = np.loadtxt("datasets/vilar_dataset_specieA_1trajs_201time.dat", delimiter=",")
 
 # Set up the prior
 dmin = [30, 200, 0, 30, 30-20, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80-30]
