@@ -186,7 +186,7 @@ class ABC(InferenceBase):
         print("after summaries function")
         # Calculate the distance between the dataset and the simulated result
         sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in sim_stats]
-
+        print("after dist")
         return {"parameters": trial_param, "trajectories": sim_result, "summarystats": sim_stats, "distances": sim_dist}
 
     # @sciope_profiler.profile
