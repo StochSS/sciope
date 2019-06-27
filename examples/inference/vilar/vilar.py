@@ -86,7 +86,7 @@ if __name__ == '__main__':
     s_trajectories = np.array([res[i][:, 8] for i in range(num_trajectories)]).T
 
     # Write it to file
-    np.savetxt("vilar_dataset_specieA_1trajs_201time.dat", s_trajectories, delimiter=",")
+    np.savetxt("datasets/vilar_dataset_specieA_1trajs_201time.dat", s_trajectories, delimiter=",")
 
 
 def simulate(param):
