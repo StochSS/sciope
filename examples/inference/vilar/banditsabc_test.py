@@ -53,7 +53,7 @@ print("sim shape: ",sim.shape)
 epsilon=0.0001
 print("epsilon: ", epsilon)
 print("data shape: ", data.shape)
-data = np.array([data]).T
+data = np.array([data])
 print("data shape: ", data.shape)
 
 ss= sum_stats.compute(data).compute()
