@@ -34,10 +34,15 @@ class SummariesTSFRESH(SummaryBase):
         self.name = 'SummariesTSFRESH'
         self.features = EfficientFCParameters() # MinimalFCParameters()
         self.features.pop('length')
+        self.returning_features = None
         super(SummariesTSFRESH, self).__init__(self.name)
 
     def features(self):
         return self.features()
+
+    def set_returning_features(self, idx):
+        self.returning_features = idx
+
 
     @dask.delayed
     def compute(self, point):
@@ -56,4 +61,7 @@ class SummariesTSFRESH(SummaryBase):
         # f = MinimalFCParameters()
         # f.pop('length')
         #return list(generate_tsfresh_features(data=point, features=self.features))
-        return np.asarray(generate_tsfresh_features(data=point, features=self.features))
+        if self.returning_features:
+            return np.asarray(generate_tsfresh_features(data=point, features=self.features))[self.returning_features]
+        else:
+            return np.asarray(generate_tsfresh_features(data=point, features=self.features))
