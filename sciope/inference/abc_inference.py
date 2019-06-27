@@ -172,6 +172,13 @@ class ABC(InferenceBase):
         # Perform the trial
         sim_result = [self.sim(param) for param in trial_param]
 
+        #TEST
+        test_param = self.prior_function.draw().compute()
+        print("test param: ", test_param)
+        test_result = self.sim(test_param).compute()
+        print("test result: ", test_result.shape, test_result)
+
+
         # Get the statistic(s)
         print("sim_result shape: ", np.array(dask.compute(sim_result)).shape)
         print("before summaries function")
