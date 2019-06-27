@@ -37,6 +37,11 @@ dist_fun = ns.NaiveSquaredDistance(use_logger=False)
 # Set up summaries
 sum_stats = tsa.SummariesTSFRESH()
 
+# Removing Nan values from summaries list
+ss=sum_stats.compute(data).compute()
+idx=np.where(~np.isnan(ss))[1]
+sum_stats.set_returning_features(idx)
+
 # Select MAB variant
 mab_algo = md.MABDirect(bandits_abc.arm_pull)
 
