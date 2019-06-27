@@ -182,7 +182,7 @@ class ABC(InferenceBase):
         # Get the statistic(s)
         print("sim_result shape: ", np.array(dask.compute(sim_result)).shape)
         print("before summaries function")
-        sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
+        sim_stats = [self.summaries_function.compute(sim) for sim in sim_result]
 
         # Calculate the distance between the dataset and the simulated result
         sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in sim_stats]
