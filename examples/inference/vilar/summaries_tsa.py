@@ -36,6 +36,9 @@ class SummariesTSFRESH(SummaryBase):
         self.features.pop('length')
         super(SummariesTSFRESH, self).__init__(self.name)
 
+    def features(self):
+        return self.features()
+
     @dask.delayed
     def compute(self, point):
         """
