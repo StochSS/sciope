@@ -37,6 +37,12 @@ dist_fun = ns.NaiveSquaredDistance(use_logger=False)
 # Set up summaries
 sum_stats = tsa.SummariesTSFRESH()
 
+
+#Check data shape
+print("data shape: ", data.shape)
+data = np.array([data])
+print("data shape: ", data.shape)
+
 # Removing Nan values from summaries list
 ss=sum_stats.compute(data).compute()
 idx=np.where(~np.isnan(ss))[1]
@@ -57,9 +63,7 @@ print("sim shape: ",sim.shape)
 # Set up ABC
 epsilon=0.0001
 print("epsilon: ", epsilon)
-print("data shape: ", data.shape)
-data = np.array([data])
-print("data shape: ", data.shape)
+
 
 ss= sum_stats.compute(data).compute()
 #ss = np.array([sum_stats.compute([data[:,i]]) for i in range(10)])
