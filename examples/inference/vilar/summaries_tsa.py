@@ -62,6 +62,6 @@ class SummariesTSFRESH(SummaryBase):
         # f.pop('length')
         #return list(generate_tsfresh_features(data=point, features=self.features))
         if self.returning_features is not None:
-            return np.asarray(generate_tsfresh_features(data=point, features=self.features))[self.returning_features]
+            return np.asarray(generate_tsfresh_features(data=point, features=self.features))[:,self.returning_features]
         else:
             return np.asarray(generate_tsfresh_features(data=point, features=self.features))
