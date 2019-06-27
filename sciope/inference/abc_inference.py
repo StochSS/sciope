@@ -173,7 +173,7 @@ class ABC(InferenceBase):
         sim_result = [self.sim(param) for param in trial_param]
 
         # Get the statistic(s)
-        print("sim_result shape: ", np.array(sim_result).shape)
+        print("sim_result shape: ", np.array(dask.compute(sim_result)).shape)
         print("before summaries function")
         sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
 
