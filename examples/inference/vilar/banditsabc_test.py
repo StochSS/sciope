@@ -20,7 +20,7 @@ from sciope.utilities.priors import uniform_prior
 from sciope.inference import bandits_abc
 from sciope.utilities.distancefunctions import naive_squared as ns
 import summaries_tsa as tsa
-from sciope.utilities.mab import mab_halving as mh
+from sciope.utilities.mab import mab_direct as mh
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
