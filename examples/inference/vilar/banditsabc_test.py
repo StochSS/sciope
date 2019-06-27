@@ -20,7 +20,7 @@ from sciope.utilities.priors import uniform_prior
 from sciope.inference import bandits_abc
 from sciope.utilities.distancefunctions import naive_squared as ns
 import summaries_tsa as tsa
-from sciope.utilities.mab import mab_direct as mh
+from sciope.utilities.mab import mab_direct as md
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
@@ -38,7 +38,7 @@ dist_fun = ns.NaiveSquaredDistance(use_logger=False)
 sum_stats = tsa.SummariesTSFRESH()
 
 # Select MAB variant
-mab_algo = mh.MABHalving(bandits_abc.arm_pull)
+mab_algo = md.MABDirect(bandits_abc.arm_pull)
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 
