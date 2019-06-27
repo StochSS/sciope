@@ -31,8 +31,8 @@ if __name__ == '__main__':
     model = model_doc.to_model("vilar")
 
     # Specify the simulation density and sampling density
-    num_trajectories = 10
-    num_timestamps = 1500
+    num_trajectories = 1
+    num_timestamps = 201
 
     # Set parameters
     temp_param = model.get_parameter('alpha_A')
@@ -81,12 +81,12 @@ if __name__ == '__main__':
     temp_param.set_expression(100.0)
 
     # Generate some data for parameter inference - we concentrate on specie A [index 8, index 0 is time]
-    model.tspan = np.linspace(1, 100, num_timestamps)
+    model.tspan = np.linspace(0, 100, num_timestamps)
     res = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_trajectories)
     s_trajectories = np.array([res[i][:, 8] for i in range(num_trajectories)]).T
 
     # Write it to file
-    np.savetxt("vilar_dataset_specieA_10trajs_1500time.dat", s_trajectories, delimiter=",")
+    np.savetxt("vilar_dataset_specieA_1trajs_201time.dat", s_trajectories, delimiter=",")
 
 
 def simulate(param):
@@ -97,7 +97,7 @@ def simulate(param):
 
     # Here, we create the model object.
     model = model_doc.to_model("vilar")
-    num_timestamps = 150
+    num_timestamps = 201
 
     # Set model parameters
     param = param.ravel()
@@ -148,7 +148,7 @@ def simulate(param):
 
     # Set up simulation density
     num_sim_trajectories = 1
-    model.tspan = np.linspace(1, 100, num_timestamps)
+    model.tspan = np.linspace(0, 100, num_timestamps)
     simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
 
     # extract time values
