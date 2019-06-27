@@ -173,6 +173,7 @@ class ABC(InferenceBase):
         sim_result = [self.sim(param) for param in trial_param]
 
         # Get the statistic(s)
+        print("before summaries function")
         sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
 
         # Calculate the distance between the dataset and the simulated result
