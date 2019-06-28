@@ -210,7 +210,7 @@ Each sampling algorithm must implement the methods described herein:</p>
 <em class="property">abstract </em><code class="sig-name descname">select_point</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for selecting one new point to X. Each derived class must implement</p>
 <dl class="simple">
-<dt>x<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+<dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
 </dd>
 </dl>
 </dd></dl>
@@ -220,9 +220,9 @@ Each sampling algorithm must implement the methods described herein:</p>
 <em class="property">abstract </em><code class="sig-name descname">select_points</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for selecting ‘n’ new points to X. Each derived class must implement.</p>
 <dl class="simple">
-<dt>x<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+<dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
 </dd>
-<dt>n<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+<dt>n<span class="classifier">integer</span></dt><dd><p>number of new points to be sampled</p>
 </dd>
 </dl>
 </dd></dl>

@@ -174,11 +174,36 @@
 <span class="sd">    Must not be used directly!</span>
 <span class="sd">    Each initial design type must implement the methods described herein:</span>
 
-<span class="sd">    * InitialDesignBase.generate(n,domain)</span>
+<span class="sd">    Properties/variables:</span>
+<span class="sd">    * name						(FactorialDesign)</span>
+<span class="sd">    * xmin						(lower bound of multi-dimensional space encompassing generated points)</span>
+<span class="sd">    * xmax						(upper bound of multi-dimensional space encompassing generated points)</span>
+<span class="sd">    * logger                    (a logging object to display/save events - set by derived classes)</span>
+<span class="sd">    * use_logger     			(a boolean variable controlling whether logging is enabled or disabled)</span>
+
+
+<span class="sd">    Methods:</span>
+<span class="sd">    * generate					(returns the generated samples)</span>
+<span class="sd">    * scale_variable            (scales a variable from an old domain range to a new domain range)</span>
+<span class="sd">    * scale_to_new_domain       (scales a matrix from an old domain range to a new domain range)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a design with specified parameters</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : string</span>
+<span class="sd">            Set by the derived class - typically same as the type of design</span>
+<span class="sd">        xmin : vector or 1D array</span>
+<span class="sd">            Specifies the lower bound of the hypercube within which the design is generated</span>
+<span class="sd">        xmax : vector or 1D array</span>
+<span class="sd">            Specifies the upper bound of the hypercube within which the design is generated</span>
+<span class="sd">        use_logger : bool, optional</span>
+<span class="sd">            controls whether logging is enabled or disabled, by default False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_less</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">err_msg</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Please validate the values and ensure shape equality of &quot;</span>
                                                           <span class="s2">&quot;domain lower and upper bounds.&quot;</span><span class="p">))</span>
@@ -196,12 +221,24 @@
     <span class="k">def</span> <span class="nf">scale_variable</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">old_min</span><span class="p">,</span> <span class="n">old_max</span><span class="p">,</span> <span class="n">new_min</span><span class="p">,</span> <span class="n">new_max</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scales a dimension from the specified old range to a new range.</span>
-<span class="sd">        :param x:       vector representing a variable / dimension</span>
-<span class="sd">        :param old_min: the old lower bound</span>
-<span class="sd">        :param old_max: the old upper bound</span>
-<span class="sd">        :param new_min: the new lower bound</span>
-<span class="sd">        :param new_max: the new upper bound</span>
-<span class="sd">        :return:        a vector scaled to the new range</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : vector</span>
+<span class="sd">            represents a variable or dimension to operate upon</span>
+<span class="sd">        old_min : vector</span>
+<span class="sd">            the old lower bound of the domain</span>
+<span class="sd">        old_max : vector</span>
+<span class="sd">            the old upper bound of the domain</span>
+<span class="sd">        new_min : vector</span>
+<span class="sd">            the new lower bound of the domain</span>
+<span class="sd">        new_max : vector</span>
+<span class="sd">            the new upper bound of the domain</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vector</span>
+<span class="sd">            scaled to the new range</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">old_max</span> <span class="o">-</span> <span class="n">old_min</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">new_min</span>      <span class="c1"># this is the rare case of a scalar with old range being 0</span>
@@ -212,10 +249,20 @@
     <span class="k">def</span> <span class="nf">scale_to_new_domain</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">new_min</span><span class="p">,</span> <span class="n">new_max</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scales a given array/matrix to a new range</span>
-<span class="sd">        :param x:       given data matrix</span>
-<span class="sd">        :param new_min: new min (np array - one element per dimension)</span>
-<span class="sd">        :param new_max: new max (np array - one element per dimension)</span>
-<span class="sd">        :return:        scaled x</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : multidimensional array/matrix</span>
+<span class="sd">            to operate upon</span>
+<span class="sd">        new_min : vector</span>
+<span class="sd">            the new lower bound of the domain, one element per dimension</span>
+<span class="sd">        new_max : vector</span>
+<span class="sd">            the new upper bound of the domain, one element per dimension</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        matrix</span>
+<span class="sd">            scaled to the new range</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">old_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>         <span class="c1"># this gives min across each dimension</span>
         <span class="n">old_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>         <span class="c1"># and max...</span>

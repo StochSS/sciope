@@ -182,25 +182,25 @@
 <span class="sd">    * s 						(summary statistics)</span>
 <span class="sd">    * outlier_column_indices	(columns containing outliers)</span>
 <span class="sd">    * size</span>
-<span class="sd">    * configurations 			(OrderedDict with relavant information)</span>
+<span class="sd">    * configurations 			(OrderedDict with relevant information)</span>
 
 
 <span class="sd">    Methods:</span>
-<span class="sd">    * impute 					(treat missing values in summary statistics data)</span>
 <span class="sd">    * get_size					(returns current size of the dataset)</span>
 <span class="sd">    * add_points				(add data to the dataset, data can be added incrementally)</span>
 <span class="sd">    * process_outliers			(check summary stats that contain outliers, and apply log scaling)</span>
+<span class="sd">    * apply_func_to_columns     (Applies a transformation function to selected column indices of a matrix)</span>
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a dataset with parameters specified above</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        name : [type]</span>
-<span class="sd">            [description]</span>
+<span class="sd">        see above</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="kc">None</span>

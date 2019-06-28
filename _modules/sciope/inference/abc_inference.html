@@ -177,7 +177,8 @@
 
 
 <div class="viewcode-block" id="get_futures"><a class="viewcode-back" href="../../../sciope.inference.html#sciope.inference.abc_inference.get_futures">[docs]</a><span class="k">def</span> <span class="nf">get_futures</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Loop through items in list to keep order of delayed objects</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loop through items in list to keep order of delayed objects</span>
 <span class="sd">        when transforming to futures. firect call of futures_of does not keep the order</span>
 <span class="sd">        of the objects</span>
 
@@ -205,7 +206,18 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Approximate Bayesian Computation Rejection Sampler</span>
 
-<span class="sd">    * InferenceBase.infer()</span>
+<span class="sd">    Properties/variables:</span>
+<span class="sd">    * data						(observed / fixed data)</span>
+<span class="sd">    * sim   					(simulator function handle)</span>
+<span class="sd">    * prior_function			(prior over the simulator parameters)</span>
+<span class="sd">    * epsilon 	    			(acceptance tolerance bound)</span>
+<span class="sd">    * summaries_function    	(summary statistics calculation function)</span>
+<span class="sd">    * distance_function         (function calculating deviation between simulated statistics and observed statistics)</span>
+<span class="sd">    * use_logger    			(whether logging is enabled or disabled)</span>
+
+
+<span class="sd">    Methods:</span>
+<span class="sd">    * infer 					(perform parameter inference)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">summaries_function</span><span class="o">=</span><span class="n">bs</span><span class="o">.</span><span class="n">Burstiness</span><span class="p">(),</span>
@@ -215,20 +227,21 @@
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        data : [type]</span>
-<span class="sd">            [description]</span>
-<span class="sd">        sim : [type]</span>
-<span class="sd">            [description]</span>
-<span class="sd">        prior_function : [type]</span>
-<span class="sd">            [description]</span>
+<span class="sd">        data : nd-array</span>
+<span class="sd">            the observed / fixed dataset</span>
+<span class="sd">        sim : nd-array</span>
+<span class="sd">            the simulated dataset or simulator function</span>
+<span class="sd">        prior_function : sciope.utilities.priors object</span>
+<span class="sd">            the prior function generating candidate samples</span>
 <span class="sd">        epsilon : float, optional</span>
-<span class="sd">            [description], by default 0.1</span>
-<span class="sd">        parallel_mode : bool, optional</span>
-<span class="sd">            [description], by default False</span>
-<span class="sd">        summaries_function : [type], optional</span>
-<span class="sd">            [description], by default bs.Burstiness()</span>
-<span class="sd">        distance_function : [type], optional</span>
-<span class="sd">            [description], by default euc.EuclideanDistance()</span>
+<span class="sd">            tolerance bound, by default 0.1</span>
+<span class="sd">        summaries_function : sciope.utilities.summarystats object, optional</span>
+<span class="sd">            function calculating summary stats over simulated results; by default bs.Burstiness()</span>
+<span class="sd">        distance_function : sciope.utilities.distancefunctions object, optional</span>
+<span class="sd">            distance function operating over summary statistics - calculates deviation between observed and simulated</span>
+<span class="sd">            data; by default euc.EuclideanDistance()</span>
+<span class="sd">        use_logger : bool</span>
+<span class="sd">            enable/disable logging</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ABC&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
@@ -247,7 +260,7 @@
 
 <div class="viewcode-block" id="ABC.scale_distance"><a class="viewcode-back" href="../../../sciope.inference.html#sciope.inference.abc_inference.ABC.scale_distance">[docs]</a>    <span class="k">def</span> <span class="nf">scale_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">         Performs scaling in [0,1] of a given distance vector/value with respect to historical distances</span>
+<span class="sd">        Performs scaling in [0,1] of a given distance vector/value with respect to historical distances</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

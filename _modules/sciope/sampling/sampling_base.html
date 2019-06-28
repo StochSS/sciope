@@ -183,16 +183,19 @@
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializer</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        name : [type]</span>
-<span class="sd">            [description]</span>
-<span class="sd">        xmin : [type]</span>
-<span class="sd">            [description]</span>
-<span class="sd">        xmax : [type]</span>
-<span class="sd">            [description]</span>
+<span class="sd">        name : string</span>
+<span class="sd">            Name of the sampling algorithm; set by the derived class</span>
+<span class="sd">        xmin : vector or 1D array</span>
+<span class="sd">            Specifies the lower bound of the hypercube within which sampling is performed</span>
+<span class="sd">        xmax : vector or 1D array</span>
+<span class="sd">            Specifies the upper bound of the hypercube within which sampling is performed</span>
+<span class="sd">        use_logger : bool, optional</span>
+<span class="sd">            Controls whether logging is enabled or disabled, by default True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_less</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">err_msg</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Please validate the values and ensure shape equality of &quot;</span>
@@ -208,8 +211,8 @@
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x : [type]</span>
-<span class="sd">            [description]</span>
+<span class="sd">        x : vector or array-like</span>
+<span class="sd">            existing design to which a new point must be added</span>
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="SamplingBase.select_points"><a class="viewcode-back" href="../../../Sc.sampling.html#sciope.sampling.sampling_base.SamplingBase.select_points">[docs]</a>    <span class="nd">@abstractmethod</span>
@@ -219,10 +222,10 @@
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        x : [type]</span>
-<span class="sd">            [description]</span>
-<span class="sd">        n : [type]</span>
-<span class="sd">            [description]</span>
+<span class="sd">        x : vector or array-like</span>
+<span class="sd">            existing design to which a new point must be added</span>
+<span class="sd">        n : integer</span>
+<span class="sd">            number of new points to be sampled</span>
 <span class="sd">        &quot;&quot;&quot;</span></div></div>
 </pre></div>
 

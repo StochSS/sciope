@@ -174,13 +174,27 @@
 <dl class="method">
 <dt id="sciope.models.ann_regressor.ANNModel.predict">
 <code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">xt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
+<dd><p>Predict unseen data using the trained model</p>
+<dl class="simple">
+<dt>xt<span class="classifier">nd-array</span></dt><dd><p>unseen data to be predicted</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>vector</dt><dd><p>predictions</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="sciope.models.ann_regressor.ANNModel.train">
 <code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
+<dd><p>Train the ANN model given the data</p>
+<dl class="simple">
+<dt>inputs<span class="classifier">nd-array</span></dt><dd><p>independent variables</p>
+</dd>
+<dt>targets<span class="classifier">vector</span></dt><dd><p>dependent variable</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -197,13 +211,28 @@
 <dl class="method">
 <dt id="sciope.models.gp_regressor.GPRModel.predict">
 <code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">xt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
+<dd><p>Predict unseen data using the trained model.
+GP returns the mean and variance of prediction, so handle it accordingly while using predict.</p>
+<dl class="simple">
+<dt>xt<span class="classifier">nd-array</span></dt><dd><p>unseen data to be predicted</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>tuple of vectors</dt><dd><p>predictions, prediction variance</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="sciope.models.gp_regressor.GPRModel.train">
 <code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
+<dd><p>Train the GP model given the data</p>
+<dl class="simple">
+<dt>inputs<span class="classifier">nd-array</span></dt><dd><p>independent variables</p>
+</dd>
+<dt>targets<span class="classifier">vector</span></dt><dd><p>dependent variable</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -226,23 +255,60 @@
 <dl class="method">
 <dt id="sciope.models.label_propagation.LPModel.objective">
 <code class="sig-name descname">objective</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.objective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.objective" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Objective function for hyper-parameter selection/evaluation</p>
+<p>x : hyper-parameter under test - gamma</p>
+<dl class="simple">
+<dt>float</dt><dd><p>a measure directly proportional to entropy</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="sciope.models.label_propagation.LPModel.optimize">
 <code class="sig-name descname">optimize</code><span class="sig-paren">(</span><em class="sig-param">min_</em>, <em class="sig-param">max_</em>, <em class="sig-param">niter=10</em>, <em class="sig-param">stepsize=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.optimize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>hyper-parameter optimization using basinhopping</p>
+<p><a href="#id1"><span class="problematic" id="id2">min_</span></a> : lower bound for parameter search
+<a href="#id3"><span class="problematic" id="id4">max_</span></a> : upper bound for parameter search
+niter : number of allowed optimization iterations
+stepsize : displacement step size</p>
+<dl class="simple">
+<dt>vector</dt><dd><p>optimized hyper-parameters</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="sciope.models.label_propagation.LPModel.predict">
 <code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">xp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
+<dd><p>Predict unseen data using the trained model</p>
+<dl class="simple">
+<dt>xp<span class="classifier">nd-array</span></dt><dd><p>unseen data to be predicted</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>vector</dt><dd><p>predictions</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="sciope.models.label_propagation.LPModel.train">
 <code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">targets</em>, <em class="sig-param">min_=0.01</em>, <em class="sig-param">max_=30</em>, <em class="sig-param">niter=10</em>, <em class="sig-param">stepsize=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
+<dd><p>Train the LP model given the data</p>
+<dl class="simple">
+<dt>inputs<span class="classifier">nd-array</span></dt><dd><p>independent variables</p>
+</dd>
+<dt>targets<span class="classifier">vector</span></dt><dd><p>dependent variable</p>
+</dd>
+<dt>min<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>max<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+<dt>niter<span class="classifier">int</span></dt><dd><p>number of training iterations</p>
+</dd>
+<dt>stepsize<span class="classifier">float</span></dt><dd><p>[]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -296,7 +362,14 @@ Each model type must implement the methods described herein:</p>
 <dl class="method">
 <dt id="sciope.models.model_base.ModelBase.scale_training_data">
 <code class="sig-name descname">scale_training_data</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.scale_training_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.scale_training_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>pre-process training data</p>
+<dl class="simple">
+<dt>x<span class="classifier">nd-array</span></dt><dd><p>inputs or independent variables</p>
+</dd>
+<dt>y<span class="classifier">nd-array</span></dt><dd><p>output or dependent variable</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="sciope.models.model_base.ModelBase.train">
@@ -318,19 +391,41 @@ Each model type must implement the methods described herein:</p>
 <dl class="method">
 <dt id="sciope.models.svm_regressor.SVRModel.predict">
 <code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">xt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
+<dd><p>Predict unseen data using the trained model</p>
+<dl class="simple">
+<dt>xt<span class="classifier">nd-array</span></dt><dd><p>unseen data to be predicted</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>vector</dt><dd><p>predictions</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="sciope.models.svm_regressor.SVRModel.train">
 <code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">inputs</em>, <em class="sig-param">targets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
+<dd><p>Train the SVR model given the data</p>
+<dl class="simple">
+<dt>inputs<span class="classifier">nd-array</span></dt><dd><p>independent variables</p>
+</dd>
+<dt>targets<span class="classifier">vector</span></dt><dd><p>dependent variable</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="sciope.models.svm_regressor.SVRModel.tune_parameters">
-<code class="sig-name descname">tune_parameters</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">nfolds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.tune_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.tune_parameters" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">tune_parameters</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">nfolds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.tune_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.tune_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tune hyper-parameters of the model</p>
+<p>x : inputs or independent variables
+y : output or dependent variable
+nfolds : number of cross-validation folds</p>
+<dl class="simple">
+<dt>vector</dt><dd><p>pseudo-optimal parameters</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

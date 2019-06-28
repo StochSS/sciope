@@ -192,16 +192,35 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Translational Propagation Latin Hypercube Sampling</span>
 
-<span class="sd">    * InitialDesignBase.generate(n)</span>
+<span class="sd">    Properties/variables:</span>
+<span class="sd">    * name						(LatinHypercube)</span>
+<span class="sd">    * xmin						(lower bound of multi-dimensional space encompassing generated points)</span>
+<span class="sd">    * xmax						(upper bound of multi-dimensional space encompassing generated points)</span>
+<span class="sd">    * logger                    (a logging object to display/save events - set by derived classes)</span>
+<span class="sd">    * use_logger     			(a boolean variable controlling whether logging is enabled or disabled)</span>
+<span class="sd">    * seed_size                 (number of points in the LHS seed design)</span>
+
+
+<span class="sd">    Methods:</span>
+<span class="sd">    * generate					(returns the generated samples)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">seed_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        LatinHypercube constructor</span>
-<span class="sd">        :param xmin: lower bounds for domain in form of a np array containing one value per dimension/variable</span>
-<span class="sd">        :param xmax: upper bounds, as above</span>
-<span class="sd">        :param use_logger: enable/disable logging to file and console output</span>
-<span class="sd">        :param seed_size: number of points in the LHS seed design</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        levels : integer</span>
+<span class="sd">            The number of levels of the factorial design. Number of generated points will be levels^dimensionality</span>
+<span class="sd">        xmin : vector or 1D array</span>
+<span class="sd">            Specifies the lower bound of the hypercube within which the design is generated</span>
+<span class="sd">        xmax : vector or 1D array</span>
+<span class="sd">            Specifies the upper bound of the hypercube within which the design is generated</span>
+<span class="sd">        use_logger : bool, optional</span>
+<span class="sd">            controls whether logging is enabled or disabled, by default False</span>
+<span class="sd">        seed_size : int, optional</span>
+<span class="sd">            number of points in the LHS seed design</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;LatinHypercube&#39;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LatinHypercube</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">use_logger</span><span class="p">)</span>
@@ -216,10 +235,19 @@
     <span class="k">def</span> <span class="nf">_tplhsdesign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">ns</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a LH using translational propagation.</span>
-<span class="sd">        :param n:      # of desired points</span>
-<span class="sd">        :param seed:    initial seed design</span>
-<span class="sd">        :param ns:      # of points in the seed design</span>
-<span class="sd">        :return:        generated LHD x</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n : integer</span>
+<span class="sd">            # of desired points</span>
+<span class="sd">        seed: vector/array-like</span>
+<span class="sd">            initial seed design</span>
+<span class="sd">        ns: integer</span>
+<span class="sd">            # of points in the seed design</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vector/array</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Define the size of TPLHD</span>
         <span class="c1"># Num. of divisions</span>
@@ -248,11 +276,21 @@
     <span class="k">def</span> <span class="nf">_reshape_seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">np_star</span><span class="p">,</span> <span class="n">nd_star</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scales the seed design as needed.</span>
-<span class="sd">        :param seed:    initial seed design (between 1 and ns)</span>
-<span class="sd">        :param ns:      # of points in the seed design</span>
-<span class="sd">        :param np_star: # of points in the LH</span>
-<span class="sd">        :param nd_star: # of divisions in the LH</span>
-<span class="sd">        :return:        the scaled design</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seed: vector/array-like</span>
+<span class="sd">            initial seed design</span>
+<span class="sd">        ns: integer</span>
+<span class="sd">            # of points in the seed design</span>
+<span class="sd">        np_star : integer</span>
+<span class="sd">            # of points in the LH</span>
+<span class="sd">        nd_star : integer</span>
+<span class="sd">            # of divisions in the LH</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vector/array</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ns</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">seed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">))</span>
@@ -268,10 +306,19 @@
     <span class="k">def</span> <span class="nf">_create_tplhd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">np_star</span><span class="p">,</span> <span class="n">nd_star</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a TP LHD</span>
-<span class="sd">        :param seed:    initial seed design</span>
-<span class="sd">        :param np_star: # points in the LH</span>
-<span class="sd">        :param nd_star: # divisions in the LH</span>
-<span class="sd">        :return:        generated design x</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seed: vector/array-like</span>
+<span class="sd">            initial seed design</span>
+<span class="sd">        np_star : integer</span>
+<span class="sd">            # of points in the LH</span>
+<span class="sd">        nd_star : integer</span>
+<span class="sd">            # of divisions in the LH</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vector/array</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">):</span>
@@ -293,10 +340,19 @@
     <span class="k">def</span> <span class="nf">_resize_tplhd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">np_star</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        In case the design is larger than requested, resize it. Else, return unchanged.</span>
-<span class="sd">        :param x:       initial design</span>
-<span class="sd">        :param np_star: # of initial design points</span>
-<span class="sd">        :param n:       # of desired design points</span>
-<span class="sd">        :return:        design x of correct dimensions</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x: vector/array-like</span>
+<span class="sd">            initial design</span>
+<span class="sd">        np_star : integer</span>
+<span class="sd">            # of initial design points</span>
+<span class="sd">        n : integer</span>
+<span class="sd">            # of desired design points</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vector/array</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># centre of the design space</span>
         <span class="n">centre</span> <span class="o">=</span> <span class="n">np_star</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nv</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.</span>
@@ -323,6 +379,15 @@
 <span class="sd">        Sub-classable method for generating &#39;n&#39; points in the given &#39;domain&#39;.</span>
 <span class="sd">        Generate several candidate designs, rank them based on inter-site distance and select the top-ranked candidate</span>
 <span class="sd">        Implementation similar to gpflowopt/LHD</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n: integer</span>
+<span class="sd">            # of desired points in the initial design</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dask.delayed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
@@ -353,6 +418,18 @@
         <span class="k">return</span> <span class="n">lhd_scaled</span>
 
 <div class="viewcode-block" id="LatinHypercube.generate_array"><a class="viewcode-back" href="../../../sciope.designs.html#sciope.designs.latin_hypercube_sampling.LatinHypercube.generate_array">[docs]</a>    <span class="k">def</span> <span class="nf">generate_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a partial design of specified points</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n: integer</span>
+<span class="sd">            # of desired points</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vector/array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">_cluster_mode</span><span class="p">:</span>
             <span class="n">lhd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
             <span class="n">wait</span><span class="p">(</span><span class="n">lhd</span><span class="p">)</span>
@@ -364,7 +441,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">generated</span> <span class="o">=</span> <span class="n">lhd_array</span> <span class="c1">#store for sampling of design</span></div>
 
 <div class="viewcode-block" id="LatinHypercube.draw"><a class="viewcode-back" href="../../../sciope.designs.html#sciope.designs.latin_hypercube_sampling.LatinHypercube.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">auto_redesign</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw specified number of points from a LHD</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_samples : integer</span>
+<span class="sd">            []</span>
+<span class="sd">        n: integer</span>
+<span class="sd">            []</span>
+<span class="sd">        auto_redesign : boolean</span>
+<span class="sd">            []</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vector/array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;generated&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">generate_array</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 

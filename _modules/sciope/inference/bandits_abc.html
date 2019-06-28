@@ -192,10 +192,51 @@
 <div class="viewcode-block" id="BanditsABC"><a class="viewcode-back" href="../../../sciope.inference.html#sciope.inference.bandits_abc.BanditsABC">[docs]</a><span class="k">class</span> <span class="nc">BanditsABC</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ABC rejection sampling with dynamic multi-armed bandit (MAB) assisted summary statistic selection.</span>
+
+<span class="sd">    Properties/variables:</span>
+<span class="sd">    * data						(observed / fixed data)</span>
+<span class="sd">    * sim   					(simulator function handle)</span>
+<span class="sd">    * prior_function			(prior over the simulator parameters)</span>
+<span class="sd">    * mab_variant               (dynamic summary statistic selection using multi-armed bandits)</span>
+<span class="sd">    * k                         (desired number of selected summary statistics participating in inference)</span>
+<span class="sd">    * epsilon 	    			(acceptance tolerance bound)</span>
+<span class="sd">    * summaries_function    	(summary statistics calculation function)</span>
+<span class="sd">    * distance_function         (function calculating deviation between simulated statistics and observed statistics)</span>
+<span class="sd">    * use_logger    			(whether logging is enabled or disabled)</span>
+
+
+<span class="sd">    Methods:</span>
+<span class="sd">    * infer 					(perform parameter inference)</span>
+<span class="sd">    * rejection_sampling        (parameter inference using rejection sampling)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">mab_variant</span><span class="o">=</span><span class="n">md</span><span class="o">.</span><span class="n">MABDirect</span><span class="p">(</span><span class="n">arm_pull</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
                  <span class="n">summaries_function</span><span class="o">=</span><span class="n">bs</span><span class="o">.</span><span class="n">Burstiness</span><span class="p">(),</span> <span class="n">distance_function</span><span class="o">=</span><span class="n">euc</span><span class="o">.</span><span class="n">EuclideanDistance</span><span class="p">(),</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        BanditsABC class for rejection sampling</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : nd-array</span>
+<span class="sd">            the observed / fixed dataset</span>
+<span class="sd">        sim : nd-array</span>
+<span class="sd">            the simulated dataset or simulator function</span>
+<span class="sd">        prior_function : sciope.utilities.priors object</span>
+<span class="sd">            the prior function generating candidate samples</span>
+<span class="sd">        mab_variant : sciope.utilities.mab object, optional; by default MABDirect</span>
+<span class="sd">            summary statistic selection using the chosen multi-armed bandit algorithm</span>
+<span class="sd">        k : integer</span>
+<span class="sd">            number of desired summary statistics participating in inference</span>
+<span class="sd">        epsilon : float, optional</span>
+<span class="sd">            tolerance bound, by default 0.1</span>
+<span class="sd">        summaries_function : sciope.utilities.summarystats object, optional</span>
+<span class="sd">            function calculating summary stats over simulated results; by default bs.Burstiness()</span>
+<span class="sd">        distance_function : sciope.utilities.distancefunctions object, optional</span>
+<span class="sd">            distance function operating over summary statistics - calculates deviation between observed and simulated</span>
+<span class="sd">            data; by default euc.EuclideanDistance()</span>
+<span class="sd">        use_logger : bool</span>
+<span class="sd">            enable/disable logging</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">summaries_function</span><span class="p">,</span> <span class="n">distance_function</span><span class="p">,</span> <span class="n">use_logger</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;BanditsABC&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mab_variant</span> <span class="o">=</span> <span class="n">mab_variant</span>

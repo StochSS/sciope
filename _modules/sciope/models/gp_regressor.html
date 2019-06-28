@@ -175,14 +175,31 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        use_logger : bool, optional</span>
+<span class="sd">            Controls whether logging is enabled or disabled, by default False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;GPRModel&#39;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GPRModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">use_logger</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">ml</span><span class="o">.</span><span class="n">SciopeLogger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Gaussian Process regression model initialized&quot;</span><span class="p">)</span>
 
-    <span class="c1"># train the GP model given the data</span>
 <div class="viewcode-block" id="GPRModel.train"><a class="viewcode-back" href="../../../sciope.models.html#sciope.models.gp_regressor.GPRModel.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train the GP model given the data</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inputs : nd-array</span>
+<span class="sd">            independent variables</span>
+<span class="sd">        targets : vector</span>
+<span class="sd">            dependent variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Scale the training data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scale_training_data</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
 
@@ -192,10 +209,21 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Gaussian Process regression model trained with </span><span class="si">{}</span><span class="s2"> samples&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)))</span></div>
 
-    <span class="c1"># Predict</span>
-    <span class="c1"># * NOTE *</span>
-    <span class="c1"># GP returns the mean and variance of prediction, so handle it accordingly while using predict</span>
 <div class="viewcode-block" id="GPRModel.predict"><a class="viewcode-back" href="../../../sciope.models.html#sciope.models.gp_regressor.GPRModel.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict unseen data using the trained model.</span>
+<span class="sd">        GP returns the mean and variance of prediction, so handle it accordingly while using predict.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xt : nd-array</span>
+<span class="sd">            unseen data to be predicted</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple of vectors</span>
+<span class="sd">            predictions, prediction variance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Predict</span>
         <span class="n">yp</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xt</span><span class="p">,</span> <span class="n">return_std</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 

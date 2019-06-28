@@ -229,8 +229,23 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">ml</span><span class="o">.</span><span class="n">SciopeLogger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Label propagation model initialized&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Tune parameters of the model</span>
+    <span class="c1">#</span>
 <div class="viewcode-block" id="LPModel.optimize"><a class="viewcode-back" href="../../../sciope.models.html#sciope.models.label_propagation.LPModel.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        hyper-parameter optimization using basinhopping</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        min_ : lower bound for parameter search</span>
+<span class="sd">        max_ : upper bound for parameter search</span>
+<span class="sd">        niter : number of allowed optimization iterations</span>
+<span class="sd">        stepsize : displacement step size</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vector</span>
+<span class="sd">            optimized hyper-parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">step_routine</span> <span class="o">=</span> <span class="n">RandomDisplacementBounds</span><span class="p">(</span><span class="n">xmax</span><span class="o">=</span><span class="n">max_</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">min_</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="n">stepsize</span><span class="p">)</span>
         <span class="n">global_bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">(</span><span class="n">xmax</span><span class="o">=</span><span class="n">max_</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">min_</span><span class="p">)</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">min_</span><span class="p">,</span> <span class="n">max_</span><span class="p">)</span>
@@ -244,15 +259,43 @@
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span></div>
 
 <div class="viewcode-block" id="LPModel.objective"><a class="viewcode-back" href="../../../sciope.models.html#sciope.models.label_propagation.LPModel.objective">[docs]</a>    <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Objective function for hyper-parameter selection/evaluation</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : hyper-parameter under test - gamma</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            a measure directly proportional to entropy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">label_propagation</span><span class="o">.</span><span class="n">LabelSpreading</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span>
                                                  <span class="n">gamma</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
         <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
         <span class="n">label_prob</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">label_distributions_</span>
         <span class="k">return</span> <span class="n">get_average_label_entropy</span><span class="p">(</span><span class="n">label_prob</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span></div>
 
-        <span class="c1"># train the label propagation model given the data</span>
-
 <div class="viewcode-block" id="LPModel.train"><a class="viewcode-back" href="../../../sciope.models.html#sciope.models.label_propagation.LPModel.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">min_</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train the LP model given the data</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inputs : nd-array</span>
+<span class="sd">            independent variables</span>
+<span class="sd">        targets : vector</span>
+<span class="sd">            dependent variable</span>
+<span class="sd">        min : float</span>
+<span class="sd">            []</span>
+<span class="sd">        max : float</span>
+<span class="sd">            []</span>
+<span class="sd">        niter : int</span>
+<span class="sd">            number of training iterations</span>
+<span class="sd">        stepsize : float</span>
+<span class="sd">            []</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Scale the training data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">inputs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">targets</span>
@@ -267,8 +310,20 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Label Propagation model trained with </span><span class="si">{}</span><span class="s2"> samples&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)))</span></div>
 
-    <span class="c1"># Predict</span>
 <div class="viewcode-block" id="LPModel.predict"><a class="viewcode-back" href="../../../sciope.models.html#sciope.models.label_propagation.LPModel.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict unseen data using the trained model</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xp : nd-array</span>
+<span class="sd">            unseen data to be predicted</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vector</span>
+<span class="sd">            predictions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># predict</span>
         <span class="n">yp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xp</span><span class="p">)</span>
 

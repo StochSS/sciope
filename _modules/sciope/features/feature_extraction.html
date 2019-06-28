@@ -220,9 +220,18 @@
 <div class="viewcode-block" id="remove_nan_features"><a class="viewcode-back" href="../../../sciope.features.html#sciope.features.feature_extraction.remove_nan_features">[docs]</a><span class="k">def</span> <span class="nf">remove_nan_features</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">features</span><span class="p">):</span>   <span class="c1"># pragma: no cover</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Method to remove features containing NaN values.</span>
-<span class="sd">    :param x: numpy array of calculated features</span>
-<span class="sd">    :param features: list of calculated features</span>
-<span class="sd">    :return: non-nan features dict, and feature values</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x: vector/array-like</span>
+<span class="sd">        array of calculated features</span>
+<span class="sd">    features : dict</span>
+<span class="sd">        list of calculated features</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        non-nan features dict, and feature values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nan_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">key_idx</span> <span class="o">=</span> <span class="mi">0</span>

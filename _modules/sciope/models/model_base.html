@@ -188,12 +188,29 @@
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : string</span>
+<span class="sd">            Model name; set by the derived class</span>
+<span class="sd">        use_logger : bool, optional</span>
+<span class="sd">            Controls whether logging is enabled or disabled, by default False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span> <span class="o">=</span> <span class="n">use_logger</span>
 
-    <span class="c1"># pre-process training data</span>
 <div class="viewcode-block" id="ModelBase.scale_training_data"><a class="viewcode-back" href="../../../sciope.models.html#sciope.models.model_base.ModelBase.scale_training_data">[docs]</a>    <span class="k">def</span> <span class="nf">scale_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        pre-process training data</span>
+
+<span class="sd">        x : nd-array</span>
+<span class="sd">            inputs or independent variables</span>
+<span class="sd">        y : nd-array</span>
+<span class="sd">            output or dependent variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Take care of NaNs</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="n">yr</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>

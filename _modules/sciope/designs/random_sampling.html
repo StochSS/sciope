@@ -174,7 +174,16 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Random Sampling implemented through gpflowopt</span>
 
-<span class="sd">    * InitialDesignBase.generate(n)</span>
+<span class="sd">    Properties/variables:</span>
+<span class="sd">    * name						(RandomSampling)</span>
+<span class="sd">    * xmin						(lower bound of multi-dimensional space encompassing generated points)</span>
+<span class="sd">    * xmax						(upper bound of multi-dimensional space encompassing generated points)</span>
+<span class="sd">    * logger                    (a logging object to display/save events - set by derived classes)</span>
+<span class="sd">    * use_logger     			(a boolean variable controlling whether logging is enabled or disabled)</span>
+
+
+<span class="sd">    Methods:</span>
+<span class="sd">    * generate					(returns the generated samples)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -182,12 +191,12 @@
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        xmin : [type]</span>
-<span class="sd">            [description]</span>
-<span class="sd">        xmax : [type]</span>
-<span class="sd">            [description]</span>
+<span class="sd">        xmin : vector or 1D array</span>
+<span class="sd">            Specifies the lower bound of the hypercube within which the design is generated</span>
+<span class="sd">        xmax : vector or 1D array</span>
+<span class="sd">            Specifies the upper bound of the hypercube within which the design is generated</span>
 <span class="sd">        use_logger : bool, optional</span>
-<span class="sd">            [description], by default True</span>
+<span class="sd">            controls whether logging is enabled or disabled, by default False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;RandomSampling&#39;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RandomSampling</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">use_logger</span><span class="p">)</span>
@@ -202,13 +211,12 @@
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        n : [type]</span>
-<span class="sd">            [description]</span>
+<span class="sd">        n : integer</span>
+<span class="sd">            number of desired points</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        [type]</span>
-<span class="sd">            [description]</span>
+<span class="sd">        dask.delayed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">num_variables</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">)</span>
 

@@ -174,12 +174,12 @@
 * s                                                 (summary statistics)
 * outlier_column_indices    (columns containing outliers)
 * size
-* configurations                    (OrderedDict with relavant information)</p>
+* configurations                    (OrderedDict with relevant information)</p>
 <p>Methods:
-* impute                                    (treat missing values in summary statistics data)
 * get_size                                  (returns current size of the dataset)
 * add_points                                (add data to the dataset, data can be added incrementally)
-* process_outliers                  (check summary stats that contain outliers, and apply log scaling)</p>
+* process_outliers                  (check summary stats that contain outliers, and apply log scaling)
+* apply_func_to_columns     (Applies a transformation function to selected column indices of a matrix)</p>
 <dl class="method">
 <dt id="sciope.data.dataset.DataSet.add_points">
 <code class="sig-name descname">add_points</code><span class="sig-paren">(</span><em class="sig-param">inputs=None</em>, <em class="sig-param">targets=None</em>, <em class="sig-param">time_series=None</em>, <em class="sig-param">summary_stats=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.add_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.add_points" title="Permalink to this definition">¶</a></dt>

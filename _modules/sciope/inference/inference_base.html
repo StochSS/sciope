@@ -178,16 +178,19 @@
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Base class initializer</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        name : [type]</span>
-<span class="sd">            [description]</span>
-<span class="sd">        data : [type]</span>
-<span class="sd">            [description]</span>
-<span class="sd">        sim : [type]</span>
-<span class="sd">            [description]</span>
+<span class="sd">        name : string</span>
+<span class="sd">            Inference algorithm name; set by the derived class</span>
+<span class="sd">        data : nd-array</span>
+<span class="sd">            Observed data or fixed data</span>
+<span class="sd">        sim : function handle</span>
+<span class="sd">            The simulator</span>
+<span class="sd">        use_logger : bool</span>
+<span class="sd">            Flag controlling enabling / disabling of logging</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="c1"># ToDo: implement assertions here</span>
