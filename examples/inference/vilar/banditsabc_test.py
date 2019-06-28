@@ -46,7 +46,12 @@ print("data shape: ", data.shape)
 # Removing Nan values from summaries list
 ss=sum_stats.compute(data).compute()
 idx=np.where(~np.isnan(ss))[1]
-sum_stats.set_returning_features(idx)
+idxx=np.where(abs(ss[idx])>1)
+idxxx=idx[1][idxx[0]]
+
+print("idxxx: ", ss[0][idxxx])
+
+sum_stats.set_returning_features(idxxx)
 
 # Select MAB variant
 mab_algo = md.MABDirect(bandits_abc.arm_pull)
