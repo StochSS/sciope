@@ -45,7 +45,7 @@ print("data shape: ", data.shape)
 
 # Removing Nan values from summaries list
 ss=sum_stats.compute(data).compute()
-idx=np.where(~np.isnan(ss))[1]
+idx=np.where(~np.isnan(ss))
 idxx=np.where(abs(ss[idx])>1)
 idxxx=idx[1][idxx[0]]
 
