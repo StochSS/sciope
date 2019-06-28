@@ -84,7 +84,7 @@ abc_instance.infer(num_samples=200, batch_size=50)
 print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
 print('Inference error in MAE: ', mean_absolute_error(true_params, abc_instance.results['inferred_parameters']))
 print('Trial count:', abc_instance.results['trial_count'])
-
+print('Mean distance:', np.mean(np.array(abc_instance.results['distances'])))
 #added code
 import numpy as np
 import matplotlib
