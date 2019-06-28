@@ -113,6 +113,36 @@ class ABC(InferenceBase):
 
         return normalized_distances[-1, :]
 
+
+    def scale_distance2(self, dist):
+        """
+         Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
+
+        Parameters
+        ----------
+        dist : ndarray, float
+            distance
+
+        Returns
+        -------
+        ndarray
+            scaled distance
+        """
+
+        dist = np.asarray(dist)
+        global normalized_distances
+        self.historical_distances.append(dist.ravel())
+        all_distances = np.array(self.historical_distances)
+        mean = np.asarray(np.nanmean(all_distances, axis=0))
+        std = np.asarray(np.nanstd(all_distances, axis=0))
+
+        normalized_distances = all_distances
+        for j in range(0, len(mean), 1):
+            if std[j] > 0:
+                normalized_distances[:, j] = (normalized_distances[:, j] - mean[j]) / std[j]
+
+        return normalized_distances[-1, :]
+
     def compute_fixed_mean(self, chunk_size):
         """
         Computes the mean over summary statistics on fixed data
@@ -233,7 +263,7 @@ class ABC(InferenceBase):
             res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
 
             # Normalize distances between [0,1]
-            sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
+            sim_dist_scaled = np.asarray([self.scale_distance2(dist) for dist in res_dist])
 
             # Take the norm to combine the distances, if more than one summary is used
             if sim_dist_scaled.shape[1] > 1:
