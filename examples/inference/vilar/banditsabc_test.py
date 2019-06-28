@@ -61,7 +61,7 @@ print("sim shape: ",sim.shape)
 
 
 # Set up ABC
-epsilon=0.00000001
+epsilon=0.0000000001
 print("epsilon: ", epsilon)
 
 
@@ -78,7 +78,7 @@ abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=epsilon, pri
                                       mab_variant=mab_algo)
 
 # Perform ABC; require 30 samples
-abc_instance.infer(num_samples=200, batch_size=10)
+abc_instance.infer(num_samples=200, batch_size=50)
 
 # Results
 print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
