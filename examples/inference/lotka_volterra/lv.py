@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
 def simulate(param, specie='A'):
     # Assert that the specie label is valid
-    np.testing.assert(specie=='A' or specie=='B', 'Lotka-Volterra model, incorrect specie label specified.')
+    assert specie == 'A' or specie == 'B', 'Lotka-Volterra model, incorrect specie label specified.'
 
     # Here, we create the model object.
     # We could pass new parameter values to this model here if we wished.
