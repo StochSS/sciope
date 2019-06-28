@@ -69,10 +69,10 @@ ss= sum_stats.compute(data).compute()
 #ss = np.array([sum_stats.compute([data[:,i]]) for i in range(10)])
 print("ss shape: ", ss.shape)
 #print("ss: ", ss)
-print("sum_stats features: ", sum_stats.features.keys())
+#print("sum_stats features: ", sum_stats.features.keys())
 
 
-abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=epsilon, prior_function=mm_prior, k=3,
+abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=epsilon, prior_function=mm_prior, k=10,
                                       distance_function=dist_fun,
                                       summaries_function=sum_stats,
                                       mab_variant=mab_algo)
