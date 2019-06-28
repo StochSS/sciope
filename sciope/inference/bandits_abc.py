@@ -129,8 +129,9 @@ class BanditsABC(ABC):
 
         # do rejection sampling
         while accepted_count < num_samples:
-            print("accepted count: ", accepted_count, ", trial count: ", trial_count, ", acc/rate: ",
-                  accepted_count/trial_count)
+            if trial_count > 0:
+                print("accepted count: ", accepted_count, ", trial count: ", trial_count, ", acc/rate: ",
+                      accepted_count/trial_count)
             res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
 
             # Normalize distances between [0,1]
