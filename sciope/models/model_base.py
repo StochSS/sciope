@@ -41,12 +41,29 @@ class ModelBase(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, name, use_logger=False):
+        """
+        Initialize the model.
+
+        Parameters
+        ----------
+        name : string
+            Model name; set by the derived class
+        use_logger : bool, optional
+            Controls whether logging is enabled or disabled, by default False
+        """
         self.name = name
         self.model = None
         self.use_logger = use_logger
 
-    # pre-process training data
     def scale_training_data(self, x, y):
+        """
+        pre-process training data
+
+        x : nd-array
+            inputs or independent variables
+        y : nd-array
+            output or dependent variable
+        """
         # Take care of NaNs
         if np.isnan(y).any():
             yr = y[~np.isnan(y)]

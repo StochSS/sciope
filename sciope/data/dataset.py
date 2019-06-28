@@ -35,25 +35,25 @@ class DataSet(object):  # pragma: no cover
     * s 						(summary statistics)
     * outlier_column_indices	(columns containing outliers)
     * size
-    * configurations 			(OrderedDict with relavant information)
+    * configurations 			(OrderedDict with relevant information)
 
 
     Methods:
-    * impute 					(treat missing values in summary statistics data)
     * get_size					(returns current size of the dataset)
     * add_points				(add data to the dataset, data can be added incrementally)
     * process_outliers			(check summary stats that contain outliers, and apply log scaling)
+    * apply_func_to_columns     (Applies a transformation function to selected column indices of a matrix)
 
 
     """
 
     def __init__(self, name):
-        """[summary]
+        """
+        Initialize a dataset with parameters specified above
         
         Parameters
         ----------
-        name : [type]
-            [description]
+        see above
         """
         self.name = name
         self.x = None

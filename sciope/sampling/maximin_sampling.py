@@ -39,14 +39,17 @@ class MaximinSampling(SamplingBase):
     """
 
     def __init__(self, xmin, xmax, use_logger=False):
-        """[summary]
+        """
+        Initialize the sampler.
         
         Parameters
         ----------
-        xmin : [type]
-            [description]
-        xmax : [type]
-            [description]
+        xmin : vector or 1D array
+            Specifies the lower bound of the hypercube within which sampling is performed
+        xmax : vector or 1D array
+            Specifies the upper bound of the hypercube within which sampling is performed
+        use_logger : bool, optional
+            Controls whether logging is enabled or disabled, by default True
         """
         name = 'MaximinSampling'
         super(MaximinSampling, self).__init__(name, xmin, xmax, use_logger)
@@ -64,13 +67,12 @@ class MaximinSampling(SamplingBase):
         
         Parameters
         ----------
-        x : [type]
-            [description]
+        x : vector or array-like
+            existing design to which a new point must be added
         
         Returns
         -------
-        [type]
-            [description]
+        dask.delayed
         """
         # Set up stuff
         num_samples = x.shape[0]
@@ -103,15 +105,14 @@ class MaximinSampling(SamplingBase):
         
         Parameters
         ----------
-        x : [type]
-            [description]
-        n : [type]
-            [description]
+        x : vector or array-like
+            existing design to which a new point must be added
+        n : integer
+            number of new samples to be selected
         
         Returns
         -------
-        ndarray
-            [description]
+        dask.delayed
         """
         c = []
         for idx in range(0, n):

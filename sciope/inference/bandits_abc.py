@@ -45,10 +45,51 @@ def arm_pull(arm_idx):
 class BanditsABC(ABC):
     """
     ABC rejection sampling with dynamic multi-armed bandit (MAB) assisted summary statistic selection.
+
+    Properties/variables:
+    * data						(observed / fixed data)
+    * sim   					(simulator function handle)
+    * prior_function			(prior over the simulator parameters)
+    * mab_variant               (dynamic summary statistic selection using multi-armed bandits)
+    * k                         (desired number of selected summary statistics participating in inference)
+    * epsilon 	    			(acceptance tolerance bound)
+    * summaries_function    	(summary statistics calculation function)
+    * distance_function         (function calculating deviation between simulated statistics and observed statistics)
+    * use_logger    			(whether logging is enabled or disabled)
+
+
+    Methods:
+    * infer 					(perform parameter inference)
+    * rejection_sampling        (parameter inference using rejection sampling)
     """
 
     def __init__(self, data, sim, prior_function, mab_variant=md.MABDirect(arm_pull), k=1, epsilon=0.1,
                  summaries_function=bs.Burstiness(), distance_function=euc.EuclideanDistance(), use_logger=False):
+        """
+        BanditsABC class for rejection sampling
+
+        Parameters
+        ----------
+        data : nd-array
+            the observed / fixed dataset
+        sim : nd-array
+            the simulated dataset or simulator function
+        prior_function : sciope.utilities.priors object
+            the prior function generating candidate samples
+        mab_variant : sciope.utilities.mab object, optional; by default MABDirect
+            summary statistic selection using the chosen multi-armed bandit algorithm
+        k : integer
+            number of desired summary statistics participating in inference
+        epsilon : float, optional
+            tolerance bound, by default 0.1
+        summaries_function : sciope.utilities.summarystats object, optional
+            function calculating summary stats over simulated results; by default bs.Burstiness()
+        distance_function : sciope.utilities.distancefunctions object, optional
+            distance function operating over summary statistics - calculates deviation between observed and simulated
+            data; by default euc.EuclideanDistance()
+        use_logger : bool
+            enable/disable logging
+        """
         super().__init__(data, sim, prior_function, epsilon, summaries_function, distance_function, use_logger)
         self.name = 'BanditsABC'
         self.mab_variant = mab_variant

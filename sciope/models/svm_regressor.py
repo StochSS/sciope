@@ -29,24 +29,54 @@ class SVRModel(ModelBase):
     """
 
     def __init__(self, use_logger=False):
+        """
+        Initialize the model.
+
+        Parameters
+        ----------
+        name : string
+            Model name; set by the derived class
+        use_logger : bool, optional
+            Controls whether logging is enabled or disabled, by default False
+        """
         self.name = 'SVRModel'
         super(SVRModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Support Vector Regression model initialized")
 
-    # Tune parameters of the model
-    def tune_parameters(self, X, y, nfolds):
-        Cs = [0.001, 0.01, 0.1, 1, 10]
+    def tune_parameters(self, x, y, nfolds):
+        """
+        Tune hyper-parameters of the model
+
+        x : inputs or independent variables
+        y : output or dependent variable
+        nfolds : number of cross-validation folds
+
+        Returns
+        -------
+        vector
+            pseudo-optimal parameters
+        """
+        cs = [0.001, 0.01, 0.1, 1, 10]
         gammas = [0.001, 0.01, 0.1, 1]
-        param_grid = {'C': Cs, 'gamma': gammas}
+        param_grid = {'C': cs, 'gamma': gammas}
         grid_search = GridSearchCV(SVR(kernel='rbf'), param_grid, cv=nfolds)
-        grid_search.fit(X, y)
+        grid_search.fit(x, y)
         grid_search.best_params_
         return grid_search.best_params_
 
-    # train the SVR model given the data
     def train(self, inputs, targets):
+        """
+        Train the SVR model given the data
+
+        Parameters
+        ----------
+        inputs : nd-array
+            independent variables
+        targets : vector
+            dependent variable
+        """
         # Scale the training data
         self.scale_training_data(inputs, targets)
 
@@ -59,8 +89,20 @@ class SVRModel(ModelBase):
         if self.use_logger:
             self.logger.info("Support Vector Regression model trained with {} samples".format(len(self.y)))
 
-    # Predict
     def predict(self, xt):
+        """
+        Predict unseen data using the trained model
+
+        Parameters
+        ----------
+        xt : nd-array
+            unseen data to be predicted
+
+        Returns
+        -------
+        vector
+            predictions
+        """
         # predict
         yp = self.model.predict(xt)
 

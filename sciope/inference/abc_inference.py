@@ -30,7 +30,8 @@ normalized_distances = None
 
 
 def get_futures(lst):
-    """ Loop through items in list to keep order of delayed objects
+    """
+    Loop through items in list to keep order of delayed objects
         when transforming to futures. firect call of futures_of does not keep the order
         of the objects
 
@@ -58,7 +59,18 @@ class ABC(InferenceBase):
     """
     Approximate Bayesian Computation Rejection Sampler
 
-    * InferenceBase.infer()
+    Properties/variables:
+    * data						(observed / fixed data)
+    * sim   					(simulator function handle)
+    * prior_function			(prior over the simulator parameters)
+    * epsilon 	    			(acceptance tolerance bound)
+    * summaries_function    	(summary statistics calculation function)
+    * distance_function         (function calculating deviation between simulated statistics and observed statistics)
+    * use_logger    			(whether logging is enabled or disabled)
+
+
+    Methods:
+    * infer 					(perform parameter inference)
     """
 
     def __init__(self, data, sim, prior_function, epsilon=0.1, summaries_function=bs.Burstiness(),
@@ -68,20 +80,21 @@ class ABC(InferenceBase):
         
         Parameters
         ----------
-        data : [type]
-            [description]
-        sim : [type]
-            [description]
-        prior_function : [type]
-            [description]
+        data : nd-array
+            the observed / fixed dataset
+        sim : nd-array
+            the simulated dataset or simulator function
+        prior_function : sciope.utilities.priors object
+            the prior function generating candidate samples
         epsilon : float, optional
-            [description], by default 0.1
-        parallel_mode : bool, optional
-            [description], by default False
-        summaries_function : [type], optional
-            [description], by default bs.Burstiness()
-        distance_function : [type], optional
-            [description], by default euc.EuclideanDistance()
+            tolerance bound, by default 0.1
+        summaries_function : sciope.utilities.summarystats object, optional
+            function calculating summary stats over simulated results; by default bs.Burstiness()
+        distance_function : sciope.utilities.distancefunctions object, optional
+            distance function operating over summary statistics - calculates deviation between observed and simulated
+            data; by default euc.EuclideanDistance()
+        use_logger : bool
+            enable/disable logging
         """
         self.name = 'ABC'
         self.epsilon = epsilon
@@ -100,7 +113,7 @@ class ABC(InferenceBase):
 
     def scale_distance(self, dist):
         """
-         Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
+        Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
         
         Parameters
         ----------

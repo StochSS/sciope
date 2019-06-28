@@ -28,14 +28,31 @@ class GPRModel(ModelBase):
     """
 
     def __init__(self, use_logger=False):
+        """
+        Initialize the model.
+
+        Parameters
+        ----------
+        use_logger : bool, optional
+            Controls whether logging is enabled or disabled, by default False
+        """
         self.name = 'GPRModel'
         super(GPRModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Gaussian Process regression model initialized")
 
-    # train the GP model given the data
     def train(self, inputs, targets):
+        """
+        Train the GP model given the data
+
+        Parameters
+        ----------
+        inputs : nd-array
+            independent variables
+        targets : vector
+            dependent variable
+        """
         # Scale the training data
         self.scale_training_data(inputs, targets)
 
@@ -45,10 +62,21 @@ class GPRModel(ModelBase):
         if self.use_logger:
             self.logger.info("Gaussian Process regression model trained with {} samples".format(len(self.y)))
 
-    # Predict
-    # * NOTE *
-    # GP returns the mean and variance of prediction, so handle it accordingly while using predict
     def predict(self, xt):
+        """
+        Predict unseen data using the trained model.
+        GP returns the mean and variance of prediction, so handle it accordingly while using predict.
+
+        Parameters
+        ----------
+        xt : nd-array
+            unseen data to be predicted
+
+        Returns
+        -------
+        tuple of vectors
+            predictions, prediction variance
+        """
         # Predict
         yp, sigma = self.model.predict(xt, return_std=True)
 
