@@ -1,4 +1,4 @@
-from dask.distributed import get_client
+from dask.distributed import get_client, futures_of
 from dask import delayed
 from toolz import partition_all
 import numpy as np
@@ -34,9 +34,40 @@ def delay_func_chunk(func, chunk):
         res.append(func(x))
     return res
 
+def get_fixed_mean(data, func, chunk_size):
+        """
+        Computes the mean over summary statistics on fixed data
+        
+        Parameters
+        ----------
+        chunk_size : int
+            the partition size when splitting the fixed data. For avoiding many individual tasks
+            in dask if the data is large 
+        
+        Returns
+        -------
+        ndarray
+            scaled distance
+        """
 
-def get_graph_chunked(param_func, sim_func, summaries_func=None, dist_func=None,
-                   fixed=None, batch_size=10, chunk_size=2):
+        # assumed data is large, make chunks
+        data_chunked = partition_all(chunk_size, data)
+
+        # compute summary stats on fixed data
+        stats = [delay_func_chunk(func, x) for x in data_chunked]
+
+        mean = delayed(np.mean)
+
+        # reducer 1 mean for each batch
+        stats_mean = mean(stats, axis=0)
+
+        # reducer 2 mean over batches
+        stats_mean = mean(stats_mean, axis=0, keepdims=True)
+
+        return stats_mean
+
+def get_graph_chunked(param_func, sim_func, summaries_func=None,
+                      batch_size=10, chunk_size=2):
     """
     Constructs the dask computational graph involving sampling, simulation,
     summary statistics and distances.
@@ -66,8 +97,6 @@ def get_graph_chunked(param_func, sim_func, summaries_func=None, dist_func=None,
         with keys 'parameters', 'trajectories', 'summarystats' and 'distances'
         values being dask delayed objects
     """
-    if dist_func is not None:
-        assert fixed is not None, "If using distance function, parameter 'fixed' can not be None"
 
     # worflow sampling with batch size = batch_size
 
@@ -95,10 +124,10 @@ def get_graph_chunked(param_func, sim_func, summaries_func=None, dist_func=None,
     return {"parameters": trial_param, "trajectories": sim_result, 
             "summarystats": stats_final}
 
-def distance(dist_func, X, chunked=True):
+def get_distance(dist_func, X, chunked=True):
 
-    if chuncked:
-        sim_dist = [delay_func_chunk(dist_func, chunk) for chunk in X_chunked]
+    if chunked:
+        sim_dist = [delay_func_chunk(dist_func, chunk) for chunk in X]
         
     else:
         sim_dist = [delayed(dist_func)(x) for x in X]
