@@ -53,6 +53,7 @@ class MABDirect(MABBase):
         :param k: number of arms to select
         :return: k selected arms
         """
+        print("select starts")
         n = len(arms)
         num_pulls = int(np.ceil((2 / (self.epsilon ** 2)) * math.log(n / self.delta)))
         print("num_pulls: ", num_pulls)

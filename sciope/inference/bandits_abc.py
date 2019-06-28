@@ -156,6 +156,7 @@ class BanditsABC(ABC):
             else:
                 result = top_k_distances.ravel()
 
+            print("accept/reject starts")
             # Accept/Reject
             for e, res in enumerate(result):
                 if self.use_logger:
@@ -168,7 +169,7 @@ class BanditsABC(ABC):
                     if self.use_logger:
                         self.logger.info("Bandits-ABC Rejection Sampling: accepted a new sample, "
                                          "total accepted samples = {0}".format(accepted_count))
-
+            print("accept/reject ends")
             trial_count += batch_size
 
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
