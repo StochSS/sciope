@@ -86,13 +86,13 @@ print("idxxx: ", idxxx)
 idxxx2=idxxx[idxx[2]]
 print("idxxx shape: ", idxxx.shape)
 
-sum_stats.set_returning_features(idxxx)
+sum_stats.set_returning_features(idxxx2)
 
 
 ss=sum_stats.compute(data).compute()
 
 
-trial_param = [mm_prior.draw() for i in range(5)]
+trial_param = [mm_prior.draw() for i in range(50)]
 
 trial_param = dask.compute(trial_param)
 trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
