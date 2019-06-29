@@ -55,7 +55,9 @@ idxx=np.where(abs(ss[idx])>10)
 print("idxx[0]: ", idxx[0])
 idxxx=idx[1]#[idxx[0]]
 
-print("idxxx: ", ss[0][idxxx])
+print("ss[0][idxxx]: ", ss[0][idxxx])
+print("ss shape: ", ss.shape)
+print("idxxx:", idxxx)
 
 sum_stats.set_returning_features(idxxx)
 
