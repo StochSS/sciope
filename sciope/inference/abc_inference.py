@@ -136,7 +136,7 @@ class ABC(InferenceBase):
         all_distances = np.array(self.historical_distances)
         mean = np.asarray(np.nanmean(all_distances, axis=0))
         std = np.asarray(np.nanstd(all_distances, axis=0))
-
+        print("std: ", std)
         normalized_distances = all_distances
         for j in range(0, len(mean), 1):
             if std[j] > 0:
