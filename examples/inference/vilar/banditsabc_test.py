@@ -77,7 +77,7 @@ trial_dist = dask.compute(trial_dist)
 print("trial_dist shape: ", np.array(trial_dist).shape)
 print("max dist: ", np.max(np.array(trial_dist),axis=0))
 
-break
+
 
 
 # Select MAB variant
