@@ -71,6 +71,7 @@ trial_param = dask.compute(trial_param)
 trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
+trial_dist = dask.compute(trial_dist)
 print("trial_dist shape: ", np.array(trial_dist))
 print("max dist: ", np.max(np.array(trial_dist),axis=0))
 
