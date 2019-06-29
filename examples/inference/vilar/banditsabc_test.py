@@ -24,6 +24,7 @@ from sciope.utilities.mab import mab_direct as md
 import numpy as np
 import vilar
 from sklearn.metrics import mean_absolute_error
+import dask
 
 # Load data
 data = np.loadtxt("datasets/vilar_dataset_specieA_1trajs_201time.dat", delimiter=",")
@@ -65,6 +66,8 @@ for t in trial_param:
     print(t.compute())
     print("shape: ", np.array(t.compute()).shape)
     print("¨¨¨¨¨¨¨¨¨¨")
+
+trial_param = dask.compute(trial_param)
 trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
