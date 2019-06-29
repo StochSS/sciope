@@ -88,6 +88,8 @@ print("idxx: ", idxx)
 idxxx=idx[1][idxx[2]]
 print("idxxx shape: ", idxxx.shape)
 
+sum_stats.set_returning_features(idxxx)
+
 
 # Select MAB variant
 mab_algo = md.MABDirect(bandits_abc.arm_pull)
