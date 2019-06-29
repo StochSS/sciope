@@ -64,12 +64,7 @@ ss=sum_stats.compute(data).compute()
 #Generate some points to ensure summary statistics to not be constants
 
 trial_param = [mm_prior.draw() for i in range(5)]
-print("trial param: ")
-for t in trial_param:
-    print("----------")
-    print(t.compute())
-    print("shape: ", np.array(t.compute()).shape)
-    print("¨¨¨¨¨¨¨¨¨¨")
+
 
 trial_param = dask.compute(trial_param)
 trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
@@ -85,7 +80,8 @@ print("min max: ", np.sort(max_dist))
 # Removing small distances from summaries list
 idxx=np.where(abs(np.max(trial_dist,axis=0)>10))
 print("idxx: ", idxx)
-idxxx=idx[1][idxx[2]]
+print("idxxx: ", idxxx)
+idxxx2=idxxx[idxx[2]]
 print("idxxx shape: ", idxxx.shape)
 
 sum_stats.set_returning_features(idxxx)
@@ -101,10 +97,9 @@ trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
-print("trial_dist shape: ", np.array(trial_dist).shape)
-print("max dist: ", np.max(np.array(trial_dist),axis=0))
+
 max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
-print("max dist shape", max_dist.shape)
+
 print("sorted dist: ", np.sort(max_dist))
 
 
