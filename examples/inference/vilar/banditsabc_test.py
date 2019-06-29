@@ -83,8 +83,10 @@ print("min max: ", np.sort(max_dist))
 
 # Removing small distances from summaries list
 idxx=np.where(abs(np.max(trial_dist,axis=0)>10))
-print("idxx shape: ", idxx)
-idxxx=idx[1][idxx[0]]
+print("idxx: ", idxx)
+idxxx=idxx[3]
+print("idxxx shape: ", idxxx)
+
 
 # Select MAB variant
 mab_algo = md.MABDirect(bandits_abc.arm_pull)
