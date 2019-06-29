@@ -54,7 +54,7 @@ idxxx=idx[1][idxx[0]]
 #Generate some points to ensure summary statistics to not be constants
 
 trial_param = [mm_prior.draw() for i in range(50)]
-trial_sim = [vilar.simulate([t]) for t in trial_param]
+trial_sim = [vilar.simulate(np.array([t])) for t in trial_param]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 print("trial_dist shape: ", np.array(trial_dist))
