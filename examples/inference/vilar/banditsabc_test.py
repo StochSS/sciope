@@ -54,7 +54,9 @@ idx=np.where(~np.isnan(ss))
 idxx=np.where(abs(ss[idx])>10)
 idxxx=idx[1][idxx[0]]
 
+print("idxxx: ", ss[0][idxxx])
 
+sum_stats.set_returning_features(idxxx)
 
 
 #Generate some points to ensure summary statistics to not be constants
@@ -75,9 +77,8 @@ trial_dist = dask.compute(trial_dist)
 print("trial_dist shape: ", np.array(trial_dist).shape)
 print("max dist: ", np.max(np.array(trial_dist),axis=0))
 
-print("idxxx: ", ss[0][idxxx])
+break
 
-sum_stats.set_returning_features(idxxx)
 
 # Select MAB variant
 mab_algo = md.MABDirect(bandits_abc.arm_pull)
