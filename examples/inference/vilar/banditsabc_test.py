@@ -81,7 +81,10 @@ max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
 print("max dist shape", max_dist.shape)
 print("min max: ", np.sort(max_dist))
 
-
+# Removing small distances from summaries list
+idxx=np.where(abs(np.max(trial_dist,axis=0)>10))
+print("idxx shape: ", idxx.shape)
+idxxx=idx[1][idxx[0]]
 
 # Select MAB variant
 mab_algo = md.MABDirect(bandits_abc.arm_pull)
