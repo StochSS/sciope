@@ -51,8 +51,8 @@ print("data shape: ", data.shape)
 ss=sum_stats.compute(data).compute()
 idx=np.where(~np.isnan(ss))
 # Removing small values from summaries list
-idxx=np.where(abs(ss[idx])>10)
-idxxx=idx[1][idxx[0]]
+#idxx=np.where(abs(ss[idx])>10)
+idxxx=idx[1]#[idxx[0]]
 
 print("idxxx: ", ss[0][idxxx])
 
