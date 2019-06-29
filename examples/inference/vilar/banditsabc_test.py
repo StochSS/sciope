@@ -28,6 +28,9 @@ from sklearn.metrics import mean_absolute_error
 # Load data
 data = np.loadtxt("datasets/vilar_dataset_specieA_1trajs_201time.dat", delimiter=",")
 
+true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+print("true param shape: ", np.array(true_params).shape)
+
 # Set up the prior
 dmin = [30, 200, 0, 30, 30-20, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80-30]
 dmax = [70+50, 600, 1+2, 70, 70, 10+5, 12+5, 1+2, 2+5, 0.5+1, 1.5+2, 1.5+1, 3+5, 70+40, 120]
@@ -51,6 +54,8 @@ idxx=np.where(abs(ss[idx])>10)
 idxxx=idx[1][idxx[0]]
 
 
+
+
 #Generate some points to ensure summary statistics to not be constants
 
 trial_param = [mm_prior.draw() for i in range(5)]
@@ -58,6 +63,7 @@ print("trial param: ")
 for t in trial_param:
     print("----------")
     print(t.compute())
+    print("shape: ", np.array(t.compute()).shape)
     print("¨¨¨¨¨¨¨¨¨¨")
 trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
@@ -72,7 +78,6 @@ sum_stats.set_returning_features(idxxx)
 # Select MAB variant
 mab_algo = md.MABDirect(bandits_abc.arm_pull)
 
-true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 
 
 #vilar test
