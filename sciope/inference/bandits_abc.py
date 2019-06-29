@@ -134,8 +134,9 @@ class BanditsABC(ABC):
                       accepted_count/trial_count)
             res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
 
+            print("before scale dist ")
             # Normalize distances between [0,1]
-            sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
+            sim_dist_scaled = np.asarray([self.scale_distance2(dist) for dist in res_dist])
 
             # Use MAB arm selection to identify the best 'k' arms or summary statistics
             num_arms = sim_dist_scaled.shape[1]

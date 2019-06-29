@@ -129,7 +129,7 @@ class ABC(InferenceBase):
         ndarray
             scaled distance
         """
-
+        print("scale distance2")
         dist = np.asarray(dist)
         global normalized_distances
         self.historical_distances.append(dist.ravel())
