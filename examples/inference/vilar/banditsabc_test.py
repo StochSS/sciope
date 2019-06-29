@@ -84,7 +84,7 @@ print("min max: ", np.sort(max_dist))
 # Removing small distances from summaries list
 idxx=np.where(abs(np.max(trial_dist,axis=0)>10))
 print("idxx: ", idxx)
-idxxx=idxx[3]
+idxxx=idxx[2]
 print("idxxx shape: ", idxxx)
 
 
