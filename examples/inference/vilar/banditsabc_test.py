@@ -58,6 +58,7 @@ print("idxxx: ", ss[0][idxxx])
 
 sum_stats.set_returning_features(idxxx)
 
+ss=sum_stats.compute(data).compute()
 
 #Generate some points to ensure summary statistics to not be constants
 
