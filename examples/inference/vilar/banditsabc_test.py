@@ -51,7 +51,8 @@ print("data shape: ", data.shape)
 ss=sum_stats.compute(data).compute()
 idx=np.where(~np.isnan(ss))
 # Removing small values from summaries list
-#idxx=np.where(abs(ss[idx])>10)
+idxx=np.where(abs(ss[idx])>10)
+print("idxx[0]: ", idxx[0])
 idxxx=idx[1]#[idxx[0]]
 
 print("idxxx: ", ss[0][idxxx])
@@ -84,8 +85,8 @@ print("min max: ", np.sort(max_dist))
 # Removing small distances from summaries list
 idxx=np.where(abs(np.max(trial_dist,axis=0)>10))
 print("idxx: ", idxx)
-idxxx=idxx[2]
-print("idxxx shape: ", idxxx)
+idxxx=idx[1]idxx[2]
+print("idxxx shape: ", idxxx.shape)
 
 
 # Select MAB variant
