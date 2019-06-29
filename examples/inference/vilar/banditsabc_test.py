@@ -91,6 +91,7 @@ print("idxxx shape: ", idxxx.shape)
 sum_stats.set_returning_features(idxxx)
 
 
+ss=sum_stats.compute(data).compute()
 
 
 trial_param = [mm_prior.draw() for i in range(5)]
