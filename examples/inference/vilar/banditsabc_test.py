@@ -57,7 +57,7 @@ trial_param = [mm_prior.draw() for i in range(5)]
 print("trial param: ")
 for t in trial_param:
     print("----------")
-    print(t)
+    print(t.compute())
     print("¨¨¨¨¨¨¨¨¨¨")
 trial_sim = [vilar.simulate(np.array([t])) for t in trial_param]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
