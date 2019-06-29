@@ -77,7 +77,9 @@ trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
 print("trial_dist shape: ", np.array(trial_dist).shape)
 print("max dist: ", np.max(np.array(trial_dist),axis=0))
-
+max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
+print("max dist shape", max_dist.shape)
+print("min max: ", np.min(max_dist))
 
 
 
