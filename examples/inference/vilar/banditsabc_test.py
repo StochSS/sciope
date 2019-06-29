@@ -50,6 +50,16 @@ idx=np.where(~np.isnan(ss))
 idxx=np.where(abs(ss[idx])>10)
 idxxx=idx[1][idxx[0]]
 
+
+#Generate some points to ensure summary statistics to not be constants
+
+trial_param = [mm_prior.draw() for i in range(50)]
+trial_sim = [vilar.simulate.sim(t) for t in trial_param]
+trial_ss = [sum_stats.compute(s) for s in trial_sim]
+trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
+print("trial_dist shape: ", np.array(trial_dist))
+print("max dist: ", np.max(np.array(trial_dist),axis=0))
+
 print("idxxx: ", ss[0][idxxx])
 
 sum_stats.set_returning_features(idxxx)
