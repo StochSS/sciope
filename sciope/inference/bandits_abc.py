@@ -182,8 +182,12 @@ class BanditsABC(ABC):
 
         print("Normalized distances shape: ", normalized_distances.shape)
         norm_dist_max = np.max(normalized_distances,axis=0)
+        norm_dist_min = np.min(normalized_distances,axis=0)
+
         print("Normalized max distances shape: ", norm_dist_max.shape)
         print("Normalized max distances: ", norm_dist_max)
+        print("Normalized min distances: ", norm_dist_min)
+
 
 
 
