@@ -98,7 +98,7 @@ max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
 
 print("sorted dist: ", np.sort(max_dist))
 
-trial_param = [mm_prior.draw() for i in range(5)]
+trial_param = [mm_prior.draw() for i in range(50)]
 trial_param = dask.compute(trial_param)
 trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
