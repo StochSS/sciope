@@ -137,7 +137,7 @@ abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=epsilon, pri
                                       mab_variant=mab_algo)
 
 # Perform ABC; require 30 samples
-abc_instance.infer(num_samples=20, batch_size=5)
+abc_instance.infer(num_samples=20, batch_size=50)
 
 # Results
 print('Inferred parameters: ', abc_instance.results['inferred_parameters'])
