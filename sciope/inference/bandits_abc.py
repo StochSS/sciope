@@ -84,6 +84,8 @@ class BanditsABC(ABC):
         for j in range(0, len(divisor), 1):
             if divisor[j] > 0:
                 normalized_distances[:, j] = normalized_distances[:, j] / divisor[j]
+            else:
+                print("divisior 0)
 
         return normalized_distances[-1, :]
 
