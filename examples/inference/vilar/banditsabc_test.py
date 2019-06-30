@@ -78,7 +78,7 @@ max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
 #print("min max: ", np.sort(max_dist))
 
 # Removing small distances from summaries list
-idxx=np.where(abs(np.min(trial_dist,axis=0)>10))
+idxx=np.where(abs(np.min(trial_dist,axis=0)>1000))
 #print("idxx: ", idxx)
 #print("idxxx: ", idxxx)
 idxxx2=idxxx[idxx[2]]
