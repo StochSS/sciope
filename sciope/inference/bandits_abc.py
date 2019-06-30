@@ -179,6 +179,11 @@ class BanditsABC(ABC):
             trial_count += batch_size
 
         print("Normalized distances shape: ", normalized_distances.shape)
+        norm_dist_max = np.max(normalized_distances,axis=0)
+        print("Normalized max distances shape: ", norm_dist_max.shape)
+        print("Normalized max distances: ", norm_dist_max)
+
+
 
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
