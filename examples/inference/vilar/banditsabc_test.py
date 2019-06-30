@@ -94,6 +94,7 @@ trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
 
 print("trial_dist after reductions: ", trial_dist)
+print("trial dist shape: ", trial_dist.shape)
 max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
 
 print("sorted dist: ", np.sort(max_dist))
