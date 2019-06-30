@@ -66,31 +66,28 @@ ss=sum_stats.compute(data).compute()
 #Generate some points to ensure summary statistics to not be constants
 
 trial_param = [mm_prior.draw() for i in range(5)]
-
-
 trial_param = dask.compute(trial_param)
 trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
-print("trial_dist shape: ", np.array(trial_dist).shape)
-print("max dist: ", np.max(np.array(trial_dist),axis=0))
+#print("trial_dist shape: ", np.array(trial_dist).shape)
+#print("max dist: ", np.max(np.array(trial_dist),axis=0))
 max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
-print("max dist shape", max_dist.shape)
+#print("max dist shape", max_dist.shape)
 #print("min max: ", np.sort(max_dist))
 
 # Removing small distances from summaries list
 idxx=np.where(abs(np.max(trial_dist,axis=0)>10))
-print("idxx: ", idxx)
-print("idxxx: ", idxxx)
+#print("idxx: ", idxx)
+#print("idxxx: ", idxxx)
 idxxx2=idxxx[idxx[2]]
-print("idxxx shape: ", idxxx.shape)
+#print("idxxx shape: ", idxxx.shape)
 
 sum_stats.set_returning_features(idxxx2)
 
 
 ss=sum_stats.compute(data).compute()
-
 
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
@@ -101,7 +98,14 @@ max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
 
 print("sorted dist: ", np.sort(max_dist))
 
-
+trial_param = [mm_prior.draw() for i in range(5)]
+trial_param = dask.compute(trial_param)
+trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
+trial_ss = [sum_stats.compute(s) for s in trial_sim]
+trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
+trial_dist = dask.compute(trial_dist)
+max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
+print("sorted dist: ", np.sort(max_dist))
 
 
 # Select MAB variant
