@@ -178,6 +178,8 @@ class BanditsABC(ABC):
             print("accept/reject ends")
             trial_count += batch_size
 
+        print("Normalized distances shape: ", normalized_distances.shape)
+
         self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
         return self.results
