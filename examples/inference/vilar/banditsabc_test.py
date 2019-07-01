@@ -21,7 +21,11 @@ from sciope.inference import bandits_abc
 from sciope.utilities.distancefunctions import naive_squared as ns
 import summaries_tsa as tsa
 from sciope.utilities.mab import mab_direct as md
+
+
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import vilar
 from sklearn.metrics import mean_absolute_error
@@ -88,8 +92,8 @@ idxxx2=idxxx[idxx[2]]
 sum_stats.set_returning_features(idxxx2)
 
 ss=sum_stats.compute(data).compute()
-
-plt.scatter(trial_param[:,0],trial_param[:,1])
+print("trial_param shape: ", np.array(trial_param).shape)
+plt.scatter(trial_param[0][:,0],trial_param[0][:,1])
 
 
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
@@ -152,10 +156,7 @@ dist=np.array(abc_instance.results['distances'])
 print("dist shape: ", dist.shape)
 print('Mean distance:', np.mean(dist))
 #added code
-import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+
 
 #shape = (sample,parameter)
 posterior = np.array(abc_instance.results['accepted_samples']).squeeze()
