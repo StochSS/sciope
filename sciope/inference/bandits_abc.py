@@ -42,6 +42,7 @@ def arm_pull(arm_idx):
     MABs but in inference we minimize distance.
     """
     global normalized_distances
+    print("normalized distances shape: ", normalized_distances.shape, ", arm_idx: ", arm_idx)
     return -1 * normalized_distances[-1, arm_idx]
 
 
