@@ -203,7 +203,7 @@ class ABC(InferenceBase):
 
         # Draw from the prior
         trial_param = [self.prior_function.draw() for x in range(batch_size)]
-
+        print("trial_param shape: ", np.asarray(dask.compute(trial_param)))
         # Perform the trial
         sim_result = [self.sim(param) for param in trial_param]
 
