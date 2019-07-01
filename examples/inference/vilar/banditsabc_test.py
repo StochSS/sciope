@@ -74,8 +74,11 @@ trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
 print("trial dist shape: ", np.array(trial_dist).shape)
+td = np.array(trial_dist).squeeze()
+print("td shape: ", td.shape)
+
 print("enumeration starts:")
-for n, d in enumerate(trial_dist):
+for n, d in enumerate(td):
     print("(",n,"): ", d)
 
 
