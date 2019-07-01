@@ -151,6 +151,7 @@ class BanditsABC(ABC):
         trial_count = 0
         accepted_samples = []
         distances = []
+        all_res = []
 
         print("start:")
         # if fixed_mean has not been computed
@@ -193,9 +194,12 @@ class BanditsABC(ABC):
             else:
                 result = top_k_distances.ravel()
 
+            print("mean result: ", np.mean(result), "median: ", np.median(result))
             print("accept/reject starts")
             # Accept/Reject
             for e, res in enumerate(result):
+
+                all_res.append(res)
                 if self.use_logger:
                     self.logger.debug("Bandits-ABC Rejection Sampling: trial parameter(s) = {}".format(res_param[e]))
                     self.logger.debug("Bandits-ABC Rejection Sampling: trial distance(s) = {}".format(res_dist[e]))
