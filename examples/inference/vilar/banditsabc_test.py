@@ -57,11 +57,12 @@ ss=sum_stats.compute(data).compute()
 print("ss shape: ", ss.shape, ss.shape[1])
 id_full=np.arange(ss.shape[1])
 
-idx=np.where(~np.isnan(ss))
+id_notnull=np.where(~np.isnan(ss))[1]
 
-idxxx=idx[1]
+print("id_notnull: ", id_notnull)
 
-sum_stats.set_returning_features(idxxx)
+
+sum_stats.set_returning_features(id_notnull)
 
 ss=sum_stats.compute(data).compute()
 
@@ -99,10 +100,10 @@ max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
 
 # Removing small distances from summaries list
 idxx=np.where(abs(np.min(trial_dist,axis=0)>1000))
-#print("idxx: ", idxx)
+print("idxx: ", np.asarray(idxx).shape)
 #print("idxxx: ", idxxx)
-idxxx2=idxxx[idxx[2]]
-print("idxxx shape: ", idxxx.shape)
+idxxx2=id_notnull[idxx[2]]
+print("idxxx2 shape: ", np.asarray(idxxx2).shape)
 
 sum_stats.set_returning_features(idxxx2)
 
