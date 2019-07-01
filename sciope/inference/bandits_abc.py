@@ -168,8 +168,8 @@ class BanditsABC(ABC):
                 print("accepted count: ", accepted_count, ", trial count: ", trial_count, ", acc/rate: ",
                       accepted_count/trial_count)
             res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
-            print("param shape: ", np.asarray(res_param).shape)
-            print("param: ", np.asarray(res_param))
+            print("dist shape: ", np.asarray(res_dist).shape)
+            print("res_dist: ", np.asarray(res_dist))
 
             print("before scale dist ")
             # Normalize distances between [0,1]
