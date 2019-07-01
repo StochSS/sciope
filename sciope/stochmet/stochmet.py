@@ -28,6 +28,7 @@ import numpy as np
 import umap
 from itertools import combinations
 
+
 def get_futures(lst):
     """ Loop through items in list to keep order of delayed objects
         when transforming to futures. firect call of futures_of does not keep the order
@@ -44,8 +45,8 @@ def get_futures(lst):
     return f
 
 
-def _do_tsne(data, nr_components = 2, init = 'random', plex = 30,
-        n_iter = 1000, lr = 200, rs= None):
+def _do_tsne(data, nr_components=2, init='random', plex=30,
+             n_iter=1000, lr=200, rs=None):
     """[summary]
     
     Parameters
@@ -293,12 +294,14 @@ class StochMET():
     """
 
     def __init__(self, simulator=None, sampler=None, features=None, default_batch_size=10):
-        
+
         assert callable(simulator), "simulator must be a callable function"
 
         allowed_sampler = ["InitialDesignBase", "PriorBase", "SamplingBase"]
-        assert isinstance(sampler, (InitialDesignBase, PriorBase, SamplingBase)), "sampling must be an instance of: {0}".format(allowed_sampler)
-        
+        assert isinstance(sampler,
+                          (InitialDesignBase, PriorBase, SamplingBase)), "sampling must be an instance of: {0}".format(
+            allowed_sampler)
+
         self.simulator = simulator
         self.sampling = sampler
         self.batch_size = default_batch_size
@@ -394,32 +397,32 @@ class StochMET():
         else:
             # TODO: avoid redundancy...
             params_res, processed_res, result_res = persist(params, processed, result)
-            
-           #convert to futures 
+
+            # convert to futures
             futures = get_futures(result_res)
             f_params = get_futures(params_res)
             f_ts = get_futures(processed_res)
-            
-            #keep track of indices...
-            f_dict = {f.key:idx for idx,f in enumerate(futures)}
-            #..as we collect result on a "as completed" basis 
-            for f,res in as_completed(futures, with_results=True):
-                #with_results = False needed to capture EventFirred
-                #try:
-                #res = f.result()
+
+            # keep track of indices...
+            f_dict = {f.key: idx for idx, f in enumerate(futures)}
+            # ..as we collect result on a "as completed" basis
+            for f, res in as_completed(futures, with_results=True):
+                # with_results = False needed to capture EventFirred
+                # try:
+                # res = f.result()
 
                 idx = f_dict[f.key]
-                #get the parameter point
+                # get the parameter point
                 param = np.array([f_params[idx].result()])
-                #get the trajatories 
+                # get the trajatories
                 ts = np.array([f_ts[idx].result()])
-                #convert to numpy array
+                # convert to numpy array
                 feature = np.array([res])
-                    #add to data collection
+                # add to data collection
                 self.data.add_points(inputs=param, time_series=ts,
-                            summary_stats=feature, user_labels=np.array([-1]))
-               # except EventFired:
-               #     pass
+                                     summary_stats=feature, user_labels=np.array([-1]))
+            # except EventFired:
+            #     pass
 
     def explore(self, dr_method='umap', scaling=None, from_distributed=False, filter_func=None, kwargs={}):
         """

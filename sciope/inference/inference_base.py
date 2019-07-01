@@ -31,16 +31,19 @@ class InferenceBase(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, name, data, sim, use_logger=False):
-        """[summary]
+        """
+        Base class initializer
         
         Parameters
         ----------
-        name : [type]
-            [description]
-        data : [type]
-            [description]
-        sim : [type]
-            [description]
+        name : string
+            Inference algorithm name; set by the derived class
+        data : nd-array
+            Observed data or fixed data
+        sim : function handle
+            The simulator
+        use_logger : bool
+            Flag controlling enabling / disabling of logging
         """
         self.name = name
         # ToDo: implement assertions here

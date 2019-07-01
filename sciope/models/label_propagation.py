@@ -82,8 +82,23 @@ class LPModel(ModelBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Label propagation model initialized")
 
-    # Tune parameters of the model
+    #
     def optimize(self, min_, max_, niter=10, stepsize=0.1):
+        """
+        hyper-parameter optimization using basinhopping
+
+        Parameters
+        ----------
+        min_ : lower bound for parameter search
+        max_ : upper bound for parameter search
+        niter : number of allowed optimization iterations
+        stepsize : displacement step size
+
+        Returns
+        -------
+        vector
+            optimized hyper-parameters
+        """
         step_routine = RandomDisplacementBounds(xmax=max_, xmin=min_, stepsize=stepsize)
         global_bounds = Bounds(xmax=max_, xmin=min_)
         start = np.random.uniform(min_, max_)
@@ -97,15 +112,43 @@ class LPModel(ModelBase):
         return res.x
 
     def objective(self, x):
+        """
+        Objective function for hyper-parameter selection/evaluation
+
+        Parameters
+        ----------
+        x : hyper-parameter under test - gamma
+
+        Returns
+        -------
+        float
+            a measure directly proportional to entropy
+        """
         model = label_propagation.LabelSpreading(kernel=self.kernel, alpha=self.alpha,
                                                  gamma=x)
         model.fit(self.x, self.y)
         label_prob = model.label_distributions_
         return get_average_label_entropy(label_prob) + self.learning_rate * x ** 2
 
-        # train the label propagation model given the data
-
     def train(self, inputs, targets, min_=0.01, max_=30, niter=10, stepsize=0.1):
+        """
+        Train the LP model given the data
+
+        Parameters
+        ----------
+        inputs : nd-array
+            independent variables
+        targets : vector
+            dependent variable
+        min : float
+            []
+        max : float
+            []
+        niter : int
+            number of training iterations
+        stepsize : float
+            []
+        """
         # Scale the training data
         self.x = inputs
         self.y = targets
@@ -120,8 +163,20 @@ class LPModel(ModelBase):
         if self.use_logger:
             self.logger.info("Label Propagation model trained with {} samples".format(len(self.y)))
 
-    # Predict
     def predict(self, xp):
+        """
+        Predict unseen data using the trained model
+
+        Parameters
+        ----------
+        xp : nd-array
+            unseen data to be predicted
+
+        Returns
+        -------
+        vector
+            predictions
+        """
         # predict
         yp = self.model.predict(xp)
 

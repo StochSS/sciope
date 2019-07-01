@@ -36,16 +36,19 @@ class SamplingBase(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, name, xmin, xmax, use_logger=False):
-        """[summary]
+        """
+        Initializer
         
         Parameters
         ----------
-        name : [type]
-            [description]
-        xmin : [type]
-            [description]
-        xmax : [type]
-            [description]
+        name : string
+            Name of the sampling algorithm; set by the derived class
+        xmin : vector or 1D array
+            Specifies the lower bound of the hypercube within which sampling is performed
+        xmax : vector or 1D array
+            Specifies the upper bound of the hypercube within which sampling is performed
+        use_logger : bool, optional
+            Controls whether logging is enabled or disabled, by default True
         """
         self.name = name
         np.testing.assert_array_less(xmin, xmax, err_msg=("Please validate the values and ensure shape equality of "
@@ -61,8 +64,8 @@ class SamplingBase(object):
         
         Parameters
         ----------
-        x : [type]
-            [description]
+        x : vector or array-like
+            existing design to which a new point must be added
         """
 
     @abstractmethod
@@ -72,8 +75,8 @@ class SamplingBase(object):
         
         Parameters
         ----------
-        x : [type]
-            [description]
-        n : [type]
-            [description]
+        x : vector or array-like
+            existing design to which a new point must be added
+        n : integer
+            number of new points to be sampled
         """

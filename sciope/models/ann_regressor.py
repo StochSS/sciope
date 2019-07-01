@@ -28,14 +28,31 @@ class ANNModel(ModelBase):
     """
 
     def __init__(self, use_logger=False):
+        """
+        Initialize the model.
+
+        Parameters
+        ----------
+        use_logger : bool, optional
+            Controls whether logging is enabled or disabled, by default False
+        """
         self.name = 'ANNModel'
         super(ANNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
 
-    # train the ANN model given the data
     def train(self, inputs, targets):
+        """
+        Train the ANN model given the data
+
+        Parameters
+        ----------
+        inputs : nd-array
+            independent variables
+        targets : vector
+            dependent variable
+        """
         # Scale the training data
         self.scale_training_data(inputs, targets)
 
@@ -46,8 +63,20 @@ class ANNModel(ModelBase):
         if self.use_logger:
             self.logger.info("Artificial Neural Network regression model trained with {} samples".format(len(self.y)))
 
-    # Predict
     def predict(self, xt):
+        """
+        Predict unseen data using the trained model
+
+        Parameters
+        ----------
+        xt : nd-array
+            unseen data to be predicted
+
+        Returns
+        -------
+        vector
+            predictions
+        """
         # predict
         yp = self.model.predict(xt)
 

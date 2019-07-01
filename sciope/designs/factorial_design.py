@@ -25,24 +25,36 @@ import dask.array as da
 # Class definition
 class FactorialDesign(InitialDesignBase):
     """
-    Factorial design
+    Class definition for Factorial design
 
-    * InitialDesignBase.generate(n)
+    Properties/variables:
+    * name						(FactorialDesign)
+    * levels					(the number of levels in the factorial design)
+    * xmin						(lower bound of multi-dimensional space encompassing generated points)
+    * xmax						(upper bound of multi-dimensional space encompassing generated points)
+    * outlier_column_indices	(columns containing outliers)
+    * logger                    (a logging object to display/save events)
+    * use_logger     			(a boolean variable controlling whether logging is enabled or disabled)
+
+
+    Methods:
+    * generate					(returns a delayed object that can generated the desired number of samples)
     """
 
     def __init__(self, levels, xmin, xmax, use_logger=False):
-        """[summary]
+        """
+        Initialize a factorial design with specified parameters
         
         Parameters
         ----------
-        levels : [type]
-            [description]
-        xmin : [type]
-            [description]
-        xmax : [type]
-            [description]
+        levels : integer
+            The number of levels of the factorial design. Number of generated points will be levels^dimensionality
+        xmin : vector or 1D array
+            Specifies the lower bound of the hypercube within which the design is generated
+        xmax : vector or 1D array
+            Specifies the upper bound of the hypercube within which the design is generated
         use_logger : bool, optional
-            [description], by default True
+            controls whether logging is enabled or disabled, by default False
         """
         name = 'FactorialDesign'
         super(FactorialDesign, self).__init__(name, xmin, xmax, use_logger)

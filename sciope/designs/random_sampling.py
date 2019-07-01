@@ -27,7 +27,16 @@ class RandomSampling(InitialDesignBase):
     """
     Random Sampling implemented through gpflowopt
 
-    * InitialDesignBase.generate(n)
+    Properties/variables:
+    * name						(RandomSampling)
+    * xmin						(lower bound of multi-dimensional space encompassing generated points)
+    * xmax						(upper bound of multi-dimensional space encompassing generated points)
+    * logger                    (a logging object to display/save events - set by derived classes)
+    * use_logger     			(a boolean variable controlling whether logging is enabled or disabled)
+
+
+    Methods:
+    * generate					(returns the generated samples)
     """
 
     def __init__(self, xmin, xmax, use_logger=False):
@@ -35,12 +44,12 @@ class RandomSampling(InitialDesignBase):
         
         Parameters
         ----------
-        xmin : [type]
-            [description]
-        xmax : [type]
-            [description]
+        xmin : vector or 1D array
+            Specifies the lower bound of the hypercube within which the design is generated
+        xmax : vector or 1D array
+            Specifies the upper bound of the hypercube within which the design is generated
         use_logger : bool, optional
-            [description], by default True
+            controls whether logging is enabled or disabled, by default False
         """
         name = 'RandomSampling'
         super(RandomSampling, self).__init__(name, xmin, xmax, use_logger)
@@ -55,13 +64,12 @@ class RandomSampling(InitialDesignBase):
         
         Parameters
         ----------
-        n : [type]
-            [description]
+        n : integer
+            number of desired points
         
         Returns
         -------
-        [type]
-            [description]
+        dask.delayed
         """
         num_variables = len(self.xmin)
 

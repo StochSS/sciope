@@ -27,11 +27,36 @@ class InitialDesignBase(object):
     Must not be used directly!
     Each initial design type must implement the methods described herein:
 
-    * InitialDesignBase.generate(n,domain)
+    Properties/variables:
+    * name						(FactorialDesign)
+    * xmin						(lower bound of multi-dimensional space encompassing generated points)
+    * xmax						(upper bound of multi-dimensional space encompassing generated points)
+    * logger                    (a logging object to display/save events - set by derived classes)
+    * use_logger     			(a boolean variable controlling whether logging is enabled or disabled)
+
+
+    Methods:
+    * generate					(returns the generated samples)
+    * scale_variable            (scales a variable from an old domain range to a new domain range)
+    * scale_to_new_domain       (scales a matrix from an old domain range to a new domain range)
     """
     __metaclass__ = ABCMeta
 
     def __init__(self, name, xmin, xmax, use_logger=False):
+        """
+        Initialize a design with specified parameters
+
+        Parameters
+        ----------
+        name : string
+            Set by the derived class - typically same as the type of design
+        xmin : vector or 1D array
+            Specifies the lower bound of the hypercube within which the design is generated
+        xmax : vector or 1D array
+            Specifies the upper bound of the hypercube within which the design is generated
+        use_logger : bool, optional
+            controls whether logging is enabled or disabled, by default False
+        """
         self.name = name
         np.testing.assert_array_less(xmin, xmax, err_msg=("Please validate the values and ensure shape equality of "
                                                           "domain lower and upper bounds."))
@@ -49,12 +74,24 @@ class InitialDesignBase(object):
     def scale_variable(x, old_min, old_max, new_min, new_max):
         """
         Scales a dimension from the specified old range to a new range.
-        :param x:       vector representing a variable / dimension
-        :param old_min: the old lower bound
-        :param old_max: the old upper bound
-        :param new_min: the new lower bound
-        :param new_max: the new upper bound
-        :return:        a vector scaled to the new range
+
+        Parameters
+        ----------
+        x : vector
+            represents a variable or dimension to operate upon
+        old_min : vector
+            the old lower bound of the domain
+        old_max : vector
+            the old upper bound of the domain
+        new_min : vector
+            the new lower bound of the domain
+        new_max : vector
+            the new upper bound of the domain
+
+        Returns
+        -------
+        vector
+            scaled to the new range
         """
         if old_max - old_min == 0:
             return new_min      # this is the rare case of a scalar with old range being 0
@@ -65,10 +102,20 @@ class InitialDesignBase(object):
     def scale_to_new_domain(x, new_min, new_max):
         """
         Scales a given array/matrix to a new range
-        :param x:       given data matrix
-        :param new_min: new min (np array - one element per dimension)
-        :param new_max: new max (np array - one element per dimension)
-        :return:        scaled x
+
+        Parameters
+        ----------
+        x : multidimensional array/matrix
+            to operate upon
+        new_min : vector
+            the new lower bound of the domain, one element per dimension
+        new_max : vector
+            the new upper bound of the domain, one element per dimension
+
+        Returns
+        -------
+        matrix
+            scaled to the new range
         """
         old_min = np.min(x, axis=0)         # this gives min across each dimension
         old_max = np.max(x, axis=0)         # and max...

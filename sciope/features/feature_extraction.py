@@ -77,9 +77,18 @@ def generate_tsfresh_features(data, features):  # pragma: no cover
 def remove_nan_features(x, features):   # pragma: no cover
     """
     Method to remove features containing NaN values.
-    :param x: numpy array of calculated features
-    :param features: list of calculated features
-    :return: non-nan features dict, and feature values
+
+    Parameters
+    ----------
+    x: vector/array-like
+        array of calculated features
+    features : dict
+        list of calculated features
+
+    Returns
+    -------
+    tuple
+        non-nan features dict, and feature values
     """
     nan_idx = np.any(np.isnan(x), axis=0)
     key_idx = 0
