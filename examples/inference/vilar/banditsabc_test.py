@@ -73,7 +73,7 @@ trial_sim = [vilar.simulate(t) for t in tp]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
-
+print("trial dist shape: ", trial_dist.shape)
 print("enumeration starts:")
 for n, d in enumerate(trial_dist):
     print("(",n,"): ", d)
