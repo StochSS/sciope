@@ -78,7 +78,7 @@ td = np.array(trial_dist).squeeze()
 print("td shape: ", td.shape)
 
 print("enumeration starts:")
-for n, d in enumerate(td):
+for n, d in enumerate(td.T):
     print("(",n,"): ", d)
 
 
