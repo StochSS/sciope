@@ -134,13 +134,13 @@ class ABC(InferenceBase):
         global normalized_distances
         self.historical_distances.append(dist.ravel())
         all_distances = np.array(self.historical_distances)
-        mean = np.asarray(np.nanmean(all_distances, axis=0))
+        median = np.asarray(np.nanmedian(all_distances, axis=0))
         std = np.asarray(np.nanstd(all_distances, axis=0))
         print("std: ", std)
         normalized_distances = all_distances
         for j in range(0, len(mean), 1):
             if std[j] > 0:
-                normalized_distances[:, j] = (normalized_distances[:, j] - mean[j]) / std[j]
+                normalized_distances[:, j] = normalized_distances[:, j] / median[j]
 
         return normalized_distances[-1, :]
 
