@@ -193,7 +193,7 @@ class BanditsABC(ABC):
                 result, = dask.compute(combined_distance)
             else:
                 result = top_k_distances.ravel()
-
+            print("results: ", result)
             print("mean result: ", np.mean(result), "(", np.mean(np.asarray(all_res)) , ") median: ", np.median(result),
                   "(", np.median(np.asarray(all_res)), ")")
             print("accept/reject starts")
