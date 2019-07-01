@@ -194,7 +194,8 @@ class BanditsABC(ABC):
             else:
                 result = top_k_distances.ravel()
 
-            print("mean result: ", np.mean(result), "median: ", np.median(result))
+            print("mean result: ", np.mean(result), "(", np.mean(np.asarray(all_res)) , ") median: ", np.median(result),
+                  "(", np.median(np.asarray(all_res)), ")")
             print("accept/reject starts")
             # Accept/Reject
             for e, res in enumerate(result):
