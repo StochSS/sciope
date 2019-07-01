@@ -92,14 +92,15 @@ for n, d in enumerate(td.T):
     print("(",n,"): ", dd)
 
 
-#print("trial_dist shape: ", np.array(trial_dist).shape)
+print("trial_dist shape: ", np.array(trial_dist).shape)
 #print("max dist: ", np.max(np.array(trial_dist),axis=0))
 max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
 #print("max dist shape", max_dist.shape)
 #print("min max: ", np.sort(max_dist))
 
 # Removing small distances from summaries list
-idxx=np.where(abs(np.min(trial_dist,axis=0)>1000))
+
+idxx=np.where(abs(np.min(np.array(trial_dist),axis=0)>1000))
 print("idxx: ", np.asarray(idxx).shape)
 #print("idxxx: ", idxxx)
 idxxx2=id_notnull[idxx[2]]
