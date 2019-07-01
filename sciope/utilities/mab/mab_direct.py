@@ -63,6 +63,7 @@ class MABDirect(MABBase):
         for a in range(0, n):
             for p in range(0, num_pulls):
                 print("a: ", a, ", arms[a]: ", arms[a])
+                print("self.arm_pull(arms[a]): ", self.arm_pull(arms[a]))
                 rewards[p, a] = self.arm_pull(arms[a])
                 self.num_pulls += 1
 
