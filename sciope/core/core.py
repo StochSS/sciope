@@ -59,11 +59,8 @@ def get_fixed_mean(data, func, chunk_size):
             scaled distance
         """
 
-        # assumed data is large, make chunks
-        data_chunked = partition_all(chunk_size, data)
-
         # compute summary stats on fixed data
-        stats = [delay_func_chunk(func, x) for x in data_chunked]
+        stats = get_summaries(data, func, chunk_size)
 
         mean = delayed(np.mean)
 
