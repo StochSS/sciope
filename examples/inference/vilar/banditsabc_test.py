@@ -109,7 +109,7 @@ print("enumeration starts:")
 for n, d in enumerate(td.T):
     dd = ["{0:.3f}".format(s) for s in d]
     moore=""
-    if n in idxx:
+    if n in np.asarray(idxx):
         moore = " ***"
 
     print("(",n,"): ", dd, moore)
