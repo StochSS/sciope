@@ -92,11 +92,11 @@ idxxx2=idxxx[idxx[2]]
 sum_stats.set_returning_features(idxxx2)
 
 ss=sum_stats.compute(data).compute()
-print("trial_param shape: ", np.array(trial_param).shape)
-tp = np.array(trial_param).squeeze()
-print("tp shape: ", tp.shape)
-
-plt.scatter(tp[:,0],tp[:,1])
+# print("trial_param shape: ", np.array(trial_param).shape)
+# tp = np.array(trial_param).squeeze()
+# print("tp shape: ", tp.shape)
+#
+# plt.scatter(tp[:,0],tp[:,1])
 
 
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
