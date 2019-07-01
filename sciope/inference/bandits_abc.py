@@ -90,6 +90,37 @@ class BanditsABC(ABC):
 
         return normalized_distances[-1, :]
 
+    def scale_distance2(self, dist):
+        """
+         Performs scaling in [0,1] of a given distance vector/value with respect to historical distances
+
+        Parameters
+        ----------
+        dist : ndarray, float
+            distance
+
+        Returns
+        -------
+        ndarray
+            scaled distance
+        """
+        print("scale distance2")
+        dist = np.asarray(dist)
+        global normalized_distances
+        self.historical_distances.append(dist.ravel())
+        all_distances = np.array(self.historical_distances)
+        median = np.asarray(np.nanmedian(all_distances, axis=0))
+        std = np.asarray(np.nanstd(all_distances, axis=0))
+        print("std: ", std)
+        normalized_distances = all_distances
+        for j in range(0, len(median), 1):
+            if median[j] > 0:
+                normalized_distances[:, j] = normalized_distances[:, j] / median[j]
+            else:
+                print("median ", j, " is 0")
+
+        return normalized_distances[-1, :]
+
     #@sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size):
         """
