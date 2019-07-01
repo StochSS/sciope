@@ -7,6 +7,8 @@ import numpy as np
 import sys
 from sciope.utilities.distancefunctions import naive_squared as ns
 from sciope.utilities.distancefunctions import euclidean as euc
+from sciope.features.feature_extraction import generate_tsfresh_features
+from tsfresh.feature_extraction.settings import MinimalFCParameters
 from sciope.core import core
 import pytest
 import gillespy2
@@ -70,9 +72,10 @@ def simulator(params, model):
 
     res = model_update.run(solver=NumPySSASolver, show_labels=False,
                            number_of_trajectories=num_trajectories)
-    tot_res = res[0][:, 1:]  # should not contain timepoints
-
-    return np.array(tot_res)
+    tot_res = np.asarray([x.T for x in res]) # reshape to (N, S, T)  
+    tot_res = tot_res[:,1:, :] # should not contain timepoints
+    
+    return tot_res
 
 
 def simulator2(x):
@@ -208,6 +211,7 @@ def test_param_sim():
     #assert graph_dict["summarystats"] is None, "Core test failed, expected None"
     #assert graph_dict["distances"] is None, "Core test failed, expected None"
 
+    lhd = LatinHypercube(dmin, dmax)
     lhd.generate_array(n_points)
     graph_dict = core.get_graph_chunked(
         param_func=lhd.draw, sim_func=simulator2, batch_size=n_points, chunk_size=2)
@@ -223,7 +227,7 @@ def test_param_sim():
     params = np.asarray(params)
 
     assert params.shape == (5, 2, 5), "Core test failed, dimensions mismatch"
-    assert sim.shape == (5, 2, 101, 2), "Core test failed, dimensions mismatch"
+    assert sim.shape == (5, 2, 1, 2, 101), "Core test failed, dimensions mismatch"
 
     # all points have been sampled from lhd, default auto_redesign = True
 
@@ -241,4 +245,53 @@ def test_param_sim():
     params = np.asarray(params)
 
     assert params.shape == (5, 2, 5), "Core test failed, dimensions mismatch"
-    assert sim.shape == (5, 2, 101, 2), "Core test failed, dimensions mismatch"
+    assert sim.shape == (5, 2, 1, 2, 101), "Core test failed, dimensions mismatch"
+
+
+def test_param_sim_summ():
+    lhd = LatinHypercube(dmin, dmax)
+    n_points = 10
+    lhd.generate_array(n_points)
+    summ = lambda x: generate_tsfresh_features(x, MinimalFCParameters())
+    graph_dict = core.get_graph_chunked(
+        param_func=lhd.draw, sim_func=simulator2, summaries_func=summ, batch_size=n_points, chunk_size=2)
+    assert len(graph_dict["parameters"]
+               ) == 5, "Core test failed, dimensions mismatch"
+    assert len(graph_dict["trajectories"]
+               ) == 5, "Core test failed, dimensions mismatch"
+    assert len(graph_dict["summarystats"]) == 5, "Core test failed, expected None"
+
+    params, sim, summaries = dask.compute(graph_dict["parameters"], graph_dict["trajectories"], graph_dict["summarystats"])
+
+    sim = np.asarray(sim)
+    params = np.asarray(params)
+    summaries = np.asarray(summaries)
+
+    assert params.shape == (5, 2, 5), "Core test failed, dimensions mismatch"
+    assert sim.shape == (5, 2, 1, 2, 101), "Core test failed, dimensions mismatch"
+    assert summaries.shape == (5, 2, 1, 16), "Core test failed, dimensions mismatch"
+
+
+    fixed_data = np.asarray([simulator2(bound) for p in range(10)])
+    print(fixed_data.shape)
+    fixed_data = fixed_data.reshape(10, 2, 101)
+    
+    fixed_mean = core.get_fixed_mean(fixed_data, summ, chunk_size=2)
+    
+    m, = dask.compute(fixed_mean)
+    m = np.asarray(m)
+    assert  m.shape == (1, 16), "Core test failed, dimensions mismatch"
+
+    dist_class = ns.NaiveSquaredDistance()
+
+    dist_func = lambda x: dist_class.compute(x, m)
+
+    dist = core.get_distance(dist_func, graph_dict["summarystats"])
+
+    assert len(dist) == 5, "Core test failed, dimesnion mismatch"
+
+    dist_res, = dask.compute(dist)
+    dist_res = np.asarray(dist_res)
+
+    assert dist_res.shape == (5, 2, 1, 16), "Core test failed, dimension mismatch"
+
