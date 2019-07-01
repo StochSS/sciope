@@ -111,7 +111,7 @@ class BanditsABC(ABC):
         all_distances = np.array(self.historical_distances)
         median = np.asarray(np.nanmedian(all_distances, axis=0))
         std = np.asarray(np.nanstd(all_distances, axis=0))
-        print("std: ", std)
+
         normalized_distances = all_distances
         for j in range(0, len(median), 1):
             if median[j] > 0:
