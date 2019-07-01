@@ -44,7 +44,9 @@ def arm_pull(arm_idx):
     global normalized_distances
     global bs
     #print("normalized distances shape: ", normalized_distances.shape, ", arm_idx: ", arm_idx)
-    return -1 * normalized_distances[-1:, arm_idx]
+
+    r = np.random.choice(normalized_distances.shape[0])
+    return -1 * normalized_distances[r:, arm_idx]
 
 
 # Class definition: Bandits-ABC rejection sampling
