@@ -22,6 +22,7 @@ from sciope.utilities.distancefunctions import naive_squared as ns
 import summaries_tsa as tsa
 from sciope.utilities.mab import mab_direct as md
 import numpy as np
+import matplotlib.pyplot as plt
 import vilar
 from sklearn.metrics import mean_absolute_error
 import dask
@@ -86,8 +87,10 @@ idxxx2=idxxx[idxx[2]]
 
 sum_stats.set_returning_features(idxxx2)
 
-
 ss=sum_stats.compute(data).compute()
+
+plt.scatter(trial_param[:,0],trial_param[:,1])
+
 
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
