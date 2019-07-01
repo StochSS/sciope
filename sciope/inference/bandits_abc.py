@@ -168,8 +168,8 @@ class BanditsABC(ABC):
                 print("accepted count: ", accepted_count, ", trial count: ", trial_count, ", acc/rate: ",
                       accepted_count/trial_count)
             res_param, res_dist = dask.compute(graph_dict["parameters"], graph_dict["distances"])
-            print("dist shape: ", np.asarray(res_dist).shape)
-            print("res_dist: ", np.asarray(res_dist))
+            # print("dist shape: ", np.asarray(res_dist).shape)
+            # print("res_dist: ", np.asarray(res_dist))
 
             print("before scale dist ")
             # Normalize distances between [0,1]
@@ -181,7 +181,8 @@ class BanditsABC(ABC):
             num_arms = sim_dist_scaled.shape[1]
             arms = range(num_arms)
             top_k_arms_idx = self.mab_variant.select(arms, self.k)
-
+            print("top k arms idx: ", top_k_arms_idx)
+            print("dim dist scaled shape: ", sim_dist_scaled.shape)
 
             top_k_distances = np.asarray([sim_dist_scaled[:, i] for i in top_k_arms_idx])
             top_k_distances = top_k_distances.transpose()
