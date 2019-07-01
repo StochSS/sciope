@@ -55,14 +55,8 @@ print("data shape: ", data.shape)
 # Removing Nan values from summaries list
 ss=sum_stats.compute(data).compute()
 idx=np.where(~np.isnan(ss))
-# Removing small values from summaries list
-idxx=np.where(abs(ss[idx])>10)
-#print("idxx[0]: ", idxx[0])
-idxxx=idx[1]#[idxx[0]]
 
-#print("ss[0][idxxx]: ", ss[0][idxxx])
-print("ss shape: ", ss.shape)
-#print("idxxx:", idxxx)
+idxxx=idx[1]
 
 sum_stats.set_returning_features(idxxx)
 
@@ -79,6 +73,12 @@ trial_sim = [vilar.simulate(t) for t in tp]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
+
+print("enumeration starts:")
+for n, d in enumerate(trial_dist):
+    print("(",n,"): ", d)
+
+
 #print("trial_dist shape: ", np.array(trial_dist).shape)
 #print("max dist: ", np.max(np.array(trial_dist),axis=0))
 max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
