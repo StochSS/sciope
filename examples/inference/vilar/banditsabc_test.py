@@ -68,9 +68,10 @@ trial_param = [mm_prior.draw() for i in range(5)]
 ttt = dask.compute(trial_param)
 print("ttt shape: ", np.asarray(ttt).shape)
 print("ttt: ", ttt)
+ttt=ttt.squeeze()
 
 
-trial_sim = [vilar.simulate(t) for t in trial_param]
+trial_sim = [vilar.simulate(t) for t in ttt]
 # tp = np.array(trial_param).squeeze()
 # print("trial sim shape: ", np.array(trial_sim).shape)
 # trial_sim = [vilar.simulate(t) for t in tp]
