@@ -139,20 +139,30 @@ for n, d in enumerate(td.T):
 
 
 
+
+trial_param = [mm_prior.draw() for i in range(5)]
+ttt = dask.compute(trial_param)
+print("ttt shape: ", np.asarray(ttt).shape)
+print("ttt: ", ttt)
+ttt=np.asarray(ttt).squeeze()
+
+
+trial_sim = [vilar.simulate(t) for t in ttt]
+# tp = np.array(trial_param).squeeze()
+# print("trial sim shape: ", np.array(trial_sim).shape)
+# trial_sim = [vilar.simulate(t) for t in tp]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
+print("trial dist shape: ", np.array(trial_dist).shape)
+td = np.array(trial_dist).squeeze()
+print("td shape: ", td.shape)
 
+print("enumeration 3 starts:")
+for n, d in enumerate(td.T):
+    dd = ["{0:.3f}".format(s) for s in d]
+    print("(",n,"): ", dd)
 
-
-trial_param = [mm_prior.draw() for i in range(50)]
-trial_param = dask.compute(trial_param)
-trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
-trial_ss = [sum_stats.compute(s) for s in trial_sim]
-trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
-trial_dist = dask.compute(trial_dist)
-max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
-print("sorted dist: ", np.sort(max_dist))
 
 
 # Select MAB variant
