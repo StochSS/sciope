@@ -177,7 +177,7 @@ print("sim shape: ",sim.shape)
 
 
 # Set up ABC
-epsilon=0.3
+epsilon=0.03
 print("epsilon: ", epsilon)
 
 
