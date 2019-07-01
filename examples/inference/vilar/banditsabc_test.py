@@ -54,6 +54,9 @@ print("data shape: ", data.shape)
 
 # Removing Nan values from summaries list
 ss=sum_stats.compute(data).compute()
+print("ss shape: ", ss.shape, ss.shape[1])
+id_full=np.arange(ss.shape[1])
+
 idx=np.where(~np.isnan(ss))
 
 idxxx=idx[1]
@@ -99,7 +102,7 @@ idxx=np.where(abs(np.min(trial_dist,axis=0)>1000))
 #print("idxx: ", idxx)
 #print("idxxx: ", idxxx)
 idxxx2=idxxx[idxx[2]]
-#print("idxxx shape: ", idxxx.shape)
+print("idxxx shape: ", idxxx.shape)
 
 sum_stats.set_returning_features(idxxx2)
 
