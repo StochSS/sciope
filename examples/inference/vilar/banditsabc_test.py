@@ -65,7 +65,8 @@ ss=sum_stats.compute(data).compute()
 #Generate some points to ensure summary statistics to not be constants
 
 trial_param = [mm_prior.draw() for i in range(5)]
-# trial_param = dask.compute(trial_param)
+ttt = dask.compute(trial_param)
+print("ttt shape: ", np.asarray(ttt))
 trial_sim = [vilar.simulate(t) for t in trial_param]
 # tp = np.array(trial_param).squeeze()
 # print("trial sim shape: ", np.array(trial_sim).shape)
