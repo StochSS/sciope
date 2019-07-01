@@ -139,8 +139,10 @@ class ABC(InferenceBase):
         print("std: ", std)
         normalized_distances = all_distances
         for j in range(0, len(mean), 1):
-            if std[j] > 0:
+            if median[j] > 0:
                 normalized_distances[:, j] = normalized_distances[:, j] / median[j]
+            else:
+                print("median ", j, " is 0")
 
         return normalized_distances[-1, :]
 
