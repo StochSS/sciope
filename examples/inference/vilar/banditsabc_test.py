@@ -123,24 +123,27 @@ print("idxxx2 shape: ", np.asarray(idxxx2).shape)
 sum_stats.set_returning_features(idxxx2)
 
 ss=sum_stats.compute(data).compute()
-print("trial_param shape: ", np.array(trial_param).shape)
-tp = np.array(dask.compute(trial_param)).squeeze()
-print("tp shape: ", tp.shape)
-print("tp shape: ", tp.shape)
 
-plt.scatter(tp[:,0],tp[:,1])
-plt.savefig('scat')
+
+trial_ss = [sum_stats.compute(s) for s in trial_sim]
+trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
+trial_dist = dask.compute(trial_dist)
+print("trial dist shape: ", np.array(trial_dist).shape)
+td = np.array(trial_dist).squeeze()
+print("td shape: ", td.shape)
+
+print("enumeration 2 starts:")
+for n, d in enumerate(td.T):
+    dd = ["{0:.3f}".format(s) for s in d]
+    print("(",n,"): ", dd)
+
 
 
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
 
-print("trial_dist after reductions: ", trial_dist)
-#print("trial dist shape: ", trial_dist.shape)
-max_dist=np.max(np.array(trial_dist),axis=0).squeeze()
 
-print("sorted dist: ", np.sort(max_dist))
 
 trial_param = [mm_prior.draw() for i in range(50)]
 trial_param = dask.compute(trial_param)
