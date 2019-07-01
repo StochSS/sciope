@@ -180,6 +180,7 @@ class BanditsABC(ABC):
             # Use MAB arm selection to identify the best 'k' arms or summary statistics
             num_arms = sim_dist_scaled.shape[1]
             arms = range(num_arms)
+            print("arms: ", arms, ", self.k: ", self.k)
             top_k_arms_idx = self.mab_variant.select(arms, self.k)
             print("top k arms idx: ", top_k_arms_idx)
             print("dim dist scaled shape: ", sim_dist_scaled.shape)
