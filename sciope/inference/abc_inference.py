@@ -197,27 +197,19 @@ class ABC(InferenceBase):
 
         # Rejection sampling with batch size = batch_size
 
+        print("batch_size: ", batch_size)
+
         # Draw from the prior
         trial_param = [self.prior_function.draw() for x in range(batch_size)]
 
         # Perform the trial
         sim_result = [self.sim(param) for param in trial_param]
 
-        #TEST
-        test_param = self.prior_function.draw().compute()
-        #print("test param: ", test_param)
-        test_result = self.sim(test_param).compute()
-        #print("test result: ", test_result.shape, test_result)
-
-
-        # Get the statistic(s)
-        print("sim_result shape: ", np.array(dask.compute(sim_result)).shape)
-        print("before summaries function")
         sim_stats = [self.summaries_function.compute(sim) for sim in sim_result]
-        print("after summaries function")
+
         # Calculate the distance between the dataset and the simulated result
         sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in sim_stats]
-        print("after dist")
+        print("sim_dist shape: ", np.asarray(dask.compute(sim_dist)))
         return {"parameters": trial_param, "trajectories": sim_result, "summarystats": sim_stats, "distances": sim_dist}
 
     # @sciope_profiler.profile
