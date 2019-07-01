@@ -19,6 +19,7 @@ Approximate Bayesian Computation
 from sciope.inference.inference_base import InferenceBase
 from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
+from sciope.core import core
 from sciope.utilities.housekeeping import sciope_logger as ml
 from toolz import partition_all
 import numpy as np
@@ -27,31 +28,6 @@ import dask
 
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
-
-
-def get_futures(lst):
-    """ Loop through items in list to keep order of delayed objects
-        when transforming to futures. firect call of futures_of does not keep the order
-        of the objects
-
-    Parameters
-    ----------
-    lst : array-like
-        array containing delayed objects
-    """
-    f = []
-    for i in lst:
-        f.append(futures_of(i)[0])
-    return f
-
-
-def _cluster_mode():
-    try:
-        get_client()
-        return True
-    except ValueError:
-        return False
-
 
 # Class definition: ABC rejection sampling
 class ABC(InferenceBase):
@@ -86,13 +62,12 @@ class ABC(InferenceBase):
         self.name = 'ABC'
         self.epsilon = epsilon
         self.summaries_function = summaries_function
-        self.prior_function = prior_function
-        self.distance_function = distance_function
+        self.prior_function = prior_function.draw
+        self.distance_function = distance_function.compute
         self.historical_distances = []
-        self.fixed_mean = []
         self.use_logger = use_logger
         super(ABC, self).__init__(self.name, data, sim, self.use_logger)
-        self.sim = dask.delayed(sim)
+        self.sim = sim
 
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
@@ -141,63 +116,14 @@ class ABC(InferenceBase):
             scaled distance
         """
 
-        # assumed data is large, make chunks
-        data_chunked = partition_all(chunk_size, self.data)
-
-        # compute summary stats on fixed data
-        stats = [self.summaries_function.compute(x) for x in data_chunked]
-
-        mean = dask.delayed(np.mean)
-
-        # reducer 1 mean for each batch
-        stats_mean = mean(stats, axis=0)
-
-        # reducer 2 mean over batches
-        stats_mean = mean(stats_mean, axis=0, keepdims=True).compute()
-
-        self.fixed_mean = np.copy(stats_mean)
+        stats_mean = core.get_fixed_mean(self.data, self.summaries_function, chunk_size)
+        self.fixed_mean = stats_mean.compute()
         del stats_mean
-
-    def get_dask_graph(self, batch_size, ensemble_size):
-        """
-        Constructs the dask computational graph involving sampling, simulation, summary statistics
-        and distances.
-        
-        Parameters
-        ----------
-        batch_size : int
-            The number of points being sampled in each batch.
-        ensemble_size : int
-
-        
-        Returns
-        -------
-        dict
-            with keys 'parameters', 'trajectories', 'summarystats' and 'distances'
-        """
-
-        # Rejection sampling with batch size = batch_size 
-
-        # Draw from the prior
-        trial_param = [self.prior_function.draw() for x in range(batch_size)] * ensemble_size
-
-        # Perform the trial
-        sim_result = [self.sim(param) for param in trial_param]
-
-        # Get the statistic(s)
-        sim_stats = [self.summaries_function.compute([sim]) for sim in sim_result]
-
-        if ensemble_size > 1:
-            stats_final = [dask.delayed(np.mean)(sim_stats[i:i + ensemble_size], axis=0) for i in
-                           range(0, len(sim_stats), ensemble_size)]
-        else:
-            stats_final = sim_stats
-
-        # Calculate the distance between the dataset and the simulated result
-        sim_dist = [self.distance_function.compute(self.fixed_mean, stats) for stats in stats_final]
-
-        return {"parameters": trial_param[:batch_size], "trajectories": sim_result, "summarystats": stats_final,
-                "distances": sim_dist}
+    
+    def _reshape_chunks(self, data):
+        data = np.asarray(data)
+        data = data.reshape(-1, data.shape[-1])
+        return data 
 
     # @sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size, normalize):
@@ -230,13 +156,16 @@ class ABC(InferenceBase):
         distances = []
 
         # if fixed_mean has not been computed
-        if not self.fixed_mean:
-            self.compute_fixed_mean(chunk_size)
+        assert hasattr(self, "fixed_mean"), "Please call compute_fixed_mean before infer"
 
         # Get dask graph
-        graph_dict = self.get_dask_graph(batch_size, ensemble_size)
+        graph_dict = core.get_graph_chunked(self.prior_function, self.sim, self.summaries_function,
+                                      batch_size, chunk_size)
+        
+        dist_func = lambda x: self.distance_function(self.fixed_mean, x)
+        graph_dict["distances"] = core.get_distance(dist_func, graph_dict["summarystats"], chunked=True)
 
-        cluster_mode = _cluster_mode()
+        cluster_mode = core._cluster_mode()
 
         # do rejection sampling
         while accepted_count < num_samples:
@@ -251,18 +180,22 @@ class ABC(InferenceBase):
                     self.logger.info("running in cluster mode")
                 res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
 
-                futures_dist = get_futures(res_dist)
-                futures_params = get_futures(res_param)
+                futures_dist = core.get_futures(res_dist)
+                futures_params = core.get_futures(res_param)
 
                 keep_idx = {f.key: idx for idx, f in enumerate(futures_dist)}
 
                 for f, dist in as_completed(futures_dist, with_results=True):
-                    dists.append(dist)
-                    if normalize:
-                        # Normalize distances between [0,1]
-                        sim_dist_scaled.append(self.scale_distance(dist))
+                    for d in dist:
+                        dists.append(d)
+                        if normalize:
+                            # Normalize distances between [0,1]
+                            sim_dist_scaled.append(self.scale_distance(d))
+
                     idx = keep_idx[f.key]
-                    params.append(futures_params[idx].result())
+                    params_res = futures_params[idx].result()
+                    for p in params_res:
+                        params.append(p)
 
                 del futures_dist, futures_params, res_param, res_dist
 
@@ -271,9 +204,11 @@ class ABC(InferenceBase):
                 if self.use_logger:
                     self.logger.info("running in parallel mode")
                 params, dists = dask.compute(graph_dict["parameters"], graph_dict["distances"])
+                params = self._reshape_chunks(params)
+                dists = self._reshape_chunks(dists)
                 if normalize:
-                    for dist in dists:
-                        sim_dist_scaled.append(self.scale_distance(dist))
+                    for d in dists:
+                        sim_dist_scaled.append(self.scale_distance(d))
 
             if normalize:
                 sim_dist_scaled = np.asarray(sim_dist_scaled)
