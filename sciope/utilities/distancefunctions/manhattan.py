@@ -41,7 +41,7 @@ class ManhattanDistance(DistanceBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("ManhattanDistance distance function initialized")
 
-    @delayed
+    
     def compute(self, data, sim):
         """[summary]
         

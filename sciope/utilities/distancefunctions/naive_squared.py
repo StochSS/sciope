@@ -40,7 +40,7 @@ class NaiveSquaredDistance(DistanceBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("NaiveSquaredDistance distance function initialized")
 
-    @delayed
+    
     def compute(self, data, sim):
         """[summary]
         
