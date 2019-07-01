@@ -138,7 +138,7 @@ class ABC(InferenceBase):
         std = np.asarray(np.nanstd(all_distances, axis=0))
         print("std: ", std)
         normalized_distances = all_distances
-        for j in range(0, len(mean), 1):
+        for j in range(0, len(median), 1):
             if median[j] > 0:
                 normalized_distances[:, j] = normalized_distances[:, j] / median[j]
             else:
