@@ -147,15 +147,12 @@ class BanditsABC(ABC):
             arms = range(num_arms)
             top_k_arms_idx = self.mab_variant.select(arms, self.k)
 
-            print("top_k_arms_idx: ", top_k_arms_idx)
 
             top_k_distances = np.asarray([sim_dist_scaled[:, i] for i in top_k_arms_idx])
             top_k_distances = top_k_distances.transpose()
 
 
-            #Mattias lines
-            print("top_k_distances shape: ", top_k_distances.shape)
-            #
+
 
             # Take the norm to combine the distances, if more than one summary is used
             if top_k_distances.shape[1] > 1:
