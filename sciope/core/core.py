@@ -34,6 +34,15 @@ def delay_func_chunk(func, chunk):
         res.append(func(x))
     return res
 
+def get_summaries(data, func, chunk_size):
+
+    # assumed data is large, make chunks
+    assert len(data)/chunk_size > 1.0, "With chunk_size: {0} will only create 1 chunk, choose a sampler chunk_size".format(chunk_size)
+    data_chunked = partition_all(chunk_size, data)
+    stats_final = [delayed(func)(chunk) for chunk in data_chunked]
+    return stats_final
+
+
 def get_fixed_mean(data, func, chunk_size):
         """
         Computes the mean over summary statistics on fixed data
