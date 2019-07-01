@@ -150,7 +150,7 @@ print("sim shape: ",sim.shape)
 
 
 # Set up ABC
-epsilon=0.000001
+epsilon=1
 print("epsilon: ", epsilon)
 
 
