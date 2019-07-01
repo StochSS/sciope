@@ -29,35 +29,6 @@ import dask
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
 
-<<<<<<< HEAD
-=======
-
-def get_futures(lst):
-    """
-    Loop through items in list to keep order of delayed objects
-        when transforming to futures. firect call of futures_of does not keep the order
-        of the objects
-
-    Parameters
-    ----------
-    lst : array-like
-        array containing delayed objects
-    """
-    f = []
-    for i in lst:
-        f.append(futures_of(i)[0])
-    return f
-
-
-def _cluster_mode():
-    try:
-        get_client()
-        return True
-    except ValueError:
-        return False
-
-
->>>>>>> 085ed06e97befcaffe677085438e9a5463d916d5
 # Class definition: ABC rejection sampling
 class ABC(InferenceBase):
     """
