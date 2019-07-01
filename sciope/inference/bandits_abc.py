@@ -42,8 +42,9 @@ def arm_pull(arm_idx):
     MABs but in inference we minimize distance.
     """
     global normalized_distances
+    global bs
     #print("normalized distances shape: ", normalized_distances.shape, ", arm_idx: ", arm_idx)
-    return -1 * normalized_distances[-1, arm_idx]
+    return -1 * normalized_distances[-bs:, arm_idx]
 
 
 # Class definition: Bandits-ABC rejection sampling
@@ -152,7 +153,8 @@ class BanditsABC(ABC):
         accepted_samples = []
         distances = []
         all_res = []
-
+        global bs
+        bs = batch_size
         print("start:")
         # if fixed_mean has not been computed
         if not self.fixed_mean:
