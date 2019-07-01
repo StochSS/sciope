@@ -138,7 +138,7 @@ class BanditsABC(ABC):
 
             print("before scale dist ")
             # Normalize distances between [0,1]
-            sim_dist_scaled = np.asarray([self.scale_distance(dist) for dist in res_dist])
+            sim_dist_scaled = np.asarray([self.scale_distance2(dist) for dist in res_dist])
             print("scaled dist shape: ", sim_dist_scaled.shape)
             print("scaled dist min: ", np.min(sim_dist_scaled))
 
