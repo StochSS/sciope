@@ -103,7 +103,7 @@ max_dist=np.max(np.array(trial_dist).squeeze(),axis=0).squeeze()
 idxx=np.where(abs(np.min(np.array(trial_dist).squeeze(),axis=0)>1000))
 print("idxx: ", np.asarray(idxx).shape)
 #print("idxxx: ", idxxx)
-idxxx2=id_notnull[np.asarray(idxx)[1]]
+idxxx2=id_notnull[np.asarray(idxx).squeeze()]
 print("idxxx2 shape: ", np.asarray(idxxx2).shape)
 
 sum_stats.set_returning_features(idxxx2)
