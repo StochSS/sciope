@@ -79,7 +79,8 @@ print("td shape: ", td.shape)
 
 print("enumeration starts:")
 for n, d in enumerate(td.T):
-    print("(",n,"): ", d)
+    dd = ["{0:.3f}".format(s) for s in d]
+    print("(",n,"): ", dd)
 
 
 #print("trial_dist shape: ", np.array(trial_dist).shape)
