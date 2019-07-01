@@ -102,6 +102,20 @@ max_dist=np.max(np.array(trial_dist).squeeze(),axis=0).squeeze()
 
 idxx=np.where(abs(np.min(np.array(trial_dist).squeeze(),axis=0)>1000))
 print("idxx: ", np.asarray(idxx).shape)
+
+
+
+print("enumeration starts:")
+for n, d in enumerate(td.T):
+    dd = ["{0:.3f}".format(s) for s in d]
+    moore=""
+    if n in idxx:
+        moore = " ***"
+
+    print("(",n,"): ", dd, moore)
+
+
+
 #print("idxxx: ", idxxx)
 idxxx2=id_notnull[np.asarray(idxx).squeeze()]
 print("idxxx2 shape: ", np.asarray(idxxx2).shape)
@@ -150,7 +164,7 @@ print("sim shape: ",sim.shape)
 
 
 # Set up ABC
-epsilon=1
+epsilon=0.7
 print("epsilon: ", epsilon)
 
 
