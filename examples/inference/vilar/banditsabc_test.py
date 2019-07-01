@@ -72,7 +72,10 @@ ss=sum_stats.compute(data).compute()
 
 trial_param = [mm_prior.draw() for i in range(5)]
 trial_param = dask.compute(trial_param)
-trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
+# trial_sim = [vilar.simulate(np.array(t)) for t in trial_param]
+tp = np.array(trial_param).squeeze()
+
+trial_sim = [vilar.simulate(t) for t in tp]
 trial_ss = [sum_stats.compute(s) for s in trial_sim]
 trial_dist = [dist_fun.compute(ss,s) for s in trial_ss]
 trial_dist = dask.compute(trial_dist)
