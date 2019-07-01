@@ -65,9 +65,13 @@ def generate_tsfresh_features(data, features):  # pragma: no cover
                     yield res
 
     def _wrapper(data):
-        return [list(_f(x)) for x in data]
+        total = []
+        for point in data:
+            total.append([list(_f(species)) for species in point])
+        return total
 
-    return np.array(_wrapper(data))
+    res = np.array(_wrapper(data))
+    return res.reshape(-1, res.shape[1]*res.shape[2])
 
 
 def remove_nan_features(x, features):   # pragma: no cover
