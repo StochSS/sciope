@@ -43,15 +43,29 @@ class UniformPrior(PriorBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Uniform prior in {} dimensions initialized".format(len(self.lb)))
 
-    @delayed
-    def draw(self, n=1):
+    
+    def draw(self, n=1, chunk_size=1):
         """
         Draw 'n' samples within self.lb and self.ub
         :param n: the desired number of samples
         :return: the n-sized vector of drawn samples
         """
+        assert n > chunk_size, "chunk_size can not be larger than n"
+
         d = len(self.lb)
 
+        generated_samples = []
+        m = n % chunk_size
+        if m > 0:
+            generated_samples.append(self._uniform_scale(m, d))
+        
+        for i in range(0, n - m, chunk_size):
+            generated_samples.append(self._uniform_scale(chunk_size, d)) 
+
+        return generated_samples
+    
+    @delayed
+    def _uniform_scale(self, n, d):
         # Generate samples in [-1,1]
         generated_samples = np.random.random((n, d)) * 2 - 1
 
@@ -60,8 +74,7 @@ class UniformPrior(PriorBase):
         for j in range(0, d):
             scaled_values[:, j] = abs((((generated_samples[:, j] + 1) *
                                         (self.ub[j] - self.lb[j])) / 2) + self.lb[j])
-
         if self.use_logger:
             self.logger.info("Uniform Prior: sampled {} points in {} dimensions".format(n, len(self.lb)))
-
+        
         return scaled_values
