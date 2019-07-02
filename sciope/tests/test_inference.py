@@ -1,167 +1,267 @@
-# Copyright 2019 Prashant Singh, Fredrik Wrede and Andreas Hellander
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""
-Test suite for inference algorithms
-"""
-from sciope.inference import abc_inference
-from sciope.inference import bandits_abc
-from sciope.utilities.priors import uniform_prior
-from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
-import sys
+from sciope.features import feature_extraction as fe
+from sciope.utilities.priors import uniform_prior
+from sciope.inference.abc_inference import ABC
+from sciope.inference import bandits_abc
+from sciope.utilities.distancefunctions import naive_squared
+from tsfresh.feature_extraction.settings import MinimalFCParameters
 from sciope.utilities.mab import mab_halving as mh, mab_sar as sar, mab_direct as md, mab_incremental as mi
-from sciope.utilities.distancefunctions import naive_squared as ns
-from sciope.utilities.distancefunctions import euclidean as euc
+from sklearn.metrics import mean_absolute_error
+from gillespy2.solvers.numpy import NumPySSASolver
+from dask.distributed import Client
+import gillespy2
 import pytest
 
-sys.path.append('../../examples/inference/vilar')
-import vilar
-import summaries_tsa as tsa
-import summaries_ensemble as se
-from sklearn.metrics import mean_absolute_error
-from distributed import Client, LocalCluster
+class ToggleSwitch(gillespy2.Model):
+    """ Gardner et al. Nature (1999)
+    'Construction of a genetic toggle switch in Escherichia coli'
+    """
+    def __init__(self, parameter_values=None):
+        # Initialize the model.
+        gillespy2.Model.__init__(self, name="toggle_switch")
+        # Parameters
+        alpha1 = gillespy2.Parameter(name='alpha1', expression=1)
+        alpha2 = gillespy2.Parameter(name='alpha2', expression=1)
+        beta = gillespy2.Parameter(name='beta', expression="2.0")
+        gamma = gillespy2.Parameter(name='gamma', expression="2.0")
+        mu = gillespy2.Parameter(name='mu', expression=1.0)
+        self.add_parameter([alpha1, alpha2, beta, gamma, mu])
 
-# @ToDo; Initialize within fixtures and update function strings
+        # Species
+        U = gillespy2.Species(name='U', initial_value=10)
+        V = gillespy2.Species(name='V', initial_value=10)
+        self.add_species([U, V])
 
-# Load data
-data = np.loadtxt("../../examples/inference/vilar/datasets/vilar_dataset_specieA_50trajs_15time.dat", delimiter=",")
+        # Reactions
+        cu = gillespy2.Reaction(name="r1",reactants={}, products={U:1},
+                propensity_function="alpha1/(1+pow(V,beta))")
+        cv = gillespy2.Reaction(name="r2",reactants={}, products={V:1},
+                propensity_function="alpha2/(1+pow(U,gamma))")
+        du = gillespy2.Reaction(name="r3",reactants={U:1}, products={},
+                rate=mu)
+        dv = gillespy2.Reaction(name="r4",reactants={V:1}, products={},
+                rate=mu)
+        self.add_reaction([cu,cv,du,dv])
+        self.timespan(np.linspace(0,50,101))
 
-# True parameter
-true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+toggle_model = ToggleSwitch()
 
-# Set up the prior, distance functions and summary statistics
-dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
-dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
-mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
-bs_stat = bs.Burstiness(mean_trajectories=True, use_logger=False)
+# Define simulator function
 
-# Set up dask
-cluster = LocalCluster()
-client = Client(cluster)
+def set_model_parameters(params, model):
+    """ params - array, needs to have the same order as
+        model.listOfParameters """
+    for e, (pname, p) in enumerate(model.listOfParameters.items()):
+        model.get_parameter(pname).set_expression(params[e])
+    return model
 
-# For Bandits ABC
-dist_fun = ns.NaiveSquaredDistance(use_logger=False)
-sum_stats = tsa.SummariesTSFRESH()
-mab_algo = mh.MABHalving(bandits_abc.arm_pull)
+# Here we use gillespy2 numpy solver, so performance will
+# be quite slow for this model
 
+def simulator(params, model):
+
+    model_update = set_model_parameters(params, model)
+    num_trajectories = 1  # TODO: howto handle ensembles
+
+    res = model_update.run(solver=NumPySSASolver, show_labels=False,
+                           number_of_trajectories=num_trajectories)
+    tot_res = np.asarray([x.T for x in res]) # reshape to (N, S, T)  
+    tot_res = tot_res[:,1:, :] # should not contain timepoints
+    
+    return tot_res
+
+
+def simulator2(x):
+    return simulator(x, model=toggle_model)
+
+# Set up the prior
+
+default_param = np.array(list(toggle_model.listOfParameters.items()))[:,1]
+bound = []
+for exp in default_param:
+    bound.append(float(exp.expression))
+    
+true_params = np.array(bound)
+dmin = true_params * 0.5
+dmax = true_params * 2.0
+
+uni_prior = uniform_prior.UniformPrior(dmin, dmax)
+
+fixed_data = toggle_model.run(solver=NumPySSASolver, number_of_trajectories=100, show_labels=False)
+
+#reshape data to (N,S,T)
+fixed_data = np.asarray([x.T for x in fixed_data])
+#and remove timepoints 
+fixed_data = fixed_data[:,1:, :]
+
+
+summ_func = lambda x: fe.generate_tsfresh_features(x, MinimalFCParameters())
+
+ns = naive_squared.NaiveSquaredDistance()
 
 def test_abc_functional():
-    abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
-                                     summaries_function=bs_stat)
-    abc_instance.infer(num_samples=30, batch_size=10)
-    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
-    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
-        "ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 15, "ABC inference test failed, error too high"
 
+    abc = ABC(fixed_data, sim=simulator2, prior_function=uni_prior, summaries_function=summ_func, distance_function=ns)
+
+    abc.compute_fixed_mean(chunk_size=2)
+
+    # run in multiprocessing mode
+    res = abc.infer(num_samples=30, batch_size=10, chunk_size=2)
+
+    mae_inference = mean_absolute_error(true_params, abc.results['inferred_parameters'])
+    assert abc.results['trial_count'] > 0 and abc.results['trial_count'] < 300, "ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "ABC inference test failed, error too high"
+
+
+    ## run in cluster mode
+    c = Client()
+    res = abc.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc.results['inferred_parameters'])
+    assert abc.results['trial_count'] > 0 and abc.results['trial_count'] < 300, "ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "ABC inference test failed, error too high"
+
+    c.close()
 
 def test_bandits_abc_functional():
-    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
-                                          distance_function=dist_fun,
-                                          summaries_function=sum_stats,
+    mab_algo = mh.MABHalving(bandits_abc.arm_pull)
+    abc_instance = bandits_abc.BanditsABC(fixed_data, simulator2, epsilon=0.1, prior_function=uni_prior, k=1,
+                                          distance_function=ns,
+                                          summaries_function=summ_func,
                                           mab_variant=mab_algo)
-    abc_instance.infer(num_samples=30, batch_size=10)
+    abc_instance.compute_fixed_mean(chunk_size=2)
+    
+    # run in multiprocessing mode
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
     assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
         "Bandits ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 15, "Bandits ABC inference test failed, error too high"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
 
+    ## run in cluster mode
+    c = Client()
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+
+    c.close()
 
 def test_bandits_abc_functional_direct():
     mab_algo = md.MABDirect(bandits_abc.arm_pull)
-    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
-                                          distance_function=dist_fun,
-                                          summaries_function=sum_stats,
+    abc_instance = bandits_abc.BanditsABC(fixed_data, simulator2, epsilon=0.1, prior_function=uni_prior, k=1,
+                                          distance_function=ns,
+                                          summaries_function=summ_func,
                                           mab_variant=mab_algo)
-    abc_instance.infer(num_samples=30, batch_size=10)
+    abc_instance.compute_fixed_mean(chunk_size=2)
+    
+    # run in multiprocessing mode
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
     assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
         "Bandits ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 15, "Bandits ABC inference test failed, error too high"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
 
+    ## run in cluster mode
+    c = Client()
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+    c.close()
 
 def test_bandits_abc_functional_sar():
     mab_algo = sar.MABSAR(arm_pull=bandits_abc.arm_pull, p=50, b=500)
-    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
-                                          distance_function=dist_fun,
-                                          summaries_function=sum_stats,
+    abc_instance = bandits_abc.BanditsABC(fixed_data, simulator2, epsilon=0.1, prior_function=uni_prior, k=1,
+                                          distance_function=ns,
+                                          summaries_function=summ_func,
                                           mab_variant=mab_algo)
-    abc_instance.infer(num_samples=30, batch_size=10)
+    abc_instance.compute_fixed_mean(chunk_size=2)
+    
+    # run in multiprocessing mode
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
     assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
         "Bandits ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 15, "Bandits ABC inference test failed, error too high"
-
-
-def test_abc_with_logging():
-    abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
-                                     summaries_function=bs_stat, use_logger=True)
-    abc_instance.infer(num_samples=30, batch_size=10)
-    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
-    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
-        "ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 15, "ABC inference test failed, error too high"
-
-
-def test_bandits_abc_with_logging():
-    mab_algo = mh.MABHalving(arm_pull=bandits_abc.arm_pull, use_logger=True)
-    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
-                                          distance_function=dist_fun,
-                                          summaries_function=sum_stats,
-                                          mab_variant=mab_algo,
-                                          use_logger=True)
-    abc_instance.infer(num_samples=30, batch_size=10)
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+    
+    c = Client()
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
     assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
         "Bandits ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 15, "Bandits ABC inference test failed, error too high"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+    c.close()
 
+def test_bandits_abc_functional_with_logging():
+    mab_algo = mh.MABHalving(bandits_abc.arm_pull, use_logger=True)
+    abc_instance = bandits_abc.BanditsABC(fixed_data, simulator2, epsilon=0.1, prior_function=uni_prior, k=1,
+                                          distance_function=ns,
+                                          summaries_function=summ_func,
+                                          mab_variant=mab_algo, use_logger=True)
+    abc_instance.compute_fixed_mean(chunk_size=2)
+    
+    # run in multiprocessing mode
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+
+    ## run in cluster mode
+    c = Client()
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+
+    c.close()
 
 def test_bandits_abc_functional_direct_with_logging():
-    mab_algo = md.MABDirect(arm_pull=bandits_abc.arm_pull, use_logger=True)
-    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
-                                          distance_function=dist_fun,
-                                          summaries_function=sum_stats,
-                                          mab_variant=mab_algo,
-                                          use_logger=True)
-    abc_instance.infer(num_samples=30, batch_size=10)
+    mab_algo = md.MABDirect(bandits_abc.arm_pull, use_logger=True)
+    abc_instance = bandits_abc.BanditsABC(fixed_data, simulator2, epsilon=0.1, prior_function=uni_prior, k=1,
+                                          distance_function=ns,
+                                          summaries_function=summ_func,
+                                          mab_variant=mab_algo, use_logger=True)
+    abc_instance.compute_fixed_mean(chunk_size=2)
+    
+    # run in multiprocessing mode
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
     assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
         "Bandits ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 15, "Bandits ABC inference test failed, error too high"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
 
+    ## run in cluster mode
+    c = Client()
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+    c.close()
 
 def test_bandits_abc_functional_sar_with_logging():
     mab_algo = sar.MABSAR(arm_pull=bandits_abc.arm_pull, p=50, b=500, use_logger=True)
-    abc_instance = bandits_abc.BanditsABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior, k=1,
-                                          distance_function=dist_fun,
-                                          summaries_function=sum_stats,
-                                          mab_variant=mab_algo,
-                                          use_logger=True)
-    abc_instance.infer(num_samples=30, batch_size=10)
+    abc_instance = bandits_abc.BanditsABC(fixed_data, simulator2, epsilon=0.1, prior_function=uni_prior, k=1,
+                                          distance_function=ns,
+                                          summaries_function=summ_func,
+                                          mab_variant=mab_algo, use_logger=True)
+    abc_instance.compute_fixed_mean(chunk_size=2)
+    
+    # run in multiprocessing mode
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
     assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
         "Bandits ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 15, "Bandits ABC inference test failed, error too high"
-
-
-def test_simple_summary_stats():
-    abc_instance = abc_inference.ABC(data, vilar.simulate, epsilon=0.1, prior_function=mm_prior,
-                                     summaries_function=se.SummariesEnsemble(),
-                                     distance_function=euc.EuclideanDistance(), use_logger=False)
-    abc_instance.infer(num_samples=30, batch_size=10)
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+    
+    c = Client()
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
-    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 500, \
-        "ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 15, "ABC inference test failed, error too high"
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+    c.close()
