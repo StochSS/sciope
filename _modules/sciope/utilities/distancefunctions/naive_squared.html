@@ -187,8 +187,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">ml</span><span class="o">.</span><span class="n">SciopeLogger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;NaiveSquaredDistance distance function initialized&quot;</span><span class="p">)</span>
 
-    <span class="nd">@delayed</span>
-    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="NaiveSquaredDistance.compute"><a class="viewcode-back" href="../../../../sciope.utilities.distancefunctions.html#sciope.utilities.distancefunctions.naive_squared.NaiveSquaredDistance.compute">[docs]</a>    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;[summary]</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
@@ -216,7 +216,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;NaiveSquaredDistance: processed data matrices of shape </span><span class="si">{0}</span><span class="s2"> and calculated distance&quot;</span>
                              <span class="s2">&quot; of </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">res</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">res</span></div>
+        <span class="k">return</span> <span class="n">res</span></div></div>
 </pre></div>
 
            </div>

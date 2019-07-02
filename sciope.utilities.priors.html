@@ -188,10 +188,13 @@
 <dd><p>Bases: <a class="reference internal" href="#sciope.utilities.priors.prior_base.PriorBase" title="sciope.utilities.priors.prior_base.PriorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.priors.prior_base.PriorBase</span></code></a></p>
 <p>The uniform prior draws a sample from the uniform distribution in a specified d-dimensional space described as:
 [min_i, max_i], i=1..d</p>
-<dl class="attribute">
+<dl class="method">
 <dt id="sciope.utilities.priors.uniform_prior.UniformPrior.draw">
-<code class="sig-name descname">draw</code><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior.draw" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">n=1</em>, <em class="sig-param">chunk_size=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/uniform_prior.html#UniformPrior.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw ‘n’ samples within self.lb and self.ub
+:param n: the desired number of samples
+:return: the n-sized vector of drawn samples</p>
+</dd></dl>
 
 </dd></dl>
 

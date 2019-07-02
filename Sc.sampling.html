@@ -176,15 +176,29 @@ Ranks monte-carlo samples such that minimum distance between them is maximized</
 Johnson, Mark E., Leslie M. Moore, and Donald Ylvisaker.
 “Minimax and maximin distance designs.”
 Journal of statistical planning and inference 26.2 (1990): 131-148.</p>
-<dl class="attribute">
+<dl class="method">
 <dt id="sciope.sampling.maximin_sampling.MaximinSampling.select_point">
-<code class="sig-name descname">select_point</code><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_point" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">select_point</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get top ranked candidate according to maximin sampling to add to current samples x</p>
+<dl class="simple">
+<dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
+</dd>
+</dl>
+<p>dask.delayed</p>
+</dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="sciope.sampling.maximin_sampling.MaximinSampling.select_points">
-<code class="sig-name descname">select_points</code><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_points" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">select_points</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get ‘n’ top ranked candidates according to maximin sampling to add to current samples x</p>
+<dl class="simple">
+<dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
+</dd>
+<dt>n<span class="classifier">integer</span></dt><dd><p>number of new samples to be selected</p>
+</dd>
+</dl>
+<p>dask.delayed</p>
+</dd></dl>
 
 </dd></dl>
 

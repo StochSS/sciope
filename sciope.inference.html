@@ -195,22 +195,6 @@ in dask if the data is large</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="sciope.inference.abc_inference.ABC.get_dask_graph">
-<code class="sig-name descname">get_dask_graph</code><span class="sig-paren">(</span><em class="sig-param">batch_size</em>, <em class="sig-param">ensemble_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.get_dask_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.get_dask_graph" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs the dask computational graph involving sampling, simulation, summary statistics
-and distances.</p>
-<dl class="simple">
-<dt>batch_size<span class="classifier">int</span></dt><dd><p>The number of points being sampled in each batch.</p>
-</dd>
-</dl>
-<p>ensemble_size : int</p>
-<dl class="simple">
-<dt>dict</dt><dd><p>with keys ‘parameters’, ‘trajectories’, ‘summarystats’ and ‘distances’</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="sciope.inference.abc_inference.ABC.infer">
 <code class="sig-name descname">infer</code><span class="sig-paren">(</span><em class="sig-param">num_samples</em>, <em class="sig-param">batch_size</em>, <em class="sig-param">chunk_size=10</em>, <em class="sig-param">ensemble_size=1</em>, <em class="sig-param">normalize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.infer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.infer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for rejection sampling. Performs ABC rejection sampling</p>
@@ -276,20 +260,6 @@ in dask if the data is large.</p>
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="sciope.inference.abc_inference.get_futures">
-<code class="sig-prename descclassname">sciope.inference.abc_inference.</code><code class="sig-name descname">get_futures</code><span class="sig-paren">(</span><em class="sig-param">lst</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#get_futures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.get_futures" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Loop through items in list to keep order of delayed objects</dt><dd><p>when transforming to futures. firect call of futures_of does not keep the order
-of the objects</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>lst<span class="classifier">array-like</span></dt><dd><p>array containing delayed objects</p>
-</dd>
-</dl>
 </dd></dl>
 
 </div>

@@ -163,8 +163,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># Imports</span>
-<span class="kn">from</span> <span class="nn">sciope.inference.abc_inference</span> <span class="k">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">get_futures</span><span class="p">,</span> <span class="n">_cluster_mode</span>
+<span class="kn">from</span> <span class="nn">sciope.inference.abc_inference</span> <span class="k">import</span> <span class="n">ABC</span>
 <span class="kn">from</span> <span class="nn">sciope.utilities.mab</span> <span class="k">import</span> <span class="n">mab_direct</span> <span class="k">as</span> <span class="n">md</span>
+<span class="kn">from</span> <span class="nn">sciope.core</span> <span class="k">import</span> <span class="n">core</span>
 <span class="kn">from</span> <span class="nn">sciope.utilities.distancefunctions</span> <span class="k">import</span> <span class="n">euclidean</span> <span class="k">as</span> <span class="n">euc</span>
 <span class="kn">from</span> <span class="nn">sciope.utilities.summarystats</span> <span class="k">import</span> <span class="n">burstiness</span> <span class="k">as</span> <span class="n">bs</span>
 <span class="kn">from</span> <span class="nn">sciope.utilities.housekeeping</span> <span class="k">import</span> <span class="n">sciope_logger</span> <span class="k">as</span> <span class="n">ml</span>
@@ -307,12 +308,16 @@
         <span class="n">distances</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># if fixed_mean has not been computed</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixed_mean</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">compute_fixed_mean</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fixed_mean&quot;</span><span class="p">),</span> <span class="s2">&quot;Please call compute_fixed_mean before infer&quot;</span>
 
         <span class="c1"># Get dask graph</span>
-        <span class="n">graph_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dask_graph</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">ensemble_size</span><span class="p">)</span>
-        <span class="n">cluster_mode</span> <span class="o">=</span> <span class="n">_cluster_mode</span><span class="p">()</span>
+        <span class="n">graph_dict</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_graph_chunked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">summaries_function</span><span class="p">,</span>
+                                      <span class="n">batch_size</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">)</span>
+        
+        <span class="n">dist_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fixed_mean</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="n">dist_func</span><span class="p">,</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;summarystats&quot;</span><span class="p">],</span> <span class="n">chunked</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">cluster_mode</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">_cluster_mode</span><span class="p">()</span>
 
         <span class="c1"># do rejection sampling</span>
         <span class="k">while</span> <span class="n">accepted_count</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">:</span>
@@ -321,33 +326,41 @@
             <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">dists</span> <span class="o">=</span> <span class="p">[]</span>
 
+            <span class="c1"># If dask cluster is used, use persist and futures, and scale as result is completed</span>
             <span class="k">if</span> <span class="n">cluster_mode</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running in cluster mode&quot;</span><span class="p">)</span>
                 <span class="n">res_param</span><span class="p">,</span> <span class="n">res_dist</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">])</span>
 
-                <span class="n">futures_dist</span> <span class="o">=</span> <span class="n">get_futures</span><span class="p">(</span><span class="n">res_dist</span><span class="p">)</span>
-                <span class="n">futures_params</span> <span class="o">=</span> <span class="n">get_futures</span><span class="p">(</span><span class="n">res_param</span><span class="p">)</span>
+                <span class="n">futures_dist</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_futures</span><span class="p">(</span><span class="n">res_dist</span><span class="p">)</span>
+                <span class="n">futures_params</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_futures</span><span class="p">(</span><span class="n">res_param</span><span class="p">)</span>
 
                 <span class="n">keep_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">futures_dist</span><span class="p">)}</span>
 
                 <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures_dist</span><span class="p">,</span> <span class="n">with_results</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-                    <span class="n">dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
-                        <span class="c1"># Normalize distances between [0,1]</span>
-                        <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_distance</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dist</span><span class="p">:</span>
+                        <span class="n">dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+                            <span class="c1"># Normalize distances between [0,1]</span>
+                            <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_distance</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+
                     <span class="n">idx</span> <span class="o">=</span> <span class="n">keep_idx</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">key</span><span class="p">]</span>
-                    <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">futures_params</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>
+                    <span class="n">params_res</span> <span class="o">=</span> <span class="n">futures_params</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_res</span><span class="p">:</span>
+                        <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
                 <span class="k">del</span> <span class="n">futures_dist</span><span class="p">,</span> <span class="n">futures_params</span><span class="p">,</span> <span class="n">res_param</span><span class="p">,</span> <span class="n">res_dist</span>
 
+            <span class="c1"># else use multiprocessing mode</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running in parallel mode&quot;</span><span class="p">)</span>
                 <span class="n">params</span><span class="p">,</span> <span class="n">dists</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">])</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">_reshape_chunks</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+                <span class="n">dists</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">_reshape_chunks</span><span class="p">(</span><span class="n">dists</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">dists</span><span class="p">:</span>
-                        <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_distance</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dists</span><span class="p">:</span>
+                        <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_distance</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
                 <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sim_dist_scaled</span><span class="p">)</span>

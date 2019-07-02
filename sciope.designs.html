@@ -180,10 +180,28 @@
 * use_logger                        (a boolean variable controlling whether logging is enabled or disabled)</p>
 <p>Methods:
 * generate                                  (returns a delayed object that can generated the desired number of samples)</p>
-<dl class="attribute">
+<dl class="method">
+<dt id="sciope.designs.factorial_design.FactorialDesign.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">n_samples</em>, <em class="sig-param">chunk_size=1</em>, <em class="sig-param">auto_redesign=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/factorial_design.html#FactorialDesign.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw specified number of points from a generated LHD</p>
+<dl class="simple">
+<dt>n_samples<span class="classifier">integer</span></dt><dd><p>[]</p>
+</dd>
+<dt>n: integer</dt><dd><p>[]</p>
+</dd>
+<dt>auto_redesign<span class="classifier">boolean</span></dt><dd><p>[]</p>
+</dd>
+</dl>
+<p>vector/array</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="sciope.designs.factorial_design.FactorialDesign.generate">
-<code class="sig-name descname">generate</code><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign.generate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/factorial_design.html#FactorialDesign.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-classable method for generating a factorial design of specified ‘levels’ in the given domain.
+The number of generated points is levels^d.</p>
+<p>dask.delayed</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -283,7 +301,7 @@ International journal for numerical methods in engineering 82, no. 2 (2010): 135
 <dl class="method">
 <dt id="sciope.designs.latin_hypercube_sampling.LatinHypercube.draw">
 <code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">n_samples</em>, <em class="sig-param">n=50</em>, <em class="sig-param">chunk_size=1</em>, <em class="sig-param">auto_redesign=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/latin_hypercube_sampling.html#LatinHypercube.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube.draw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw specified number of points from a LHD</p>
+<dd><p>Draw specified number of points from a generated LHD</p>
 <dl class="simple">
 <dt>n_samples<span class="classifier">integer</span></dt><dd><p>[]</p>
 </dd>
