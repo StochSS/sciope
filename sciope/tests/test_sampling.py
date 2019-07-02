@@ -17,6 +17,7 @@ Test suite for sampling algorithms
 from sciope.designs import latin_hypercube_sampling as lhs
 from sciope.sampling import maximin_sampling as ms
 import numpy as np
+import dask
 import pytest
 
 
@@ -28,13 +29,15 @@ def test_maximin_functional():
     n_initial_points = 10
     lhs_obj = lhs.LatinHypercube(lb, ub, use_logger=False)
     lhs_del = lhs_obj.generate(n_initial_points)
-    lhs_points = lhs_del.compute()
+    lhs_points, = dask.compute(lhs_del)
 
     # Get 10 additional points using maximin sampling
     n_new_points = 10
     ms_obj = ms.MaximinSampling(lb, ub, use_logger=False)
     ms_del = ms_obj.select_points(lhs_points, n_new_points)
-    ms_points = ms_del.compute()
+    ms_points, = dask.compute(ms_del)
+
+    ms_points = np.asarray(ms_points)
 
     assert ms_points.shape[0] == n_new_points, "MaximinSampling test error, dimensions mismatch"
     assert ms_points.shape[1] == n_dims, "MaximinSampling test error, dimensions mismatch"
@@ -48,13 +51,15 @@ def test_maximin_functional_with_logging():
     n_initial_points = 10
     lhs_obj = lhs.LatinHypercube(lb, ub, use_logger=True)
     lhs_del = lhs_obj.generate(n_initial_points)
-    lhs_points = lhs_del.compute()
+    lhs_points, = dask.compute(lhs_del)
 
     # Get 10 additional points using maximin sampling
     n_new_points = 10
-    ms_obj = ms.MaximinSampling(lb, ub, use_logger=True)
+    ms_obj = ms.MaximinSampling(lb, ub, use_logger=False)
     ms_del = ms_obj.select_points(lhs_points, n_new_points)
-    ms_points = ms_del.compute()
+    ms_points, = dask.compute(ms_del)
+
+    ms_points = np.asarray(ms_points)
 
     assert ms_points.shape[0] == n_new_points, "MaximinSampling test error, dimensions mismatch"
     assert ms_points.shape[1] == n_dims, "MaximinSampling test error, dimensions mismatch"
