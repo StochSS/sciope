@@ -18,8 +18,11 @@ from sciope.utilities.distancefunctions import euclidean, manhattan, naive_squar
 from sciope.utilities.mab import mab_direct, mab_incremental, mab_halving, mab_sar
 from sciope.utilities.priors import uniform_prior
 from sciope.utilities.summarystats import burstiness, global_max, global_min, temporal_mean, temporal_variance
+from sciope.core import core
+from dask.distributed import Client
 import numpy as np
 from scipy.spatial.distance import cityblock
+import dask
 import pytest
 
 
@@ -30,13 +33,13 @@ def test_distance_functions():
 
     # calculate Euclidean distance using sciope and numpy
     euc_func = euclidean.EuclideanDistance()
-    euc_dist = euc_func.compute(v1, v2).compute()
+    euc_dist = euc_func.compute(v1, v2)
     validation_val = np.linalg.norm(v1 - v2)
     assert euc_dist == validation_val, "EuclideanDistance functional test error, expected value mismatch"
 
     # now for Manhattan distance
     man_func = manhattan.ManhattanDistance()
-    man_dist = man_func.compute(v1, v2).compute()
+    man_dist = man_func.compute(v1, v2)
     validation_val = cityblock(v1, v2)
     assert man_dist == validation_val, "ManhattanDistance functional test error, expected value mismatch"
 
@@ -45,7 +48,7 @@ def test_distance_functions():
     v3 = np.asarray([0, 0, 0])
     v4 = np.asarray([1, 1, 1])
     validation_val = v4
-    ns_dist = ns_func.compute(v3, v4).compute()
+    ns_dist = ns_func.compute(v3, v4)
     assert np.array_equal(ns_dist, validation_val), "NaiveSquaredDistance functional test error, " \
                                                     "expected value mismatch"
 
@@ -55,13 +58,50 @@ def test_uniform_prior():
     ub = np.asarray([5, 5])
     num_samples = 5
     prior_func = uniform_prior.UniformPrior(lb, ub)
-    samples = prior_func.draw(num_samples).compute()
+
+    #multiprocessing mode
+    samples = prior_func.draw(num_samples, chunk_size=1)
+    assert len(samples) == 5, "UniformPrior functional test error, expected chunk count mismatch"
+    samples, = dask.compute(samples)
+    samples = np.asarray(samples)
     assert samples.shape[0] == num_samples, "UniformPrior functional test error, expected sample count mismatch"
-    assert samples.shape[1] == len(lb), "UniformPrior functional test error, dimension mismatch"
+    assert samples.shape[1] == 1, "UniformPrior functional test error, expected chunk size mismatch"
+    assert samples.shape[2] == len(lb), "UniformPrior functional test error, dimension mismatch"
+    samples = samples.reshape(-1, len(lb))
     axis_mins = np.min(samples, 0)
     axis_maxs = np.max(samples, 0)
     assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
         "UniformPrior functional test error, drawn samples out of bounds"
+    
+    #Cluster mode
+    c = Client()
+    samples = prior_func.draw(num_samples, chunk_size=1)
+    assert len(samples) == 5, "UniformPrior functional test error, expected chunk count mismatch"
+    samples, = dask.compute(samples)
+    samples = np.asarray(samples)
+    assert samples.shape[0] == num_samples, "UniformPrior functional test error, expected sample count mismatch"
+    assert samples.shape[1] == 1, "UniformPrior functional test error, expected chunk size mismatch"
+    assert samples.shape[2] == len(lb), "UniformPrior functional test error, dimension mismatch"
+    samples = samples.reshape(-1, len(lb))
+    axis_mins = np.min(samples, 0)
+    axis_maxs = np.max(samples, 0)
+    assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
+        "UniformPrior functional test error, drawn samples out of bounds"
+
+    #chunk_size = 2
+    samples = prior_func.draw(num_samples, chunk_size=2)
+    assert len(samples) == 3, "UniformPrior functional test error, expected chunk count mismatch"
+    samples, = dask.compute(samples)
+    samples = np.asarray(samples)
+    assert samples.shape[0] == 3, "UniformPrior functional test error, expected sample count mismatch"
+    assert samples[-1].shape[0] == 2, "UniformPrior functional test error, expected chunk size mismatch"
+    assert samples[-1].shape[1] == len(lb), "UniformPrior functional test error, dimension mismatch"
+    samples = core._reshape_chunks(samples)
+    axis_mins = np.min(samples, 0)
+    axis_maxs = np.max(samples, 0)
+    assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
+        "UniformPrior functional test error, drawn samples out of bounds"
+    c.close()
 
 
 def test_distance_functions_with_logging():
@@ -71,13 +111,13 @@ def test_distance_functions_with_logging():
 
     # calculate Euclidean distance using sciope and numpy
     euc_func = euclidean.EuclideanDistance(use_logger=True)
-    euc_dist = euc_func.compute(v1, v2).compute()
+    euc_dist = euc_func.compute(v1, v2)
     validation_val = np.linalg.norm(v1 - v2)
     assert euc_dist == validation_val, "EuclideanDistance functional test error, expected value mismatch"
 
     # now for Manhattan distance
     man_func = manhattan.ManhattanDistance(use_logger=True)
-    man_dist = man_func.compute(v1, v2).compute()
+    man_dist = man_func.compute(v1, v2)
     validation_val = cityblock(v1, v2)
     assert man_dist == validation_val, "ManhattanDistance functional test error, expected value mismatch"
 
@@ -86,7 +126,7 @@ def test_distance_functions_with_logging():
     v3 = np.asarray([0, 0, 0])
     v4 = np.asarray([1, 1, 1])
     validation_val = v4
-    ns_dist = ns_func.compute(v3, v4).compute()
+    ns_dist = ns_func.compute(v3, v4)
     assert np.array_equal(ns_dist, validation_val), "NaiveSquaredDistance functional test error, " \
                                                     "expected value mismatch"
 
@@ -96,10 +136,47 @@ def test_uniform_prior_with_logging():
     ub = np.asarray([5, 5])
     num_samples = 5
     prior_func = uniform_prior.UniformPrior(lb, ub, use_logger=True)
-    samples = prior_func.draw(num_samples).compute()
+
+    #multiprocessing mode
+    samples = prior_func.draw(num_samples, chunk_size=1)
+    assert len(samples) == 5, "UniformPrior functional test error, expected chunk count mismatch"
+    samples, = dask.compute(samples)
+    samples = np.asarray(samples)
     assert samples.shape[0] == num_samples, "UniformPrior functional test error, expected sample count mismatch"
-    assert samples.shape[1] == len(lb), "UniformPrior functional test error, dimension mismatch"
+    assert samples.shape[1] == 1, "UniformPrior functional test error, expected chunk size mismatch"
+    assert samples.shape[2] == len(lb), "UniformPrior functional test error, dimension mismatch"
+    samples = samples.reshape(-1, len(lb))
     axis_mins = np.min(samples, 0)
     axis_maxs = np.max(samples, 0)
     assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
         "UniformPrior functional test error, drawn samples out of bounds"
+    
+    #Cluster mode
+    c = Client()
+    samples = prior_func.draw(num_samples, chunk_size=1)
+    assert len(samples) == 5, "UniformPrior functional test error, expected chunk count mismatch"
+    samples, = dask.compute(samples)
+    samples = np.asarray(samples)
+    assert samples.shape[0] == num_samples, "UniformPrior functional test error, expected sample count mismatch"
+    assert samples.shape[1] == 1, "UniformPrior functional test error, expected chunk size mismatch"
+    assert samples.shape[2] == len(lb), "UniformPrior functional test error, dimension mismatch"
+    samples = samples.reshape(-1, len(lb))
+    axis_mins = np.min(samples, 0)
+    axis_maxs = np.max(samples, 0)
+    assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
+        "UniformPrior functional test error, drawn samples out of bounds"
+
+    #chunk_size = 2
+    samples = prior_func.draw(num_samples, chunk_size=2)
+    assert len(samples) == 3, "UniformPrior functional test error, expected chunk count mismatch"
+    samples, = dask.compute(samples)
+    samples = np.asarray(samples)
+    assert samples.shape[0] == 3, "UniformPrior functional test error, expected sample count mismatch"
+    assert samples[-1].shape[0] == 2, "UniformPrior functional test error, expected chunk size mismatch"
+    assert samples[-1].shape[1] == len(lb), "UniformPrior functional test error, dimension mismatch"
+    samples = core._reshape_chunks(samples)
+    axis_mins = np.min(samples, 0)
+    axis_maxs = np.max(samples, 0)
+    assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
+        "UniformPrior functional test error, drawn samples out of bounds"
+    c.close()
