@@ -31,5 +31,10 @@ def test_utilities():
     from sciope.utilities.housekeeping import sciope_logger, sciope_profiler
     from sciope.utilities.mab import mab_base, mab_direct, mab_halving, mab_incremental, mab_sar
     from sciope.utilities.priors import prior_base, uniform_prior
-    from sciope.utilities.summarystats import burstiness, global_max, global_min, summary_base, temporal_mean, \
-        temporal_variance
+    from sciope.utilities.summarystats import burstiness, global_max, global_min, summary_base, temporal_mean, temporal_variance
+    
+def test_core():
+    from sciope.core import core
+
+
+
