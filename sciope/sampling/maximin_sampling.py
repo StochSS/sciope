@@ -22,6 +22,7 @@ from scipy.spatial import distance_matrix
 from sciope.utilities.housekeeping import sciope_logger as ml
 import numpy as np
 from dask import delayed
+import dask.array as da
 
 
 # Class definition
@@ -60,7 +61,7 @@ class MaximinSampling(SamplingBase):
     # Example call:
     # ms = MaximinSampling([0,0], [1,1])
     # new_points = ms.select_point(X)
-    @delayed
+    
     def select_point(self, x):
         """
         Get top ranked candidate according to maximin sampling to add to current samples x
@@ -81,7 +82,7 @@ class MaximinSampling(SamplingBase):
         num_candidates = num_samples * candidates_ratio
 
         # Generate MC candidates
-        c = np.random.uniform(low=self.xmin, high=self.xmax, size=(num_candidates, num_dimensions))
+        c = da.random.uniform(low=self.xmin, high=self.xmax, size=(num_candidates, num_dimensions))
 
         # Compute distances
         # p = 1 implies Manhattan distance
@@ -98,7 +99,7 @@ class MaximinSampling(SamplingBase):
             self.logger.info("Maximin sequential design: selected one new sample")
         return c[idx[0], :]
 
-    @delayed
+    
     def select_points(self, x, n):
         """
         Get 'n' top ranked candidates according to maximin sampling to add to current samples x
@@ -114,13 +115,13 @@ class MaximinSampling(SamplingBase):
         -------
         dask.delayed
         """
+        x = da.from_array(x, chunks='auto')
         c = []
         for idx in range(0, n):
-            c_new = delayed(self.select_point(x))
-            c_new_p = c_new.compute()
-            x = np.vstack((x, c_new_p))
-            c.append(c_new_p)
+            c_new = self.select_point(x)
+            x = da.vstack((x, c_new))
+            c.append(c_new.to_delayed()[0])
 
         if self.use_logger:
             self.logger.info("Maximin sequential design: selected {0} new samples".format(n))
-        return np.array(c)
+        return c
