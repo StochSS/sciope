@@ -295,7 +295,7 @@ class LatinHypercube(InitialDesignBase):
 
     def draw(self, n_samples, n=50, chunk_size = 1, auto_redesign=True):
         """
-        Draw specified number of points from a LHD
+        Draw specified number of points from a generated LHD
 
         Parameters
         ----------

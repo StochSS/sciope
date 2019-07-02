@@ -2,8 +2,10 @@ import numpy as np
 from sciope.features import feature_extraction as fe
 from sciope.utilities.priors import uniform_prior
 from sciope.inference.abc_inference import ABC
+from sciope.inference import bandits_abc
 from sciope.utilities.distancefunctions import naive_squared
 from tsfresh.feature_extraction.settings import MinimalFCParameters
+from sciope.utilities.mab import mab_halving as mh, mab_sar as sar, mab_direct as md, mab_incremental as mi
 from sklearn.metrics import mean_absolute_error
 from gillespy2.solvers.numpy import NumPySSASolver
 from dask.distributed import Client
@@ -97,6 +99,8 @@ summ_func = lambda x: fe.generate_tsfresh_features(x, MinimalFCParameters())
 
 ns = naive_squared.NaiveSquaredDistance()
 
+mab_algo = mh.MABHalving(bandits_abc.arm_pull)
+
 def test_new_abc_functional():
 
     abc = ABC(fixed_data, sim=simulator2, prior_function=uni_prior, summaries_function=summ_func, distance_function=ns)
@@ -118,5 +122,76 @@ def test_new_abc_functional():
     assert abc.results['trial_count'] > 0 and abc.results['trial_count'] < 300, "ABC inference test failed, trial count out of bounds"
     assert mae_inference < 0.5, "ABC inference test failed, error too high"
 
+    c.close()
+
+def test_new_bandits_abc_functional():
+    abc_instance = bandits_abc.BanditsABC(fixed_data, simulator2, epsilon=0.1, prior_function=uni_prior, k=1,
+                                          distance_function=ns,
+                                          summaries_function=summ_func,
+                                          mab_variant=mab_algo)
+    abc_instance.compute_fixed_mean(chunk_size=2)
+    
+    # run in multiprocessing mode
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+
+    ## run in cluster mode
+    c = Client()
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+
+    c.close()
+
+def test_new_bandits_abc_functional_direct():
+    mab_algo = md.MABDirect(bandits_abc.arm_pull)
+    abc_instance = bandits_abc.BanditsABC(fixed_data, simulator2, epsilon=0.1, prior_function=uni_prior, k=1,
+                                          distance_function=ns,
+                                          summaries_function=summ_func,
+                                          mab_variant=mab_algo)
+    abc_instance.compute_fixed_mean(chunk_size=2)
+    
+    # run in multiprocessing mode
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+
+    ## run in cluster mode
+    c = Client()
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+    c.close()
+
+def test_new_bandits_abc_functional_sar():
+    mab_algo = sar.MABSAR(arm_pull=bandits_abc.arm_pull, p=50, b=500)
+    abc_instance = bandits_abc.BanditsABC(fixed_data, simulator2, epsilon=0.1, prior_function=uni_prior, k=1,
+                                          distance_function=ns,
+                                          summaries_function=summ_func,
+                                          mab_variant=mab_algo)
+    abc_instance.compute_fixed_mean(chunk_size=2)
+    
+    # run in multiprocessing mode
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
+    
+    c = Client()
+    abc_instance.infer(num_samples=30, batch_size=10, chunk_size=2)
+    mae_inference = mean_absolute_error(true_params, abc_instance.results['inferred_parameters'])
+    assert abc_instance.results['trial_count'] > 0 and abc_instance.results['trial_count'] < 300, \
+        "Bandits ABC inference test failed, trial count out of bounds"
+    assert mae_inference < 0.5, "Bandits ABC inference test failed, error too high"
     c.close()
 
