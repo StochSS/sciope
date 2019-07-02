@@ -21,9 +21,13 @@ import numpy as np
 from distributed import Client, LocalCluster
 import pytest
 
-# Set up dask
-cluster = LocalCluster()
-client = Client(cluster)
+@pytest.fixture(scope='session', autouse=True)
+def setup_dask():
+     # Set up dask
+     cluster = LocalCluster()
+     client = Client(cluster)
+     yield
+     client.close()
 
 
 def test_lhs_functional():
@@ -110,6 +114,57 @@ def test_factorial_functional():
     fd_points = fd_delayed.compute()
     assert fd_points.shape[0] == np.power(num_levels, num_dims), "FactorialDesign test failed, dimensions mismatch"
     assert fd_points.shape[1] == num_dims, "FactorialDesign test failed, dimensions mismatch"
+
+
+    # default chunk_size = 1 
+    num_samples = 10
+    samples = fd_obj.draw(n_samples=num_samples)
+
+    assert len(samples) == 10, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(fd_obj.random_idx) == 17, "LatinHypercube sampling test failed, dimensions mismatch"
+    for d in samples:
+         sample = d.compute()
+         assert sample.shape == (1,num_dims)
+    
+    samples = fd_obj.draw(n_samples=5)
+    assert len(samples) == 5, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(fd_obj.random_idx) == 12, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    # n_samples > len(random_idx)
+    samples = fd_obj.draw(n_samples=20)
+    assert len(samples) == 12, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(fd_obj.random_idx) == 0, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    # default auto_redesign = True
+    samples = fd_obj.draw(n_samples=5)
+    assert len(samples) == 5, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(fd_obj.random_idx) == 22, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    # chunk_size = 2 
+    num_samples = 10
+    fd_obj = fd.FactorialDesign(num_levels, lb, ub, use_logger=False)
+    samples = fd_obj.draw(n_samples=num_samples, chunk_size=2)
+
+    assert len(samples) == 5, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(fd_obj.random_idx) == 17, "LatinHypercube sampling test failed, dimensions mismatch"
+    for d in samples:
+         sample = d.compute()
+         assert sample.shape == (2,num_dims)
+    
+    samples = fd_obj.draw(n_samples=5, chunk_size=2)
+    assert len(samples) == 3, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(fd_obj.random_idx) == 12, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    # n_samples > len(random_idx)
+    samples = fd_obj.draw(n_samples=20, chunk_size=2)
+    assert len(samples) == 6, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(fd_obj.random_idx) == 0, "LatinHypercube sampling test failed, dimensions mismatch"
+
+    # default auto_redesign = True
+    samples = fd_obj.draw(n_samples=5, chunk_size=2)
+    assert len(samples) == 3, "LatinHypercube sampling test failed, dimensions mismatch"
+    assert len(fd_obj.random_idx) == 22, "LatinHypercube sampling test failed, dimensions mismatch"
+    
 
 
 def test_lhs_functional_with_logging():

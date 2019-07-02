@@ -18,8 +18,10 @@ Factorial Initial Design
 # Imports
 from sciope.designs.initial_design_base import InitialDesignBase
 from sciope.utilities.housekeeping import sciope_logger as ml
+from toolz import partition_all
 from dask import delayed
 import dask.array as da
+import numpy as np
 
 
 # Class definition
@@ -63,7 +65,7 @@ class FactorialDesign(InitialDesignBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Factorial design in {0} dimensions initialized".format(len(self.xmin)))
 
-    @delayed
+    
     def generate(self):
         """
         Sub-classable method for generating a factorial design of specified 'levels' in the given domain.
@@ -74,6 +76,9 @@ class FactorialDesign(InitialDesignBase):
         dask.delayed
             
         """
+        if hasattr(self, 'random_idx'):
+            del self.random_idx
+
         # Get grid coordinates
         grid_coords = [da.linspace(lb, ub, num=self.levels) for lb, ub in zip(self.xmin, self.xmax)]
 
@@ -81,6 +86,66 @@ class FactorialDesign(InitialDesignBase):
         x = da.meshgrid(*grid_coords)
         dim_idx = [item.ravel() for item in x]
         x = da.vstack(dim_idx).T
+        x = x.rechunk(('auto', x.shape[1]))
         if self.use_logger:
             self.logger.info("Factorial design: generated {0} points in {1} dimensions".format(len(x), len(self.xmin)))
+        self.generated = x
         return x
+    
+
+    def draw(self,n_samples, chunk_size=1, auto_redesign=True):
+        """
+        Draw specified number of points from a generated LHD
+
+        Parameters
+        ----------
+        n_samples : integer
+            []
+        n: integer
+            []
+        auto_redesign : boolean
+            []
+
+        Returns
+        -------
+        vector/array
+        """
+        if not hasattr(self, 'generated'):
+            self.generate()
+
+        if not hasattr(self, 'random_idx'):
+            self.random_idx = np.arange(self.generated.shape[0])
+        
+        len_random = len(self.random_idx)
+        if len_random == 0:
+            del self.generated
+            del self.random_idx
+            if auto_redesign:
+                if self.use_logger:
+                    self.logger.info("{0} points left to draw form Latin hypercube design:\
+                    computing new design for {0} points".format(n))
+                return self.draw(n_samples, chunk_size=chunk_size)
+            else:
+                raise(ValueError)("{0} points left to draw form Latin hypercube design:\
+                clearing design".format(len_random))
+
+        if n_samples > len_random: 
+            if self.use_logger:
+                self.logger.info("Only {0} points left to draw form Latin hypercube design:\
+                    setting n_samples to {0}".format(len_random))
+            idx = range(len_random)
+        else:   
+            idx = np.random.choice(range(len_random), n_samples, replace=False)
+        
+        idx_chunks = partition_all(chunk_size, idx)
+        delays = []
+        for i in idx_chunks:
+            i = list(i)
+            rand_idx = self.random_idx[i]
+            delay = self.generated[rand_idx].to_delayed()[0]
+            delays.append(delay[0])
+            
+        self.random_idx = np.delete(self.random_idx, idx)    
+
+        return delays
+
