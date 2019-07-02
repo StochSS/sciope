@@ -131,11 +131,6 @@ class ABC(InferenceBase):
         stats_mean = core.get_fixed_mean(self.data, self.summaries_function, chunk_size)
         self.fixed_mean = stats_mean.compute()
         del stats_mean
-    
-    def _reshape_chunks(self, data):
-        data = np.asarray(data)
-        data = data.reshape(-1, data.shape[-1])
-        return data 
 
     # @sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size, normalize):
@@ -216,8 +211,8 @@ class ABC(InferenceBase):
                 if self.use_logger:
                     self.logger.info("running in parallel mode")
                 params, dists = dask.compute(graph_dict["parameters"], graph_dict["distances"])
-                params = self._reshape_chunks(params)
-                dists = self._reshape_chunks(dists)
+                params = core._reshape_chunks(params)
+                dists = core._reshape_chunks(dists)
                 if normalize:
                     for d in dists:
                         sim_dist_scaled.append(self.scale_distance(d))

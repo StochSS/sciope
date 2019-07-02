@@ -138,7 +138,12 @@ def get_distance(dist_func, X, chunked=True):
     else:
         sim_dist = [delayed(dist_func)(x) for x in X]
     
-    return sim_dist 
+    return sim_dist
+
+def _reshape_chunks(data):
+    data = np.asarray(data)
+    data = data.reshape(-1, data.shape[-1])
+    return data 
 
 def get_graph_unchunked(param_func, sim_func, summaries_func=None, dist_func=None,
                    fixed=None, batch_size=10, ensemble_size=1):
