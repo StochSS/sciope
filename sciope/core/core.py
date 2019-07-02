@@ -142,8 +142,17 @@ def get_distance(dist_func, X, chunked=True):
 
 def _reshape_chunks(data):
     data = np.asarray(data)
-    data = data.reshape(-1, data.shape[-1])
-    return data 
+    if len(data.shape) > 1:
+        data = data.reshape(-1, data.shape[-1])
+        return data
+    else:
+        new = []
+        for chunk in data:
+            for point in chunk:
+                new.append(point)
+        new = np.asarray(new) 
+        assert len(new.shape) > 1 
+        return np.asarray(new)  
 
 def get_graph_unchunked(param_func, sim_func, summaries_func=None, dist_func=None,
                    fixed=None, batch_size=10, ensemble_size=1):
