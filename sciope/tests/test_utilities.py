@@ -18,6 +18,7 @@ from sciope.utilities.distancefunctions import euclidean, manhattan, naive_squar
 from sciope.utilities.mab import mab_direct, mab_incremental, mab_halving, mab_sar
 from sciope.utilities.priors import uniform_prior
 from sciope.utilities.summarystats import burstiness, global_max, global_min, temporal_mean, temporal_variance
+from sciope.utilities.summarystats import auto_tsfresh
 from sciope.core import core
 from dask.distributed import Client
 import numpy as np
@@ -180,3 +181,35 @@ def test_uniform_prior_with_logging():
     assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
         "UniformPrior functional test error, drawn samples out of bounds"
     c.close()
+
+
+def test_summarystats_auto_tsfresh():
+    samples = np.random.randn(2, 2, 10)
+    #corrcoef = False, will compute mean
+    at = auto_tsfresh.SummariesTSFRESH()
+    stats = at.compute(samples)
+    assert stats.shape == (1, 14), "summarystats auto_tsfresh test failed, dimension mismatch"
+
+    #corrcoef = True
+    at.corrcoef = True
+    stats = at.compute(samples)
+    assert stats.shape == (1, 15), "summarystats auto_tsfresh test failed, dimension mismatch"
+
+    samples = np.random.randn(1, 1, 10)
+    #corrcoef = False, will compute mean
+    at = auto_tsfresh.SummariesTSFRESH()
+    stats = at.compute(samples)
+    assert stats.shape == (1, 7), "summarystats auto_tsfresh test failed, dimension mismatch"
+
+    #corrcoef = True, should raise AssertionError
+    at.corrcoef = True
+    with pytest.raises(AssertionError) as excinfo:
+        stats = at.compute(samples)
+    assert "corrcoef = True can only be used if the n_species > 1" in str(excinfo.value)
+
+    #input wrong shape, should rasie AssertionError
+    samples = np.random.randn(1, 10)
+    with pytest.raises(AssertionError) as excinfo:
+        stats = at.compute(samples)
+    assert "required input shape is (n_points, n_species, n_timepoints)" in str(excinfo.value)
+    
