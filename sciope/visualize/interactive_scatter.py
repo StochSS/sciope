@@ -73,8 +73,9 @@ def interative_scatter(scatter_data, data_class=None):  # pragma: no cover
     # draw trajectory function
     def draw_trajectory(axis, idx, species_idx):    # pragma: no cover
         ts_data = data_class.ts[idx]
-        ts_data = ts_data.T[species_idx]
-        axis.plot(ts_data)
+        ts_data = ts_data[:,species_idx,:]
+        for point in ts_data:
+            axis.plot(point)
         axis.figure.canvas.draw_idle()
 
     # define the behaviour -> what happens when you pick a dot on the scatterplot by clicking close to it

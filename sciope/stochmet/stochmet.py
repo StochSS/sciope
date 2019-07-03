@@ -20,29 +20,15 @@ from sciope.utilities.priors.prior_base import PriorBase
 from sciope.visualize.interactive_scatter import interative_scatter
 from tsfresh.feature_extraction import MinimalFCParameters
 from sciope.data.dataset import DataSet
+from sciope.core import core
 from sklearn.manifold import t_sne
 from sklearn.decomposition import PCA, KernelPCA
-from dask import persist, delayed
+from dask import persist, delayed, compute
 from dask.distributed import as_completed, futures_of
 import numpy as np
 import umap
 from itertools import combinations
 
-
-def get_futures(lst):
-    """ Loop through items in list to keep order of delayed objects
-        when transforming to futures. firect call of futures_of does not keep the order
-        of the objects
-    
-    Parameters
-    ----------
-    lst : array-like
-        array containing delayed objects
-    """
-    f = []
-    for i in lst:
-        f.append(futures_of(i)[0])
-    return f
 
 
 def _do_tsne(data, nr_components=2, init='random', plex=30,
@@ -174,62 +160,6 @@ def _do_dimension_reduction(X, method, kwargs={}):
         return _do_kpca(X, **kwargs)
 
 
-class EventFired(Exception):
-    """ 
-    Exception class to handle events in solvers
-    
-    """
-    pass
-
-
-class SummariesTSFRESH(SummaryBase):
-    """
-    Class for computing features/statistics on time series data.
-    An ensemble of different statistics from TSFRESH are supported.
-    """
-
-    def __init__(self):
-        self.name = 'SummariesTSFRESH'
-        self.features = MinimalFCParameters()
-        self.features.pop('length')
-        super(SummariesTSFRESH, self).__init__(self.name)
-
-    def distribute(self, point):
-        """
-        Computes features for one point (time series).
-        
-        Parameters
-        ----------
-        point : ndarray
-            trajectory of shape n_timepoints x 1
-
-        Returns
-        -------
-        list
-            list of generated features 
-        """
-        return list(generate_tsfresh_features(data=[point], features=self.features)[0])
-
-    def correlation(self, x, y):
-        """
-        Computes the Pearson correlation coefficient between two trajectories
-        
-        Parameters
-        ---------
-
-        x : ndarray 
-            Trajectory of shape n_timepoints x 1 
-
-        y: ndarray 
-            Trajectory of shape n_timepoints x 1 
-
-        Returns
-        list
-            list of generated feature
-        """
-        return [np.corrcoef(x, y)[0, 1]]
-
-
 class DataSetMET(DataSet):
     """ 
     DataSet class. Container for keeping MET results in memory. 
@@ -293,28 +223,23 @@ class StochMET():
 
     """
 
-    def __init__(self, simulator=None, sampler=None, features=None, default_batch_size=10):
+    def __init__(self, sim, sampler, summarystats, default_batch_size=100, default_chunk_size=10):
 
-        assert callable(simulator), "simulator must be a callable function"
+        assert callable(sim), "simulator must be a callable function"
 
         allowed_sampler = ["InitialDesignBase", "PriorBase", "SamplingBase"]
         assert isinstance(sampler,
                           (InitialDesignBase, PriorBase, SamplingBase)), "sampling must be an instance of: {0}".format(
             allowed_sampler)
 
-        self.simulator = simulator
+        self.simulator = sim
         self.sampling = sampler
         self.batch_size = default_batch_size
+        self.chunk_size = default_chunk_size
         self.data = DataSetMET()
-        self.summaries = SummariesTSFRESH()
-        if features is None:
-            self.features = MinimalFCParameters()
-            self.features.pop('length')
-        else:
-            self.features = features  # TODO: check supported format
-        self.summaries.features = self.features
+        self.summaries = summarystats
 
-    def compute(self, n_species, n_points=None, join_features=True, predictor=None):
+    def compute(self, n_points=None, chunk_size=None, predictor=None):
         """
         Computes a batch of the parameter sweep.
 
@@ -336,51 +261,17 @@ class StochMET():
                     TODO: currently only supports joined features    
 
         """
+        cluster_mode = core._cluster_mode()
         if n_points is None:
             n_points = self.default_batch_size
-        # da_params = da.asarray(self.sampling.generate(n_points))
-        sampler = delayed(self.sampling.generate)  # according to best practice instead of passing a
-        # dask collection to a delayed object
-        params = [sampler(1)[0] for x in range(n_points)]
-
-        simulator = delayed(self.simulator)
-
-        features = delayed(self.summaries.distribute)
-
-        processed = [simulator(g) for g in params]
-
-        if type(n_species) is int:
-            n_species = range(n_species)
-        all_features = []
-
-        for p in processed:
-            for s in n_species:  # try catch EventFired
-                traj = p[:, s]  # get_item
-                all_features.append(features(traj))
-
-            if hasattr(self.summaries, 'correlation'):
-                correlation = delayed(self.summaries.correlation)
-                for s in combinations(n_species, 2):
-                    x = p[:, s[0]]  # get_item
-                    y = p[:, s[1]]  # get_item
-                    all_features.append(correlation(x, y))
-
-        result = []
-        if join_features:
-            window_len = len(n_species) + len(list(combinations(n_species, 2)))
-
-            @delayed
-            def join(lst):
-                joined = lst[0]
-                for item in lst[1:]:
-                    joined += item
-                return joined
-
-            for j in range(0, len(all_features), window_len):
-                result.append(join(all_features[j:j + window_len]))
-        else:
-            result = all_features
-
+        if chunk_size is None:
+            chunk_size = self.chunk_size
+        
+        graph_dict = core.get_graph_chunked(self.sampling.draw, 
+                                            self.simulator,
+                                            self.summaries.compute, 
+                                            batch_size=n_points,
+                                            chunk_size=chunk_size)
         pred = []
         if predictor is not None:
             if callable(predictor):
@@ -389,42 +280,94 @@ class StochMET():
             else:
                 raise ValueError("The predictor must be a callable function")
             # persist at workers, will run in background
-            params_res, processed_res, result_res, pred_res = persist(params, processed, result, pred)
-            wait(pred_res)
-            # keep on workers until needed for local processing
-            self.futures = {'parameters': params_res, 'ts': processed_res, 'features': result_res,
-                            'prediction': pred_res}
+            if cluster_mode:
+                params_res, processed_res, result_res, pred_res = persist(graph_dict["parameters"], 
+                                                                          graph_dict["trajectories"], 
+                                                                          graph_dict["summarystats"],
+                                                                          pred)
+                # convert to futures
+                futures = core.get_futures(result_res)
+                f_pred = core.get_futures(pred_res)
+                f_params = core.get_futures(params_res)
+                f_ts = core.get_futures(processed_res)
+
+                # keep track of indices...
+                f_dict = {f.key: idx for idx, f in enumerate(futures)}
+                # ..as we collect result on a "as completed" basis
+                for f, pred in as_completed(f_pred, with_results=True):
+                    idx = f_dict[f.key]
+                    # get the parameter point
+                    params = f_params[idx].result()
+                    # get the trajatories
+                    trajs = f_ts[idx].result()
+                    #get summary stats
+                    stats = futures[idx].result()
+                    # add to data collection
+                    param = np.asarray(params)
+                    traj = np.asarray(trajs)
+                    stats = np.asarray(stats)
+                    pred = np.asarray(pred)
+                    print(param.shape, traj.shape, res.shape)
+                    self.data.add_points(inputs=param, time_series=traj,
+                                        summary_stats=stats, user_labels=np.ones(len(res))*-1,
+                                         targets=pred)
+            else:
+                params_res, processed_res, result_res, pred_res = compute(graph_dict["parameters"], 
+                                                                          graph_dict["trajectories"], 
+                                                                          graph_dict["summarystats"],
+                                                                          pred)
+                for e, pred in enumerate(pres_res):
+                    param = np.asarray(params_res[e])
+                    ts = np.asarray(processed_res[e])
+                    stats = np.asarray(result_res[e])
+                    pred = np.asarray(pred)
+                    self.data.add_points(inputs=param, time_series=ts,
+                                         summary_stats=stats, user_labels=np.ones(len(pred))*-1,
+                                         targets=pred)
+
+
         else:
             # TODO: avoid redundancy...
-            params_res, processed_res, result_res = persist(params, processed, result)
+            if cluster_mode:
+                params_res, processed_res, result_res = persist(graph_dict["parameters"], 
+                                                                graph_dict["trajectories"], 
+                                                                graph_dict["summarystats"])
 
-            # convert to futures
-            futures = get_futures(result_res)
-            f_params = get_futures(params_res)
-            f_ts = get_futures(processed_res)
+                # convert to futures
+                futures = core.get_futures(result_res)
+                f_params = core.get_futures(params_res)
+                f_ts = core.get_futures(processed_res)
 
-            # keep track of indices...
-            f_dict = {f.key: idx for idx, f in enumerate(futures)}
-            # ..as we collect result on a "as completed" basis
-            for f, res in as_completed(futures, with_results=True):
-                # with_results = False needed to capture EventFirred
-                # try:
-                # res = f.result()
+                # keep track of indices...
+                f_dict = {f.key: idx for idx, f in enumerate(futures)}
+                # ..as we collect result on a "as completed" basis
+                for f, res in as_completed(futures, with_results=True):
+                    idx = f_dict[f.key]
+                    # get the parameter point
+                    params = f_params[idx].result()
+                    # get the trajatories
+                    trajs = f_ts[idx].result()
+                    # add to data collection
+                    param = np.asarray(params)
+                    traj = np.asarray(trajs)
+                    res = np.asarray(res)
+                    print(param.shape, traj.shape, res.shape)
+                    self.data.add_points(inputs=param, time_series=traj,
+                                        summary_stats=res, user_labels=np.ones(len(res))*-1)
+            else:
+                params_res, processed_res, result_res = compute(graph_dict["parameters"], 
+                                                                          graph_dict["trajectories"], 
+                                                                          graph_dict["summarystats"])
+                for e, res in enumerate(result_res):
+                    param = np.asarray(params_res[e])
+                    ts = np.asarray(processed_res[e])
+                    res = np.asarray(res)
+                    self.data.add_points(inputs=param, time_series=ts,
+                                         summary_stats=res, user_labels=np.ones(len(res))*-1)
 
-                idx = f_dict[f.key]
-                # get the parameter point
-                param = np.array([f_params[idx].result()])
-                # get the trajatories
-                ts = np.array([f_ts[idx].result()])
-                # convert to numpy array
-                feature = np.array([res])
-                # add to data collection
-                self.data.add_points(inputs=param, time_series=ts,
-                                     summary_stats=feature, user_labels=np.array([-1]))
-            # except EventFired:
-            #     pass
+            
 
-    def explore(self, dr_method='umap', scaling=None, from_distributed=False, filter_func=None, kwargs={}):
+    def explore(self, dr_method='umap', scaling=None, kwargs={}):
         """
         Visualize the results from the total parameter sweep.
 
@@ -450,58 +393,13 @@ class StochMET():
         kwargs : TODO: parameters for dr_method 
         
         """
-        if from_distributed:
-            # collecting data from distributed RAM. TODO: "explore" should read only neccesary data
-            self._collect_persisted(filter_func)
-            del self.futures
-
+        data = self.data.s.reshape(self.data.s.shape[0],self.data.s.shape[-1])
         if scaling is not None:
             assert hasattr(scaling, 'fit_transform'), "%r.fit_transform does not exist" % scaling
-            data = scaling.fit_transform(self.data.s)
-        else:
-            data = self.data.s
-
+            data = scaling.fit_transform(data)
+       
         data.astype(np.float32)
         data, model = _do_dimension_reduction(data, dr_method, **kwargs)
         self.dr_model = model
         interative_scatter(data,
-                           self.data)  # TODO: interactive_scatter now treat DataSet.y as labels, change to DataSet.user_labels
-
-    def _collect_persisted(self, filter_func=None):
-        """
-        Collects data from persited storage and store it in StochMET.data
-        
-        Parameters
-        ----------
-        filter_func : function, optional. A function that takes the output from "predictor" 
-                      (if used in "compute") and filter persited data according to some 
-                      criteria (e.g entropy for active learning or predicted class). 
-                      The function should return True if the criteria is statisfied for one
-                      individual point, and False otherwise. By default None.
-        """
-        assert hasattr(self, 'futures'), "There is no futures (data) to be collected"
-        use_filter = False
-        if filter_func is not None:
-            if callable(filter_func):
-                use_filter = True
-            else:
-                raise ValueError("The filter must be a callable function returning"
-                                 "True of False")
-        for e, i in enumerate(self.futures['ts']):
-            try:
-                ts = np.array([i.compute()])
-                if 'prediction' in self.futures.keys():
-                    pred = self.futures['prediction'][e].compute()
-                    if use_filter:
-                        if filter_func(pred):
-                            self.data.add_points(targets=np.array([pred]))
-                        else:
-                            continue
-
-                param = np.array([self.futures['parameters'][e].compute()])
-                feature = np.array([self.futures['features'][e].compute()])
-
-                self.data.add_points(inputs=param, time_series=ts,
-                                     summary_stats=feature, user_labels=np.array([-1]))
-            except EventFired:
-                continue
+                           self.data)
