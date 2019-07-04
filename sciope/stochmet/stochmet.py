@@ -275,8 +275,7 @@ class StochMET():
         pred = []
         if predictor is not None:
             if callable(predictor):
-                predictor = delayed(predictor)
-                pred = [predictor(x) for x in result]
+                pred = core.get_prediction(predictor, graph_dict["summarystats"])
             else:
                 raise ValueError("The predictor must be a callable function")
             # persist at workers, will run in background
@@ -292,7 +291,7 @@ class StochMET():
                 f_ts = core.get_futures(processed_res)
 
                 # keep track of indices...
-                f_dict = {f.key: idx for idx, f in enumerate(futures)}
+                f_dict = {f.key: idx for idx, f in enumerate(f_pred)}
                 # ..as we collect result on a "as completed" basis
                 for f, pred in as_completed(f_pred, with_results=True):
                     idx = f_dict[f.key]
@@ -307,16 +306,15 @@ class StochMET():
                     traj = np.asarray(trajs)
                     stats = np.asarray(stats)
                     pred = np.asarray(pred)
-                    print(param.shape, traj.shape, res.shape)
                     self.data.add_points(inputs=param, time_series=traj,
-                                        summary_stats=stats, user_labels=np.ones(len(res))*-1,
+                                        summary_stats=stats, user_labels=np.ones(len(stats))*-1,
                                          targets=pred)
             else:
                 params_res, processed_res, result_res, pred_res = compute(graph_dict["parameters"], 
                                                                           graph_dict["trajectories"], 
                                                                           graph_dict["summarystats"],
                                                                           pred)
-                for e, pred in enumerate(pres_res):
+                for e, pred in enumerate(pred_res):
                     param = np.asarray(params_res[e])
                     ts = np.asarray(processed_res[e])
                     stats = np.asarray(result_res[e])

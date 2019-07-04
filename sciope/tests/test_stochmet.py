@@ -21,6 +21,7 @@ from sciope.utilities.summarystats import auto_tsfresh
 from sciope.utilities.priors import uniform_prior
 from sciope.stochmet import stochmet
 from gillespy2.solvers.numpy import NumPySSASolver
+from sklearn.svm import SVC
 from dask.distributed import Client
 import gillespy2
 import pytest
@@ -134,4 +135,66 @@ def test_stochmet_toggleswitch():
     np.testing.assert_equal(met.data.user_labels.shape, (20,))
 
     c.close()
+
+def test_stochmet_with_prediction():
+
+    uni_prior = uniform_prior.UniformPrior(dmin, true_params*0.6)
+    met = stochmet.StochMET(sim=simulator2, sampler=uni_prior, summarystats=summaries)
+    met.compute(n_points=50, chunk_size=2)
+
+    x_0 = met.data.s.reshape((50, 12))
+    y_0 = np.zeros(50)
+
+    uni_prior = uniform_prior.UniformPrior(true_params*1.5, dmax)
+    met = stochmet.StochMET(sim=simulator2, sampler=uni_prior, summarystats=summaries)
+    met.compute(n_points=50, chunk_size=2)
+
+    x_1 = met.data.s.reshape((50, 12))
+    y_1 = np.ones(50)
+
+    X = np.vstack((x_0, x_1))
+    y = np.hstack((y_0,y_1))
+
+    clf = SVC()
+    clf.fit(X,y)
+
+    def predictor(x):
+        return clf.predict(x)
+    
+    #multi-processing mode
+    uni_prior = uniform_prior.UniformPrior(dmin, dmax)
+    met = stochmet.StochMET(sim=simulator2, sampler=uni_prior, summarystats=summaries)
+    met.compute(n_points=10, chunk_size=2, predictor=predictor)
+
+    np.testing.assert_equal(met.data.s.shape, (10, 1, 12))
+    np.testing.assert_equal(met.data.ts.shape, (10, 1, 2, 101))
+    np.testing.assert_equal(met.data.x.shape, (10, 5))
+    np.testing.assert_equal(met.data.user_labels.shape, (10,))
+    np.testing.assert_equal(met.data.y.shape, (10, 1))
+
+
+    #cluster-mode
+    c = Client()
+
+    met.compute(n_points=10, chunk_size=2, predictor=predictor)
+
+    np.testing.assert_equal(met.data.s.shape, (20, 1, 12))
+    np.testing.assert_equal(met.data.ts.shape, (20, 1, 2, 101))
+    np.testing.assert_equal(met.data.x.shape, (20, 5))
+    np.testing.assert_equal(met.data.user_labels.shape, (20,))
+    np.testing.assert_equal(met.data.y.shape, (20, 1))
+
+    c.close()
+
+
+    
+
+
+
+
+
+
+
+
+
 
