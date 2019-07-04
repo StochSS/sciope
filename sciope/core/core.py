@@ -140,6 +140,16 @@ def get_distance(dist_func, X, chunked=True):
     
     return sim_dist
 
+def get_prediction(pred_func, X, chunked=True):
+
+    if chunked:
+        pred = [delay_func_chunk(pred_func, chunk) for chunk in X]
+        
+    else:
+        pred = [delayed(pred_func)(x) for x in X]
+    
+    return pred
+
 def _reshape_chunks(data):
     data = np.asarray(data)
     if len(data.shape) > 1:
