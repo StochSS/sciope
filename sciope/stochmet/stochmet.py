@@ -263,7 +263,7 @@ class StochMET():
         """
         cluster_mode = core._cluster_mode()
         if n_points is None:
-            n_points = self.default_batch_size
+            n_points = self.batch_size
         if chunk_size is None:
             chunk_size = self.chunk_size
         
