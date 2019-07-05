@@ -195,6 +195,12 @@ def test_summarystats_auto_tsfresh():
     stats = at.compute(samples)
     assert stats.shape == (1, 15), "summarystats auto_tsfresh test failed, dimension mismatch"
 
+    samples = np.random.randn(2, 3, 10)
+    #corrcoef = True
+    at.corrcoef = True
+    stats = at.compute(samples)
+    assert stats.shape == (1, 21+3), "summarystats auto_tsfresh test failed, dimension mismatch"
+
     samples = np.random.randn(1, 1, 10)
     #corrcoef = False, will compute mean
     at = auto_tsfresh.SummariesTSFRESH()

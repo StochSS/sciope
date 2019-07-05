@@ -95,10 +95,12 @@ class SummariesTSFRESH(SummaryBase):
             corrcoef_summaries = []
             n_species = range(point.shape[1])
             for n in point:
+                corr = []
                 for s in combinations(n_species, 2):
                     x = n[s[0]]
                     y = n[s[1]]
-                    corrcoef_summaries.append(self._compute_corrcoef(x, y))
+                    corr.append(self._compute_corrcoef(x, y)[0])
+                corrcoef_summaries.append(corr)
             corrcoef_summaries = np.asarray(corrcoef_summaries)
             corrcoef_summaries = np.mean(corrcoef_summaries, axis=0, keepdims=True)
             tot = np.hstack((tsfresh_summaries, corrcoef_summaries))
