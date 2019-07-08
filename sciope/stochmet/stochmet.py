@@ -349,7 +349,6 @@ class StochMET():
                     param = np.asarray(params)
                     traj = np.asarray(trajs)
                     res = np.asarray(res)
-                    print(param.shape, traj.shape, res.shape)
                     self.data.add_points(inputs=param, time_series=traj,
                                         summary_stats=res, user_labels=np.ones(len(res))*-1)
             else:
