@@ -322,39 +322,75 @@
         <span class="n">cluster_mode</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">_cluster_mode</span><span class="p">()</span>
 
         <span class="c1"># do rejection sampling</span>
-        <span class="k">while</span> <span class="n">accepted_count</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">:</span>
+        <span class="c1">#while accepted_count &lt; num_samples:</span>
 
-            <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">dists</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1">#sim_dist_scaled = []</span>
+            <span class="c1">#params = []</span>
+            <span class="c1">#dists = []</span>
 
-            <span class="c1"># If dask cluster is used, use persist and futures, and scale as result is completed</span>
-            <span class="k">if</span> <span class="n">cluster_mode</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running in cluster mode&quot;</span><span class="p">)</span>
-                <span class="n">res_param</span><span class="p">,</span> <span class="n">res_dist</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">])</span>
+        <span class="c1"># If dask cluster is used, use persist and futures, and scale as result is completed</span>
+        <span class="k">if</span> <span class="n">cluster_mode</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running in cluster mode&quot;</span><span class="p">)</span>
+            <span class="n">res_param</span><span class="p">,</span> <span class="n">res_dist</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">])</span>
 
-                <span class="n">futures_dist</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_futures</span><span class="p">(</span><span class="n">res_dist</span><span class="p">)</span>
-                <span class="n">futures_params</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_futures</span><span class="p">(</span><span class="n">res_param</span><span class="p">)</span>
+            <span class="n">futures_dist</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_futures</span><span class="p">(</span><span class="n">res_dist</span><span class="p">)</span>
+            <span class="n">futures_params</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_futures</span><span class="p">(</span><span class="n">res_param</span><span class="p">)</span>
 
-                <span class="n">keep_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">futures_dist</span><span class="p">)}</span>
+            <span class="n">keep_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">futures_dist</span><span class="p">)}</span>
+
+            <span class="k">while</span> <span class="n">accepted_count</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">:</span>
 
                 <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures_dist</span><span class="p">,</span> <span class="n">with_results</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">dists</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">futures_dist</span><span class="p">))</span>
                     <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dist</span><span class="p">:</span>
                         <span class="n">dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                        <span class="n">trial_count</span> <span class="o">+=</span> <span class="mi">1</span>
                         <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
                             <span class="c1"># Normalize distances between [0,1]</span>
                             <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_distance</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
-
+                    
                     <span class="n">idx</span> <span class="o">=</span> <span class="n">keep_idx</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">key</span><span class="p">]</span>
                     <span class="n">params_res</span> <span class="o">=</span> <span class="n">futures_params</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
                     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params_res</span><span class="p">:</span>
                         <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    
+                    <span class="n">accepted_samples</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">accepted_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scale_reject</span><span class="p">(</span><span class="n">sim_dist_scaled</span><span class="p">,</span> 
+                                                                                        <span class="n">dists</span><span class="p">,</span> 
+                                                                                        <span class="n">accepted_samples</span><span class="p">,</span> 
+                                                                                        <span class="n">distances</span><span class="p">,</span>
+                                                                                        <span class="n">params</span><span class="p">,</span>
+                                                                                        <span class="n">accepted_count</span><span class="p">,</span> 
+                                                                                        <span class="n">normalize</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">accepted_count</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">:</span>
+                        <span class="n">new_chunk</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_graph_chunked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prior_function</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">summaries_function</span><span class="p">,</span>
+                                        <span class="n">chunk_size</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">)</span>
+                        <span class="n">new_chunk</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="n">dist_func</span><span class="p">,</span> <span class="n">new_chunk</span><span class="p">[</span><span class="s2">&quot;summarystats&quot;</span><span class="p">],</span> <span class="n">chunked</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-                <span class="k">del</span> <span class="n">futures_dist</span><span class="p">,</span> <span class="n">futures_params</span><span class="p">,</span> <span class="n">res_param</span><span class="p">,</span> <span class="n">res_dist</span>
+                        <span class="n">c_param</span><span class="p">,</span> <span class="n">c_dist</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">new_chunk</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="n">new_chunk</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">])</span>
+                        <span class="n">f_dist</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_futures</span><span class="p">(</span><span class="n">c_dist</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">f_param</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_futures</span><span class="p">(</span><span class="n">c_param</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">futures_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f_dist</span><span class="p">)</span>
+                        <span class="n">futures_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f_param</span><span class="p">)</span>
 
-            <span class="c1"># else use multiprocessing mode</span>
-            <span class="k">else</span><span class="p">:</span>
+                        <span class="n">keep_idx</span><span class="p">[</span><span class="n">f_dist</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keep_idx</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">futures_dist</span><span class="p">,</span> <span class="n">futures_params</span><span class="p">,</span> <span class="n">res_param</span><span class="p">,</span> <span class="n">res_dist</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;accepted_samples&#39;</span><span class="p">:</span> <span class="n">accepted_samples</span><span class="p">,</span> <span class="s1">&#39;distances&#39;</span><span class="p">:</span> <span class="n">distances</span><span class="p">,</span> <span class="s1">&#39;accepted_count&#39;</span><span class="p">:</span> <span class="n">accepted_count</span><span class="p">,</span>
+                        <span class="s1">&#39;trial_count&#39;</span><span class="p">:</span> <span class="n">trial_count</span><span class="p">,</span> <span class="s1">&#39;inferred_parameters&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">accepted_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)}</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span>
+
+
+        <span class="c1"># else use multiprocessing mode</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">accepted_count</span> <span class="o">&lt;</span> <span class="n">num_samples</span><span class="p">:</span>
+                <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">dists</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;running in parallel mode&quot;</span><span class="p">)</span>
                 <span class="n">params</span><span class="p">,</span> <span class="n">dists</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">])</span>
@@ -364,37 +400,49 @@
                     <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dists</span><span class="p">:</span>
                         <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_distance</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
 
-            <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
-                <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sim_dist_scaled</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dists</span><span class="p">)</span>
+                <span class="n">accepted_samples</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">accepted_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scale_reject</span><span class="p">(</span><span class="n">sim_dist_scaled</span><span class="p">,</span> 
+                                                                                        <span class="n">dists</span><span class="p">,</span> 
+                                                                                        <span class="n">accepted_samples</span><span class="p">,</span> 
+                                                                                        <span class="n">distances</span><span class="p">,</span>
+                                                                                        <span class="n">params</span><span class="p">,</span>
+                                                                                        <span class="n">accepted_count</span><span class="p">,</span> 
+                                                                                        <span class="n">normalize</span><span class="p">)</span>
 
-            <span class="c1"># Take the norm to combine the distances, if more than one summary is used</span>
-            <span class="k">if</span> <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">combined_distance</span> <span class="o">=</span> <span class="p">[</span><span class="n">dask</span><span class="o">.</span><span class="n">delayed</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">)(</span><span class="n">scaled</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                                     <span class="k">for</span> <span class="n">scaled</span> <span class="ow">in</span> <span class="n">sim_dist_scaled</span><span class="p">]</span>
-                <span class="n">result</span><span class="p">,</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">combined_distance</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+                <span class="n">trial_count</span> <span class="o">+=</span> <span class="n">batch_size</span>
 
-            <span class="c1"># Accept/Reject</span>
-            <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;ABC Rejection Sampling: trial parameter(s) = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">e</span><span class="p">]))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;ABC Rejection Sampling: trial distance(s) = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sim_dist_scaled</span><span class="p">[</span><span class="n">e</span><span class="p">]))</span>
-                <span class="k">if</span> <span class="n">res</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">:</span>
-                    <span class="n">accepted_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">e</span><span class="p">])</span>
-                    <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="n">e</span><span class="p">])</span>
-                    <span class="n">accepted_count</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ABC Rejection Sampling: accepted a new sample, &quot;</span>
-                                         <span class="s2">&quot;total accepted samples = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accepted_count</span><span class="p">))</span>
-
-            <span class="n">trial_count</span> <span class="o">+=</span> <span class="n">batch_size</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;accepted_samples&#39;</span><span class="p">:</span> <span class="n">accepted_samples</span><span class="p">,</span> <span class="s1">&#39;distances&#39;</span><span class="p">:</span> <span class="n">distances</span><span class="p">,</span> <span class="s1">&#39;accepted_count&#39;</span><span class="p">:</span> <span class="n">accepted_count</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;accepted_samples&#39;</span><span class="p">:</span> <span class="n">accepted_samples</span><span class="p">,</span> <span class="s1">&#39;distances&#39;</span><span class="p">:</span> <span class="n">distances</span><span class="p">,</span> <span class="s1">&#39;accepted_count&#39;</span><span class="p">:</span> <span class="n">accepted_count</span><span class="p">,</span>
                         <span class="s1">&#39;trial_count&#39;</span><span class="p">:</span> <span class="n">trial_count</span><span class="p">,</span> <span class="s1">&#39;inferred_parameters&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">accepted_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)}</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span></div>
+
+    <span class="k">def</span> <span class="nf">_scale_reject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim_dist_scaled</span><span class="p">,</span> <span class="n">dists</span><span class="p">,</span> <span class="n">accepted_samples</span><span class="p">,</span> 
+                      <span class="n">distances</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">accepted_count</span><span class="p">,</span> <span class="n">normalize</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+                <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sim_dist_scaled</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sim_dist_scaled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dists</span><span class="p">)</span>
+
+        <span class="c1"># Take the norm to combine the distances, if more than one summary is used</span>
+        <span class="k">if</span> <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">combined_distance</span> <span class="o">=</span> <span class="p">[</span><span class="n">dask</span><span class="o">.</span><span class="n">delayed</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">)(</span><span class="n">scaled</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                                    <span class="k">for</span> <span class="n">scaled</span> <span class="ow">in</span> <span class="n">sim_dist_scaled</span><span class="p">]</span>
+            <span class="n">result</span><span class="p">,</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">combined_distance</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">sim_dist_scaled</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+        <span class="c1"># Accept/Reject</span>
+        <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;ABC Rejection Sampling: trial parameter(s) = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">e</span><span class="p">]))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;ABC Rejection Sampling: trial distance(s) = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sim_dist_scaled</span><span class="p">[</span><span class="n">e</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">:</span>
+                <span class="n">accepted_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">e</span><span class="p">])</span>
+                <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="n">e</span><span class="p">])</span>
+                <span class="n">accepted_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_logger</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ABC Rejection Sampling: accepted a new sample, &quot;</span>
+                                        <span class="s2">&quot;total accepted samples = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accepted_count</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">accepted_samples</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">accepted_count</span>
 
 <div class="viewcode-block" id="ABC.infer"><a class="viewcode-back" href="../../../sciope.inference.html#sciope.inference.abc_inference.ABC.infer">[docs]</a>    <span class="k">def</span> <span class="nf">infer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ensemble_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
