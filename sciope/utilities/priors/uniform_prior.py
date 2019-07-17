@@ -50,7 +50,7 @@ class UniformPrior(PriorBase):
         :param n: the desired number of samples
         :return: the n-sized vector of drawn samples
         """
-        assert n > chunk_size, "chunk_size can not be larger than n"
+        assert n >= chunk_size, "chunk_size can not be larger than n"
 
         d = len(self.lb)
 
