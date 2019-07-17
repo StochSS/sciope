@@ -175,39 +175,75 @@ class ABC(InferenceBase):
         cluster_mode = core._cluster_mode()
 
         # do rejection sampling
-        while accepted_count < num_samples:
+        #while accepted_count < num_samples:
 
-            sim_dist_scaled = []
-            params = []
-            dists = []
+            #sim_dist_scaled = []
+            #params = []
+            #dists = []
 
-            # If dask cluster is used, use persist and futures, and scale as result is completed
-            if cluster_mode:
-                if self.use_logger:
-                    self.logger.info("running in cluster mode")
-                res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
+        # If dask cluster is used, use persist and futures, and scale as result is completed
+        if cluster_mode:
+            if self.use_logger:
+                self.logger.info("running in cluster mode")
+            res_param, res_dist = dask.persist(graph_dict["parameters"], graph_dict["distances"])
 
-                futures_dist = core.get_futures(res_dist)
-                futures_params = core.get_futures(res_param)
+            futures_dist = core.get_futures(res_dist)
+            futures_params = core.get_futures(res_param)
 
-                keep_idx = {f.key: idx for idx, f in enumerate(futures_dist)}
+            keep_idx = {f.key: idx for idx, f in enumerate(futures_dist)}
+
+            while accepted_count < num_samples:
 
                 for f, dist in as_completed(futures_dist, with_results=True):
+                    sim_dist_scaled = []
+                    params = []
+                    dists = []
+                    print(len(futures_dist))
                     for d in dist:
                         dists.append(d)
+                        trial_count += 1
                         if normalize:
                             # Normalize distances between [0,1]
                             sim_dist_scaled.append(self.scale_distance(d))
-
+                    
                     idx = keep_idx[f.key]
                     params_res = futures_params[idx].result()
                     for p in params_res:
                         params.append(p)
+                    
+                    accepted_samples, distances, accepted_count = self._scale_reject(sim_dist_scaled, 
+                                                                                        dists, 
+                                                                                        accepted_samples, 
+                                                                                        distances,
+                                                                                        params,
+                                                                                        accepted_count, 
+                                                                                        normalize)
+                    if accepted_count < num_samples:
+                        new_chunk = core.get_graph_chunked(self.prior_function, self.sim, self.summaries_function,
+                                        chunk_size, chunk_size)
+                        new_chunk["distances"] = core.get_distance(dist_func, new_chunk["summarystats"], chunked=True)
 
-                del futures_dist, futures_params, res_param, res_dist
+                        c_param, c_dist = dask.persist(new_chunk["parameters"], new_chunk["distances"])
+                        f_dist = core.get_futures(c_dist)[0]
+                        f_param = core.get_futures(c_param)[0]
+                        futures_dist.append(f_dist)
+                        futures_params.append(f_param)
 
-            # else use multiprocessing mode
-            else:
+                        keep_idx[f_dist.key] = len(keep_idx)
+
+                    else:
+                        del futures_dist, futures_params, res_param, res_dist
+                        self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
+                        'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
+                        return self.results
+
+
+        # else use multiprocessing mode
+        else:
+            while accepted_count < num_samples:
+                sim_dist_scaled = []
+                params = []
+                dists = []
                 if self.use_logger:
                     self.logger.info("running in parallel mode")
                 params, dists = dask.compute(graph_dict["parameters"], graph_dict["distances"])
@@ -217,37 +253,49 @@ class ABC(InferenceBase):
                     for d in dists:
                         sim_dist_scaled.append(self.scale_distance(d))
 
-            if normalize:
-                sim_dist_scaled = np.asarray(sim_dist_scaled)
-            else:
-                sim_dist_scaled = np.asarray(dists)
+                accepted_samples, distances, accepted_count = self._scale_reject(sim_dist_scaled, 
+                                                                                        dists, 
+                                                                                        accepted_samples, 
+                                                                                        distances,
+                                                                                        params,
+                                                                                        accepted_count, 
+                                                                                        normalize)
 
-            # Take the norm to combine the distances, if more than one summary is used
-            if sim_dist_scaled.shape[1] > 1:
-                combined_distance = [dask.delayed(np.linalg.norm)(scaled.reshape(1, scaled.size), axis=1)
-                                     for scaled in sim_dist_scaled]
-                result, = dask.compute(combined_distance)
-            else:
-                result = sim_dist_scaled.ravel()
+                trial_count += batch_size
 
-            # Accept/Reject
-            for e, res in enumerate(result):
-                if self.use_logger:
-                    self.logger.debug("ABC Rejection Sampling: trial parameter(s) = {}".format(params[e]))
-                    self.logger.debug("ABC Rejection Sampling: trial distance(s) = {}".format(sim_dist_scaled[e]))
-                if res <= self.epsilon:
-                    accepted_samples.append(params[e])
-                    distances.append(dists[e])
-                    accepted_count += 1
-                    if self.use_logger:
-                        self.logger.info("ABC Rejection Sampling: accepted a new sample, "
-                                         "total accepted samples = {0}".format(accepted_count))
-
-            trial_count += batch_size
-
-        self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
+            self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
                         'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
-        return self.results
+            return self.results
+
+    def _scale_reject(self, sim_dist_scaled, dists, accepted_samples, 
+                      distances, params, accepted_count, normalize):
+        if normalize:
+                sim_dist_scaled = np.asarray(sim_dist_scaled)
+        else:
+            sim_dist_scaled = np.asarray(dists)
+
+        # Take the norm to combine the distances, if more than one summary is used
+        if sim_dist_scaled.shape[1] > 1:
+            combined_distance = [dask.delayed(np.linalg.norm)(scaled.reshape(1, scaled.size), axis=1)
+                                    for scaled in sim_dist_scaled]
+            result, = dask.compute(combined_distance)
+        else:
+            result = sim_dist_scaled.ravel()
+
+        # Accept/Reject
+        for e, res in enumerate(result):
+            if self.use_logger:
+                self.logger.debug("ABC Rejection Sampling: trial parameter(s) = {}".format(params[e]))
+                self.logger.debug("ABC Rejection Sampling: trial distance(s) = {}".format(sim_dist_scaled[e]))
+            if res <= self.epsilon:
+                accepted_samples.append(params[e])
+                distances.append(dists[e])
+                accepted_count += 1
+                if self.use_logger:
+                    self.logger.info("ABC Rejection Sampling: accepted a new sample, "
+                                        "total accepted samples = {0}".format(accepted_count))
+        
+        return accepted_samples, distances, accepted_count
 
     def infer(self, num_samples, batch_size, chunk_size=10, ensemble_size=1, normalize=True):
         """
