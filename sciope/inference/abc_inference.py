@@ -198,7 +198,6 @@ class ABC(InferenceBase):
                     sim_dist_scaled = []
                     params = []
                     dists = []
-                    print(len(futures_dist))
                     for d in dist:
                         dists.append(d)
                         trial_count += 1
@@ -207,7 +206,8 @@ class ABC(InferenceBase):
                             sim_dist_scaled.append(self.scale_distance(d))
                     
                     idx = keep_idx[f.key]
-                    params_res = futures_params[idx].result()
+                    param = futures_params[idx]
+                    params_res = param.result()
                     for p in params_res:
                         params.append(p)
                     
@@ -218,6 +218,7 @@ class ABC(InferenceBase):
                                                                                         params,
                                                                                         accepted_count, 
                                                                                         normalize)
+                    del dist, param
                     if accepted_count < num_samples:
                         new_chunk = core.get_graph_chunked(self.prior_function, self.sim, self.summaries_function,
                                         chunk_size, chunk_size)
