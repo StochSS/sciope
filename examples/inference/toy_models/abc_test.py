@@ -59,9 +59,7 @@ accepted_std = np.std(accepted_para,axis=0)
 print("posterior dev: ", accepted_mean-true_param)
 print("posterior std: ", accepted_std)
 data_pred = np.squeeze(data_pred)
-print("dist shape: ", dist.shape)
 accepted_dist = dist[accepted_ind]
-print("accepted_dist shape: ", accepted_dist.shape)
 
 print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted_dist), ", min: ", np.min(accepted_dist))
 
