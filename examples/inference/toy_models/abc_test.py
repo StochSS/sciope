@@ -41,17 +41,15 @@ validation_pred = np.reshape(validation_pred,(-1,2))
 print("mean squared error: ", np.mean((validation_thetas-validation_pred)**2))
 
 #ABC algorithm
+
 new_para = np.array(prior(n=500000))
 new_data = np.expand_dims(np.array([simulate(p,n=100) for p in new_para]),2)
 new_pred = cnn.predict(new_data)
 mean_dev = np.mean(np.linalg.norm(new_para-new_pred, axis=1))
 print("mean deviation: ", mean_dev)
 
-print("new_data shape: ", new_data.shape)
 
-print("data shape: ", data.shape)
 data_exp = np.expand_dims( np.expand_dims(data,axis=0), axis=2 )
-print("data shape: ", data_exp.shape)
 data_pred = cnn.predict(data_exp)
 dist = np.linalg.norm( new_pred - data_pred,axis=1)
 accepted_ind = np.argpartition(dist,500)[0:500]
