@@ -13,20 +13,20 @@ import matplotlib.pyplot as plt
 
 
 # Class definition
-class CNNModel(ModelBase):
+class PEN_CNNModel(ModelBase):
     """
     We use keras to define CNN and DNN layers to the model
     """
     
 
-    def __init__(self, use_logger=False,input_shape=(499,3),output_shape=15):
-        self.name = 'CNNModel'
-        super(CNNModel, self).__init__(self.name, use_logger)
+    def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, pen_nr=3):
+        self.name = 'PEN_NNModel'
+        super(PEN_CNNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
-        self.model = construct_model(input_shape,output_shape)
-        self.model.summary()
+        self.model = construct_model(input_shape,output_shape,pen_nr)
+        self.pen_nr = pen_nr
     
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets,
@@ -37,14 +37,14 @@ class CNNModel(ModelBase):
                                                        monitor='val_loss', 
                                                        mode='min')
 
-        EarlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=0,
+        EarlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0,
                                                       mode='auto',
                                                       baseline=None)
         #train 40 epochs with batch size = 32
         history1 = self.model.fit(
                 inputs, targets, validation_data = (validation_inputs,
                 validation_targets), epochs=10,batch_size=200,shuffle=True,
-                callbacks=[mcp_save,EarlyStopping])
+                callbacks=[mcp_save])
         
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
@@ -54,7 +54,7 @@ class CNNModel(ModelBase):
         # history2 = self.model.fit(
         #         inputs, targets, validation_data = (validation_inputs,
         #         validation_targets), epochs=5,batch_size=4096,shuffle=True,
-        #         callbacks=[mcp_save,EarlyStopping])
+        #         callbacks=[mcp_save])
 
                 
         #TODO: concatenate history1 and history2 to plot all the training 
@@ -71,14 +71,15 @@ class CNNModel(ModelBase):
     def load_model(self, save_as='saved_models/ver1'):
         self.model = keras.models.load_model(save_as+'.hdf5')
     
-def construct_model(input_shape,output_shape):
+def construct_model(input_shape, output_shape, pen_nr = 3):
     #TODO: add a **kwargs to specify the hyperparameters
+
     activation = 'relu'
     dense_activation = 'relu'
     padding = 'same'
     poolpadding = 'valid'
-    con_len = 3
-    lay_size = [int(64*1.5**i) for i in range(10)]
+    con_len = 1
+    lay_size = [100, 50, 10, 50, 50, 20]
     maxpool = con_len
     levels=3
     batch_mom = 0.99
@@ -89,44 +90,37 @@ def construct_model(input_shape,output_shape):
     
        
     #Add levels nr of CNN layers
-    model.add(keras.layers.Conv1D(lay_size[0],con_len, strides=1, 
-                                  padding=padding, activity_regularizer=reg, 
+    model.add(keras.layers.Conv1D(lay_size[0],pen_nr, strides=1,
+                                  padding='valid', activity_regularizer=reg,
                                   input_shape=input_shape))
     model.add(keras.layers.Activation(activation))
-    model.add(keras.layers.Conv1D(lay_size[0],con_len, strides=1,
-                                  padding=padding, activity_regularizer=reg))
-    model.add(keras.layers.Activation(activation))
 
-    model.add(pool(maxpool,padding=poolpadding))
-    if padding == 'valid':
-        depth-=(con_len-1)*3
-    depth=depth//maxpool
+
     
     for i in range(1,levels):
         model.add(keras.layers.Conv1D(lay_size[i], con_len, strides=1, 
                                       padding=padding, 
                                       activity_regularizer=reg))
         model.add(keras.layers.Activation(activation))
-        model.add(keras.layers.Conv1D(lay_size[i], con_len, strides=1, 
-                                      padding=padding, 
-                                      activity_regularizer=reg))
-        model.add(keras.layers.Activation(activation))
-        
-        if padding == 'valid':
-            depth-=(con_len-1)*2
-        if i<levels-1:
-            model.add(pool(maxpool,padding=poolpadding))
-            depth=depth//maxpool
-        
+
+    poolsize = input_shape[0] - (pen_nr - 1)
+    print("poolsize: ", poolsize)
     #Using Maxpooling to downsample the temporal dimension size to 1.
-    model.add(keras.layers.MaxPooling1D(depth,padding=poolpadding))
+    model.add(keras.layers.AvgPool1D(poolsize,padding=poolpadding))
+
+
+    # model.add(keras.backend.sum(
+    #     x,
+    #     axis=1,
+    #     keepdims=False
+    # ))
     #Reshape previous layer to 1 dimension (feature state).
     model.add(keras.layers.Flatten())
     
     #Add 3 layers of Dense layers with activation function and Batch Norm.
-    for i in range(1,3):
-        model.add(keras.layers.Dense(100))
-        model.add(keras.layers.BatchNormalization(momentum=batch_mom))
+    for i in range(3,6):
+        model.add(keras.layers.Dense(lay_size[i]))
+        # model.add(keras.layers.BatchNormalization(momentum=batch_mom))
         model.add(keras.layers.Activation(dense_activation))
     
     #Add output layer without Activation or Batch Normalization

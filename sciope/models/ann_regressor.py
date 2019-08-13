@@ -40,7 +40,7 @@ class ANNModel(ModelBase):
         self.scale_training_data(inputs, targets)
 
         # Train the model
-        self.model = MLPRegressor(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(200, 2), max_iter=50000,
+        self.model = MLPRegressor(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(100, 3), max_iter=50000,
                                   learning_rate='adaptive', activation='logistic')
         self.model.fit(self.x, self.y)
         if self.use_logger:

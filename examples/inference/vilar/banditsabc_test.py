@@ -38,8 +38,6 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 print("true param shape: ", np.array(true_params).shape)
 
 # Set up the prior
-dmin = [30, 200, 0, 30, 30-20, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80-30]
-dmax = [70+50, 600, 1+2, 70, 70, 10+5, 12+5, 1+2, 2+5, 0.5+1, 1.5+2, 1.5+1, 3+5, 70+40, 120]
 mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 dist_fun = ns.NaiveSquaredDistance(use_logger=False)
 
