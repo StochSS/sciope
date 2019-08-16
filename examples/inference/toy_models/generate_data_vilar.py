@@ -76,8 +76,8 @@ train_thetas = np.zeros((0,15))
 train_ts = np.zeros((0,201))
 for i in range(100):
     tp, thet = dg.gen(batch_size=1000)
-    train_thetas = np.concatenate(train_thetas,thet)
-    train_ts = np.concatenate(train_ts,tp)
+    train_thetas = np.concatenate((train_thetas,thet),axis=0)
+    train_ts = np.concatenate((train_ts,tp),axis=0)
     if i%10 == 0:
         print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
