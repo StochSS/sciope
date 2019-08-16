@@ -27,14 +27,16 @@ class PEN_CNNModel(ModelBase):
             self.logger.info("Artificial Neural Network regression model initialized")
         self.model = construct_model(input_shape,output_shape,pen_nr)
         self.pen_nr = pen_nr
+        self.save_as = 'saved_models/pen'+str(self.pen_nr)
+
 
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets,
              save_model = True, plot_training_progress=False):
-        save_as = 'saved_models/pen'+str(self.pen_nr)
+        self.save_as = 'saved_models/pen'+str(self.pen_nr)
 
         if save_model:
-            mcp_save = keras.callbacks.ModelCheckpoint(save_as+'.hdf5', 
+            mcp_save = keras.callbacks.ModelCheckpoint(self.save_as+'.hdf5',
                                                        save_best_only=True, 
                                                        monitor='val_loss', 
                                                        mode='min')
@@ -50,8 +52,8 @@ class PEN_CNNModel(ModelBase):
         
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
-        if save_as:
-            self.model = keras.models.load_model(save_as+'.hdf5')
+        if save_model:
+            self.model = keras.models.load_model(self.save_as+'.hdf5')
         #train 5 epochs with batch size 4096
         # history2 = self.model.fit(
         #         inputs, targets, validation_data = (validation_inputs,
@@ -70,8 +72,8 @@ class PEN_CNNModel(ModelBase):
         # predict
         return self.model.predict(xt)
 
-    def load_model(self, save_as='saved_models/ver1'):
-        self.model = keras.models.load_model(save_as+'.hdf5')
+    def load_model(self):
+        self.model = keras.models.load_model(self.save_as+'.hdf5')
     
 def construct_model(input_shape, output_shape, pen_nr = 3):
     #TODO: add a **kwargs to specify the hyperparameters
@@ -92,41 +94,47 @@ def construct_model(input_shape, output_shape, pen_nr = 3):
     
     Input = keras.Input(shape=input_shape)
     #Add levels nr of CNN layers
-    model.add(keras.layers.Conv1D(lay_size[0],pen_nr, strides=1,
+    layer = keras.layers.Conv1D(lay_size[0],pen_nr, strides=1,
                                   padding='valid', activity_regularizer=reg,
-                                  input_shape=input_shape))
-    model.add(keras.layers.Activation(activation))
+                                  input_shape=input_shape)(Input)
+    layer = keras.layers.Activation(activation)(layer)
 
 
     
     for i in range(1,levels):
-        model.add(keras.layers.Conv1D(lay_size[i], con_len, strides=1, 
+        layer = keras.layers.Conv1D(lay_size[i], con_len, strides=1,
                                       padding=padding, 
-                                      activity_regularizer=reg))
-        model.add(keras.layers.Activation(activation))
+                                      activity_regularizer=reg)(layer)
+        layer = keras.layers.Activation(activation)(layer)
 
     poolsize = input_shape[0] - (pen_nr - 1)
     print("poolsize: ", poolsize)
     #Using Maxpooling to downsample the temporal dimension size to 1.
-    model.add(keras.layers.AvgPool1D(poolsize,padding=poolpadding))
+    layer = keras.layers.AvgPool1D(poolsize,padding=poolpadding)(layer)
 
-    x = keras.layers.concatenate([model, auxiliary_input])
     # model.add(keras.backend.sum(
     #     x,
     #     axis=1,
     #     keepdims=False
     # ))
     #Reshape previous layer to 1 dimension (feature state).
-    model.add(keras.layers.Flatten())
-    
+    layer = keras.layers.Flatten()(layer)
+    squeezed = keras.layers.Lambda(lambda x: keras.backend.squeeze(x, 2))(Input)
+    y = keras.layers.Lambda(lambda x: x[:,0:pen_nr], )(squeezed)
+
+    layer = keras.layers.concatenate([layer, y])
+
     #Add 3 layers of Dense layers with activation function and Batch Norm.
     for i in range(3,6):
-        model.add(keras.layers.Dense(lay_size[i]))
+        layer = keras.layers.Dense(lay_size[i])(layer)
         # model.add(keras.layers.BatchNormalization(momentum=batch_mom))
-        model.add(keras.layers.Activation(dense_activation))
+        layer = keras.layers.Activation(dense_activation)(layer)
     
     #Add output layer without Activation or Batch Normalization
-    model.add(keras.layers.Dense(output_shape))
+    layer = keras.layers.Dense(output_shape)(layer)
+
+    model = keras.models.Model(inputs=Input, outputs=layer)
+
         
     #Using Adam optimizer with learning rate 0.001 
     model.compile(optimizer=keras.optimizers.Adam(0.001), 

@@ -26,13 +26,14 @@ class CNNModel(ModelBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
         self.model = construct_model(input_shape,output_shape)
-        self.model.summary()
+        self.save_as
     
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets,
-              save_as='saved_models/ver1',plot_training_progress=False):
-        if save_as:
-            mcp_save = keras.callbacks.ModelCheckpoint(save_as+'.hdf5', 
+              save_model = True, plot_training_progress=False):
+        self.save_as = 'saved_models/cnn'
+        if save_model:
+            mcp_save = keras.callbacks.ModelCheckpoint(save_as+'.hdf5',
                                                        save_best_only=True, 
                                                        monitor='val_loss', 
                                                        mode='min')
@@ -44,11 +45,11 @@ class CNNModel(ModelBase):
         history1 = self.model.fit(
                 inputs, targets, validation_data = (validation_inputs,
                 validation_targets), epochs=10,batch_size=200,shuffle=True,
-                callbacks=[mcp_save,EarlyStopping])
+                callbacks=[mcp_save])#,EarlyStopping])
         
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
-        if save_as:
+        if save_model:
             self.model = keras.models.load_model(save_as+'.hdf5')
         #train 5 epochs with batch size 4096
         # history2 = self.model.fit(
@@ -68,7 +69,8 @@ class CNNModel(ModelBase):
         # predict
         return self.model.predict(xt)
 
-    def load_model(self, save_as='saved_models/ver1'):
+    def load_model(self):
+        save_as = self.save_as
         self.model = keras.models.load_model(save_as+'.hdf5')
     
 def construct_model(input_shape,output_shape):
@@ -78,12 +80,14 @@ def construct_model(input_shape,output_shape):
     padding = 'same'
     poolpadding = 'valid'
     con_len = 3
-    lay_size = [int(64*1.5**i) for i in range(10)]
+    # lay_size = [int(64*1.5**i) for i in range(10)]
+    lay_size = [25, 50, 100]
+
     maxpool = con_len
-    levels=3
+    levels=2
     batch_mom = 0.99
     reg = None
-    pool = keras.layers.MaxPooling1D
+    pool = keras.layers.AvgPool1D # keras.layers.MaxPooling1D
     model = keras.Sequential()
     depth = input_shape[0]
     

@@ -25,13 +25,13 @@ class ANNModel(ModelBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
         self.model = construct_model(input_shape, output_shape)
-        self.model.summary()
+        self.save_as = 'saved_models/dnn'
 
     # train the ANN model given the data
     def train(self, inputs, targets, validation_inputs, validation_targets,
-              save_as='saved_models/dnn', plot_training_progress=False):
-        if save_as:
-            mcp_save = keras.callbacks.ModelCheckpoint(save_as + '.hdf5',
+              save_model=True, plot_training_progress=False):
+        if save_model:
+            mcp_save = keras.callbacks.ModelCheckpoint(self.save_as + '.hdf5',
                                                        save_best_only=True,
                                                        monitor='val_loss',
                                                        mode='min')
@@ -47,8 +47,8 @@ class ANNModel(ModelBase):
 
         # To avoid overfitting load the model with best validation results after
         # the first training part.
-        if save_as:
-            self.model = keras.models.load_model(save_as + '.hdf5')
+        if save_model:
+            self.model = keras.models.load_model(self.save_as + '.hdf5')
         # train 5 epochs with batch size 4096
         # history2 = self.model.fit(
         #     inputs, targets, validation_data=(validation_inputs,
@@ -85,7 +85,7 @@ def construct_model(input_shape, output_shape):
         else:
             model.add(keras.layers.Dense(100))
 
-        model.add(keras.layers.BatchNormalization(momentum=batch_mom))
+        # model.add(keras.layers.BatchNormalization(momentum=batch_mom))
         model.add(keras.layers.Activation(dense_activation))
 
     # Add output layer without Activation or Batch Normalization

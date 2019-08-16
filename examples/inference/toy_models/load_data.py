@@ -18,5 +18,9 @@ def load_data(modelname='auto_regression2'):
     test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
     test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 
-    return true_param, data, train_thetas, train_ts, validation_thetas, validation_ts, test_thetas, test_ts
+    abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
+    abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
+
+    return true_param, data, train_thetas, train_ts, validation_thetas, validation_ts, test_thetas, test_ts, \
+           abc_trial_thetas, abc_trial_ts
 

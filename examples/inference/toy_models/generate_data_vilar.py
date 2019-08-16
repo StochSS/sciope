@@ -1,19 +1,24 @@
-# from AutoRegressive_model import simulate, prior
-from MovingAverage_model import simulate, prior
-import pickle
+"""
+The vilar Model: Approximate Bayesian Computation Test Run
+"""
+
+# Imports
+from sciope.utilities.priors import uniform_prior
+from sciope.inference import abc_inference
+from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
+import vilar
+from sklearn.metrics import mean_absolute_error
 
-sim = simulate
 
-true_param = [0.2,-0.13] # auto regression 2
-true_param = [0.6,0.2] # moving average2
 
-data = simulate(true_param)
-# modelname='auto_regression2'
-modelname='moving_average2'
+# Set up the prior
+dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
+dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
+mm_prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax))
 
-n=1000000
-train_thetas = np.array(prior(n=n))
+n=100000
+train_thetas = mm_prior()
 train_ts = np.expand_dims(np.array([simulate(p,n=100) for p in train_thetas]),2)
 
 validation_thetas = np.array(prior(n=10000))
@@ -39,4 +44,3 @@ pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
 
 pickle.dump( abc_trial_thetas, open( 'datasets/' + modelname + '/abc_trial_thetas.p', "wb" ) )
 pickle.dump( abc_trial_ts, open( 'datasets/' + modelname + '/abc_trial_ts.p', "wb" ) )
-
