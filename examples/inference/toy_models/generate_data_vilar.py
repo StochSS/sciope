@@ -10,7 +10,7 @@ import numpy as np
 import vilar
 from vilar import simulate
 import dask
-
+import pickle
 from sklearn.metrics import mean_absolute_error
 
 
@@ -61,8 +61,7 @@ class DataGenerator:
 modelname = "vilar_A_100_201"
 
 
-true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-data = 5
+
 
 # Set up the prior
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
@@ -74,9 +73,8 @@ print("generating some data")
 
 train_thetas = np.zeros((0,15))
 train_ts = np.zeros((0,201))
-for i in range(100):
+for i in range(500):
     param, ts = dg.gen(batch_size=1000)
-    print("ts shape: ", ts.shape, ", param shape: ", param.shape)
     train_thetas = np.concatenate((train_thetas,param),axis=0)
     train_ts = np.concatenate((train_ts,ts),axis=0)
     if i%10 == 0:
@@ -84,33 +82,58 @@ for i in range(100):
 
 print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
-
-print("generating trainig data")
-n=100000
-train_thetas = np.squeeze( np.array(dask.compute( prior(n))))
-train_ts =np.array([simulate(p) for p in train_thetas])
-print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-
-validation_thetas = np.squeeze( np.array(dask.compute(np.array(prior(n=10000)))))
-validation_ts = np.expand_dims(np.array([simulate(p) for p in validation_thetas]),2)
-
-test_thetas = np.squeeze( np.array(dask.compute(np.array(prior(n=10000)))))
-test_ts = np.expand_dims(np.array([simulate(p) for p in validation_thetas]),2)
-
-abc_trial_thetas = np.squeeze( np.array(dask.compute( np.array(prior(n=500000)))))
-abc_trial_ts = np.expand_dims(np.array([simulate(p) for p in abc_trial_thetas]),2)
-
-pickle.dump( true_param, open( 'datasets/' + modelname + '/true_param.p', "wb" ) )
-pickle.dump( data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
-
 pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas.p', "wb" ) )
 pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts.p', "wb" ) )
+
+validation_thetas = np.zeros((0,15))
+validation_ts = np.zeros((0,201))
+for i in range(20):
+    param, ts = dg.gen(batch_size=1000)
+    validation_thetas = np.concatenate((validation_thetas,param),axis=0)
+    validation_ts = np.concatenate((validation_ts,ts),axis=0)
+    if i%10 == 0:
+        print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
+
+print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
 
 pickle.dump( validation_thetas, open( 'datasets/' + modelname + '/validation_thetas.p', "wb" ) )
 pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', "wb" ) )
 
+
+test_thetas = np.zeros((0,15))
+test_ts = np.zeros((0,201))
+for i in range(100):
+    param, ts = dg.gen(batch_size=1000)
+    test_thetas = np.concatenate((test_thetas,param),axis=0)
+    test_ts = np.concatenate((test_ts,ts),axis=0)
+    if i%10 == 0:
+        print("test data shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
+
+print("generating test data done, shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
 pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb" ) )
 pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
 
+abc_trial_thetas = np.zeros((0,15))
+abc_trial_ts = np.zeros((0,201))
+for i in range(100):
+    param, ts = dg.gen(batch_size=1000)
+    abc_trial_thetas = np.concatenate((abc_trial_thetas,param),axis=0)
+    abc_trial_ts = np.concatenate((abc_trial_ts,ts),axis=0)
+    if i%10 == 0:
+        print("abc_trial data shape: abc_trial_ts: ", abc_trial_ts.shape, ", abc_trial_thetas: ", abc_trial_thetas.shape)
+
 pickle.dump( abc_trial_thetas, open( 'datasets/' + modelname + '/abc_trial_thetas.p', "wb" ) )
 pickle.dump( abc_trial_ts, open( 'datasets/' + modelname + '/abc_trial_ts.p', "wb" ) )
+
+true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+data = simulate(true_params)
+
+pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param.p', "wb" ) )
+pickle.dump( data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
+
+
+
+
+
+
+
