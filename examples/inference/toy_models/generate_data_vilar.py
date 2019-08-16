@@ -3,7 +3,7 @@ The vilar Model: Approximate Bayesian Computation Test Run
 """
 
 # Imports
-from sciope.utilities.priors import uniform_prior as prior
+from sciope.utilities.priors import uniform_prior
 from sciope.inference import abc_inference
 from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
