@@ -49,7 +49,7 @@ class DataGenerator:
     def gen(self, batch_size):
         graph_dict = self.get_dask_graph(batch_size=batch_size)
         res_param, res_sim = dask.compute(graph_dict["parameters"], graph_dict["trajectories"])
-        return res_param, res_sim
+        return np.array(res_param), np.array(res_sim)
 
     def sim_param(self, param):
         return self.sim(param)
@@ -70,7 +70,7 @@ prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax)) # .draw
 dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
 
-tp, sim_result = dg.gen(batch_size=1000)
+tp, sim_result = dg.gen(batch_size=100)
 print("generating some data done: shape: ", tp.shape, sim_result.shape)
 
 
