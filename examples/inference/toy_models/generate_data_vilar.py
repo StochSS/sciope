@@ -72,8 +72,16 @@ prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax)) # .draw
 dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
 
-tp, sim_result = dg.gen(batch_size=100)
-print("generating some data done: shape: ", tp.shape, sim_result.shape)
+train_thetas = np.zeros((0,15))
+train_ts = np.zeros((0,201))
+for i in range(100):
+    tp, thet = dg.gen(batch_size=1000)
+    train_thetas = np.concatenate(train_thetas,thet)
+    train_ts = np.concatenate(train_ts,tp)
+    if i%10 == 0:
+        print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+
+print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
 
 print("generating trainig data")
