@@ -73,7 +73,7 @@ print("generating some data")
 
 train_thetas = np.zeros((0,15))
 train_ts = np.zeros((0,201))
-for i in range(500):
+for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     train_thetas = np.concatenate((train_thetas,param),axis=0)
     train_ts = np.concatenate((train_ts,ts),axis=0)
