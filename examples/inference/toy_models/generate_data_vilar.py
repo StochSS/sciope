@@ -8,7 +8,7 @@ from sciope.inference import abc_inference
 from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
 import vilar
-from vilar import simulate_all_species as simulate
+from vilar import simulate
 import dask
 import pickle
 from sklearn.metrics import mean_absolute_error
