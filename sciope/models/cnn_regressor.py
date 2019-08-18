@@ -39,8 +39,7 @@ class CNNModel(ModelBase):
                                                        mode='min')
 
         EarlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=0,
-                                                      mode='auto',
-                                                      baseline=None)
+                                                      mode='auto')
         #train 40 epochs with batch size = 32
         history1 = self.model.fit(
                 inputs, targets, validation_data = (validation_inputs,
