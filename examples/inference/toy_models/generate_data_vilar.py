@@ -83,65 +83,65 @@ prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax)) # .draw
 
 dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
+nr=1
+train_thetas = np.zeros((0,15))
+train_ts = np.zeros((0,201,3))
+for i in range(100):
+    param, ts = dg.gen(batch_size=1000)
+    train_thetas = np.concatenate((train_thetas,param),axis=0)
+    print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
+    train_ts = np.concatenate((train_ts,ts),axis=0)
+    if i%10 == 0:
+        print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
-# train_thetas = np.zeros((0,15))
-# train_ts = np.zeros((0,201,3))
+print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+
+pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas_'+str(nr)+'.p', "wb" ) )
+pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
+
+# validation_thetas = np.zeros((0,15))
+# validation_ts = np.zeros((0,201,3))
+# for i in range(20):
+#     param, ts = dg.gen(batch_size=1000)
+#     validation_thetas = np.concatenate((validation_thetas,param),axis=0)
+#     validation_ts = np.concatenate((validation_ts,ts),axis=0)
+#     if i%10 == 0:
+#         print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
+#
+# print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
+#
+# pickle.dump( validation_thetas, open( 'datasets/' + modelname + '/validation_thetas.p', "wb" ) )
+# pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', "wb" ) )
+#
+#
+# test_thetas = np.zeros((0,15))
+# test_ts = np.zeros((0,201,3))
 # for i in range(100):
 #     param, ts = dg.gen(batch_size=1000)
-#     train_thetas = np.concatenate((train_thetas,param),axis=0)
-#     print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
-#     train_ts = np.concatenate((train_ts,ts),axis=0)
+#     test_thetas = np.concatenate((test_thetas,param),axis=0)
+#     test_ts = np.concatenate((test_ts,ts),axis=0)
 #     if i%10 == 0:
-#         print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+#         print("test data shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
 #
-# print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+# print("generating test data done, shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
+# pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb" ) )
+# pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
 #
-# pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas.p', "wb" ) )
-# pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts.p', "wb" ) )
-
-validation_thetas = np.zeros((0,15))
-validation_ts = np.zeros((0,201,3))
-for i in range(20):
-    param, ts = dg.gen(batch_size=1000)
-    validation_thetas = np.concatenate((validation_thetas,param),axis=0)
-    validation_ts = np.concatenate((validation_ts,ts),axis=0)
-    if i%10 == 0:
-        print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
-
-print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
-
-pickle.dump( validation_thetas, open( 'datasets/' + modelname + '/validation_thetas.p', "wb" ) )
-pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', "wb" ) )
-
-
-test_thetas = np.zeros((0,15))
-test_ts = np.zeros((0,201,3))
-for i in range(100):
-    param, ts = dg.gen(batch_size=1000)
-    test_thetas = np.concatenate((test_thetas,param),axis=0)
-    test_ts = np.concatenate((test_ts,ts),axis=0)
-    if i%10 == 0:
-        print("test data shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
-
-print("generating test data done, shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
-pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb" ) )
-pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
-
-abc_trial_thetas = np.zeros((0,15))
-abc_trial_ts = np.zeros((0,201,3))
-for i in range(100):
-    param, ts = dg.gen(batch_size=1000)
-    abc_trial_thetas = np.concatenate((abc_trial_thetas,param),axis=0)
-    abc_trial_ts = np.concatenate((abc_trial_ts,ts),axis=0)
-    if i%10 == 0:
-        print("abc_trial data shape: abc_trial_ts: ", abc_trial_ts.shape, ", abc_trial_thetas: ", abc_trial_thetas.shape)
-
-pickle.dump( abc_trial_thetas, open( 'datasets/' + modelname + '/abc_trial_thetas.p', "wb" ) )
-pickle.dump( abc_trial_ts, open( 'datasets/' + modelname + '/abc_trial_ts.p', "wb" ) )
-
-
-
-
+# abc_trial_thetas = np.zeros((0,15))
+# abc_trial_ts = np.zeros((0,201,3))
+# for i in range(100):
+#     param, ts = dg.gen(batch_size=1000)
+#     abc_trial_thetas = np.concatenate((abc_trial_thetas,param),axis=0)
+#     abc_trial_ts = np.concatenate((abc_trial_ts,ts),axis=0)
+#     if i%10 == 0:
+#         print("abc_trial data shape: abc_trial_ts: ", abc_trial_ts.shape, ", abc_trial_thetas: ", abc_trial_thetas.shape)
+#
+# pickle.dump( abc_trial_thetas, open( 'datasets/' + modelname + '/abc_trial_thetas.p', "wb" ) )
+# pickle.dump( abc_trial_ts, open( 'datasets/' + modelname + '/abc_trial_ts.p', "wb" ) )
+#
+#
+#
+#
 
 
 

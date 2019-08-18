@@ -1,7 +1,13 @@
 
 import pickle
+import os
 
 
+def load_spec(modelname="vilar_ACR_100_201", type = "train"):
+    loaded_thetas = None
+    loaded_ts = None
+    nr=0
+    if os.path.isfile("datasets/"+modelname+"/"+type+"_"+str(nr)) and os.path.isfile("datasets/"+modelname+"/"+type+"_"+str(nr))
 
 def load_data(modelname='auto_regression2'):
     true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
