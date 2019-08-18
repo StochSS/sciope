@@ -16,8 +16,8 @@ def load_spec(modelname="vilar_ACR_100_201", type = "train"):
             loaded_thetas = thetas
             loaded_ts = ts
         else:
-            loaded_thetas = np.concatenate(loaded_thetas,thetas,axis=0)
-            loaded_ts = np.concatenate(loaded_ts,ts,axis=0)
+            loaded_thetas = np.concatenate((loaded_thetas,thetas),axis=0)
+            loaded_ts = np.concatenate((loaded_ts,ts),axis=0)
         nr+=1
     return loaded_thetas, loaded_ts
 
