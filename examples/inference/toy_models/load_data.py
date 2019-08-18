@@ -8,7 +8,7 @@ def load_spec(modelname="vilar_ACR_100_201", type = "train"):
     loaded_thetas = None
     loaded_ts = None
     nr=0
-    while os.path.isfile("datasets/"+modelname+"/"+type+"_thetas_"+str(nr)) and os.path.isfile("datasets/"+modelname+"/"+type+"_ts_"+str(nr)):
+    while os.path.isfile("datasets/"+modelname+"/"+type+"_thetas_"+str(nr)+".p") and os.path.isfile("datasets/"+modelname+"/"+type+"_ts_"+str(nr)+".p"):
         thetas = pickle.load(open('datasets/' + modelname + '/' + type + '_thetas_' + str(nr) + '.p', "rb"))
         ts = pickle.load(open('datasets/' + modelname + '/' + type + '_ts_' + str(nr) + '.p', "rb"))
 
