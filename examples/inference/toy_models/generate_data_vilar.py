@@ -72,7 +72,7 @@ dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
 
 train_thetas = np.zeros((0,15))
-train_ts = np.zeros((0,201))
+train_ts = np.zeros((0,3,201))
 for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     train_thetas = np.concatenate((train_thetas,param),axis=0)
