@@ -64,8 +64,10 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 obs_data = simulate(np.array(true_params))
 
 import matplotlib.pyplot as plt
+
+plt.plot(np.random.rand(201))
+
 for i in range(3):
-    plt.plot(np.random.rand(201))
     plt.plot(obs_data[0,:,i])
 
 plt.savefig('3sptest')
