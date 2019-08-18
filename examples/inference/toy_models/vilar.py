@@ -155,7 +155,7 @@ def simulate(param):
     #time = np.array(simple_trajectories[0][:, 0])
 
     # extract just the trajectories for Specie A with index 8 into a numpy array
-    s_trajectories = np.array([simple_trajectories[i][:, 6:8] for i in range(num_sim_trajectories)]).T
+    s_trajectories = np.array([simple_trajectories[i][:, 8:] for i in range(num_sim_trajectories)]).T
 
     return s_trajectories.T
 
