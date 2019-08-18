@@ -58,7 +58,7 @@ class DataGenerator:
 
 
 
-modelname = "vilar_A_100_201"
+modelname = "vilar_ACR_100_201"
 
 
 
