@@ -83,7 +83,7 @@ if __name__ == '__main__':
     # Generate some data for parameter inference - we concentrate on specie A [index 8, index 0 is time]
     model.tspan = np.linspace(0, 100, num_timestamps)
     res = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_trajectories)
-    s_trajectories = np.array([res[i][:, 8] for i in range(num_trajectories)]).T
+    s_trajectories = np.array([res[i][:, 6:8] for i in range(num_trajectories)]).T
 
     # Write it to file
     np.savetxt("datasets/vilar_dataset_specieA_1trajs_201time.dat", s_trajectories, delimiter=",")
