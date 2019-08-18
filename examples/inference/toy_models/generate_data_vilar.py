@@ -72,7 +72,7 @@ dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
 
 train_thetas = np.zeros((0,15))
-train_ts = np.zeros((0,3,201))
+train_ts = np.zeros((0,201,3))
 for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     train_thetas = np.concatenate((train_thetas,param),axis=0)
@@ -102,7 +102,7 @@ pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', 
 
 
 test_thetas = np.zeros((0,15))
-test_ts = np.zeros((0,201))
+test_ts = np.zeros((0,201,3))
 for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     test_thetas = np.concatenate((test_thetas,param),axis=0)
@@ -115,7 +115,7 @@ pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb"
 pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
 
 abc_trial_thetas = np.zeros((0,15))
-abc_trial_ts = np.zeros((0,201))
+abc_trial_ts = np.zeros((0,201,3))
 for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     abc_trial_thetas = np.concatenate((abc_trial_thetas,param),axis=0)
