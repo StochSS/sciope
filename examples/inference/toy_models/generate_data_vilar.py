@@ -84,23 +84,23 @@ prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax)) # .draw
 dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
 
-train_thetas = np.zeros((0,15))
-train_ts = np.zeros((0,201,3))
-for i in range(100):
-    param, ts = dg.gen(batch_size=1000)
-    train_thetas = np.concatenate((train_thetas,param),axis=0)
-    print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
-    train_ts = np.concatenate((train_ts,ts),axis=0)
-    if i%10 == 0:
-        print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-
-print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-
-pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas.p', "wb" ) )
-pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts.p', "wb" ) )
+# train_thetas = np.zeros((0,15))
+# train_ts = np.zeros((0,201,3))
+# for i in range(100):
+#     param, ts = dg.gen(batch_size=1000)
+#     train_thetas = np.concatenate((train_thetas,param),axis=0)
+#     print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
+#     train_ts = np.concatenate((train_ts,ts),axis=0)
+#     if i%10 == 0:
+#         print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+#
+# print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+#
+# pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas.p', "wb" ) )
+# pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts.p', "wb" ) )
 
 validation_thetas = np.zeros((0,15))
-validation_ts = np.zeros((0,201))
+validation_ts = np.zeros((0,201,3))
 for i in range(20):
     param, ts = dg.gen(batch_size=1000)
     validation_thetas = np.concatenate((validation_thetas,param),axis=0)
