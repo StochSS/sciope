@@ -79,11 +79,11 @@ def construct_model(input_shape,output_shape):
     padding = 'same'
     poolpadding = 'valid'
     con_len = 3
-    # lay_size = [int(64*1.5**i) for i in range(10)]
-    lay_size = [25, 50, 100]
+    lay_size = [int(64*1.5**i) for i in range(10)]
+    # lay_size = [25, 50, 100]
 
     maxpool = con_len
-    levels=2
+    levels=3
     batch_mom = 0.99
     reg = None
     pool = keras.layers.AvgPool1D # keras.layers.MaxPooling1D
