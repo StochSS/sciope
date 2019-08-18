@@ -60,7 +60,13 @@ class DataGenerator:
 
 modelname = "vilar_ACR_100_201"
 
+true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+data = simulate(true_params)
 
+
+
+pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param.p', "wb" ) )
+pickle.dump( data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
 
 
 # Set up the prior
@@ -126,11 +132,7 @@ for i in range(100):
 pickle.dump( abc_trial_thetas, open( 'datasets/' + modelname + '/abc_trial_thetas.p', "wb" ) )
 pickle.dump( abc_trial_ts, open( 'datasets/' + modelname + '/abc_trial_ts.p', "wb" ) )
 
-true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-data = simulate(true_params)
 
-pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param.p', "wb" ) )
-pickle.dump( data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
 
 
 
