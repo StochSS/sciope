@@ -33,7 +33,7 @@ class CNNModel(ModelBase):
               save_model = True, plot_training_progress=False):
         self.save_as = 'saved_models/cnn'
         if save_model:
-            mcp_save = keras.callbacks.ModelCheckpoint(save_as+'.hdf5',
+            mcp_save = keras.callbacks.ModelCheckpoint(self.save_as+'.hdf5',
                                                        save_best_only=True, 
                                                        monitor='val_loss', 
                                                        mode='min')
@@ -50,7 +50,7 @@ class CNNModel(ModelBase):
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
         if save_model:
-            self.model = keras.models.load_model(save_as+'.hdf5')
+            self.model = keras.models.load_model(self.save_as+'.hdf5')
         #train 5 epochs with batch size 4096
         # history2 = self.model.fit(
         #         inputs, targets, validation_data = (validation_inputs,
