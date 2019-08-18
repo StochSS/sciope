@@ -31,7 +31,7 @@ print("training_thetas shape: ", train_thetas.shape)
 print("training_ts shape: ", train_ts.shape)
 
 # choose neural network model
-nnm = CNNModel(input_shape=(100,3), output_shape=(2))
+nnm = CNNModel(input_shape=(201,3), output_shape=(2))
 # nnm = PEN_CNNModel(input_shape=(100,1), output_shape=(2), pen_nr=10)
 # nm = ANNModel(input_shape=(100,1), output_shape=(2))
 
