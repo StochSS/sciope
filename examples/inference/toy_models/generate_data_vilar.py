@@ -73,7 +73,7 @@ for i in range(3):
 plt.savefig('3sptest')
 
 pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param.p', "wb" ) )
-pickle.dump( data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
+pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
 
 
 # Set up the prior
