@@ -8,6 +8,7 @@ from AutoRegressive_model import simulate, prior
 # from MovingAverage_model import simulate, prior
 from sklearn.metrics import mean_absolute_error
 import pickle
+from normalize_data import normalize_data
 
 # sim = simulate
 
@@ -20,10 +21,21 @@ import pickle
 # validation_ts = np.expand_dims(np.array([simulate(p,n=100) for p in validation_thetas]),2)
 print("update")
 modelname = "vilar_ACR_100_201"
+dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
+dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 train_thetas = pickle.load(open('datasets/' + modelname + '/train_thetas.p', "rb" ) )
 train_ts = pickle.load(open('datasets/' + modelname + '/train_ts.p', "rb" ) )
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
+
+print("train thetas min: ", np.min(train_thetas,0), ", max: ", np.max(train_thetas,0))
+
+train_thetas = normalize_data(train_thetas,dmin,dmax)
+validation_thetas = normalize_data(validation_thetas,dmin,dmax)
+
+print("train thetas min: ", np.min(train_thetas,0), ", max: ", np.max(train_thetas,0))
+
+
 print("validation_thetas shape: ", validation_thetas.shape)
 print("validation_ts shape: ", validation_ts.shape)
 
