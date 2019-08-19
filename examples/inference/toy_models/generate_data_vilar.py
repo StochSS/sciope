@@ -59,7 +59,7 @@ class DataGenerator:
 
 
 
-modelname = "vilar_ACR_100_201"
+modelname = "vilar_ACR_200_401"
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 obs_data = simulate(np.array(true_params))
