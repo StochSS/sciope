@@ -119,11 +119,12 @@ def construct_model(input_shape, output_shape, pen_nr = 3):
     # ))
     #Reshape previous layer to 1 dimension (feature state).
     layer = keras.layers.Flatten()(layer)
-    # squeezed = keras.layers.Lambda(lambda x: keras.backend.squeeze(x, 2))(Input)
-    squeezed = keras.layers.Reshape((pen_nr*input_shape[1],))
-    y = keras.layers.Lambda(lambda x: x[:,0:pen_nr], )(squeezed)
+    cut_Input = keras.layers.Lambda(lambda x: x[0:pen_nr,:], )(Input)
 
-    layer = keras.layers.concatenate([layer, y])
+    cut_Input_1d = keras.layers.Lambda(lambda x: keras.backend.reshape(pen_nr*input_shape[1],))(cut_Input)
+
+
+    layer = keras.layers.concatenate([layer, cut_Input_1d])
 
     #Add 3 layers of Dense layers with activation function and Batch Norm.
     for i in range(3,6):
