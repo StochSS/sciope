@@ -44,8 +44,8 @@ abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas
 abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
 abc_trial_pred = nnm.predict(abc_trial_ts)
-mean_dev = np.linalg.norm(abc_trial_thetas-abc_trial_pred, axis=0)
-print("dev_norm shape: ", mean_dev.shape)
+mean_dev = np.mean(abc_trial_thetas-abc_trial_pred, axis=0)
+print("mean dev shape: ", mean_dev.shape)
 print("deviation norm: ", mean_dev)
 
 bpi = np.argsort(mean_dev)[:4] # best_param_ind
