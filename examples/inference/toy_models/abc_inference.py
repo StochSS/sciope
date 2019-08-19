@@ -41,9 +41,11 @@ print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
+abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
 abc_trial_pred = nnm.predict(abc_trial_ts)
 dev_norm = np.linalg.norm(abc_trial_thetas-abc_trial_pred, axis=1)
+print("dev_norm shape: ", dev_norm.shape)
 print("deviation norm: ", dev_norm)
 
 bpi = np.argsort(dev_norm)[:4] # best_param_ind
@@ -69,10 +71,8 @@ print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted
 # bpi = np.argsort(accepted_std)[:4] # best_param_ind
 
 
-accepted_para = normalize_data(accepted_para,dmin,dmax)
-true_param = normalize_data(true_param,dmin,dmax)
-accepted_mean = normalize_data(accepted_mean,dmin,dmax)
 
+true_param = normalize_data(true_param,dmin,dmax)
 plt.axis('equal')
 f, ax = plt.subplots(4,4,figsize=(15,15),sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
