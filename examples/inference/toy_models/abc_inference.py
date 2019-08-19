@@ -32,7 +32,7 @@ true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) 
 data = pickle.load(open('datasets/' + modelname + '/obs_data.p', "rb" ) )
 print("data shape: ", data.shape)
 data_exp = np.expand_dims( np.expand_dims(data,axis=0), axis=2 )
-print("data shape: ", data.shape)
+print("data_exp shape: ", data_exp.shape)
 
 data_pred = nnm.predict(data_exp)
 
