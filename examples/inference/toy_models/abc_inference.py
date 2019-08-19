@@ -62,6 +62,10 @@ accepted_mean = np.mean(accepted_para,axis=0)
 accepted_std = np.std(accepted_para,axis=0)
 print("posterior dev: ", accepted_mean-true_param)
 print("posterior std: ", accepted_std)
+print("accepted dist max: ", np.max(dist[accepted_ind]))
+print("accepted dist mean: ", np.mean(dist[accepted_ind]))
+print("trial dist mean: ", np.mean(dist))
+
 data_pred = np.squeeze(data_pred)
 accepted_dist = dist[accepted_ind]
 
