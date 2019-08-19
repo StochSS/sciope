@@ -73,6 +73,10 @@ plt.axis('equal')
 
 accepted_para = normalize_data(accepted_para,dmin,dmax)
 true_param = normalize_data(true_param,dmin,dmax)
+accepted_mean = normalize_data(accepted_mean,dmin,dmax)
+data_pred = normalize_data(data_pred,dmin,dmax)
+
+
 
 plt.scatter(accepted_para[:, 0], accepted_para[:, 1], color="green", s=2)
 
@@ -81,9 +85,9 @@ plt.scatter(accepted_mean[0],accepted_mean[1], color="red", marker="x")
 plt.scatter(data_pred[0],data_pred[1], color="gray", marker="o")
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
+plt.plot([0,1,1,0,0],[0,0,1,1,0])
 
-
-plt.plot([-2,2,0,-2],[1,1,-1,1],color="red")
+#plt.plot([-2,2,0,-2],[1,1,-1,1],color="red")
 #plt.plot([-2,2,0,-2],[-1,-1,1,-1],color="red")
 
 
