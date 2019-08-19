@@ -97,7 +97,7 @@ def simulate(param):
 
     # Here, we create the model object.
     model = model_doc.to_model("vilar")
-    num_timestamps = 201
+    num_timestamps = 401
 
     # Set model parameters
     param = param.ravel()
@@ -148,7 +148,7 @@ def simulate(param):
 
     # Set up simulation density
     num_sim_trajectories = 1
-    model.tspan = np.linspace(0, 100, num_timestamps)
+    model.tspan = np.linspace(0, 200, num_timestamps)
     simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
 
     # extract time values

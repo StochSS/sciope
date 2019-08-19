@@ -11,6 +11,7 @@ import vilar
 from vilar import simulate
 import dask
 import pickle
+import os
 from sklearn.metrics import mean_absolute_error
 
 
@@ -84,20 +85,24 @@ prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax)) # .draw
 dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
 nr=0
-train_thetas = np.zeros((0,15))
-train_ts = np.zeros((0,201,3))
-for i in range(100):
-    param, ts = dg.gen(batch_size=1000)
-    train_thetas = np.concatenate((train_thetas,param),axis=0)
-    # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
-    train_ts = np.concatenate((train_ts,ts),axis=0)
-    if i%10 == 0:
-        print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
+    nr += 1
 
-print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+for nr in range(nr,3):
+    train_thetas = np.zeros((0,15))
+    train_ts = np.zeros((0,201,3))
+    for i in range(100):
+        param, ts = dg.gen(batch_size=1000)
+        train_thetas = np.concatenate((train_thetas,param),axis=0)
+        # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
+        train_ts = np.concatenate((train_ts,ts),axis=0)
+        if i%10 == 0:
+            print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
-pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas_'+str(nr)+'.p', "wb" ) )
-pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
+    print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+
+    pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas_'+str(nr)+'.p', "wb" ) )
+    pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
 
 # validation_thetas = np.zeros((0,15))
 # validation_ts = np.zeros((0,201,3))
