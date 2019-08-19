@@ -30,7 +30,10 @@ dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
 true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
 data = pickle.load(open('datasets/' + modelname + '/obs_data.p', "rb" ) )
+print("data shape: ", data.shape)
 data_exp = np.expand_dims( np.expand_dims(data,axis=0), axis=2 )
+print("data shape: ", data.shape)
+
 data_pred = nnm.predict(data_exp)
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
