@@ -34,7 +34,7 @@ print("data shape: ", data.shape)
 # data_exp = np.expand_dims( np.expand_dims(data,axis=0), axis=2 )
 # print("data_exp shape: ", data_exp.shape)
 
-data_pred = nnm.predict(data_exp)
+data_pred = nnm.predict(data)
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
