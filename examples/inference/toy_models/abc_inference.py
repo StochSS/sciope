@@ -43,14 +43,17 @@ data_pred = nnm.predict(data)
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
 abc_trial_pred = nnm.predict(abc_trial_ts)
-mean_dev = np.mean(np.linalg.norm(abc_trial_thetas-abc_trial_pred, axis=1))
-print("mean deviation: ", mean_dev)
+dev_norm = np.linalg.norm(abc_trial_thetas-abc_trial_pred, axis=1)
+print("deviation norm: ", dev_norm)
+
+bpi = np.argsort(dev_norm)[:4] # best_param_ind
+
 
 nr_of_trial = abc_trial_thetas.shape[0]
 nr_of_accept = 100
 
 
-dist = np.linalg.norm(abc_trial_pred - data_pred,axis=1)
+dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
 accepted_ind = np.argpartition(dist,nr_of_accept)[0:nr_of_accept]
 accepted_para = abc_trial_thetas[accepted_ind]
 accepted_mean = np.mean(accepted_para,axis=0)
@@ -63,7 +66,7 @@ accepted_dist = dist[accepted_ind]
 print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted_dist), ", min: ", np.min(accepted_dist))
 
 
-bpi = np.argsort(accepted_std)[:4] # best_param_ind
+# bpi = np.argsort(accepted_std)[:4] # best_param_ind
 
 
 accepted_para = normalize_data(accepted_para,dmin,dmax)
