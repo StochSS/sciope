@@ -63,25 +63,23 @@ accepted_dist = dist[accepted_ind]
 print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted_dist), ", min: ", np.min(accepted_dist))
 
 
-# plt.figure(figsize=(20,20))
-plt.axis('equal')
-# col = np.zeros((500,3))
-# col[:,1]=(accepted_dist - np.min(accepted_dist)) / (np.max(accepted_dist)-np.min(accepted_dist))
-# circle1 = plt.Circle((true_param[0],true_param[1]),mean_dev,color='r', fill = False)
-# plt.gcf().gca().add_artist(circle1)
-#plt.scatter(abc_trial_thetas[:, 0], abc_trial_thetas[:, 1], color="orange", s=2)
+bpi = np.argsort(accepted_std)[:4] # best_param_ind
+
 
 accepted_para = normalize_data(accepted_para,dmin,dmax)
 true_param = normalize_data(true_param,dmin,dmax)
 accepted_mean = normalize_data(accepted_mean,dmin,dmax)
 
-
-
-plt.scatter(accepted_para[:, 0], accepted_para[:, 1], color="green", s=2)
-
-plt.scatter(true_param[0],true_param[1], color="gray", marker="x")
-plt.scatter(accepted_mean[0],accepted_mean[1], color="red", marker="x")
-plt.scatter(data_pred[0],data_pred[1], color="gray", marker="o")
+plt.axis('equal')
+f, ax = plt.subplots(4,4,figsize=(15,15),sharex=True,sharey=True)
+f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
+for i in range(16):
+    x = i // 4
+    y = i % 4
+    ax[x,y].scatter(accepted_para[:, bpi[x]], accepted_para[:, bpi[y]], color="green", s=2)
+    ax[x,y].scatter(true_param[bpi[x]],true_param[bpi[y]], color="gray", marker="x")
+    ax[x,y].scatter(accepted_mean[bpi[x]],accepted_mean[bpi[y]], color="red", marker="x")
+    ax[x,y].scatter(data_pred[bpi[x]],data_pred[bpi[y]], color="gray", marker="o")
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
 plt.plot([0,1,1,0,0],[0,0,1,1,0])
