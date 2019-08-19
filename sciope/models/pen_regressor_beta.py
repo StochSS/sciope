@@ -119,7 +119,7 @@ def construct_model(input_shape, output_shape, pen_nr = 3):
     # ))
     #Reshape previous layer to 1 dimension (feature state).
     layer = keras.layers.Flatten()(layer)
-    cut_Input = keras.layers.Lambda(lambda x: x[0:pen_nr,:], )(Input)
+    cut_Input = keras.layers.Lambda(lambda x: x[:,0:pen_nr,:], )(Input)
 
     # cut_Input_1d = keras.layers.Lambda(lambda x: keras.backend.reshape(pen_nr*input_shape[1],))(cut_Input)
 
