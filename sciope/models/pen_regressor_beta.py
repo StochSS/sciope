@@ -123,7 +123,9 @@ def construct_model(input_shape, output_shape, pen_nr = 3):
 
     # cut_Input_1d = keras.layers.Lambda(lambda x: keras.backend.reshape(pen_nr*input_shape[1],))(cut_Input)
 
-    cut_Input_1d = keras.backend.reshape(cut_Input,(-1,pen_nr*input_shape[1],))
+    # cut_Input_1d = keras.backend.reshape(cut_Input,(-1,pen_nr*input_shape[1],))
+    cut_Input_1d = keras.layers.Lambda(lambda x: keras.backend.reshape(x,pen_nr*input_shape[1],))(cut_Input)
+
 
     layer = keras.layers.concatenate([layer, cut_Input_1d])
 
