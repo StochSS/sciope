@@ -46,7 +46,7 @@ abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb
 abc_trial_pred = nnm.predict(abc_trial_ts)
 mean_dev = np.mean(abs(abc_trial_thetas-abc_trial_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
-print("deviation norm: ", mean_dev)
+print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
 
 bpi = np.argsort(mean_dev)[:4] # best_param_ind
 
@@ -91,7 +91,7 @@ for i in range(16):
 
         ax[x, y].plot([1, 1], [0, peak_val], c='b')
         ax[x, y].plot([0, 0], [0, peak_val], c='b')
-    elif y>x:
+    else:
         ax[x,y].scatter(accepted_para[:, bpi[x]], accepted_para[:, bpi[y]], color="green", s=2)
         ax[x,y].scatter(true_param[bpi[x]],true_param[bpi[y]], color="black", marker="*")
         ax[x,y].scatter(accepted_mean[bpi[x]],accepted_mean[bpi[y]], color="red", marker="x")
