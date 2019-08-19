@@ -33,7 +33,6 @@ class PEN_CNNModel(ModelBase):
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets,
              save_model = True, plot_training_progress=False):
-        self.save_as = 'saved_models/pen'+str(self.pen_nr)
 
         if save_model:
             mcp_save = keras.callbacks.ModelCheckpoint(self.save_as+'.hdf5',
