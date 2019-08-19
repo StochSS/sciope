@@ -73,7 +73,7 @@ class PEN_CNNModel(ModelBase):
         return self.model.predict(xt)
 
     def load_model(self):
-        self.model = keras.models.load_model(self.save_as+'.hdf5')
+        self.model = keras.models.load_model(self.save_as+'.hdf5', custom_objects={"keras": keras})
     
 def construct_model(input_shape, output_shape, pen_nr = 3):
     #TODO: add a **kwargs to specify the hyperparameters
