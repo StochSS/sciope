@@ -1,7 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
+plt.plot([1,2,3])
 from sciope.inference import abc_inference
 from sciope.models.cnn_regressor import CNNModel
 from sciope.models.pen_regressor_beta import PEN_CNNModel
