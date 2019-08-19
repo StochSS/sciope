@@ -10,8 +10,9 @@ from sklearn.metrics import mean_absolute_error
 import pickle
 from normalize_data import normalize_data
 from load_data import load_spec
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
 
 # choose neural network model
 # nnm = CNNModel(input_shape=(201,3), output_shape=(15))
