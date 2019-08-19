@@ -83,7 +83,7 @@ prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax)) # .draw
 
 dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
-nr=2
+nr=0
 train_thetas = np.zeros((0,15))
 train_ts = np.zeros((0,201,3))
 for i in range(100):
