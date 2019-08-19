@@ -119,7 +119,8 @@ def construct_model(input_shape, output_shape, pen_nr = 3):
     # ))
     #Reshape previous layer to 1 dimension (feature state).
     layer = keras.layers.Flatten()(layer)
-    squeezed = keras.layers.Lambda(lambda x: keras.backend.squeeze(x, 2))(Input)
+    # squeezed = keras.layers.Lambda(lambda x: keras.backend.squeeze(x, 2))(Input)
+    squeezed = keras.layers.Reshape((pen_nr*input_shape[1],))
     y = keras.layers.Lambda(lambda x: x[:,0:pen_nr], )(squeezed)
 
     layer = keras.layers.concatenate([layer, y])
