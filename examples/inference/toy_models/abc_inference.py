@@ -84,7 +84,7 @@ for i in range(16):
     x = i // 4
     y = i % 4
     if x == y:
-        ax[x, y].hist(accepted_para[:, bpi[x]])
+        ax[x, y].hist(accepted_para[:, bpi[x]], density=True)
         ax[x, y].plot([true_param[bpi[x]], true_param[bpi[x]]], [0,1], c='black')
         ax[x, y].plot([0, 1, 1, 0, 0], [0, 0, 1, 1, 0])
 
