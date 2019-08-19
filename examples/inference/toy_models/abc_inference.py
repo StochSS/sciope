@@ -70,6 +70,10 @@ plt.axis('equal')
 # circle1 = plt.Circle((true_param[0],true_param[1]),mean_dev,color='r', fill = False)
 # plt.gcf().gca().add_artist(circle1)
 #plt.scatter(abc_trial_thetas[:, 0], abc_trial_thetas[:, 1], color="orange", s=2)
+
+accepted_para = normalize_data(accepted_para,dmin,dmax)
+true_param = normalize_data(true_param,dmin,dmax)
+
 plt.scatter(accepted_para[:, 0], accepted_para[:, 1], color="green", s=2)
 
 plt.scatter(true_param[0],true_param[1], color="gray", marker="x")
