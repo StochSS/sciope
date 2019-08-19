@@ -132,7 +132,7 @@ def construct_model(input_shape, output_shape, pen_nr = 3):
     #Add 3 layers of Dense layers with activation function and Batch Norm.
     for i in range(3,6):
         layer = keras.layers.Dense(lay_size[i])(layer)
-        # model.add(keras.layers.BatchNormalization(momentum=batch_mom))
+        model.add(keras.layers.BatchNormalization(momentum=batch_mom))
         layer = keras.layers.Activation(dense_activation)(layer)
     
     #Add output layer without Activation or Batch Normalization
