@@ -41,9 +41,9 @@ class PEN_CNNModel(ModelBase):
                                                        monitor='val_loss', 
                                                        mode='min')
 
-        EarlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0,
-                                                      mode='auto',
-                                                      baseline=None)
+        # EarlyStopping = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=0, verbose=0,
+        #                                               mode='auto',
+        #                                               baseline=None)
         #train 40 epochs with batch size = 32
         history1 = self.model.fit(
                 inputs, targets, validation_data = (validation_inputs,
