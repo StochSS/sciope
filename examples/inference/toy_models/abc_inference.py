@@ -83,9 +83,10 @@ for i in range(16):
     ax[x,y].scatter(true_param[bpi[x]],true_param[bpi[y]], color="gray", marker="x")
     ax[x,y].scatter(accepted_mean[bpi[x]],accepted_mean[bpi[y]], color="red", marker="x")
     ax[x,y].scatter(data_pred[bpi[x]],data_pred[bpi[y]], color="gray", marker="o")
+    ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
-plt.plot([0,1,1,0,0],[0,0,1,1,0])
+# plt.plot([0,1,1,0,0],[0,0,1,1,0])
 
 #plt.plot([-2,2,0,-2],[1,1,-1,1],color="red")
 #plt.plot([-2,2,0,-2],[-1,-1,1,-1],color="red")
