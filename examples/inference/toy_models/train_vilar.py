@@ -51,7 +51,7 @@ print("training_ts shape: ", train_ts.shape)
 nnm = PEN_CNNModel(input_shape=(201,3), output_shape=(15), pen_nr=2)
 # nm = ANNModel(input_shape=(100,1), output_shape=(2))
 
-nnm.load_model()
+# nnm.load_model()
 
 # nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
 #           plot_training_progress=False)
