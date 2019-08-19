@@ -80,4 +80,4 @@ plt.plot([-2,2,0,-2],[1,1,-1,1],color="red")
 #plt.plot([-2,2,0,-2],[-1,-1,1,-1],color="red")
 
 
-plt.savefig('')
+plt.savefig('posterior_abc')
