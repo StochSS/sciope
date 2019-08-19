@@ -60,9 +60,7 @@ accepted_dist = dist[accepted_ind]
 print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted_dist), ", min: ", np.min(accepted_dist))
 
 
-
-
-plt.figure(figsize=(20,20))
+# plt.figure(figsize=(20,20))
 plt.axis('equal')
 # col = np.zeros((500,3))
 # col[:,1]=(accepted_dist - np.min(accepted_dist)) / (np.max(accepted_dist)-np.min(accepted_dist))
