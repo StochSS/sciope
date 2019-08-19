@@ -52,7 +52,8 @@ class PEN_CNNModel(ModelBase):
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
         if save_model:
-            self.model = keras.models.load_model(self.save_as+'.hdf5')
+            # self.model = keras.models.load_model(self.save_as+'.hdf5')
+            self.load_model()
         #train 5 epochs with batch size 4096
         # history2 = self.model.fit(
         #         inputs, targets, validation_data = (validation_inputs,
