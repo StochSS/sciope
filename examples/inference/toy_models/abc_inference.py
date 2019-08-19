@@ -1,7 +1,6 @@
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-plt.plot([1,2,3])
 from sciope.inference import abc_inference
 from sciope.models.cnn_regressor import CNNModel
 from sciope.models.pen_regressor_beta import PEN_CNNModel
@@ -32,7 +31,7 @@ dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
 true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
-true_param = np.array(true_param)
+true_param = np.squeeze(np.array(true_param))
 print("true_param shape: ", true_param.shape)
 data = pickle.load(open('datasets/' + modelname + '/obs_data.p', "rb" ) )
 print("data shape: ", data.shape)
