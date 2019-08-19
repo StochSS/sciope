@@ -84,9 +84,11 @@ for i in range(16):
     x = i // 4
     y = i % 4
     if x == y:
-        ax[x, y].hist(accepted_para[:, bpi[x]], density=True)
-        ax[x, y].plot([true_param[bpi[x]], true_param[bpi[x]]], [0,1], c='black')
-        ax[x, y].plot([0, 1, 1, 0, 0], [0, 0, 1, 1, 0])
+        ret = ax[x, y].hist(accepted_para[:, bpi[x]], density=True)
+        peak_val = np.max(ret[1])
+        ax[x, y].plot([true_param[bpi[x]], true_param[bpi[x]]], [0,peak_val], c='black')
+        ax[x, y].plot([1, 1], [0, peak_val], c='b')
+        ax[x, y].plot([0, 0], [0, peak_val], c='b')
 
     ax[x,y].scatter(accepted_para[:, bpi[x]], accepted_para[:, bpi[y]], color="green", s=2)
     ax[x,y].scatter(true_param[bpi[x]],true_param[bpi[y]], color="black", marker="*")
