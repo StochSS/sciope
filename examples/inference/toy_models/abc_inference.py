@@ -85,7 +85,7 @@ for i in range(16):
     y = i % 4
     if x == y:
         ret = ax[x, y].hist(accepted_para[:, bpi[x]], density=True)
-        peak_val = np.max(ret[1])
+        peak_val = np.max(ret[0])
         ax[x, y].plot([true_param[bpi[x]], true_param[bpi[x]]], [0,peak_val], c='black')
         ax[x, y].plot([1, 1], [0, peak_val], c='b')
         ax[x, y].plot([0, 0], [0, peak_val], c='b')
