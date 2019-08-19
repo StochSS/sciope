@@ -27,7 +27,7 @@ dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 # train_thetas = pickle.load(open('datasets/' + modelname + '/train_thetas.p', "rb" ) )
 # train_ts = pickle.load(open('datasets/' + modelname + '/train_ts.p', "rb" ) )
 
-train_thetas, train_ts = load_spec(modelname="vilar_ACR_100_201", type = "train")
+train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
 
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
