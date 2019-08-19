@@ -89,12 +89,12 @@ for i in range(16):
         ax[x, y].plot([true_param[bpi[x]], true_param[bpi[x]]], [0,peak_val], c='black')
         ax[x, y].plot([1, 1], [0, peak_val], c='b')
         ax[x, y].plot([0, 0], [0, peak_val], c='b')
-
-    ax[x,y].scatter(accepted_para[:, bpi[x]], accepted_para[:, bpi[y]], color="green", s=2)
-    ax[x,y].scatter(true_param[bpi[x]],true_param[bpi[y]], color="black", marker="*")
-    ax[x,y].scatter(accepted_mean[bpi[x]],accepted_mean[bpi[y]], color="red", marker="x")
-    ax[x,y].scatter(data_pred[bpi[x]],data_pred[bpi[y]], color="gray", marker="o")
-    ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
+    else:
+        ax[x,y].scatter(accepted_para[:, bpi[x]], accepted_para[:, bpi[y]], color="green", s=2)
+        ax[x,y].scatter(true_param[bpi[x]],true_param[bpi[y]], color="black", marker="*")
+        ax[x,y].scatter(accepted_mean[bpi[x]],accepted_mean[bpi[y]], color="red", marker="x")
+        ax[x,y].scatter(data_pred[bpi[x]],data_pred[bpi[y]], color="gray", marker="o")
+        ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
 # plt.plot([0,1,1,0,0],[0,0,1,1,0])
