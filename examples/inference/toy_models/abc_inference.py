@@ -74,7 +74,6 @@ plt.axis('equal')
 accepted_para = normalize_data(accepted_para,dmin,dmax)
 true_param = normalize_data(true_param,dmin,dmax)
 accepted_mean = normalize_data(accepted_mean,dmin,dmax)
-data_pred = normalize_data(data_pred,dmin,dmax)
 
 
 
