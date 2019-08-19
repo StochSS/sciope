@@ -87,9 +87,11 @@ for i in range(16):
         ret = ax[x, y].hist(accepted_para[:, bpi[x]], density=True)
         peak_val = np.max(ret[0])
         ax[x, y].plot([true_param[bpi[x]], true_param[bpi[x]]], [0,peak_val], c='black')
+        ax[x, y].plot([accepted_mean[bpi[x]], accepted_mean[bpi[x]]], [0,peak_val], c='red')
+
         ax[x, y].plot([1, 1], [0, peak_val], c='b')
         ax[x, y].plot([0, 0], [0, peak_val], c='b')
-    else:
+    elif y>x:
         ax[x,y].scatter(accepted_para[:, bpi[x]], accepted_para[:, bpi[y]], color="green", s=2)
         ax[x,y].scatter(true_param[bpi[x]],true_param[bpi[y]], color="black", marker="*")
         ax[x,y].scatter(accepted_mean[bpi[x]],accepted_mean[bpi[y]], color="red", marker="x")

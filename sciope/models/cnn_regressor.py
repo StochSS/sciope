@@ -87,7 +87,7 @@ def construct_model(input_shape,output_shape):
     batch_mom = 0.99
     reg = None
     # pool = keras.layers.AvgPool1D #
-    pool =  keras.layers.MaxPooling1D
+    pool = keras.layers.MaxPooling1D
     model = keras.Sequential()
     depth = input_shape[0]
     
