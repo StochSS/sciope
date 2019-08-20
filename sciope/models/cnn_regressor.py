@@ -26,12 +26,11 @@ class CNNModel(ModelBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
         self.model = construct_model(input_shape,output_shape)
-        self.save_as = 'saved_models/cnn'
+        self.save_as = 'saved_models/cnn_light'
     
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets,
               save_model = True, plot_training_progress=False):
-        self.save_as = 'saved_models/cnn'
         if save_model:
             mcp_save = keras.callbacks.ModelCheckpoint(self.save_as+'.hdf5',
                                                        save_best_only=True, 
