@@ -42,7 +42,7 @@ class CNNModel(ModelBase):
         #train 40 epochs with batch size = 32
         history1 = self.model.fit(
                 inputs, targets, validation_data = (validation_inputs,
-                validation_targets), epochs=10,batch_size=64,shuffle=True,
+                validation_targets), epochs=10,batch_size=1024*4,shuffle=True,
                 callbacks=[mcp_save])#,EarlyStopping])
         
         #To avoid overfitting load the model with best validation results after 
