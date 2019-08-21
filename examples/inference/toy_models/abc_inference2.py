@@ -124,8 +124,8 @@ for x in range(15):
             ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
             ax[x, y].plot([data_pred_[x], data_pred_[x]], [0,peak_val], c='gray')
 
-            ax[x, y].plot([1, 1], [0, peak_val], c='b')
-            ax[x, y].plot([0, 0], [0, peak_val], c='b')
+            ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
+            ax[x, y].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
         else:
             ax[x, y].scatter(accepted_para_[:, y], accepted_para_[:, x], color="green", s=2)
             ax[x, y].scatter(true_param_[y],true_param_[x], color="black", marker="*")
