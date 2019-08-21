@@ -116,7 +116,7 @@ for x in range(15):
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
-
+            print("hist_data[x] shape: ", hist_data[x].shape, ", np.histogram(accepted_para[:,x])[0] shape: ", np.histogram(accepted_para[:,x])[0].shape)
             hist_data[x] *= np.histogram(accepted_para[:,x])[0]
             hist_data[y] *= np.histogram(accepted_para[:,y])[0]
 
