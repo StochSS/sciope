@@ -78,7 +78,7 @@ print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
-f, ax = plt.subplots(4,4,figsize=(15,15))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(15,15,figsize=(15,15))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 for x in range(15):
     for y in range(x+1,15):
