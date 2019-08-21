@@ -109,7 +109,7 @@ for x in range(15):
         accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
         accepted_para = abc_trial_thetas[accepted_ind]
         #denormalize
-        accepted_para__ = denormalize_data(accepted_para, dmin, dmax)
+        accepted_para_ = denormalize_data(accepted_para, dmin, dmax)
         true_param_ = denormalize_data(true_param, dmin, dmax)
         data_pred_ = denormalize_data(data_pred, dmin, dmax)
         # print("d range: ", np.min(accepted_para), np.max(accepted_para), np.min(true_param), np.max(true_param), )
