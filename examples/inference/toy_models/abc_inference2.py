@@ -99,7 +99,7 @@ f, ax = plt.subplots(15,16,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
 bins = np.linspace(0,1,21)
-hist_data = np.ones((15,21))
+hist_data = np.ones((15,20))
 for x in range(15):
     ax[0, x].set_title(para_names[x])
     for y in range(x,15):
@@ -116,7 +116,7 @@ for x in range(15):
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
-            print("hist_data[x] shape: ", hist_data[x].shape, ", np.histogram(accepted_para[:,x])[0] shape: ", np.histogram(accepted_para[:,x])[0].shape)
+            print("hist_data[x] shape: ", hist_data[x].shape, ", np.histogram(accepted_para[:,x], bins=bins)[0] shape: ", np.histogram(accepted_para[:,x], bins=bins)[0].shape)
             hist_data[x] *= np.histogram(accepted_para[:,x], bins=bins)[0]
             hist_data[y] *= np.histogram(accepted_para[:,y])[0]
 
