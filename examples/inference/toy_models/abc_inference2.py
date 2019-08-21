@@ -109,27 +109,28 @@ for x in range(15):
         accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
         accepted_para = abc_trial_thetas[accepted_ind]
         #denormalize
-        accepted_para = denormalize_data(accepted_para, dmin, dmax)
-        true_param = denormalize_data(true_param, dmin, dmax)
-        data_pred = denormalize_data(data_pred, dmin, dmax)
+        accepted_para__ = denormalize_data(accepted_para, dmin, dmax)
+        true_param_ = denormalize_data(true_param, dmin, dmax)
+        data_pred_ = denormalize_data(data_pred, dmin, dmax)
+        # print("d range: ", np.min(accepted_para), np.max(accepted_para), np.min(true_param), np.max(true_param), )
 
 
-        accepted_mean = np.mean(accepted_para, axis=0)
+        accepted_mean = np.mean(accepted_para_, axis=0)
 
         if x == y:
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, color='green')
+            ret = ax[x, y].hist(accepted_para_[:, x], density=True, color='green')
             peak_val = np.max(ret[0])
-            ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black')
+            ax[x, y].plot([true_param_[x], true_param_[x]], [0,peak_val], c='black')
             ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-            ax[x, y].plot([data_pred[x], data_pred[x]], [0,peak_val], c='gray')
+            ax[x, y].plot([data_pred_[x], data_pred_[x]], [0,peak_val], c='gray')
 
             ax[x, y].plot([1, 1], [0, peak_val], c='b')
             ax[x, y].plot([0, 0], [0, peak_val], c='b')
         else:
-            ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=2)
-            ax[x, y].scatter(true_param[y],true_param[x], color="black", marker="*")
+            ax[x, y].scatter(accepted_para_[:, y], accepted_para_[:, x], color="green", s=2)
+            ax[x, y].scatter(true_param_[y],true_param_[x], color="black", marker="*")
             ax[x, y].scatter(accepted_mean[y],accepted_mean[x], color="red", marker="x")
-            ax[x, y].scatter(data_pred[y],data_pred[x], color="gray", marker="o")
+            ax[x, y].scatter(data_pred_[y],data_pred_[x], color="gray", marker="o")
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
