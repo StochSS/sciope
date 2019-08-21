@@ -11,7 +11,7 @@ from AutoRegressive_model import simulate, prior
 # from MovingAverage_model import simulate, prior
 from sklearn.metrics import mean_absolute_error
 import pickle
-from normalize_data import normalize_data
+from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
 import vilar
 
@@ -98,6 +98,8 @@ true_param = normalize_data(true_param,dmin,dmax)
 f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
+
+
 for x in range(15):
     ax[0, x].set_title(para_names[x])
     for y in range(x,15):
@@ -106,6 +108,12 @@ for x in range(15):
         dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[[x,y]], axis=1)
         accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
         accepted_para = abc_trial_thetas[accepted_ind]
+        #denormalize
+        accepted_para = denormalize_data(accepted_para, dmin, dmax)
+        true_param = denormalize_data(true_param, dmin, dmax)
+        data_pred = denormalize_data(data_pred, dmin, dmax)
+
+
         accepted_mean = np.mean(accepted_para, axis=0)
 
         if x == y:
