@@ -101,6 +101,8 @@ f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),font
 bins = np.linspace(0,1,21)
 hist_data = np.ones((15,20))
 hist_data_add = np.ones((15,20))
+hist_data_all = np.zeros((15,15,20))
+
 
 for x in range(15):
     ax[0, x].set_title(para_names[x])
@@ -123,6 +125,9 @@ for x in range(15):
             hist_data[y] *= np.histogram(accepted_para[:,y], bins=bins)[0]
             hist_data_add[x] += np.histogram(accepted_para[:, x], bins=bins)[0]
             hist_data_add[y] += np.histogram(accepted_para[:, y], bins=bins)[0]
+            hist_data_all[x,y,:] = np.histogram(accepted_para[:, x], bins=bins)[0]
+            hist_data_all[y,x,:] = np.histogram(accepted_para[:, y], bins=bins)[0]
+
 
 
 
@@ -151,7 +156,8 @@ for i in range(15):
     ax[i+1, i].plot([true_param[i], true_param[i]], [0, peak_val], c='black')
     # ax[i+1, i].plot([accepted_mean[i], accepted_mean[i]], [0, peak_val], c='red')
     ax[i+1, i].plot([data_pred[i], data_pred[i]], [0, peak_val], c='gray')
-    ax[i+2, i].plot(bin_points, hist_data_add[i,:])
+    for j in range(15):
+        ax[i+2, i].plot(bin_points, hist_data_all[i,j,:])
     peak_val = np.max(hist_data_add[i,:])
 
     ax[i + 2, i].plot([true_param[i], true_param[i]], [0, peak_val], c='black')
