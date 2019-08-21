@@ -84,9 +84,9 @@ true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
 f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
-for ax_, col in zip(ax[0], cols):
-    ax_.set_title(col)
+
 for x in range(15):
+    ax[x,0].set_title(para_names[x])
     for y in range(x,15):
         print("x: ", x, ", y: ", y)
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
@@ -116,5 +116,4 @@ for x in range(15):
 #plt.plot([-2,2,0,-2],[1,1,-1,1],color="red")
 #plt.plot([-2,2,0,-2],[-1,-1,1,-1],color="red")
 
-f.tight_layout()
 plt.savefig('posterior_abc')
