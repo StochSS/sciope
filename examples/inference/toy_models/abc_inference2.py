@@ -95,11 +95,11 @@ for i in range(15):
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
-f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(15,16,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
 bins = np.linspace(0,1,21)
-
+hist_data = np.ones((15,21))
 for x in range(15):
     ax[0, x].set_title(para_names[x])
     for y in range(x,15):
@@ -108,14 +108,20 @@ for x in range(15):
         if x==y:
             dist = abs(abc_trial_pred[:, x] - data_pred[x])
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:2000]
+            accepted_para = abc_trial_thetas[accepted_ind]
+            accepted_mean = np.mean(accepted_para, axis=0)
 
         else:
             dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[[x,y]], axis=1)
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
+            accepted_para = abc_trial_thetas[accepted_ind]
+            accepted_mean = np.mean(accepted_para, axis=0)
 
-        accepted_para = abc_trial_thetas[accepted_ind]
+            hist_data[x] *= np.histogram(accepted_para[:,x])[0]
+            hist_data[y] *= np.histogram(accepted_para[:,y])[0]
 
-        accepted_mean = np.mean(accepted_para, axis=0)
+
+
 
         if x == y:
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=bins, color='green')
@@ -133,6 +139,10 @@ for x in range(15):
             ax[x, y].scatter(accepted_mean[y],accepted_mean[x], color="red", marker="x")
             ax[x, y].scatter(data_pred[y],data_pred[x], color="gray", marker="o")
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
+
+for i in range(15):
+    ax[i, 16].plot(hist_data[i,:])
+
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
 # plt.plot([0,1,1,0,0],[0,0,1,1,0])
