@@ -158,11 +158,11 @@ for i in range(15):
     ax[i+1, i].plot([data_pred[i], data_pred[i]], [0, peak_val], c='gray')
     for j in range(15):
         ax[i+2, i].plot(bin_points, hist_data_all[i,j,:])
-    peak_val = np.max(hist_data_add[i,:])
-
-    ax[i + 2, i].plot([true_param[i], true_param[i]], [0, peak_val], c='black')
-    # ax[i + 2, i].plot([accepted_mean[i], accepted_mean[i]], [0, peak_val], c='red')
-    ax[i + 2, i].plot([data_pred[i], data_pred[i]], [0, peak_val], c='gray')
+    # peak_val = np.max(hist_data_add[i,:])
+    #
+    # ax[i + 2, i].plot([true_param[i], true_param[i]], [0, peak_val], c='black')
+    # # ax[i + 2, i].plot([accepted_mean[i], accepted_mean[i]], [0, peak_val], c='red')
+    # ax[i + 2, i].plot([data_pred[i], data_pred[i]], [0, peak_val], c='gray')
 
 
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
