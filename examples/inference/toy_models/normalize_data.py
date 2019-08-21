@@ -10,4 +10,5 @@ def normalize_data(data, dmin, dmax):
 def denormalize_data(data, dmin, dmax):
     dmin = np.array(dmin)
     dmax = np.array(dmax)
-    return data * (dmax-dmin) + dmin
+    denorm = data * (dmax-dmin) + dmin
+    return denorm
