@@ -121,6 +121,7 @@ for x in range(15):
             ax[x, y].plot([1, 1], [0, peak_val], c='b')
             ax[x, y].plot([0, 0], [0, peak_val], c='b')
         else:
+            ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
             ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=2)
             ax[x, y].scatter(true_param[y],true_param[x], color="black", marker="*")
             ax[x, y].scatter(accepted_mean[y],accepted_mean[x], color="red", marker="x")
