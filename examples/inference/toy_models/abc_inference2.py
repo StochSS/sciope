@@ -101,7 +101,7 @@ f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),font
 bins = np.linspace(0,1,21)
 hist_data = np.ones((15,20))
 hist_data_add = np.ones((15,20))
-hist_data_all = np.zeros((15,15,20))
+hist_data_all = np.ones((15,15,20))
 
 
 for x in range(15):
