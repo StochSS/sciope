@@ -106,7 +106,7 @@ for x in range(15):
         print("x: ", x, ", y: ", y)
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
         if x==y:
-            dist = np.linalg.norm(abc_trial_pred[:, x] - data_pred[x])
+            dist = abs(abc_trial_pred[:, x] - data_pred[x])
         else:
             dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[[x,y]], axis=1)
         print("dist shape: ", dist.shape)
