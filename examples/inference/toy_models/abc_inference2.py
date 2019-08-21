@@ -158,7 +158,7 @@ for i in range(15):
     ax[i+1, i].plot([data_pred[i], data_pred[i]], [0, peak_val], c='gray')
     for j in range(15):
         if j != i:
-            ax[i+2, i].plot(bin_points, hist_data_all[i,j,:])
+            ax[i+3, i].plot(bin_points, hist_data_all[i,j,:])
 
     bin_prod = np.prod(hist_data_all,axis=1)
     ax[i+2, i].plot(bin_points, bin_prod[i,:])
