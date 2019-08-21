@@ -82,7 +82,7 @@ cols = ['Column {}'.format(para_names) for col in range(1, 4)]
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
-f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(15,15,figsize=(30,30) ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
 for x in range(15):
@@ -100,6 +100,7 @@ for x in range(15):
             peak_val = np.max(ret[0])
             ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black')
             ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
+            ax[x, y].plot([data_pred[x], data_pred[x]], [0,peak_val], c='gray')
 
             ax[x, y].plot([1, 1], [0, peak_val], c='b')
             ax[x, y].plot([0, 0], [0, peak_val], c='b')
