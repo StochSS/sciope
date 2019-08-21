@@ -56,6 +56,7 @@ class BanditsABC(ABC):
     * epsilon 	    			(acceptance tolerance bound)
     * summaries_function    	(summary statistics calculation function)
     * distance_function         (function calculating deviation between simulated statistics and observed statistics)
+    * summaries_divisor         (numpy array of maxima - used for normalizing summary statistic values)
     * use_logger    			(whether logging is enabled or disabled)
 
 
@@ -65,7 +66,8 @@ class BanditsABC(ABC):
     """
 
     def __init__(self, data, sim, prior_function, mab_variant=md.MABDirect(arm_pull), k=1, epsilon=0.1,
-                 summaries_function=bs.Burstiness(), distance_function=euc.EuclideanDistance(), use_logger=False):
+                 summaries_function=bs.Burstiness(), distance_function=euc.EuclideanDistance(), summaries_divisor=None,
+                 use_logger=False):
         """
         BanditsABC class for rejection sampling
 
@@ -88,10 +90,14 @@ class BanditsABC(ABC):
         distance_function : sciope.utilities.distancefunctions object, optional
             distance function operating over summary statistics - calculates deviation between observed and simulated
             data; by default euc.EuclideanDistance()
+        summaries_divisor : 1D numpy array, optional
+            instead of normalizing using division by current known max of each statistic, use the supplied division
+            factors. These may come from prior knowledge, or pre-studies, etc.
         use_logger : bool
             enable/disable logging
         """
-        super().__init__(data, sim, prior_function, epsilon, summaries_function, distance_function, use_logger)
+        super().__init__(data, sim, prior_function, epsilon, summaries_function, distance_function, summaries_divisor,
+                         use_logger)
         self.name = 'BanditsABC'
         self.mab_variant = mab_variant
         self.k = k
@@ -117,7 +123,10 @@ class BanditsABC(ABC):
         global normalized_distances
         self.historical_distances.append(dist.ravel())
         all_distances = np.array(self.historical_distances)
-        divisor = np.asarray(np.nanmax(all_distances, axis=0))
+        if self.summaries_divisor is not None:
+            divisor = self.summaries_divisor
+        else:
+            divisor = np.asarray(np.nanmax(all_distances, axis=0))
         normalized_distances = all_distances
         for j in range(0, len(divisor), 1):
             if divisor[j] > 0:
