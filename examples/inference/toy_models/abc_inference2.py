@@ -97,11 +97,11 @@ true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
 f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
-
-bins = np.linspace(0,1,11)
-hist_data = np.ones((15,10))
-hist_data_add = np.ones((15,10))
-hist_data_all = np.ones((15,15,10))
+bins_nr = 40
+bins = np.linspace(0,1,bins_nr+1)
+hist_data = np.ones((15,bins_nr))
+hist_data_add = np.ones((15,bins_nr))
+hist_data_all = np.ones((15,15,bins_nr))
 
 
 for x in range(15):
@@ -149,7 +149,7 @@ for x in range(15):
             ax[x, y].scatter(data_pred[y],data_pred[x], color="gray", marker="o")
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
-bin_points = [(bins[i+1]+bins[i])/2 for i in range(10)]
+bin_points = [(bins[i+1]+bins[i])/2 for i in range(bins_nr)]
 for i in range(15):
     ax[i+1, i].plot(bin_points, hist_data[i,:])
     peak_val = np.max(hist_data[i,:])
