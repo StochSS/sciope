@@ -232,3 +232,7 @@ def get_model():
     # We could pass new parameter values to this model here if we wished.
     model = model_doc.to_model("vilar")
     return model
+
+def get_parameter_names():
+    model = get_model()
+    return [k for k in model.listOfParameters.keys()]

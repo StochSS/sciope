@@ -13,6 +13,7 @@ from sklearn.metrics import mean_absolute_error
 import pickle
 from normalize_data import normalize_data
 from load_data import load_spec
+import vilar
 
 
 # choose neural network model
@@ -74,12 +75,17 @@ print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted
 
 # bpi = np.argsort(accepted_std)[:4] # best_param_ind
 
+para_names = vilar.get_parameter_names()
+cols = ['Column {}'.format(para_names) for col in range(1, 4)]
+
 
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
 f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
+for ax_, col in zip(ax[0], cols):
+    ax_.set_title(col)
 for x in range(15):
     for y in range(x,15):
         print("x: ", x, ", y: ", y)
