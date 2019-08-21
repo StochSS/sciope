@@ -95,7 +95,7 @@ for i in range(15):
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
-f, ax = plt.subplots(17,15,figsize=(30,30))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
 bins = np.linspace(0,1,21)
@@ -157,7 +157,12 @@ for i in range(15):
     # ax[i+1, i].plot([accepted_mean[i], accepted_mean[i]], [0, peak_val], c='red')
     ax[i+1, i].plot([data_pred[i], data_pred[i]], [0, peak_val], c='gray')
     for j in range(15):
-        ax[i+2, i].plot(bin_points, hist_data_all[i,j,:])
+        if j != i:
+            ax[i+2, i].plot(bin_points, hist_data_all[i,j,:])
+
+    bin_prod = np.prod(hist_data_all,axis=1)
+    ax[i+2, i].plot(bin_points, bin_prod[i,:])
+
     # peak_val = np.max(hist_data_add[i,:])
     #
     # ax[i + 2, i].plot([true_param[i], true_param[i]], [0, peak_val], c='black')
