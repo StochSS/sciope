@@ -98,10 +98,10 @@ true_param = normalize_data(true_param,dmin,dmax)
 f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
-bins = np.linspace(0,1,21)
-hist_data = np.ones((15,20))
-hist_data_add = np.ones((15,20))
-hist_data_all = np.ones((15,15,20))
+bins = np.linspace(0,1,11)
+hist_data = np.ones((15,10))
+hist_data_add = np.ones((15,10))
+hist_data_all = np.ones((15,15,10))
 
 
 for x in range(15):
