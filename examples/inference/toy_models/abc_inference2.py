@@ -98,10 +98,10 @@ for x in range(15):
             ax[x, y].plot([1, 1], [0, peak_val], c='b')
             ax[x, y].plot([0, 0], [0, peak_val], c='b')
         else:
-            ax[x,y].scatter(accepted_para[:, x], accepted_para[:, y], color="green", s=2)
-            ax[x,y].scatter(true_param[x],true_param[y], color="black", marker="*")
-            ax[x,y].scatter(accepted_mean[x],accepted_mean[y], color="red", marker="x")
-            ax[x,y].scatter(data_pred[x],data_pred[y], color="gray", marker="o")
+            ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=2)
+            ax[x, y].scatter(true_param[y],true_param[x], color="black", marker="*")
+            ax[x, y].scatter(accepted_mean[y],accepted_mean[x], color="red", marker="x")
+            ax[x, y].scatter(data_pred[y],data_pred[x], color="gray", marker="o")
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
