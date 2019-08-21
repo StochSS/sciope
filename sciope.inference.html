@@ -166,7 +166,7 @@
 <span class="target" id="module-sciope.inference.abc_inference"></span><p>Approximate Bayesian Computation</p>
 <dl class="class">
 <dt id="sciope.inference.abc_inference.ABC">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.inference.abc_inference.</code><code class="sig-name descname">ABC</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">sim</em>, <em class="sig-param">prior_function</em>, <em class="sig-param">epsilon=0.1</em>, <em class="sig-param">summaries_function=&lt;sciope.utilities.summarystats.burstiness.Burstiness object&gt;</em>, <em class="sig-param">distance_function=&lt;sciope.utilities.distancefunctions.euclidean.EuclideanDistance object&gt;</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sciope.inference.abc_inference.</code><code class="sig-name descname">ABC</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">sim</em>, <em class="sig-param">prior_function</em>, <em class="sig-param">epsilon=0.1</em>, <em class="sig-param">summaries_function=&lt;sciope.utilities.summarystats.burstiness.Burstiness object&gt;</em>, <em class="sig-param">distance_function=&lt;sciope.utilities.distancefunctions.euclidean.EuclideanDistance object&gt;</em>, <em class="sig-param">summaries_divisor=None</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.inference.inference_base.InferenceBase" title="sciope.inference.inference_base.InferenceBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.inference.inference_base.InferenceBase</span></code></a></p>
 <p>Approximate Bayesian Computation Rejection Sampler</p>
 <p>Properties/variables:
@@ -176,6 +176,7 @@
 * epsilon                           (acceptance tolerance bound)
 * summaries_function        (summary statistics calculation function)
 * distance_function         (function calculating deviation between simulated statistics and observed statistics)
+* summaries_divisor         (numpy array of maxima - used for normalizing summary statistic values)
 * use_logger                        (whether logging is enabled or disabled)</p>
 <p>Methods:
 * infer                                     (perform parameter inference)</p>
@@ -268,7 +269,7 @@ in dask if the data is large.</p>
 <span class="target" id="module-sciope.inference.bandits_abc"></span><p>Multi-Armed Bandit - Approximate Bayesian Computation</p>
 <dl class="class">
 <dt id="sciope.inference.bandits_abc.BanditsABC">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.inference.bandits_abc.</code><code class="sig-name descname">BanditsABC</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">sim</em>, <em class="sig-param">prior_function</em>, <em class="sig-param">mab_variant=&lt;sciope.utilities.mab.mab_direct.MABDirect object&gt;</em>, <em class="sig-param">k=1</em>, <em class="sig-param">epsilon=0.1</em>, <em class="sig-param">summaries_function=&lt;sciope.utilities.summarystats.burstiness.Burstiness object&gt;</em>, <em class="sig-param">distance_function=&lt;sciope.utilities.distancefunctions.euclidean.EuclideanDistance object&gt;</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/bandits_abc.html#BanditsABC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.bandits_abc.BanditsABC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sciope.inference.bandits_abc.</code><code class="sig-name descname">BanditsABC</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">sim</em>, <em class="sig-param">prior_function</em>, <em class="sig-param">mab_variant=&lt;sciope.utilities.mab.mab_direct.MABDirect object&gt;</em>, <em class="sig-param">k=1</em>, <em class="sig-param">epsilon=0.1</em>, <em class="sig-param">summaries_function=&lt;sciope.utilities.summarystats.burstiness.Burstiness object&gt;</em>, <em class="sig-param">distance_function=&lt;sciope.utilities.distancefunctions.euclidean.EuclideanDistance object&gt;</em>, <em class="sig-param">summaries_divisor=None</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/bandits_abc.html#BanditsABC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.bandits_abc.BanditsABC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.inference.abc_inference.ABC" title="sciope.inference.abc_inference.ABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.inference.abc_inference.ABC</span></code></a></p>
 <p>ABC rejection sampling with dynamic multi-armed bandit (MAB) assisted summary statistic selection.</p>
 <p>Properties/variables:
@@ -280,6 +281,7 @@ in dask if the data is large.</p>
 * epsilon                           (acceptance tolerance bound)
 * summaries_function        (summary statistics calculation function)
 * distance_function         (function calculating deviation between simulated statistics and observed statistics)
+* summaries_divisor         (numpy array of maxima - used for normalizing summary statistic values)
 * use_logger                        (whether logging is enabled or disabled)</p>
 <p>Methods:
 * infer                                     (perform parameter inference)

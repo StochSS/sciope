@@ -203,6 +203,7 @@
 <span class="sd">    * epsilon 	    			(acceptance tolerance bound)</span>
 <span class="sd">    * summaries_function    	(summary statistics calculation function)</span>
 <span class="sd">    * distance_function         (function calculating deviation between simulated statistics and observed statistics)</span>
+<span class="sd">    * summaries_divisor         (numpy array of maxima - used for normalizing summary statistic values)</span>
 <span class="sd">    * use_logger    			(whether logging is enabled or disabled)</span>
 
 
@@ -212,7 +213,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">mab_variant</span><span class="o">=</span><span class="n">md</span><span class="o">.</span><span class="n">MABDirect</span><span class="p">(</span><span class="n">arm_pull</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-                 <span class="n">summaries_function</span><span class="o">=</span><span class="n">bs</span><span class="o">.</span><span class="n">Burstiness</span><span class="p">(),</span> <span class="n">distance_function</span><span class="o">=</span><span class="n">euc</span><span class="o">.</span><span class="n">EuclideanDistance</span><span class="p">(),</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                 <span class="n">summaries_function</span><span class="o">=</span><span class="n">bs</span><span class="o">.</span><span class="n">Burstiness</span><span class="p">(),</span> <span class="n">distance_function</span><span class="o">=</span><span class="n">euc</span><span class="o">.</span><span class="n">EuclideanDistance</span><span class="p">(),</span> <span class="n">summaries_divisor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        BanditsABC class for rejection sampling</span>
 
@@ -235,10 +237,14 @@
 <span class="sd">        distance_function : sciope.utilities.distancefunctions object, optional</span>
 <span class="sd">            distance function operating over summary statistics - calculates deviation between observed and simulated</span>
 <span class="sd">            data; by default euc.EuclideanDistance()</span>
+<span class="sd">        summaries_divisor : 1D numpy array, optional</span>
+<span class="sd">            instead of normalizing using division by current known max of each statistic, use the supplied division</span>
+<span class="sd">            factors. These may come from prior knowledge, or pre-studies, etc.</span>
 <span class="sd">        use_logger : bool</span>
 <span class="sd">            enable/disable logging</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">summaries_function</span><span class="p">,</span> <span class="n">distance_function</span><span class="p">,</span> <span class="n">use_logger</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">summaries_function</span><span class="p">,</span> <span class="n">distance_function</span><span class="p">,</span> <span class="n">summaries_divisor</span><span class="p">,</span>
+                         <span class="n">use_logger</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;BanditsABC&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mab_variant</span> <span class="o">=</span> <span class="n">mab_variant</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
@@ -264,7 +270,10 @@
         <span class="k">global</span> <span class="n">normalized_distances</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">historical_distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
         <span class="n">all_distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">historical_distances</span><span class="p">)</span>
-        <span class="n">divisor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">all_distances</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">summaries_divisor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">divisor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">summaries_divisor</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">divisor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">all_distances</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
         <span class="n">normalized_distances</span> <span class="o">=</span> <span class="n">all_distances</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">divisor</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">divisor</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
