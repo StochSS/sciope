@@ -116,5 +116,5 @@ for x in range(15):
 #plt.plot([-2,2,0,-2],[1,1,-1,1],color="red")
 #plt.plot([-2,2,0,-2],[-1,-1,1,-1],color="red")
 
-
+f.tight_layout()
 plt.savefig('posterior_abc')
