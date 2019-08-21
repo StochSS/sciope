@@ -53,7 +53,7 @@ bpi = np.argsort(mean_dev)[:4] # best_param_ind
 
 
 nr_of_trial = abc_trial_thetas.shape[0]
-nr_of_accept = 1000
+nr_of_accept = 10
 
 
 dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
