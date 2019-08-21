@@ -95,7 +95,7 @@ for i in range(15):
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
-f, ax = plt.subplots(15,16,figsize=(30,30))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(16,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
 bins = np.linspace(0,1,21)
@@ -141,7 +141,7 @@ for x in range(15):
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
 for i in range(15):
-    ax[i, 15].plot(hist_data[i,:])
+    ax[15, i].plot(hist_data[i,:])
 
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
