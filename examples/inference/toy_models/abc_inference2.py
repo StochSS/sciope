@@ -77,7 +77,7 @@ print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted
 
 para_names = vilar.get_parameter_names()
 
-for i in range(15)
+for i in range(15):
     pk = para_names[i]
     pks = pk.split("_")
     if len(pks) > 1:
