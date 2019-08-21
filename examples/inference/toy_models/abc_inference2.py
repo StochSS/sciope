@@ -149,7 +149,7 @@ for x in range(15):
             ax[x, y].scatter(data_pred[y],data_pred[x], color="gray", marker="o")
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
-bin_points = [(bins[i+1]+bins[i])/2 for i in range(20)]
+bin_points = [(bins[i+1]+bins[i])/2 for i in range(10)]
 for i in range(15):
     ax[i+1, i].plot(bin_points, hist_data[i,:])
     peak_val = np.max(hist_data[i,:])
