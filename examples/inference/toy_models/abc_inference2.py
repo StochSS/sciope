@@ -141,7 +141,7 @@ for x in range(15):
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
 for i in range(15):
-    ax[15, i].plot(hist_data[i,:])
+    ax[i+1, i].plot(hist_data[i,:])
 
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
