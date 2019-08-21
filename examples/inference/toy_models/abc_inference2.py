@@ -95,11 +95,13 @@ for i in range(15):
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
-f, ax = plt.subplots(16,15,figsize=(30,30))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(17,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
 bins = np.linspace(0,1,21)
 hist_data = np.ones((15,20))
+hist_data_add = np.ones((15,20))
+
 for x in range(15):
     ax[0, x].set_title(para_names[x])
     for y in range(x,15):
@@ -119,6 +121,8 @@ for x in range(15):
             print("hist_data[x] shape: ", hist_data[x].shape, ", np.histogram(accepted_para[:,x], bins=bins)[0] shape: ", np.histogram(accepted_para[:,x], bins=bins)[0].shape)
             hist_data[x] *= np.histogram(accepted_para[:,x], bins=bins)[0]
             hist_data[y] *= np.histogram(accepted_para[:,y], bins=bins)[0]
+            hist_data_add[x] += np.histogram(accepted_para[:, x], bins=bins)[0]
+            hist_data_add[y] += np.histogram(accepted_para[:, y], bins=bins)[0]
 
 
 
@@ -142,6 +146,8 @@ for x in range(15):
 
 for i in range(15):
     ax[i+1, i].plot(hist_data[i,:])
+    ax[i+2, i].plot(hist_data_add[i,:])
+
 
 # plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
 
