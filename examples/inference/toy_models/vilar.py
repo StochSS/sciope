@@ -223,3 +223,12 @@ def simulate_all_species(param):
     simple_trajectories = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_sim_trajectories)
 
     return np.asarray(simple_trajectories)
+
+def get_model():
+    config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                               "StochSS_model/vilar_oscillator_AIYDNg/models/data/vilar_oscillator.xml")
+    model_doc = gillespy2.StochMLDocument.from_file(config_file)
+    # Here, we create the model object.
+    # We could pass new parameter values to this model here if we wished.
+    model = model_doc.to_model("vilar")
+    return model
