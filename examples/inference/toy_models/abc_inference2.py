@@ -76,13 +76,26 @@ print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted
 # bpi = np.argsort(accepted_std)[:4] # best_param_ind
 
 para_names = vilar.get_parameter_names()
-cols = ['Column {}'.format(para_names) for col in range(1, 4)]
 
+for i in range(15)
+    pk = para_names[i]
+    pks = pk.split("_")
+    if len(pks) > 1:
+        pk_p = "\hat{\\" + pks[0].lower() + "}_{" + pks[1].upper() + "}"
+        pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
+    if len(pks) == 3:
+        print("len 3: ", pks[2])
+        if pks[2] == 'prime':
+            pk_p = pk_p + "'"
+            pk = pk + "'"
+
+    para_name_p = "$" + pk_p + "$"
+    para_names[i] = "$\\" + pk + "$"
 
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
-f, ax = plt.subplots(15,15,figsize=(30,30) ,sharex=True,sharey=True)
+f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
 for x in range(15):
