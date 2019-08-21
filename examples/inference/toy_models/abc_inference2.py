@@ -86,7 +86,7 @@ f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
 for x in range(15):
-    ax[x,0].set_title(para_names[x])
+    ax[0, x].set_title(para_names[x])
     for y in range(x,15):
         print("x: ", x, ", y: ", y)
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
