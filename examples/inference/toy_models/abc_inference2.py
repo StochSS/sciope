@@ -91,6 +91,7 @@ for x in range(15):
             #
             # ax[x, y].plot([1, 1], [0, peak_val], c='b')
             # ax[x, y].plot([0, 0], [0, peak_val], c='b')
+            print("todo")
         else:
             ax[x,y].scatter(accepted_para[:, x], accepted_para[:, y], color="green", s=2)
             ax[x,y].scatter(true_param[x],true_param[y], color="black", marker="*")
