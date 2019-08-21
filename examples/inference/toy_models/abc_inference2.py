@@ -109,6 +109,7 @@ for x in range(15):
             dist = np.linalg.norm(abc_trial_pred[:, x] - data_pred[x])
         else:
             dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[[x,y]], axis=1)
+        print("dist shape: ", dist.shape)
         accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
         accepted_para = abc_trial_thetas[accepted_ind]
 
