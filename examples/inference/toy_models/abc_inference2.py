@@ -82,7 +82,9 @@ f, ax = plt.subplots(15,15,figsize=(15,15))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 for x in range(15):
     for y in range(x+1,15):
-
+        dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[:, [x,y]], axis=1)
+        accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
+        accepted_para = abc_trial_thetas[accepted_ind]
         if x == y:
             # ret = ax[x, y].hist(accepted_para[:, x], density=True, c='green')
             # peak_val = np.max(ret[0])
