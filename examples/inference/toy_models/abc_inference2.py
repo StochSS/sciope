@@ -98,7 +98,7 @@ true_param = normalize_data(true_param,dmin,dmax)
 f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 
-bins = np.linspace(0,1,10)
+bins = np.linspace(0,1,21)
 
 for x in range(15):
     ax[0, x].set_title(para_names[x])
