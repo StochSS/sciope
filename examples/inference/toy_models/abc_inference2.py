@@ -78,24 +78,25 @@ print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
-f, ax = plt.subplots(15,15,figsize=(15,15))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 for x in range(15):
-    for y in range(x+1,15):
+    for y in range(x,15):
         print("x: ", x, ", y: ", y)
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
         dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[[x,y]], axis=1)
         accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
         accepted_para = abc_trial_thetas[accepted_ind]
+        accepted_mean = np.mean(accepted_para, axis=0)
+
         if x == y:
-            # ret = ax[x, y].hist(accepted_para[:, x], density=True, c='green')
-            # peak_val = np.max(ret[0])
-            # ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black')
-            # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-            #
-            # ax[x, y].plot([1, 1], [0, peak_val], c='b')
-            # ax[x, y].plot([0, 0], [0, peak_val], c='b')
-            print("todo")
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, c='green')
+            peak_val = np.max(ret[0])
+            ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black')
+            ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
+
+            ax[x, y].plot([1, 1], [0, peak_val], c='b')
+            ax[x, y].plot([0, 0], [0, peak_val], c='b')
         else:
             ax[x,y].scatter(accepted_para[:, x], accepted_para[:, y], color="green", s=2)
             ax[x,y].scatter(true_param[x],true_param[y], color="black", marker="*")
