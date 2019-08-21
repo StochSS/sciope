@@ -53,7 +53,7 @@ bpi = np.argsort(mean_dev)[:4] # best_param_ind
 
 
 nr_of_trial = abc_trial_thetas.shape[0]
-nr_of_accept = 1000
+nr_of_accept = 100
 
 
 dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
@@ -107,10 +107,12 @@ for x in range(15):
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
         if x==y:
             dist = abs(abc_trial_pred[:, x] - data_pred[x])
+            accepted_ind = np.argpartition(dist, nr_of_accept)[0:2000]
+
         else:
             dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[[x,y]], axis=1)
-        print("dist shape: ", dist.shape)
-        accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
+            accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
+
         accepted_para = abc_trial_thetas[accepted_ind]
 
         accepted_mean = np.mean(accepted_para, axis=0)
