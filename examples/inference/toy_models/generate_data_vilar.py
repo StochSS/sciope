@@ -59,7 +59,7 @@ class DataGenerator:
 
 
 
-num_timestamps=401
+num_timestamps=801
 endtime=200
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
@@ -70,7 +70,7 @@ simulate = Vilar_.simulate
 modelname = "vilar_ACR_" + str(endtime) + "_" + str(num_timestamps)
 
 
-if not os.path.exists(modelname):
+if not os.path.exists('datasets/'+modelname):
     os.mkdir(modelname)
 
 
