@@ -65,7 +65,7 @@ endtime=200
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 
 
-simulate = Vilar.simulate
+simulate = Vilar_.simulate
 
 modelname = "vilar_ACR_" + endtime + "_" + num_timestamps
 
