@@ -95,7 +95,7 @@ while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
 
 for nr in range(nr,3):
     train_thetas = np.zeros((0,15))
-    train_ts = np.zeros((0,401,3))
+    train_ts = np.zeros((0,num_timestamps,3))
     for i in range(100):
         param, ts = dg.gen(batch_size=1000)
         train_thetas = np.concatenate((train_thetas,param),axis=0)
@@ -110,7 +110,7 @@ for nr in range(nr,3):
     pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
 
 validation_thetas = np.zeros((0,15))
-validation_ts = np.zeros((0,401,3))
+validation_ts = np.zeros((0,num_timestamps,3))
 for i in range(20):
     param, ts = dg.gen(batch_size=1000)
     validation_thetas = np.concatenate((validation_thetas,param),axis=0)
@@ -125,7 +125,7 @@ pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', 
 
 
 test_thetas = np.zeros((0,15))
-test_ts = np.zeros((0,401,3))
+test_ts = np.zeros((0,num_timestamps,3))
 for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     test_thetas = np.concatenate((test_thetas,param),axis=0)
@@ -138,7 +138,7 @@ pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb"
 pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
 
 abc_trial_thetas = np.zeros((0,15))
-abc_trial_ts = np.zeros((0,401,3))
+abc_trial_ts = np.zeros((0,num_timestamps,3))
 for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     abc_trial_thetas = np.concatenate((abc_trial_thetas,param),axis=0)
