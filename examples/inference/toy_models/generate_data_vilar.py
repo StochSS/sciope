@@ -8,7 +8,7 @@ from sciope.inference import abc_inference
 from sciope.utilities.summarystats import burstiness as bs
 import numpy as np
 import vilar
-from vilar import simulate
+from vilar import Vilar_model
 import dask
 import pickle
 import os
@@ -59,7 +59,15 @@ class DataGenerator:
 
 
 
-modelname = "vilar_ACR_200_401"
+num_timestamps=401
+endtime=200
+
+Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
+
+
+simulate = Vilar.simulate
+
+modelname = "vilar_ACR_" + endtime + "_" + num_timestamps
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 obs_data = simulate(np.array(true_params))
