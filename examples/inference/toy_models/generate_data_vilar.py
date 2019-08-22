@@ -71,7 +71,7 @@ modelname = "vilar_ACR_" + str(endtime) + "_" + str(num_timestamps)
 
 
 if not os.path.exists('datasets/'+modelname):
-    os.mkdir(modelname)
+    os.mkdir('datasets/'+modelname)
 
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
