@@ -29,7 +29,7 @@ class CNNModel(ModelBase):
         self.save_as = 'saved_models/cnn_light'
     
     # train the CNN model given the data
-    def train(self, inputs, targets,validation_inputs,validation_targets,
+    def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs,
               save_model = True, plot_training_progress=False):
         if save_model:
             mcp_save = keras.callbacks.ModelCheckpoint(self.save_as+'.hdf5',
@@ -41,8 +41,8 @@ class CNNModel(ModelBase):
                                                       mode='auto')
         #train 40 epochs with batch size = 32
         history1 = self.model.fit(
-                inputs, targets, validation_data = (validation_inputs,
-                validation_targets), epochs=10,batch_size=1024*4,shuffle=True,
+                inputs, targets, validation_data=(validation_inputs,
+                validation_targets), epochs=epochs, batch_size=batch_size, shuffle=True,
                 callbacks=[mcp_save])#,EarlyStopping])
         
         #To avoid overfitting load the model with best validation results after 

@@ -54,7 +54,7 @@ nnm = CNNModel(input_shape=(801,3), output_shape=(15))
 # nnm.load_model()
 
 nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          plot_training_progress=False)
+          batch_size=32, epochs=20, plot_training_progress=False)
 
 # nnm.load_model()
 #validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
