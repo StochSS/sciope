@@ -21,7 +21,7 @@ from load_data import load_spec
 # validation_thetas = np.array(prior(n=10000))
 # validation_ts = np.expand_dims(np.array([simulate(p,n=100) for p in validation_thetas]),2)
 print("update")
-modelname = "vilar_ACR_200_801"
+modelname = "vilar_ACR_200_401"
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 # train_thetas = pickle.load(open('datasets/' + modelname + '/train_thetas.p', "rb" ) )
@@ -45,16 +45,20 @@ print("validation_ts shape: ", validation_ts.shape)
 
 print("training_thetas shape: ", train_thetas.shape)
 print("training_ts shape: ", train_ts.shape)
-
+ts_len = train_ts.shape[1]
+print("ts_len: ", ts_len)
 # choose neural network model
-nnm = CNNModel(input_shape=(801,3), output_shape=(15))
+nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
 # nnm = PEN_CNNModel(input_shape=(401,3), output_shape=(15), pen_nr=10)
 # nm = ANNModel(input_shape=(100,1), output_shape=(2))
 
 # nnm.load_model()
 
 nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=20, plot_training_progress=False)
+          batch_size=32, epochs=40, plot_training_progress=False)
+
+nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+          batch_size=4096, epochs=5, plot_training_progress=False)
 
 # nnm.load_model()
 #validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
