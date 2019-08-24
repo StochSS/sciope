@@ -31,7 +31,7 @@ class PEN_CNNModel(ModelBase):
 
 
     # train the CNN model given the data
-    def train(self, inputs, targets,validation_inputs,validation_targets,
+    def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs,
              save_model = True, plot_training_progress=False):
 
         if save_model:
@@ -46,7 +46,7 @@ class PEN_CNNModel(ModelBase):
         #train 40 epochs with batch size = 32
         history1 = self.model.fit(
                 inputs, targets, validation_data = (validation_inputs,
-                validation_targets), epochs=10,batch_size=200,shuffle=True,
+                validation_targets), epochs=epochs,batch_size=batch_size,shuffle=True,
                 callbacks=[mcp_save])
         
         #To avoid overfitting load the model with best validation results after 
