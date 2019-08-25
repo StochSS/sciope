@@ -49,7 +49,7 @@ ts_len = train_ts.shape[1]
 print("ts_len: ", ts_len)
 # choose neural network model
 # nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
-nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=6)
+nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=18)
 # nm = ANNModel(input_shape=(100,1), output_shape=(2))
 
 # nnm.load_model()
