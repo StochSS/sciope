@@ -79,8 +79,8 @@ test_thetas = normalize_data(test_thetas,dmin,dmax)
 test_pred = nnm.predict(test_ts)
 test_pred = np.reshape(test_pred,(-1,15))
 
-test_mse = np.mean((test_thetas-validation_pred)**2)
-test_mae = np.mean(abs(test_thetas-validation_pred))
+test_mse = np.mean((test_thetas-test_pred)**2)
+test_mae = np.mean(abs(test_thetas-test_pred))
 
 print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
