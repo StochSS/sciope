@@ -84,7 +84,7 @@ def construct_model(input_shape, output_shape):
         else:
             model.add(keras.layers.Dense(100))
 
-        # model.add(keras.layers.BatchNormalization(momentum=batch_mom))
+        model.add(keras.layers.BatchNormalization(momentum=batch_mom))
         model.add(keras.layers.Activation(dense_activation))
 
     # Add output layer without Activation or Batch Normalization
