@@ -8,6 +8,7 @@ from AutoRegressive_model import simulate, prior
 # from MovingAverage_model import simulate, prior
 from sklearn.metrics import mean_absolute_error
 import pickle
+import time
 from normalize_data import normalize_data
 from load_data import load_spec
 
@@ -21,7 +22,7 @@ from load_data import load_spec
 # validation_thetas = np.array(prior(n=10000))
 # validation_ts = np.expand_dims(np.array([simulate(p,n=100) for p in validation_thetas]),2)
 print("update")
-modelname = "vilar_ACR_200_801"
+modelname = "vilar_ACR_200_401"
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 # train_thetas = pickle.load(open('datasets/' + modelname + '/train_thetas.p', "rb" ) )
@@ -49,26 +50,42 @@ ts_len = train_ts.shape[1]
 print("ts_len: ", ts_len)
 # choose neural network model
 # nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
-nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=18)
-# nm = ANNModel(input_shape=(100,1), output_shape=(2))
+# nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=18)
+nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
 # nnm.load_model()
-
+start_time = time.time()
 nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
           batch_size=32, epochs=40, plot_training_progress=False)
 
 nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
           batch_size=4096, epochs=5, plot_training_progress=False)
+end_time = time.time()
+training_time = end_time - start_time
+validation_pred = nnm.predict(validation_ts)
+validation_pred = np.reshape(validation_pred,(-1,15))
+print("training time: ", training_time)
+print("mean square error: ", np.mean((validation_thetas-validation_pred)**2))
+print("mean absolute error: ", np.mean(abs(validation_thetas-validation_pred)))
+
 
 # nnm.load_model()
 #validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
-validation_pred = nnm.predict(validation_ts)
-print("validation_pred shape: ", validation_pred.shape)
-validation_pred = np.reshape(validation_pred,(-1,15))
 
 
-print("mean squared error: ", np.mean((validation_thetas-validation_pred)**2))
+test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
+test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+test_thetas = normalize_data(test_thetas,dmin,dmax)
+test_pred = nnm.predict(test_ts)
+test_pred = np.reshape(test_pred,(-1,15))
+
+test_mse = np.mean((test_thetas-validation_pred)**2)
+test_mae = np.mean(abs(test_thetas-validation_pred))
 
 print("Model name: ", nnm.name)
+print("mean square error: ", test_mse)
+print("mean square error: ", test_mae)
 
+test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae}
+pickle.dump(test_results, open('results/training_results_' + modelname + '.p', "wb"))
 
