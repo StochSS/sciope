@@ -59,7 +59,7 @@ class DataGenerator:
 
 
 
-num_timestamps=801
+num_timestamps=401
 endtime=200
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
@@ -75,11 +75,11 @@ if not os.path.exists('datasets/'+modelname):
 
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-
+obs_data = np.zeros((20,num_timestamps))
 for i in range(20):
-    obs_data = simulate(np.array(true_params))
-    pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param' + str(i) + '.p', "wb" ) )
-    pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data' + str(i) + '.p', "wb" ) )
+    obs_data[i,:] = simulate(np.array(true_params))
+pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param_pack.p', "wb" ) )
+pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_pack.p', "wb" ) )
 
 
 # Set up the prior
