@@ -53,7 +53,7 @@ bpi = np.argsort(mean_dev)[:4] # best_param_ind
 
 
 nr_of_trial = abc_trial_thetas.shape[0]
-nr_of_accept = 500
+nr_of_accept = 1000
 
 
 dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
@@ -97,7 +97,7 @@ true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
 f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
-bins_nr = 40
+bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
 hist_data = np.ones((15,bins_nr))
 hist_data_add = np.ones((15,bins_nr))
