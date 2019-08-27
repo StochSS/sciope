@@ -52,9 +52,9 @@ print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
 bpi = np.argsort(mean_dev)[:4] # best_param_ind
 
 
-data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
-data_pred = nnm.predict(data)
-
+data_pack = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
+data_pack_pred = nnm.predict(data_pack)
+print("data_pack_pred shape: ", data_pack_pred.shape)
 
 
 nr_of_trial = abc_trial_thetas.shape[0]
@@ -143,6 +143,8 @@ for x in range(15):
             ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black')
             ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
             ax[x, y].plot([data_pred[x], data_pred[x]], [0,peak_val], c='gray')
+            for i in range(20):
+                ax[x, y].plot([data_pack_pred[i,x], data_pack_pred[i,x]], [0, peak_val], c='yellow')
 
             ax[x, y].plot([1, 1], [0, peak_val], c='b')
             ax[x, y].plot([0, 0], [0, peak_val], c='b')
@@ -152,6 +154,9 @@ for x in range(15):
             ax[x, y].scatter(true_param[y],true_param[x], color="black", marker="*")
             ax[x, y].scatter(accepted_mean[y],accepted_mean[x], color="red", marker="x")
             ax[x, y].scatter(data_pred[y],data_pred[x], color="gray", marker="o")
+            for i in range(20):
+                ax[x, y].scatter(data_pack_pred[i,y],data_pack_pred[i,x], color="yellow", marker="o")
+
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
 bin_points = [(bins[i+1]+bins[i])/2 for i in range(bins_nr)]
