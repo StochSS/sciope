@@ -52,6 +52,11 @@ print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
 bpi = np.argsort(mean_dev)[:4] # best_param_ind
 
 
+data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
+data_pred = nnm.predict(data)
+
+
+
 nr_of_trial = abc_trial_thetas.shape[0]
 nr_of_accept = 1000
 
