@@ -144,7 +144,7 @@ for x in range(15):
             ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
             ax[x, y].plot([data_pred[x], data_pred[x]], [0,peak_val], c='gray')
             for i in range(20):
-                ax[x, y].plot([data_pack_pred[i,x], data_pack_pred[i,x]], [0, peak_val], c='yellow', marker='-')
+                ax[x, y].plot([data_pack_pred[i,x], data_pack_pred[i,x]], [0, peak_val], '--', c='yellow')
 
             ax[x, y].plot([1, 1], [0, peak_val], c='b')
             ax[x, y].plot([0, 0], [0, peak_val], c='b')
