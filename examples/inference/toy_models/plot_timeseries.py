@@ -14,7 +14,7 @@ import pickle
 from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
 from vilar import Vilar_model
-from man_statistics import peak_finder
+from man_statistics import peak_finder, man_statistics
 
 # choose neural network model
 # nnm = CNNModel(input_shape=(401,3), output_shape=(15))
@@ -58,6 +58,9 @@ center_ts = simulate(center_pred)
 
 print("example_ts shape: ", example_ts.shape)
 print("data shape: ", data.shape)
+
+man_statistics(data)
+
 
 colors = [[1,0,0],[0,1,0],[0,0,1]]
 
