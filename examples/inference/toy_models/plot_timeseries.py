@@ -76,6 +76,8 @@ for TS in data_set:
 data_set_stat = np.asarray(data_set_stat)
 print("data_set_stat shape: ", data_set_stat.shape)
 
+data_set_stat = np.mean(data_set_stat,axis=0)
+
 
 
 # print("data stat:", man_statistics(data))
