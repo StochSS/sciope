@@ -22,7 +22,7 @@ from load_data import load_spec
 # validation_thetas = np.array(prior(n=10000))
 # validation_ts = np.expand_dims(np.array([simulate(p,n=100) for p in validation_thetas]),2)
 print("update")
-modelname = "vilar_ACR_200_401"
+modelname = "vilar_ACR_200_801"
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 # train_thetas = pickle.load(open('datasets/' + modelname + '/train_thetas.p', "rb" ) )
@@ -49,8 +49,8 @@ print("training_ts shape: ", train_ts.shape)
 ts_len = train_ts.shape[1]
 print("ts_len: ", ts_len)
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
-# nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=18)
+# nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
+nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
 # nnm.load_model()
