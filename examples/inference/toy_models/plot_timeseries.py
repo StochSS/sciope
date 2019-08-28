@@ -66,15 +66,15 @@ for ts in data[0,:,:].T:
     print("ts shape: ", ts.shape)
     max_sp[i] = np.max(ts)
     l = np.ones(ts.shape)*max_sp[i]
-    ax[0].plot(l)
-    i+=1
-    ax[0].plot(ts)
+    ax[0].plot(l,c=colors[i])
+    ax[0].plot(ts,c=colors[i])
+    i += 1
 i=0
 for ts in example_ts[0,:,:].T:
     print("ts shape: ", ts.shape)
     l = np.ones(ts.shape) * max_sp[i]
-    ax[0].plot(l)
+    ax[0].plot(l, c=colors[i])
+    ax[1].plot(ts, c=colors[i])
     i += 1
-    ax[1].plot(ts)
 
 plt.savefig('data_plots')
