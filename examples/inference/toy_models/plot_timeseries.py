@@ -74,7 +74,7 @@ i=0
 for ts in example_ts[0,:,:].T:
     print("ts shape: ", ts.shape)
     l = np.ones(ts.shape) * max_sp[i]
-    ax[0].plot(l, c=colors[i])
+    ax[1].plot(l, c=colors[i])
     ax[1].plot(ts, c=colors[i])
     i += 1
 
