@@ -39,7 +39,7 @@ def peak_finder(ts):
         filter_start = np.maximum(0,i-filter_len)
         filter_end = np.minimum(len,i+1+filter_len)
 
-        if ts[i]>np.max(ts[filter_start:i]) and ts[i]>np.max(ts[i+1:filter_end]) and ts[i]>treshold_peak:
+        if ts[i]>=np.max(ts[filter_start:filter_end]) and ts[i]>treshold_peak:
             peaks.append(i)
 
     return peaks
