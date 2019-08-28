@@ -5,13 +5,31 @@ def man_statistics(TS):
     print("TS shape: ", TS.shape)
     peaks=[]
     peaks_val=[]
-    for ts in TS.T:
-        p = peak_finder(ts)
-        print("p: ", p)
-        peaks.append(p[:8])
-        peaks_val.append(ts[p[:8]])
-    peaks_val = np.squeeze(np.asarray(peaks_val))
-    peaks_ind = np.asarray(peaks).T
+    TS = np.squeeze(TS)
+    p = [peak_finder(ts) for ts in TS.T]
+    min_len = np.min(np.asarray([len(pf) for pf in p]))
+    true_peaks=[]
+    for i in range(min_len):
+        if abs(p[0,i]-p[1,i])<20 and abs(p[0,i]-p[2,i])<20 and abs(p[1,i]-p[2,i])<20:
+            true_peaks.append([p[0,i],p[1,i],p[2,i]])
+
+    true_peaks_val = [TS.T[i,true_peaks[i]] for i in range(3)]
+
+
+    peaks_ind = np.asarray(true_peaks)
+    peaks_val = np.asarray(true_peaks_val)
+
+    print("peaks_val shape: ", peaks_val.shape)
+    print("peaks_ind shape: ", peaks_ind.shape)
+
+
+    # for ts in TS.T:
+    #     p = peak_finder(ts)
+    #     print("p: ", p)
+    #     peaks.append(p)
+    #     peaks_val.append(ts[p)
+    # peaks_val = np.squeeze(np.asarray(peaks_val))
+    # peaks_ind = np.asarray(peaks).T
     print("peaks_val shape: ", peaks_val.shape)
     mean_peaks = np.mean(peaks_val,axis=1)
     max_peaks = np.max(peaks_val,axis=1)
