@@ -18,7 +18,7 @@ def man_statistics(TS):
     peak_dist = np.array(
         [[peaks_ind[i,0]-peaks_ind[i,1], peaks_ind[i,0]-peaks_ind[i,2], peaks_ind[i,1]-peaks_ind[i,2]] for i in range(8)])
     print("peak dist shape: ", peak_dist.shape)
-    peak_dist_mean = np.mean(peak_dist,axis=1)
+    peak_dist_mean = np.mean(peak_dist,axis=0)
     print("peak dist mean: ", peak_dist_mean)
     s = {"mean_peaks":mean_peaks, "max_peaks":max_peaks, "min_peaks": min_peaks, "peak_dist_mean":peak_dist_mean}
     return s
