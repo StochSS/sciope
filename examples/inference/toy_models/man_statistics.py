@@ -3,13 +3,13 @@ import numpy as np
 
 def man_statistics(TS):
     peaks=[]
+    peaks_val=[]
     for ts in TS.T:
         print("ts shape: ", ts.shape)
-        peaks.append(peak_finder(ts))
-    peaks_ind = np.asarray(peaks).T
-    print("peaks ind shape:", peaks_ind.shape)
-    print("TS shape: ", TS.shape, ", TS[0] shape", TS[0].shape)
-    peaks_val = TS[0][peaks_ind]
+        p = peak_finder(ts)
+        peaks.append(p)
+        peaks_val.append(ts[p])
+    peaks_val = np.asarray(peaks_val)
     print("peaks_val shape: ", peaks_val.shape)
     mean_peaks = np.mean(peaks_val,axis=1)
     max_peaks = np.max(peaks_val,axis=1)
