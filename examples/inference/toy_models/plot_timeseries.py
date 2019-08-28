@@ -55,14 +55,26 @@ example_ts = simulate(data_pred)
 print("example_ts shape: ", example_ts.shape)
 print("data shape: ", data.shape)
 
+colors = [[1,0,0],[0,1,0],[0,0,1]]
+
+
+max_sp = np.zeros((3))
 f, ax = plt.subplots(2,1,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('',fontsize=16)
+i=0
 for ts in data[0,:,:].T:
     print("ts shape: ", ts.shape)
+    max_sp[i] = np.max(ts)
+    l = np.ones(ts.shape)*max_sp[i]
+    ax[0].plot(l)
+    i+=1
     ax[0].plot(ts)
-
+i=0
 for ts in example_ts[0,:,:].T:
     print("ts shape: ", ts.shape)
+    l = np.ones(ts.shape) * max_sp[i]
+    ax[0].plot(l)
+    i += 1
     ax[1].plot(ts)
 
 plt.savefig('data_plots')
