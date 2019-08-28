@@ -10,12 +10,13 @@ def man_statistics(TS):
         peaks.append(p)
         peaks_val.append(ts[p])
     peaks_val = np.asarray(peaks_val)
+    peaks_ind = np.asarray(peaks).T
     print("peaks_val shape: ", peaks_val.shape)
     mean_peaks = np.mean(peaks_val,axis=1)
     max_peaks = np.max(peaks_val,axis=1)
     min_peaks = np.min(peaks_val,axis=1)
     print("min_peaks shape: ", min_peaks.shape)
-
+    print("peak ind shape: ", peaks_ind.shape)
     # print("peaks ind: ", peaks_ind)
     # print("peaks val: ", peaks_val)
 
