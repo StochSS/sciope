@@ -8,15 +8,14 @@ def man_statistics(ts):
 
 def peak_finder(ts):
     len = ts.shape[0]
-    print("len: ", len)
     peaks = []
 
     for i in range(10,len-10):
+        treshold_peak = np.max(ts)*0.5
+        filter_start = np.maximum(0,i-20)
+        filter_end = np.maximum(len,i+21)
 
-        print(i, ", ts[i]: ", ts[i], "max: ", np.max(ts[i-10:i+11]))
-        if ts[i]>np.max(ts[i-10:i]) and ts[i]>np.max(ts[i+1:i+11]):
-            print("peak found at: ", i)
+        if ts[i]>np.max(ts[filter_start:i]) and ts[i]>np.max(ts[i+1:filter_end]) and ts[i]>treshold_peak:
             peaks.append(i)
-            print("peaks: ", peaks)
-    print("peaks found: ", peaks)
+
     return peaks
