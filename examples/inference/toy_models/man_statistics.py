@@ -10,8 +10,8 @@ def man_statistics(TS):
     min_len = np.min(np.asarray([len(pf) for pf in p]))
     true_peaks=[]
     for i in range(min_len):
-        if abs(p[0,i]-p[1,i])<20 and abs(p[0,i]-p[2,i])<20 and abs(p[1,i]-p[2,i])<20:
-            true_peaks.append([p[0,i],p[1,i],p[2,i]])
+        if abs(p[0][i]-p[1][i])<20 and abs(p[0][i]-p[2][i])<20 and abs(p[1][i]-p[2][i])<20:
+            true_peaks.append([p[0][i],p[1][i],p[2][i]])
 
     true_peaks_val = [TS.T[i,true_peaks[i]] for i in range(3)]
 
