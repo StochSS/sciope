@@ -58,6 +58,7 @@ print("data shape: ", data.shape)
 f, ax = plt.subplots(2,1,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('',fontsize=16)
 for ts in data[0,:,:].T:
+    print("ts shape: ", ts.shape)
     ax[0].plot(ts)
 
 plt.savefig('data_plots')
