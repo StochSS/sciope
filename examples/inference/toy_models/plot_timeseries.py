@@ -61,4 +61,8 @@ for ts in data[0,:,:].T:
     print("ts shape: ", ts.shape)
     ax[0].plot(ts)
 
+for ts in example_ts[0,:,:].T:
+    print("ts shape: ", ts.shape)
+    ax[0].plot(ts)
+
 plt.savefig('data_plots')
