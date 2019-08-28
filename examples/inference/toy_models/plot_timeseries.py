@@ -68,7 +68,10 @@ data_set_stat=[]
 for TS in data_set:
     s=man_statistics(TS)
     print("s values: ", s.values())
-    data_set_stat.append(s.values())
+    data_set_stat_i = []
+    for v in s.values():
+        data_set_stat_i.append(v)
+    data_set_stat.append(data_set_stat_i)
 
 data_set_stat = np.asarray(data_set_stat)
 print("data_set_stat shape: ", data_set_stat.shape)
