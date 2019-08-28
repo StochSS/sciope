@@ -8,7 +8,7 @@ def man_statistics(TS):
     for ts in TS.T:
         p = peak_finder(ts)
         print("p: ", p)
-        peaks.append(p)
+        peaks.append(p[:8])
         peaks_val.append(ts[p[:8]])
     peaks_val = np.squeeze(np.asarray(peaks_val))
     peaks_ind = np.asarray(peaks).T
