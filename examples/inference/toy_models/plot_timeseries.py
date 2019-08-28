@@ -69,6 +69,7 @@ i=0
 for ts in data[0,:,:].T:
     print("ts shape: ", ts.shape)
     p = peak_finder(ts)
+    print("p: ", p)
     ax[0].scatter(p,ts[p])
     max_sp[i] = np.max(ts)
     l = np.ones(ts.shape)*max_sp[i]
