@@ -15,4 +15,5 @@ def peak_finder(ts):
         if ts[i]>=np.max(ts[i-10:i+11]):
             print("peak found at: ", i)
             peaks.append(i)
+    print("peaks: ", peaks)
     return peaks
