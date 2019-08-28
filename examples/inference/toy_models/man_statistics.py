@@ -8,9 +8,11 @@ def man_statistics(TS):
         peaks.append(peak_finder(ts))
     peaks_ind = np.asarray(peaks).T
     peaks_val = TS[0][peaks_ind]
+    print("peaks_val shape: ", peaks_val.shape)
     mean_peaks = np.mean(peaks_val,axis=1)
     max_peaks = np.max(peaks_val,axis=1)
     min_peaks = np.min(peaks_val,axis=1)
+    print("min_peaks shape: ", min_peaks.shape)
 
     # print("peaks ind: ", peaks_ind)
     # print("peaks val: ", peaks_val)
