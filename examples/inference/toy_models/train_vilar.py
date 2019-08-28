@@ -12,42 +12,22 @@ import time
 from normalize_data import normalize_data
 from load_data import load_spec
 
-# sim = simulate
-
-# true_param = [0.2,-0.13]
-# data = simulate(true_param)
-# n=1000000
-# train_thetas = np.array(prior(n=n))
-# train_ts = np.expand_dims(np.array([simulate(p,n=100) for p in train_thetas]),2)
-# validation_thetas = np.array(prior(n=10000))
-# validation_ts = np.expand_dims(np.array([simulate(p,n=100) for p in validation_thetas]),2)
-print("update")
 modelname = "vilar_ACR_200_401"
+#parameter range
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
-# train_thetas = pickle.load(open('datasets/' + modelname + '/train_thetas.p', "rb" ) )
-# train_ts = pickle.load(open('datasets/' + modelname + '/train_ts.p', "rb" ) )
 
+#Load data
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
-
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
 
-# print("train thetas min: ", np.min(train_thetas,0), ", max: ", np.max(train_thetas,0))
-
+#Normalize parameter values
 train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 
-# print("train thetas min: ", np.min(train_thetas,0), ", max: ", np.max(train_thetas,0))
 
-
-print("validation_thetas shape: ", validation_thetas.shape)
-print("validation_ts shape: ", validation_ts.shape)
-
-print("training_thetas shape: ", train_thetas.shape)
-print("training_ts shape: ", train_ts.shape)
 ts_len = train_ts.shape[1]
-print("ts_len: ", ts_len)
 # choose neural network model
 # nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
 nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
@@ -81,11 +61,12 @@ test_pred = np.reshape(test_pred,(-1,15))
 
 test_mse = np.mean((test_thetas-test_pred)**2)
 test_mae = np.mean(abs(test_thetas-test_pred))
+test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
 
 print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean square error: ", test_mae)
 
-test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae}
+test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae}
 pickle.dump(test_results, open('results/training_results_' + modelname + '.p', "wb"))
 
