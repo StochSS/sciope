@@ -7,6 +7,8 @@ def man_statistics(TS):
         print("ts shape: ", ts.shape)
         peaks.append(peak_finder(ts))
     peaks_ind = np.asarray(peaks).T
+    print("peaks ind shape:", peaks_ind.shape)
+    print("TS shape: ", TS.shape, ", TS[0] shape", TS[0].shape)
     peaks_val = TS[0][peaks_ind]
     print("peaks_val shape: ", peaks_val.shape)
     mean_peaks = np.mean(peaks_val,axis=1)
