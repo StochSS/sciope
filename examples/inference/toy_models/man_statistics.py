@@ -10,7 +10,7 @@ def peak_finder(ts):
     len = ts.shape[0]
     peaks = []
     filter_len = 20
-    for i in range(len):
+    for i in range(2,len-2):
         treshold_peak = np.max(ts)*0.5
         filter_start = np.maximum(0,i-filter_len)
         filter_end = np.minimum(len,i+1+filter_len)
