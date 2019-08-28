@@ -7,6 +7,7 @@ def man_statistics(TS):
     peaks_val=[]
     for ts in TS.T:
         p = peak_finder(ts)
+        print("p: ", p)
         peaks.append(p)
         peaks_val.append(ts[p])
     peaks_val = np.squeeze(np.asarray(peaks_val))
