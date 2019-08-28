@@ -42,6 +42,9 @@ print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred = denormalize_data(data_pred,dmin,dmax)
 
+center_pred = np.ones((1,15))*0.5
+center_pred = denormalize_data(center_pred,dmin,dmax)
+
 num_timestamps=401
 endtime=200
 
@@ -51,6 +54,7 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 
 example_ts = simulate(data_pred)
+center_ts = simulate(center_pred)
 
 print("example_ts shape: ", example_ts.shape)
 print("data shape: ", data.shape)
@@ -59,7 +63,7 @@ colors = [[1,0,0],[0,1,0],[0,0,1]]
 
 
 max_sp = np.zeros((3))
-f, ax = plt.subplots(2,1,figsize=(30,30))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(3,1,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('',fontsize=16)
 i=0
 for ts in data[0,:,:].T:
@@ -76,6 +80,14 @@ for ts in example_ts[0,:,:].T:
     l = np.ones(ts.shape) * max_sp[i]
     ax[1].plot(l, c=colors[i])
     ax[1].plot(ts, c=colors[i])
+    i += 1
+
+i=0
+for ts in center_ts[0,:,:].T:
+    print("ts shape: ", ts.shape)
+    l = np.ones(ts.shape) * max_sp[i]
+    ax[2].plot(l, c=colors[i])
+    ax[2].plot(ts, c=colors[i])
     i += 1
 
 plt.savefig('data_plots')
