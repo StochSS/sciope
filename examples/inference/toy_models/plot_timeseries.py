@@ -67,6 +67,7 @@ data_set = [simulate(np.asarray(true_param)) for i in range(itt)]
 data_set_stat=[]
 for TS in data_set:
     s=man_statistics(TS)
+    print("s values: ", s.values())
     data_set_stat.append(s.values())
 
 data_set_stat = np.asarray(data_set_stat)
