@@ -59,7 +59,24 @@ center_ts = simulate(center_pred)
 print("example_ts shape: ", example_ts.shape)
 print("data shape: ", data.shape)
 
+itt=10
+example_ts_set = [simulate(data_pred) for i in range(itt)]
+center_ts_set = [simulate(center_pred) for i in range(itt)]
+data_set = [simulate(np.asarray(true_param)) for i in range(itt)]
 
+data_set_stat=[]
+for TS in data_set:
+    s=man_statistics(TS)
+    data_set_stat.append(s.values())
+
+data_set_stat = np.asarray(data_set_stat)
+print("data_set_stat shape: ", data_set_stat.shape)
+
+
+
+# print("data stat:", man_statistics(data))
+# print("example_ts stat:", man_statistics(example_ts))
+# print("center_ts stat:", man_statistics(center_ts))
 
 
 colors = [[1,0,0],[0,1,0],[0,0,1]]
@@ -98,6 +115,4 @@ for ts in center_ts[0,:,:].T:
 
 plt.savefig('data_plots')
 
-print("data stat:", man_statistics(data))
-print("example_ts stat:", man_statistics(example_ts))
-print("center_ts stat:", man_statistics(center_ts))
+
