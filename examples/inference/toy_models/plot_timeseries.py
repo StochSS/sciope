@@ -14,7 +14,7 @@ import pickle
 from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
 from vilar import Vilar_model
-
+from man_statistics import peak_finder
 
 # choose neural network model
 # nnm = CNNModel(input_shape=(401,3), output_shape=(15))
@@ -68,6 +68,8 @@ f.suptitle('',fontsize=16)
 i=0
 for ts in data[0,:,:].T:
     print("ts shape: ", ts.shape)
+    p = peak_finder(ts)
+    ax[0].scatter(p,ts[p])
     max_sp[i] = np.max(ts)
     l = np.ones(ts.shape)*max_sp[i]
     ax[0].plot(l,c=colors[i])
