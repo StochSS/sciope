@@ -78,7 +78,7 @@ print("data_set_stat shape: ", data_set_stat.shape)
 
 data_set_stat = np.mean(data_set_stat,axis=0)
 
-
+print("data set stat: ", data_set_stat)
 
 # print("data stat:", man_statistics(data))
 # print("example_ts stat:", man_statistics(example_ts))
