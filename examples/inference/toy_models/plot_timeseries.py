@@ -59,7 +59,10 @@ center_ts = simulate(center_pred)
 print("example_ts shape: ", example_ts.shape)
 print("data shape: ", data.shape)
 
-man_statistics(data)
+print("data stat:", man_statistics(data))
+print("example_ts stat:", man_statistics(example_ts))
+print("center_ts stat:", man_statistics(center_ts))
+
 
 
 colors = [[1,0,0],[0,1,0],[0,0,1]]
