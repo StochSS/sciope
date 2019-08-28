@@ -2,14 +2,14 @@ import numpy as np
 
 
 def man_statistics(TS):
+    print("TS shape: ", TS.shape)
     peaks=[]
     peaks_val=[]
     for ts in TS.T:
-        print("ts shape: ", ts.shape)
         p = peak_finder(ts)
         peaks.append(p)
         peaks_val.append(ts[p])
-    peaks_val = np.asarray(peaks_val)
+    peaks_val = np.squeeze(np.asarray(peaks_val))
     peaks_ind = np.asarray(peaks).T
     print("peaks_val shape: ", peaks_val.shape)
     mean_peaks = np.mean(peaks_val,axis=1)
