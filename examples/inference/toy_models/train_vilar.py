@@ -49,9 +49,9 @@ print("training_ts shape: ", train_ts.shape)
 ts_len = train_ts.shape[1]
 print("ts_len: ", ts_len)
 # choose neural network model
-# nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
+nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
 # nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=18)
-nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
+# nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
 # nnm.load_model()
 start_time = time.time()
