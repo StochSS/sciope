@@ -69,6 +69,7 @@ for ts in data[0,:,:].T:
     ax[0].plot(l,c=colors[i])
     ax[0].plot(ts,c=colors[i])
     i += 1
+print("max sp: ", max_sp)
 i=0
 for ts in example_ts[0,:,:].T:
     print("ts shape: ", ts.shape)
