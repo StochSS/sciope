@@ -26,7 +26,7 @@ class CNNModel(ModelBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
         self.model = construct_model(input_shape,output_shape)
-        self.save_as = 'saved_models/cnn_light'
+        self.save_as = 'saved_models/cnn_light10'
     
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs,
@@ -77,7 +77,7 @@ def construct_model(input_shape,output_shape):
     dense_activation = 'relu'
     padding = 'same'
     poolpadding = 'valid'
-    con_len = 6
+    con_len = 10
     # lay_size = [int(64*1.5**i) for i in range(10)]
     lay_size = [25, 50, 100]
 
