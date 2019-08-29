@@ -49,7 +49,7 @@ print("data shape: ", data.shape)
 # print("data_exp shape: ", data_exp.shape)
 
 true_param = np.random.rand(15)
-data = simulate(true_param)
+data = simulate(denormalize_data(true_param,dmin,dmax))
 
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
