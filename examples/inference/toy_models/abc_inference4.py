@@ -107,7 +107,7 @@ hist_data_add = np.ones((15,bins_nr))
 hist_data_all = np.ones((15,15,bins_nr))
 
 
-dist = abs(abc_trial_pred - data_pred)
+dist = np.linalg.norm(abc_trial_pred - data_pred, axis=1)
 print("dist shape: ", dist.shape)
 accepted_ind = np.argpartition(dist,nr_of_accept)
 print("accepted_ind shape: ", accepted_ind.shape)
