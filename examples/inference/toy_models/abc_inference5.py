@@ -57,7 +57,7 @@ abc_trial_pred = nnm.predict(abc_trial_ts)
 mean_dev = np.mean(abs(abc_trial_thetas-abc_trial_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
-nr_of_accept = 100
+nr_of_accept = 1000
 nr_of_trial = abc_trial_thetas.shape[0]
 
 # bpi = np.argsort(mean_dev)[:4] # best_param_ind
