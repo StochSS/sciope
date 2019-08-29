@@ -146,4 +146,4 @@ for x in range(15):
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
 
-plt.savefig('posterior_abc4')
+plt.savefig('posterior_abc5')
