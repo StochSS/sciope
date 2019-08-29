@@ -63,8 +63,8 @@ test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
 print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
 print("abc_trial_ts shape: ", abc_trial_ts.shape)
-abc_trial_thetas = np.concatenate((abc_trial_thetas,train_thetas,test_thetas),axis=0)
-abc_trial_ts = np.concatenate((abc_trial_ts,train_ts,test_ts),axis=0)
+abc_trial_thetas = np.concatenate((abc_trial_thetas,test_thetas),axis=0)
+abc_trial_ts = np.concatenate((abc_trial_ts,test_ts),axis=0)
 print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
 print("abc_trial_ts shape: ", abc_trial_ts.shape)
 
@@ -147,8 +147,8 @@ for x in range(15):
         if x == y:
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=bins, color='green')
             peak_val = np.max(ret[0])
-            ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black')
-            ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
+            ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=2)
+            # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
             ax[x, y].plot([data_pred[x], data_pred[x]], [0,peak_val], c='gray')
 
             ax[x, y].plot([1, 1], [0, peak_val], c='b')
