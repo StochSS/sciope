@@ -40,6 +40,7 @@ print("data shape: ", data.shape)
 # print("data_exp shape: ", data_exp.shape)
 
 data_pred = nnm.predict(data)
+data_pred = np.squeeze(data_pred)
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
