@@ -44,11 +44,14 @@ data_pred = np.squeeze(data_pred)
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
 
+test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
+test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
 print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
 print("abc_trial_ts shape: ", abc_trial_ts.shape)
-abc_trial_thetas = np.concatenate((abc_trial_thetas,train_thetas),axis=0)
-abc_trial_ts = np.concatenate((abc_trial_ts,train_ts),axis=0)
+abc_trial_thetas = np.concatenate((abc_trial_thetas,train_thetas,test_thetas),axis=0)
+abc_trial_ts = np.concatenate((abc_trial_ts,train_ts,test_ts),axis=0)
 print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
 print("abc_trial_ts shape: ", abc_trial_ts.shape)
 
