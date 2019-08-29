@@ -25,6 +25,7 @@ nnm = CNNModel(input_shape=(401,3), output_shape=(15))
 nnm.load_model()
 
 
+
 #ABC algorithm
 
 
@@ -48,8 +49,8 @@ print("data shape: ", data.shape)
 # data_exp = np.expand_dims( np.expand_dims(data,axis=0), axis=2 )
 # print("data_exp shape: ", data_exp.shape)
 
-true_param = np.random.rand(15)
-data = simulate(denormalize_data(true_param,dmin,dmax))
+data = simulate(true_param)
+print("data shape: ", data.shape)
 
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
@@ -120,7 +121,7 @@ for i in range(15):
     para_names[i] = "$\\" + pk + "$"
 
 
-# true_param = normalize_data(true_param,dmin,dmax)
+true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
 f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
@@ -161,4 +162,4 @@ for x in range(15):
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
 
-plt.savefig('posterior_abc_alt_para')
+plt.savefig('posterior_abc5_alt')
