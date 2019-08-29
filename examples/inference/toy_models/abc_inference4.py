@@ -40,7 +40,7 @@ print("data shape: ", data.shape)
 # print("data_exp shape: ", data_exp.shape)
 
 data_pred = nnm.predict(data)
-
+data_pred = np.squeeze(data_pred)
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
@@ -70,7 +70,7 @@ nr_of_trial = abc_trial_thetas.shape[0]
 # print("accepted dist mean: ", np.mean(dist[accepted_ind]))
 # print("trial dist mean: ", np.mean(dist))
 #
-# data_pred = np.squeeze(data_pred)
+#
 # accepted_dist = dist[accepted_ind]
 #
 # print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted_dist), ", min: ", np.min(accepted_dist))
