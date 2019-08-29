@@ -48,33 +48,32 @@ abc_trial_pred = nnm.predict(abc_trial_ts)
 mean_dev = np.mean(abs(abc_trial_thetas-abc_trial_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
-
-bpi = np.argsort(mean_dev)[:4] # best_param_ind
-
-
-nr_of_trial = abc_trial_thetas.shape[0]
 nr_of_accept = 1000
-
-
-dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
-print("dist shape: ", dist.shape)
-accepted_ind = np.argpartition(dist,nr_of_accept)
-print("accepted_ind shape: ", accepted_ind.shape)
-accepted_ind = np.argpartition(dist,nr_of_accept)[0:nr_of_accept]
-accepted_para = abc_trial_thetas[accepted_ind]
-accepted_mean = np.mean(accepted_para,axis=0)
-accepted_std = np.std(accepted_para,axis=0)
-print("posterior dev: ", accepted_mean-true_param)
-print("posterior std: ", accepted_std)
-print("accepted dist max: ", np.max(dist[accepted_ind]))
-print("accepted dist mean: ", np.mean(dist[accepted_ind]))
-print("trial dist mean: ", np.mean(dist))
-
-data_pred = np.squeeze(data_pred)
-accepted_dist = dist[accepted_ind]
-
-print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted_dist), ", min: ", np.min(accepted_dist))
-
+# bpi = np.argsort(mean_dev)[:4] # best_param_ind
+#
+# nr_of_trial = abc_trial_thetas.shape[0]
+#
+#
+#
+# dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
+# print("dist shape: ", dist.shape)
+# accepted_ind = np.argpartition(dist,nr_of_accept)
+# print("accepted_ind shape: ", accepted_ind.shape)
+# accepted_ind = np.argpartition(dist,nr_of_accept)[0:nr_of_accept]
+# accepted_para = abc_trial_thetas[accepted_ind]
+# accepted_mean = np.mean(accepted_para,axis=0)
+# accepted_std = np.std(accepted_para,axis=0)
+# print("posterior dev: ", accepted_mean-true_param)
+# print("posterior std: ", accepted_std)
+# print("accepted dist max: ", np.max(dist[accepted_ind]))
+# print("accepted dist mean: ", np.mean(dist[accepted_ind]))
+# print("trial dist mean: ", np.mean(dist))
+#
+# data_pred = np.squeeze(data_pred)
+# accepted_dist = dist[accepted_ind]
+#
+# print("accepted dist mean: ", np.mean(accepted_dist), ", max: ", np.max(accepted_dist), ", min: ", np.min(accepted_dist))
+#
 
 # bpi = np.argsort(accepted_std)[:4] # best_param_ind
 
@@ -108,6 +107,9 @@ hist_data_all = np.ones((15,15,bins_nr))
 
 
 dist = abs(abc_trial_pred - data_pred)
+print("dist shape: ", dist.shape)
+accepted_ind = np.argpartition(dist,nr_of_accept)
+print("accepted_ind shape: ", accepted_ind.shape)
 accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
 accepted_para = abc_trial_thetas[accepted_ind]
 accepted_mean = np.mean(accepted_para, axis=0)
