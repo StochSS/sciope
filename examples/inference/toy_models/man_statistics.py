@@ -40,7 +40,7 @@ def man_statistics(TS):
     # print("peaks val: ", peaks_val)
 
     peak_dist = np.array(
-        [[peaks_ind[i,0]-peaks_ind[i,1], peaks_ind[i,0]-peaks_ind[i,2], peaks_ind[i,1]-peaks_ind[i,2]] for i in range(8)])
+        [[peaks_ind[i,0]-peaks_ind[i,1], peaks_ind[i,0]-peaks_ind[i,2], peaks_ind[i,1]-peaks_ind[i,2]] for i in range(peaks_ind.shape[0])])
     # print("peak dist shape: ", peak_dist.shape)
     peak_dist_mean = np.mean(peak_dist,axis=0)
     # print("peak dist mean: ", peak_dist_mean)
