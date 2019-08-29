@@ -58,6 +58,8 @@ nr_of_accept = 1000
 
 dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
 print("dist shape: ", dist.shape)
+accepted_ind = np.argpartition(dist,nr_of_accept)
+print("accepted_ind shape: ", accepted_ind.shape)
 accepted_ind = np.argpartition(dist,nr_of_accept)[0:nr_of_accept]
 accepted_para = abc_trial_thetas[accepted_ind]
 accepted_mean = np.mean(accepted_para,axis=0)
