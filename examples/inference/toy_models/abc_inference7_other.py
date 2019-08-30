@@ -56,6 +56,9 @@ print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 print("data pred shape: ", data_pred.shape)
+print("data_pred.std: ", np.std(data_pred,axis=0))
+print("data.std: ", np.std(data,axis=0))
+
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
@@ -104,9 +107,6 @@ f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
-hist_data = np.ones((15,bins_nr))
-hist_data_add = np.ones((15,bins_nr))
-hist_data_all = np.ones((15,15,bins_nr))
 
 
 dist = np.array([np.linalg.norm(abc_trial_pred - data_pred_, axis=1) for data_pred_ in data_pred])
@@ -131,6 +131,7 @@ y=0
 abc_pred = np.zeros((accepted_para.shape[0],15))
 for accepted_para_ in accepted_para:
     print("accepted_para_ shape: ", accepted_para_.shape)
+    print("y: ", y)
     for x in range(15):
 
         ret = ax[y, x].hist(accepted_para_[:, x], density=True, bins=bins, color='green')
