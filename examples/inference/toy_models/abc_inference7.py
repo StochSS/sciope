@@ -164,8 +164,9 @@ for accepted_para_ in accepted_para:
         ax[y, x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
         abc_pred[y,x]=loc_opt
         if y == 4:
-            mae = np.mean(abs(abc_pred-true_param),axis=0)
-            me = np.mean(abc_pred-true_param,axis=0)
+            mae = np.mean(abs(abc_pred[:,x]-true_param[x]),axis=0)
+            me = np.mean(abc_pred[:,x]-true_param[x],axis=0)
+            print("mae, me: ", mae,me)
             ax[0, x].set_title(para_names[x] + ", mae: " + '{0:.3f}'.format(mae) + ", me: " + '{0:.3f}'.format(me))
     y+=1
 
