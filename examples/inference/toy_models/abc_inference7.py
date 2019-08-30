@@ -166,7 +166,7 @@ for accepted_para_ in accepted_para:
         if y == 4:
             mae = np.mean(abs(abc_pred-true_param),axis=0)
             me = np.mean(abc_pred-true_param,axis=0)
-            ax[0, x].set_title(para_names[x], ", mae: ", mae, ", me: ", me)
+            ax[0, x].set_title(para_names[x] + ", mae: " + '{0:.3f}'.format(mae) + ", me: " + '{0:.3f}'.format(me))
     y+=1
 
 plt.savefig('posterior_abc7')
