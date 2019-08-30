@@ -162,4 +162,4 @@ for accepted_para_ in accepted_para:
         ax[y, x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
     y+=1
 
-plt.savefig('posterior_abc6')
+plt.savefig('posterior_abc7')
