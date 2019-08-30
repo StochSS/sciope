@@ -179,4 +179,4 @@ nnmae = np.mean(abs(data_pred-true_param),axis=0)
 nnme = np.mean(data_pred-true_param,axis=0)
 
 save_results = {"abc_mae": mae, "abc_me": me, "nn_mae": nnmae, "nn_me":nnme}
-pickle.dump( save_results, open( "abc_results_t08_" + str(nr_of_accept)), "wb"))
+pickle.dump( save_results, open( "abc_results_t08_" + str(nr_of_accept), "wb"))
