@@ -49,6 +49,7 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 
 more_data = np.array([simulate(true_param) for i in range(4)])
+true_param = normalize_data(true_param,dmin,dmax)
 
 data = np.concatenate([data, more_data])
 print("data shape: ", data.shape)
@@ -96,7 +97,6 @@ for i in range(15):
     para_names[i] = "$\\" + pk + "$"
 
 
-true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
 f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
@@ -107,16 +107,15 @@ hist_data_add = np.ones((15,bins_nr))
 hist_data_all = np.ones((15,15,bins_nr))
 
 
-dist = np.linalg.norm(abc_trial_pred - data_pred, axis=1)
+dist = np.array([np.linalg.norm(abc_trial_pred - data_pred_, axis=1) for data_pred_ in data_pred])
 print("dist shape: ", dist.shape)
-accepted_ind = np.argpartition(dist,nr_of_accept)
+accepted_ind =np.array([np.argpartition(dist_,nr_of_accept)[0:nr_of_accept] for dist_ in dist])
 print("accepted_ind shape: ", accepted_ind.shape)
-accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
-accepted_para = abc_trial_thetas[accepted_ind]
-accepted_mean = np.mean(accepted_para, axis=0)
+
+accepted_para = np.array([ abc_trial_thetas[accepted_ind_] for accepted_ind_ in accepted_ind])
+# accepted_mean = np.mean(accepted_para, axis=0)
 
 lower, upper = 0, 1
-bg=0
 
 def nnlf(params, data):
     loc, scale = params
@@ -126,38 +125,39 @@ def nnlf(params, data):
     value = stats.truncnorm.nnlf(theta, data)
     return value
 
+y=0
+for accepted_para_ in accepted_para:
 
+    for x in range(15):
+        if y == 0:
+            ax[0, x].set_title(para_names[x])
+        ret = ax[y, x].hist(0, accepted_para_[:, x], density=True, bins=bins, color='green')
+        peak_val = np.max(ret[0])
+        ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
+        # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
+        ax[y, x].plot([data_pred[x], data_pred[x]], [0,peak_val], c='gray', ls='--')
 
+        ax[y, x].plot([1, 1], [0, peak_val], c='b')
+        ax[y, x].plot([0, 0], [0, peak_val], c='b')
 
-for x in range(15):
-    ax[0, x].set_title(para_names[x])
-    ret = ax[0, x].hist(accepted_para[:, x], density=True, bins=bins, color='green')
-    peak_val = np.max(ret[0])
-    ax[0, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
-    # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-    ax[0, x].plot([data_pred[x], data_pred[x]], [0,peak_val], c='gray', ls='--')
+        loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(0, accepted_para_[:, x]), np.std(0, accepted_para_[:, x])),
+                                           args=(0, accepted_para_[:, x],), disp=False)
 
-    ax[0, x].plot([1, 1], [0, peak_val], c='b')
-    ax[0, x].plot([0, 0], [0, peak_val], c='b')
+        left_trunc_norm = (lower - loc_opt) / scale_opt
+        right_trunc_norm = (upper - loc_opt) / scale_opt
 
-    loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
-                                       args=(accepted_para[:, x],), disp=False)
+        l = np.linspace(lower, upper, 100)
+        p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
-    left_trunc_norm = (lower - loc_opt) / scale_opt
-    right_trunc_norm = (upper - loc_opt) / scale_opt
-
-    l = np.linspace(lower, upper, 100)
-    p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-
-    ax[0, x].plot(l, p)
-    col ='red'
-    if loc_opt<lower or loc_opt>upper:
-        col = 'orange'
-        if loc_opt<lower:
-            loc_opt=lower
-        if loc_opt>upper:
-            loc_opt=upper
-    ax[0, x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
-
+        ax[y, x].plot(l, p)
+        col ='red'
+        if loc_opt<lower or loc_opt>upper:
+            col = 'orange'
+            if loc_opt<lower:
+                loc_opt=lower
+            if loc_opt>upper:
+                loc_opt=upper
+        ax[y, x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
+    y+=1
 
 plt.savefig('posterior_abc6')
