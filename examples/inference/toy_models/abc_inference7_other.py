@@ -79,7 +79,7 @@ abc_trial_pred = nnm.predict(abc_trial_ts)
 mean_dev = np.mean(abs(abc_trial_thetas-abc_trial_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
-nr_of_accept = 100
+nr_of_accept = 500
 nr_of_trial = abc_trial_thetas.shape[0]
 
 
@@ -103,7 +103,7 @@ for i in range(15):
 
 
 # plt.axis('equal')
-f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(5,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
@@ -165,8 +165,10 @@ for accepted_para_ in accepted_para:
         if y == 4:
             mae = np.mean(abs(abc_pred[:,x]-true_param[x]),axis=0)
             me = np.mean(abc_pred[:,x]-true_param[x],axis=0)
-            print("mae, me: ", mae,me)
-            ax[0, x].set_title(para_names[x] + ", mae: " + '{0:.3f}'.format(mae) + ", me: " + '{0:.3f}'.format(me))
+            nnmae = np.mean(abs(data_pred[:,x]-true_param[x]),axis=0)
+            nnme = np.mean(data_pred[:,x]-true_param[x],axis=0)
+            print("mae, me: ", mae,me, "nn mea, me: ", nnmae, nnme)
+            ax[0, x].set_title(para_names[x] + ", mae: " + '{0:.3f}'.format(mae) + "\n me: " + '{0:.3f}'.format(me))
     y+=1
 
 plt.savefig('posterior_abc7_other08')
