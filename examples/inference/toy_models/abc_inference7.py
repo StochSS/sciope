@@ -130,7 +130,7 @@ def nnlf(params, data):
     return value
 
 y=0
-abc_pred = np.zeros(accepted_para.shape[0],15)
+abc_pred = np.zeros((accepted_para.shape[0],15))
 for accepted_para_ in accepted_para:
     print("accepted_para_ shape: ", accepted_para_.shape)
     for x in range(15):
