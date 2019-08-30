@@ -129,11 +129,11 @@ def nnlf(params, data):
 
 y=0
 for accepted_para_ in accepted_para:
-
+    print("accepted_para_ shape: ", accepted_para_.shape)
     for x in range(15):
         if y == 0:
             ax[0, x].set_title(para_names[x])
-        ret = ax[y, x].hist(0, accepted_para_[:, x], density=True, bins=bins, color='green')
+        ret = ax[y, x].hist(accepted_para_[:, x], density=True, bins=bins, color='green')
         peak_val = np.max(ret[0])
         ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
         # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
