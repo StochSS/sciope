@@ -50,6 +50,8 @@ simulate = Vilar_.simulate
 
 more_data = np.array([simulate(true_param) for i in range(4)])
 true_param = normalize_data(true_param,dmin,dmax)
+print("data shape: ", data.shape)
+print("more data shape: ", more_data.shape)
 
 data = np.concatenate([data, more_data])
 print("data shape: ", data.shape)
