@@ -44,7 +44,7 @@ dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
 
 true_param = np.random.rand(15)
-true_param = np.ones((15))*0.2
+true_param = np.ones((15))*0.8
 data = simulate(denormalize_data(true_param,dmin,dmax))
 
 data_pred = nnm.predict(data)
@@ -189,4 +189,4 @@ for x in range(15):
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
 
-plt.savefig('posterior_abc6_t02')
+plt.savefig('posterior_abc6_t08')
