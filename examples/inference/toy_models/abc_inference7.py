@@ -142,8 +142,8 @@ for accepted_para_ in accepted_para:
         ax[y, x].plot([1, 1], [0, peak_val], c='b')
         ax[y, x].plot([0, 0], [0, peak_val], c='b')
 
-        loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(0, accepted_para_[:, x]), np.std(0, accepted_para_[:, x])),
-                                           args=(0, accepted_para_[:, x],), disp=False)
+        loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para_[:, x]), np.std(accepted_para_[:, x])),
+                                           args=(accepted_para_[:, x],), disp=False)
 
         left_trunc_norm = (lower - loc_opt) / scale_opt
         right_trunc_norm = (upper - loc_opt) / scale_opt
