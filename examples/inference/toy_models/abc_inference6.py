@@ -148,7 +148,7 @@ for x in range(15):
         if x == y:
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=bins, color='green')
             peak_val = np.max(ret[0])
-            ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black')
+            ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
             ax[x, y].plot([data_pred[x], data_pred[x]], [0,peak_val], c='gray', ls='--')
 
@@ -165,6 +165,8 @@ for x in range(15):
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
             ax[x, x].plot(l, p)
+            ax[x, x].plot([loc_opt, loc_opt], [peak_val, 0], c='red', ls='--')
+
         else:
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
             ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=1, alpha=0.5)

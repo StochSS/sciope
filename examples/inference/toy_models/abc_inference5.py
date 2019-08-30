@@ -62,7 +62,7 @@ print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
 nr_of_accept = 1000
 nr_of_trial = abc_trial_thetas.shape[0]
-bx=5
+
 # bpi = np.argsort(mean_dev)[:4] # best_param_ind
 #
 #
