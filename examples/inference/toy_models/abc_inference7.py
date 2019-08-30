@@ -78,7 +78,7 @@ abc_trial_pred = nnm.predict(abc_trial_ts)
 mean_dev = np.mean(abs(abc_trial_thetas-abc_trial_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
-nr_of_accept = 5000
+nr_of_accept = 100
 nr_of_trial = abc_trial_thetas.shape[0]
 
 
@@ -130,11 +130,11 @@ def nnlf(params, data):
     return value
 
 y=0
+abc_pred = np.zeros(accepted_para.shape[0],15)
 for accepted_para_ in accepted_para:
     print("accepted_para_ shape: ", accepted_para_.shape)
     for x in range(15):
-        if y == 0:
-            ax[0, x].set_title(para_names[x])
+
         ret = ax[y, x].hist(accepted_para_[:, x], density=True, bins=bins, color='green')
         peak_val = np.max(ret[0])
         ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
@@ -162,6 +162,11 @@ for accepted_para_ in accepted_para:
             if loc_opt>upper:
                 loc_opt=upper
         ax[y, x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
+        abc_pred[y,x]=loc_opt
+        if y == 4:
+            mae = np.mean(abs(abc_pred-true_param),axis=0)
+            me = np.mean(abc_pred-true_param,axis=0)
+            ax[0, x].set_title(para_names[x], ", mae: ", mae, ", me: ", me)
     y+=1
 
 plt.savefig('posterior_abc7')
