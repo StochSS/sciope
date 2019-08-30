@@ -130,6 +130,7 @@ accepted_para = abc_trial_thetas[accepted_ind]
 accepted_mean = np.mean(accepted_para, axis=0)
 
 lower, upper = 0, 1
+bg=0
 
 def nnlf(params, data):
     loc, scale = params
