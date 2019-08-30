@@ -14,7 +14,7 @@ import pickle
 from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
 from vilar import Vilar_model
-
+import vilar
 from scipy import stats, optimize
 
 
