@@ -56,8 +56,8 @@ print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 print("data pred shape: ", data_pred.shape)
-print("data_pred.std: ", np.std(data_pred,axis=0))
-print("data.std: ", np.std(data,axis=0))
+print("data_pred.std: ", np.std(data_pred,axis=1))
+print("data.std: ", np.std(data,axis=1))
 
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
