@@ -57,6 +57,8 @@ data = np.concatenate([data, more_data])
 print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
+print("data pred shape: ", data_pred.shape)
+
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
 
@@ -137,7 +139,7 @@ for accepted_para_ in accepted_para:
         peak_val = np.max(ret[0])
         ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
         # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-        ax[y, x].plot([data_pred[i,x], data_pred[i,x]], [0,peak_val], c='gray', ls='--')
+        ax[y, x].plot([data_pred[y,x], data_pred[y,x]], [0,peak_val], c='gray', ls='--')
 
         ax[y, x].plot([1, 1], [0, peak_val], c='b')
         ax[y, x].plot([0, 0], [0, peak_val], c='b')
