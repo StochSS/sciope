@@ -165,7 +165,14 @@ for x in range(15):
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
             ax[x, x].plot(l, p)
-            ax[x, x].plot([loc_opt, loc_opt], [peak_val, 0], c='red', ls='--')
+            col ='red'
+            if loc_opt<lower or loc_opt>upper:
+                col = 'green'
+                if loc_opt<lower:
+                    loc_opt=lower
+                if loc_opt>upper:
+                    loc_opt=upper
+            ax[x, x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
 
         else:
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
