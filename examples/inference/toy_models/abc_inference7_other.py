@@ -48,7 +48,7 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 
 simulate = Vilar_.simulate
 
-data = np.array([np.squeeze(simulate(true_param)) for i in range(5)])
+data = np.array([np.squeeze(simulate(denormalize_data(true_param,dmin,dmax))) for i in range(5)])
 # true_param = normalize_data(true_param,dmin,dmax)
 print("data shape: ", data.shape)
 
@@ -56,8 +56,8 @@ print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 print("data pred shape: ", data_pred.shape)
-print("data_pred.std: ", np.std(data_pred,axis=1))
-print("data.std: ", np.std(data,axis=1))
+print("data_pred.std: ", np.std(data_pred,axis=0))
+print("data.std: ", np.mean(np.std(data,axis=0)))
 
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
