@@ -41,6 +41,7 @@ yhat = model(x_tst)
 
 print("type yhat: ", type(yhat))
 print("shape yhat: ", yhat.shape)
+yhat = np.asarray(yhat)
 
 plt.scatter(x_tst,yhat)
 plt.scatter(x_tst,y_tst)
