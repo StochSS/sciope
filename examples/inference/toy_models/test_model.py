@@ -1,8 +1,10 @@
 import tensorflow as tf
 from tensorflow import keras
-# import tensorflow_probability as tfp
+import tensorflow_probability as tfp
 import numpy as np
-# tfd = tfp.distributions
+tfd = tfp.distributions
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
@@ -27,7 +29,7 @@ print("x shape: ", x.shape)
 model = tf.keras.Sequential([
   keras.layers.Dense(1, input_shape=(1,))
 
-  # tfp.layers.DistributionLambda(lambda t: tfd.Normal(loc=t, scale=1)),
+  tfp.layers.DistributionLambda(lambda t: tfd.Normal(loc=t, scale=1)),
 ])
 
 # Do inference.
@@ -37,9 +39,8 @@ model.fit(x, y, epochs=5)#, verbose=False)
 # Make predictions.
 yhat = model.predict(x_tst)
 
-plt.plot(x_tst,yhat)
-plt.plot(x_tst,y_tst)
-plt.show()
-
+plt.scatter(x_tst,yhat)
+plt.scatter(x_tst,y_tst)
+plt.savefig('takeme')
 
 
