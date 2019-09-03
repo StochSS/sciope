@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorflow import keras
 import tensorflow_probability as tfp
 import numpy as np
 tfd = tfp.distributions
@@ -29,7 +30,7 @@ model = tf.keras.Sequential([
 ])
 
 # Do inference.
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.05), loss=negloglik)
+model.compile(optimizer=keras.optimizers.Adam(0.001), loss=negloglik)
 model.fit(x, y, epochs=500, verbose=False)
 
 # Make predictions.
