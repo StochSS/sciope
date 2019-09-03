@@ -1,5 +1,7 @@
 from sciope.inference import abc_inference
 from sciope.models.cnn_regressor import CNNModel
+from sciope.models.cnn_regressor_normal import CNNModel
+
 from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
 from load_data_from_julia import load_data
@@ -29,8 +31,8 @@ validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 
 ts_len = train_ts.shape[1]
 # choose neural network model
-# nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
-nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
+nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
+# nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
 # nnm.load_model()
