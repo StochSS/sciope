@@ -133,10 +133,10 @@ def construct_model(input_shape,output_shape):
         layer = keras.layers.Activation(dense_activation)(layer)
     
     #Add output layer without Activation or Batch Normalization
-    layer = keras.layers.Dense(output_shape)(layer)
+    # layer = keras.layers.Dense(output_shape)(layer)
 
-    mu = tf.layers.dense(inputs=layer, units=1)
-    sigma = tf.layers.dense(inputs=layer, units=1, activation=lambda x: tf.nn.elu(x) + 1)
+    mu = tf.layers.dense(inputs=layer, units=output_shape)
+    sigma = tf.layers.dense(inputs=layer, units=output_shape, activation=lambda x: tf.nn.elu(x) + 1)
     dist = tf.distributions.Normal(loc=mu, scale=sigma)
 
     # Define custom loss
