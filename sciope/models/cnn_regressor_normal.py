@@ -149,7 +149,8 @@ def construct_model(input_shape,output_shape):
         # Return a function
         return loss
 
-    model = keras.models.Model(inputs=input, outputs=mu)
+
+    model = keras.models.Model(inputs=input, outputs=layer)
     #Using Adam optimizer with learning rate 0.001 
     model.compile(optimizer=keras.optimizers.Adam(0.001), 
               loss=custom_loss(dist),metrics=['mae'])
