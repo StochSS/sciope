@@ -10,7 +10,8 @@ from tensorflow import keras
 from sciope.utilities.housekeeping import sciope_logger as ml
 import matplotlib.pyplot as plt
 import tensorflow as tf
-
+import tensorflow_probability as tfp
+tfd = tfp.distributions
 
 # Class definition
 class CNNModel(ModelBase):
@@ -137,8 +138,8 @@ def construct_model(input_shape,output_shape):
 
     mu = keras.layers.Dense(output_shape)(layer)
     sigma = keras.layers.Dense(output_shape, activation=lambda x: tf.nn.elu(x) + 1)(layer)
-    dist = tf.distributions.Normal(loc=mu, scale=sigma)
-
+    # dist = tf.distributions.Normal(loc=mu, scale=sigma)
+    tfp.layers.DistributionLambda(lambda t: tfd.Normal(loc=mu, scale=sigma))
     # Define custom loss
     def custom_loss(distance):
 
