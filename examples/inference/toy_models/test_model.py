@@ -43,7 +43,7 @@ print("shape yhat: ", yhat.shape)
 yhat = yhat.mean()
 print("type yhat: ", type(yhat))
 print("shape yhat: ", yhat.shape)
-yhat = np.asarray(yhat)
+yhat = yhat.eval()
 print("shape yhat: ", yhat.shape)
 
 plt.scatter(x_tst,yhat)
