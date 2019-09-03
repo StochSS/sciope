@@ -35,7 +35,7 @@ model.compile(optimizer=keras.optimizers.Adam(0.001), loss='mse')
 model.fit(x, y, epochs=5)#, verbose=False)
 
 # Make predictions.
-yhat = model(x_tst)
+yhat = model.predict(x_tst)
 
 plt.plot(x_tst,yhat)
 plt.plot(x_tst,y_tst)
