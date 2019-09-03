@@ -139,7 +139,7 @@ def construct_model(input_shape,output_shape):
     mu = keras.layers.Dense(output_shape)(layer)
     sigma = keras.layers.Dense(output_shape, activation=lambda x: tf.nn.elu(x) + 1)(layer)
     # dist = tf.distributions.Normal(loc=mu, scale=sigma)
-    tfp.layers.DistributionLambda(lambda t: tfd.Normal(loc=mu, scale=sigma))
+    dist = tfp.layers.DistributionLambda(lambda t: tfd.Normal(loc=mu, scale=sigma))
     # Define custom loss
     def custom_loss(distance):
 
