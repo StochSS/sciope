@@ -37,8 +37,10 @@ model.compile(optimizer=keras.optimizers.Adam(0.001), loss='mse')
 model.fit(x, y, epochs=5)#, verbose=False)
 
 # Make predictions.
-yhat = model(x_tst).mean()
-
+yhat = model(x_tst)
+print("type yhat: ", type(yhat))
+print("shape yhat: ", yhat.shape)
+yhat = yhat.mean()
 print("type yhat: ", type(yhat))
 print("shape yhat: ", yhat.shape)
 yhat = np.asarray(yhat)
