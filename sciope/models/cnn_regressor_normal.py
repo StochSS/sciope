@@ -133,7 +133,7 @@ def construct_model(input_shape,output_shape):
         layer = keras.layers.Activation(dense_activation)(layer)
     
     #Add output layer without Activation or Batch Normalization
-    # layer = keras.layers.Dense(output_shape)(layer)
+    layer = keras.layers.Dense(output_shape)(layer)
 
     mu = tf.layers.Dense(output_shape)(layer)
     sigma = tf.layers.Dense(output_shape, activation=lambda x: tf.nn.elu(x) + 1)(layer)
@@ -150,7 +150,7 @@ def construct_model(input_shape,output_shape):
         return loss
 
 
-    model = keras.models.Model(inputs=input, outputs=mu)
+    model = keras.models.Model(inputs=input, outputs=layer)
     #Using Adam optimizer with learning rate 0.001 
     model.compile(optimizer=keras.optimizers.Adam(0.001), 
               loss=custom_loss(dist),metrics=['mae'])
