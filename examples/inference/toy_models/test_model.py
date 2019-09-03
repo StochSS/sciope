@@ -1,8 +1,8 @@
 import tensorflow as tf
 from tensorflow import keras
-import tensorflow_probability as tfp
+# import tensorflow_probability as tfp
 import numpy as np
-tfd = tfp.distributions
+# tfd = tfp.distributions
 import matplotlib.pyplot as plt
 
 
@@ -22,7 +22,7 @@ print("x shape: ", x.shape)
 
 
 # Build model.
-negloglik = lambda y, p_y: -p_y.log_prob(y)
+# negloglik = lambda y, p_y: -p_y.log_prob(y)
 
 model = tf.keras.Sequential([
   keras.layers.Dense(1)
