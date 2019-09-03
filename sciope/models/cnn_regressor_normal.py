@@ -127,7 +127,7 @@ def construct_model(input_shape,output_shape):
     layer = keras.layers.Flatten()(layer)
     
     #Add 3 layers of Dense layers with activation function and Batch Norm.
-    for i in range(1,3):
+    for i in range(1, 3):
         layer = keras.layers.Dense(100)(layer)
         layer = keras.layers.BatchNormalization(momentum=batch_mom)(layer)
         layer = keras.layers.Activation(dense_activation)(layer)
