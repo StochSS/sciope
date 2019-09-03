@@ -152,9 +152,10 @@ def construct_model(input_shape,output_shape):
 
 
     model = keras.models.Model(inputs=input, outputs=layer)
-    #Using Adam optimizer with learning rate 0.001 
+    #Using Adam optimizer with learning rate 0.001
+    negloglik = lambda y, p_y: -p_y.log_prob(y)
     model.compile(optimizer=keras.optimizers.Adam(0.001), 
-              loss=custom_loss(dist),metrics=['mae'])
+              loss=negloglik, metrics=['mae'])
     model.summary()
     return model  
     
