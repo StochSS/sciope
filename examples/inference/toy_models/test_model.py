@@ -19,6 +19,8 @@ x_tst,y_tst = gen_data(100)
 
 
 # Build model.
+negloglik = lambda y, p_y: -p_y.log_prob(y)
+
 model = tf.keras.Sequential([
   tf.keras.layers.Dense(1),
   tfp.layers.DistributionLambda(lambda t: tfd.Normal(loc=t, scale=1)),
