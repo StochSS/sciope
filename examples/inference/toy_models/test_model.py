@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 # Def a linear data generator with gaussian noise
 def gen_data(n=1000, m=2, k=4):
-    x=np.random.rand(n)
-    y=k*x + m + np.random.normal(0,1,n)
+    x=np.random.rand(n,1)
+    y=k*x + m + np.random.normal(0,1,(n,1))
     return x,y
 
 
