@@ -143,8 +143,8 @@ def construct_model(input_shape,output_shape):
     def custom_loss(distance):
 
         # Create a loss function that adds the MSE loss to the mean of all squared activations of a specific layer
-        def loss(y):
-            return tf.reduce_mean(-distance.log_prob(y))
+        def loss(y_true,y_pred):
+            return tf.reduce_mean(-distance.log_prob(y_true))
 
         # Return a function
         return loss
