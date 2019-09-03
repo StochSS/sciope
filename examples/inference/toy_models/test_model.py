@@ -37,7 +37,10 @@ model.compile(optimizer=keras.optimizers.Adam(0.001), loss='mse')
 model.fit(x, y, epochs=5)#, verbose=False)
 
 # Make predictions.
-yhat = model.predict(x_tst)
+yhat = model(x_tst)
+
+print("type yhat: ", type(yhat))
+print("shape yhat: ", yhat.shape)
 
 plt.scatter(x_tst,yhat)
 plt.scatter(x_tst,y_tst)
