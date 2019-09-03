@@ -16,6 +16,8 @@ def gen_data(n=1000, m=2, k=4):
 x,y = gen_data(100000)
 
 x_tst,y_tst = gen_data(100)
+print("y shape: ", y.shape)
+print("x shape: ", x.shape)
 
 
 # Build model.
