@@ -31,7 +31,7 @@ model = tf.keras.Sequential([
 ])
 
 # Do inference.
-model.compile(optimizer=keras.optimizers.Adam(0.001), loss=negloglik)
+model.compile(optimizer=keras.optimizers.Adam(0.001), loss='mse')
 model.fit(x, y, epochs=500, verbose=False)
 
 # Make predictions.
