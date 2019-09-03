@@ -34,7 +34,7 @@ model = tf.keras.Sequential([
 
 # Do inference.
 model.compile(optimizer=keras.optimizers.Adam(0.001), loss='mse')
-model.fit(x, y, epochs=5)#, verbose=False)
+model.fit(x, y, epochs=1)#, verbose=False)
 
 # Make predictions.
 yhat = model(x_tst)
@@ -43,7 +43,7 @@ print("shape yhat: ", yhat.shape)
 yhat = yhat.mean()
 print("type yhat: ", type(yhat))
 print("shape yhat: ", yhat.shape)
-yhat = yhat.eval()
+yhat = keras.backend.eval(yhat)
 print("shape yhat: ", yhat.shape)
 
 plt.scatter(x_tst,yhat)
