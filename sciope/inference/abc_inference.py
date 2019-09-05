@@ -218,7 +218,7 @@ class ABC(InferenceBase):
                                                                                         params,
                                                                                         accepted_count, 
                                                                                         normalize)
-                    del dist, param
+                    del dist, param #TODO: remove all futures including simulation and summarystats
                     if accepted_count < num_samples:
                         new_chunk = core.get_graph_chunked(self.prior_function, self.sim, self.summaries_function,
                                         chunk_size, chunk_size)
