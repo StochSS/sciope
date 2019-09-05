@@ -49,39 +49,15 @@ class LotkaVolterra(gillespy2.Model):
         self.timespan(np.linspace(0, 30, 30))
 
 
-if __name__ == '__main__':
-    # Here, we create the model object.
-    # We could pass new parameter values to this model here if we wished.
-    model = LotkaVolterra()
-
-    # Specify the simulation density and sampling density
-    num_trajectories = 15
-    num_timestamps = 30
-
-    # Generate some data for parameter inference
-    model.tspan = np.linspace(1, 30, num_timestamps)
-    res = model.run(solver=StochKitSolver, show_labels=True, number_of_trajectories=num_trajectories)
-    A_trajectories = np.array([res[i]['A'] for i in range(num_trajectories)]).T
-    B_trajectories = np.array([res[i]['B'] for i in range(num_trajectories)]).T
-
-    # Write it to file
-    np.savetxt("lv_dataset15_t30_specieA.dat", A_trajectories, delimiter=",")
-    np.savetxt("lv_dataset15_t30_specieB.dat", B_trajectories, delimiter=",")
-
-
-def simulate(param, specie='A'):
-    # Assert that the specie label is valid
-    assert specie == 'A' or specie == 'B', 'Lotka-Volterra model, incorrect specie label specified.'
-
+def simulate(param):
     # Here, we create the model object.
     # We could pass new parameter values to this model here if we wished.
     model = LotkaVolterra(parameter_values=param)
 
     # Set up simulation density
     num_trajectories = 1
-    trajectories = model.run(solver=StochKitSolver, show_labels=True, number_of_trajectories=num_trajectories)
-
-    # extract just the trajectories for specie S into a numpy array
-    S_trajectories = np.array([trajectories[i][specie] for i in range(num_trajectories)]).T
-
-    return S_trajectories
+    sim_results = model.run(solver=StochKitSolver, show_labels=False, number_of_trajectories=num_trajectories)
+    tot_res = np.asarray([x.T for x in sim_results])  # reshape to (N, S, T)
+    tot_res = tot_res[:, 1:, :]  # should not contain timepoints
+    tot_res = tot_res.reshape((1, 2, 30))
+    return tot_res

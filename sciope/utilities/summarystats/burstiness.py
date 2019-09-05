@@ -18,7 +18,6 @@ The 'Burstiness' summary statistic
 # Imports
 import numpy as np
 import math as mt
-from dask import delayed
 from sciope.utilities.summarystats.summary_base import SummaryBase
 from sciope.utilities.housekeeping import sciope_logger as ml
 
@@ -50,26 +49,22 @@ class Burstiness(SummaryBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Burstiness summary statistic initialized")
 
-    @delayed
-    def compute(self, data):
+    def _compute(self, data):
         """
-        Calculate the value(s) of the summary statistic(s)
-        
+        Calculates the measure per specie
         Parameters
         ----------
         data : [type]
-            simulated or data set
-        
+            simulated or data set in the form N x S X T - num data points x num species x num time steps
+
         Returns
         -------
         [type]
             computed statistic value
-        
         """
-        data_arr = np.array(data)
         trajs = []
         for i in range(np.shape(data)[0]):
-            y = data_arr[i, :]
+            y = data[i, :]
             r = np.std(y) / np.mean(y)
             if not self.improvement:
                 # original burstiness due to Goh and Barabasi
@@ -83,6 +78,31 @@ class Burstiness(SummaryBase):
 
         out = np.array(trajs)
         res = np.reshape(out, (out.size, 1))
+        return res
+
+    def compute(self, data):
+        """
+        Calculate the value(s) of the summary statistic(s)
+        
+        Parameters
+        ----------
+        data : [type]
+            simulated or data set in the form N x S X T - num data points x num species x num time steps
+        
+        Returns
+        -------
+        [type]
+            computed statistic value
+        
+        """
+        data_arr = np.array(data)
+        assert len(data_arr.shape) == 3, "required input shape is (n_points, n_species, n_timepoints)"
+
+        res = []
+        for i in range(data_arr.shape[1]):
+            bs_value = self._compute(data_arr[:, i, :].reshape((data_arr.shape[0], data_arr.shape[2])))
+            res.append(bs_value.ravel())
+        res = np.asarray(res)
 
         if self.mean_trajectories:
             res = np.asarray(np.mean(res, axis=0))  # returns a scalar, so we cast it as an array
@@ -90,9 +110,4 @@ class Burstiness(SummaryBase):
         if self.use_logger:
             self.logger.info("Burstiness summary statistic: processed data matrix of shape {0} and generated summaries"
                              " of shape {1}".format(data.shape, res.shape))
-        if self.mean_trajectories:
-            np.testing.assert_equal(res.shape[0], 1, "Burstiness: expected summaries count mismatch!")
-        else:
-            np.testing.assert_equal(res.shape[0], data_arr.shape[0], "Burstiness: expected summaries count mismatch!")
         return res
-

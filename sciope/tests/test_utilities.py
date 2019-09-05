@@ -15,9 +15,7 @@
 Test suite for utilities - distance functions, MABs, prior functions and summary statistics
 """
 from sciope.utilities.distancefunctions import euclidean, manhattan, naive_squared
-from sciope.utilities.mab import mab_direct, mab_incremental, mab_halving, mab_sar
 from sciope.utilities.priors import uniform_prior
-from sciope.utilities.summarystats import burstiness, global_max, global_min, temporal_mean, temporal_variance
 from sciope.utilities.summarystats import auto_tsfresh
 from sciope.core import core
 from dask.distributed import Client
@@ -60,7 +58,7 @@ def test_uniform_prior():
     num_samples = 5
     prior_func = uniform_prior.UniformPrior(lb, ub)
 
-    #multiprocessing mode
+    # multiprocessing mode
     samples = prior_func.draw(num_samples, chunk_size=1)
     assert len(samples) == 5, "UniformPrior functional test error, expected chunk count mismatch"
     samples, = dask.compute(samples)
@@ -73,8 +71,8 @@ def test_uniform_prior():
     axis_maxs = np.max(samples, 0)
     assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
         "UniformPrior functional test error, drawn samples out of bounds"
-    
-    #Cluster mode
+
+    # Cluster mode
     c = Client()
     samples = prior_func.draw(num_samples, chunk_size=1)
     assert len(samples) == 5, "UniformPrior functional test error, expected chunk count mismatch"
@@ -89,7 +87,7 @@ def test_uniform_prior():
     assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
         "UniformPrior functional test error, drawn samples out of bounds"
 
-    #chunk_size = 2
+    # chunk_size = 2
     samples = prior_func.draw(num_samples, chunk_size=2)
     assert len(samples) == 3, "UniformPrior functional test error, expected chunk count mismatch"
     samples, = dask.compute(samples)
@@ -138,7 +136,7 @@ def test_uniform_prior_with_logging():
     num_samples = 5
     prior_func = uniform_prior.UniformPrior(lb, ub, use_logger=True)
 
-    #multiprocessing mode
+    # multiprocessing mode
     samples = prior_func.draw(num_samples, chunk_size=1)
     assert len(samples) == 5, "UniformPrior functional test error, expected chunk count mismatch"
     samples, = dask.compute(samples)
@@ -151,8 +149,8 @@ def test_uniform_prior_with_logging():
     axis_maxs = np.max(samples, 0)
     assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
         "UniformPrior functional test error, drawn samples out of bounds"
-    
-    #Cluster mode
+
+    # Cluster mode
     c = Client()
     samples = prior_func.draw(num_samples, chunk_size=1)
     assert len(samples) == 5, "UniformPrior functional test error, expected chunk count mismatch"
@@ -167,7 +165,7 @@ def test_uniform_prior_with_logging():
     assert axis_mins[0] > lb[0] and axis_maxs[0] < ub[0] and axis_mins[1] > lb[1] and axis_maxs[1] < ub[1], \
         "UniformPrior functional test error, drawn samples out of bounds"
 
-    #chunk_size = 2
+    # chunk_size = 2
     samples = prior_func.draw(num_samples, chunk_size=2)
     assert len(samples) == 3, "UniformPrior functional test error, expected chunk count mismatch"
     samples, = dask.compute(samples)
@@ -185,37 +183,36 @@ def test_uniform_prior_with_logging():
 
 def test_summarystats_auto_tsfresh():
     samples = np.random.randn(2, 2, 10)
-    #corrcoef = False, will compute mean
+    # corrcoef = False, will compute mean
     at = auto_tsfresh.SummariesTSFRESH()
     stats = at.compute(samples)
     assert stats.shape == (1, 14), "summarystats auto_tsfresh test failed, dimension mismatch"
 
-    #corrcoef = True
+    # corrcoef = True
     at.corrcoef = True
     stats = at.compute(samples)
     assert stats.shape == (1, 15), "summarystats auto_tsfresh test failed, dimension mismatch"
 
     samples = np.random.randn(2, 3, 10)
-    #corrcoef = True
+    # corrcoef = True
     at.corrcoef = True
     stats = at.compute(samples)
-    assert stats.shape == (1, 21+3), "summarystats auto_tsfresh test failed, dimension mismatch"
+    assert stats.shape == (1, 21 + 3), "summarystats auto_tsfresh test failed, dimension mismatch"
 
     samples = np.random.randn(1, 1, 10)
-    #corrcoef = False, will compute mean
+    # corrcoef = False, will compute mean
     at = auto_tsfresh.SummariesTSFRESH()
     stats = at.compute(samples)
     assert stats.shape == (1, 7), "summarystats auto_tsfresh test failed, dimension mismatch"
 
-    #corrcoef = True, should raise AssertionError
+    # corrcoef = True, should raise AssertionError
     at.corrcoef = True
     with pytest.raises(AssertionError) as excinfo:
         stats = at.compute(samples)
     assert "corrcoef = True can only be used if the n_species > 1" in str(excinfo.value)
 
-    #input wrong shape, should rasie AssertionError
+    # input wrong shape, should rasie AssertionError
     samples = np.random.randn(1, 10)
     with pytest.raises(AssertionError) as excinfo:
         stats = at.compute(samples)
     assert "required input shape is (n_points, n_species, n_timepoints)" in str(excinfo.value)
-    
