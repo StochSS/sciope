@@ -66,13 +66,18 @@ abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 
+test_pred = nnm.predict(test_ts)
+
+test_mae = np.mean(abs(normalize_data(test_thetas,dmin,dmax)-test_pred))
+print("test mae: ", test_mae)
+
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
-print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
-print("abc_trial_ts shape: ", abc_trial_ts.shape)
+# print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
+# print("abc_trial_ts shape: ", abc_trial_ts.shape)
 abc_trial_thetas = np.concatenate((abc_trial_thetas,train_thetas,test_thetas),axis=0)
 abc_trial_ts = np.concatenate((abc_trial_ts,train_ts,test_ts),axis=0)
-print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
-print("abc_trial_ts shape: ", abc_trial_ts.shape)
+# print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
+# print("abc_trial_ts shape: ", abc_trial_ts.shape)
 
 abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
 abc_trial_pred = nnm.predict(abc_trial_ts)
