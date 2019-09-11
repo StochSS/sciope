@@ -57,7 +57,11 @@ data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 print("data pred shape: ", data_pred.shape)
 print("data_pred mae: ", np.mean(abs(data_pred - normalize_data(true_param, dmin, dmax))))
+abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
+abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
+abc_trial_pred = nnm.predict(abc_trial_ts)
 
+abc_trial_pred_denorm = denormalize_data(abc_trial_pred,dmin,dmax)
 
 
 
@@ -80,7 +84,7 @@ for i in range(15):
 
 
 plt.axis('equal')
-f, ax = plt.subplots(1,15,figsize=(90,20))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(5,15,figsize=(90,20))# ,sharex=True,sharey=True)
 # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
@@ -104,15 +108,19 @@ def nnlf(params, data,lower,upper):
 
 for x in range(15):
 
-    ret = ax[x].hist(data_pred_denorm[:, x], density=True, color='green')
+    ret = ax[0,x].hist(data_pred_denorm[:, x], density=True, color='green')
     peak_val = np.max(ret[0])
 
-    ax[x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
-    # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-    # ax[y, x].plot([data_pred_denorm[y,x], data_pred_denorm[y,x]], [0,peak_val], c='gray', ls='--')
+    ax[0,x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
+    ax[0,x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
+    ax[0,x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
-    ax[x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
-    ax[x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
+    ret = ax[1, x].hist(abc_trial_pred_denorm[:, x], density=True, color='green')
+    peak_val = np.max(ret[0])
+
+    ax[1, x].plot([true_param[x], true_param[x]], [0, peak_val], c='black', lw=4)
+    ax[1, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
+    ax[1, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
     # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(data_pred_denorm[:, x]), np.std(data_pred_denorm[:, x])),
     #                                    args=(data_pred_denorm[:, x],dmin[x],dmax[x]), disp=False)
@@ -138,5 +146,5 @@ for x in range(15):
 
 
 
-plt.savefig('posterior_abc7_clean')
+plt.savefig('posterior_abc_predict')
 
