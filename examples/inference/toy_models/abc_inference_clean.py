@@ -145,7 +145,7 @@ for accepted_para_ in accepted_para:
         print("y,x: ", x, y, ", peak_val: ", peak_val)
         ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
         # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-        ax[y, x].plot([data_pred_denorm[y,x], data_pred_denorm[y,x]], [0,peak_val], c='orange', ls='--')
+        ax[y, x].plot([data_pred_denorm[y,x], data_pred_denorm[y,x]], [0,peak_val], c='gray', ls='--')
 
         ax[y, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
         ax[y, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
@@ -184,10 +184,11 @@ print("im_post shape: ", im_post.shape)
 for x in range(15):
 
     peak_val=np.max(im_post[x])
+    l = np.linspace(dmin[x], dmax[x], 100)
     ax[5, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
     ax[5, x].plot(l, im_post[x])
-    ax[5, x].plot([1, 1], [0, peak_val], c='b')
-    ax[5, x].plot([0, 0], [0, peak_val], c='b')
+    ax[5, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
+    ax[5, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
 
 plt.savefig('posterior_abc7_clean')
