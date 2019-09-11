@@ -73,6 +73,13 @@ abc_trial_pred = nnm.predict(abc_trial_ts)
 
 abc_trial_pred_denorm = denormalize_data(abc_trial_pred,dmin,dmax)
 
+alt_param = np.ones(15)*0.8
+alt_param_denorm = denormalize_data(alt_param,dmin,dmax)
+alt_data = np.array([np.squeeze(simulate(alt_param)) for i in range(1000)])
+alt_data_pred = nnm.predict(alt_data)
+alt_data_pred = np.squeeze(alt_data_pred)
+alt_data_pred_denorm = denormalize_data(alt_data_pred,dmin,dmax)
+print("data_pred mae: ", np.mean(abs(data_pred - normalize_data(true_param, dmin, dmax))))
 
 
 para_names = vilar.get_parameter_names()
@@ -138,6 +145,13 @@ for x in range(15):
     ax[2, x].plot([true_param[x], true_param[x]], [0, peak_val], c='black', lw=4)
     ax[2, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
     ax[2, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
+
+    ret = ax[3, x].hist(alt_data_pred_denorm[:, x], density=True, color='green')
+    peak_val = np.max(ret[0])
+
+    ax[3, x].plot([alt_param_denorm[x], alt_param_denorm[x]], [0, peak_val], c='black', lw=4)
+    ax[3, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
+    ax[3, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
     # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(data_pred_denorm[:, x]), np.std(data_pred_denorm[:, x])),
     #                                    args=(data_pred_denorm[:, x],dmin[x],dmax[x]), disp=False)
