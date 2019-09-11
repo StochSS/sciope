@@ -67,6 +67,16 @@ data_pack_pred_denorm = denormalize_data(data_pack_pred,dmin,dmax)
 
 print("data pack_pred mae: ", np.mean(abs(data_pack_pred - normalize_data(true_param, dmin, dmax))))
 
+f, ax = plt.subplots(2,1,figsize=(90,20))# ,sharex=True,sharey=True)
+
+for i in range(3):
+    ax[0].plot(data[0,:,i])
+    ax[1].plot(data_pack[0,:,i])
+
+plt.savefig('timeserie_check')
+
+
+
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
