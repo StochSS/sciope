@@ -68,17 +68,17 @@ test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
 print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
 print("abc_trial_ts shape: ", abc_trial_ts.shape)
-abc_trial_thetas = np.concatenate((abc_trial_thetas,train_thetas,test_thetas),axis=0)
-abc_trial_ts = np.concatenate((abc_trial_ts,train_ts,test_ts),axis=0)
+# abc_trial_thetas = np.concatenate((abc_trial_thetas,train_thetas,test_thetas),axis=0)
+# abc_trial_ts = np.concatenate((abc_trial_ts,train_ts,test_ts),axis=0)
 print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
 print("abc_trial_ts shape: ", abc_trial_ts.shape)
 
-abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
-abc_trial_pred = nnm.predict(abc_trial_ts)
+# abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
+abc_trial_pred = nnm.predict(normalize_data(abc_trial_thetas,dmin,dmax))
 mean_dev = np.mean(abs(abc_trial_thetas-abc_trial_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
-nr_of_accept = 1000
+nr_of_accept = 100
 nr_of_trial = abc_trial_thetas.shape[0]
 
 
@@ -141,8 +141,8 @@ for accepted_para_ in accepted_para:
         # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
         ax[y, x].plot([data_pred[y,x], data_pred[y,x]], [0,peak_val], c='gray', ls='--')
 
-        ax[y, x].plot([1, 1], [0, peak_val], c='b')
-        ax[y, x].plot([0, 0], [0, peak_val], c='b')
+        ax[y, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
+        ax[y, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
         loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para_[:, x]), np.std(accepted_para_[:, x])),
                                            args=(accepted_para_[:, x],), disp=False)
