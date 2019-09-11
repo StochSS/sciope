@@ -54,6 +54,7 @@ print("data shape: ", data.shape)
 print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
+data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 print("data pred shape: ", data_pred.shape)
 print("data_pred.std: ", np.std(data_pred,axis=0))
 print("data.std: ", np.mean(np.std(data,axis=0)))
@@ -75,10 +76,11 @@ print("abc_trial_ts shape: ", abc_trial_ts.shape)
 
 # abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
 abc_trial_pred = nnm.predict(abc_trial_ts)
+
 mean_dev = np.mean(abs(normalize_data(abc_trial_thetas,dmin,dmax)-abc_trial_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
-nr_of_accept = 100
+nr_of_accept = 1000
 nr_of_trial = abc_trial_thetas.shape[0]
 
 
@@ -143,7 +145,7 @@ for accepted_para_ in accepted_para:
         print("y,x: ", x, y, ", peak_val: ", peak_val)
         ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
         # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-        # ax[y, x].plot([data_pred[y,x], data_pred[y,x]], [0,peak_val], c='orange', ls='--')
+        ax[y, x].plot([data_pred_denorm[y,x], data_pred_denorm[y,x]], [0,peak_val], c='orange', ls='--')
 
         ax[y, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
         ax[y, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
