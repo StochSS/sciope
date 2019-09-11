@@ -18,17 +18,18 @@ class ANNModel(ModelBase):
     We use keras to define CNN and DNN layers to the model
     """
 
-    def __init__(self, use_logger=False, input_shape=(499, 3), output_shape=15):
-        self.name = 'CNNModel'
+    def __init__(self, use_logger=False, input_shape=(499, 3), output_shape=15, modelname="None"):
+        self.name = 'DNNModel'
+        self.modelname = modelname
         super(ANNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
         self.model = construct_model(input_shape, output_shape)
-        self.save_as = 'saved_models/dnn'
+        self.save_as = 'saved_models/'  + self.modelname + "_" +  self.name
 
     # train the ANN model given the data
-    def train(self, inputs, targets, validation_inputs, validation_targets, batch_size, epochs,
+    def train(self, inputs, targets, validation_inputs, validation_targets, batch_size, epochs, learning_rate = 0.001,
               save_model=True, plot_training_progress=False):
         if save_model:
             mcp_save = keras.callbacks.ModelCheckpoint(self.save_as + '.hdf5',
@@ -36,7 +37,9 @@ class ANNModel(ModelBase):
                                                        monitor='val_loss',
                                                        mode='min')
 
-
+        # Using Adam optimizer with learning rate 0.001
+        self.model.compile(optimizer=keras.optimizers.Adam(learning_rate),
+                      loss='mean_squared_error', metrics=['mae'])
 
         # train 40 epochs with batch size = 32
         history1 = self.model.fit(
@@ -90,9 +93,7 @@ def construct_model(input_shape, output_shape):
     # Add output layer without Activation or Batch Normalization
     model.add(keras.layers.Dense(output_shape))
 
-    # Using Adam optimizer with learning rate 0.001
-    model.compile(optimizer=keras.optimizers.Adam(0.001),
-                  loss='mean_squared_error', metrics=['mae'])
+
     model.summary()
     return model
 

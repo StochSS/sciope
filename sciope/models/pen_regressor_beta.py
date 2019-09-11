@@ -31,9 +31,11 @@ class PEN_CNNModel(ModelBase):
 
 
     # train the CNN model given the data
-    def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs,
+    def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs, learning_rate=0.001,
              save_model = True, plot_training_progress=False):
 
+        self.model.compile(optimizer=keras.optimizers.Adam(learning_rate),
+                      loss='mean_squared_error', metrics=['mae'])
         if save_model:
             mcp_save = keras.callbacks.ModelCheckpoint(self.save_as+'.hdf5',
                                                        save_best_only=True, 
@@ -83,7 +85,7 @@ def construct_model(input_shape, output_shape, pen_nr = 3):
     padding = 'same'
     poolpadding = 'valid'
     con_len = 1
-    lay_size = [25, 50*12, 100*12, 100, 100, 100]
+    lay_size = [25, 50, 100, 100, 100, 100]
     maxpool = con_len
     levels=3
     batch_mom = 0.99
@@ -142,8 +144,7 @@ def construct_model(input_shape, output_shape, pen_nr = 3):
 
         
     #Using Adam optimizer with learning rate 0.001 
-    model.compile(optimizer=keras.optimizers.Adam(0.001), 
-              loss='mean_squared_error',metrics=['mae'])
+
     model.summary()
     return model  
     

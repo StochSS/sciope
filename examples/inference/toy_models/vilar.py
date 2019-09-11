@@ -21,7 +21,9 @@ from gillespy2.solvers.stochkit import StochKitSolver
 
 import os
 
+
 class Vilar_model:
+
 
     def __init__(self,num_timestamps=401, endtime=200):
         self.num_timestamps = num_timestamps
