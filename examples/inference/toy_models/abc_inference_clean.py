@@ -48,7 +48,7 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 
 simulate = Vilar_.simulate
 print("before simulation")
-data = np.array([np.squeeze(simulate(denormalize_data(true_param,dmin,dmax))) for i in range(5)])
+data = np.array([np.squeeze(simulate(normalize_data(true_param,dmin,dmax))) for i in range(5)])
 print("data shape: ", data.shape)
 
 print("data shape: ", data.shape)
