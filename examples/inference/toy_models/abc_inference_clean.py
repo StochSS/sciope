@@ -74,8 +74,8 @@ print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
 print("abc_trial_ts shape: ", abc_trial_ts.shape)
 
 # abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
-abc_trial_pred = nnm.predict(normalize_data(abc_trial_thetas,dmin,dmax))
-mean_dev = np.mean(abs(abc_trial_thetas-abc_trial_pred), axis=0)
+abc_trial_pred = nnm.predict(abc_trial_ts)
+mean_dev = np.mean(abs(normalize_data(abc_trial_thetas,dmin,dmax)-abc_trial_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
 nr_of_accept = 100
