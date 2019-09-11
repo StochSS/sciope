@@ -113,7 +113,7 @@ print("dist shape: ", dist.shape)
 accepted_ind =np.array([np.argpartition(dist_,nr_of_accept)[0:nr_of_accept] for dist_ in dist])
 print("accepted_ind shape: ", accepted_ind.shape)
 
-accepted_para = np.array([ abc_trial_thetas[accepted_ind_] for accepted_ind_ in accepted_ind])
+accepted_para = np.array([abc_trial_thetas[accepted_ind_] for accepted_ind_ in accepted_ind])
 # accepted_mean = np.mean(accepted_para, axis=0)
 
 lower, upper = 0, 1
@@ -135,13 +135,14 @@ for accepted_para_ in accepted_para:
     print("accepted_para_ shape: ", accepted_para_.shape)
     print("y: ", y)
     for x in range(15):
-
+        print("accepted para mean: ", np.mean(accepted_para_[:, x]))
+        print("data pred: ", data_pred[y,x], ", true_param: ", true_param[x])
         ret = ax[y, x].hist(accepted_para_[:, x], density=True, bins=bins, color='green')
         peak_val = np.max(ret[0])
         print("y,x: ", x, y, ", peak_val: ", peak_val)
         ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
         # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-        ax[y, x].plot([data_pred[y,x], data_pred[y,x]], [0,peak_val], c='orange', ls='--')
+        # ax[y, x].plot([data_pred[y,x], data_pred[y,x]], [0,peak_val], c='orange', ls='--')
 
         ax[y, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
         ax[y, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
