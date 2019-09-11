@@ -56,8 +56,7 @@ data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 print("data pred shape: ", data_pred.shape)
-print("data_pred.std: ", np.std(data_pred,axis=0))
-print("data.std: ", np.mean(np.std(data,axis=0)))
+print("data_pred mae: ", np.mean(abs(data_pred - normalize_data(true_param, dmin, dmax)), axis=0))
 
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
