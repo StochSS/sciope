@@ -59,6 +59,7 @@ data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 print("data_pred mae: ", np.mean(abs(data_pred - normalize_data(true_param, dmin, dmax))))
+print("data shape: ", data.shape)
 
 data_pack = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
 data_pack_pred = nnm.predict(data_pack)
