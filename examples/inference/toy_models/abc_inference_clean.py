@@ -116,10 +116,11 @@ print("accepted_ind shape: ", accepted_ind.shape)
 accepted_para = np.array([abc_trial_thetas[accepted_ind_] for accepted_ind_ in accepted_ind])
 # accepted_mean = np.mean(accepted_para, axis=0)
 
-lower, upper = 0, 1
+# lower, upper = 0, 1
 print("true param: ", true_param)
 def nnlf(params, data,lower,upper):
     # print("inside nnlf: data shape: ", data.shape)
+    print("inside nnlf: lower, upper ", lower, upper)
     loc, scale = params
     left_trunc_norm = (lower - loc)/scale
     right_trunc_norm = (upper - loc) / scale
