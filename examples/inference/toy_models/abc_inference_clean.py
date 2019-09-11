@@ -161,10 +161,10 @@ for accepted_para_ in accepted_para:
         col ='red'
         if loc_opt<dmin[x] or loc_opt>dmax[x]:
             col = 'orange'
-            if loc_opt<lower:
-                loc_opt=lower
-            if loc_opt>upper:
-                loc_opt=upper
+            if loc_opt<dmin[x]:
+                loc_opt=dmin[x]
+            if loc_opt>dmax[x]:
+                loc_opt=dmax[x]
         ax[y, x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
         abc_pred[y,x]=loc_opt
         if y == 4:
