@@ -119,7 +119,8 @@ accepted_para = np.array([ abc_trial_thetas[accepted_ind_] for accepted_ind_ in 
 lower, upper = 0, 1
 print("true param: ", true_param)
 def nnlf(params, data):
-    loc, scale, lower, upper = params
+    print("inside nnlf: data shape: ", data.shape)
+    loc, scale = params
     left_trunc_norm = (lower - loc)/scale
     right_trunc_norm = (upper - loc) / scale
     theta = (left_trunc_norm, right_trunc_norm, loc, scale)
@@ -144,8 +145,8 @@ for accepted_para_ in accepted_para:
         ax[y, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
         ax[y, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
-        loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para_[:, x]), np.std(accepted_para_[:, x]), dmin[x], dmax[x]),
-                                           args=(accepted_para_[:, x],), disp=False)
+        loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para_[:, x]), np.std(accepted_para_[:, x])),
+                                           args=(accepted_para_[:, x],dmin[x],dmax[x]), disp=False)
 
         left_trunc_norm = (lower - loc_opt) / scale_opt
         right_trunc_norm = (upper - loc_opt) / scale_opt
