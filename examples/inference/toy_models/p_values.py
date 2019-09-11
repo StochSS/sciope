@@ -30,28 +30,28 @@ def trunc_norm_pvalue(x,loc, scale, dmin, dmax):
 
 
 # test
-dims=3
-center = np.random.rand(dims)
-dmin = np.random.rand(dims)*center
-dmax = center + np.random.rand(dims)*(1-center)
-dmin = np.ones(dims)*(-10000)
-dmax = np.ones(dims)*(10000)
-
-mean = np.random.rand(dims)*(dmax-dmin)+dmin
-
-std = np.random.rand(dims)
-
-
-d=truncnorm.rvs((dmin-mean)/std, (dmax-mean)/std, loc=mean, scale=std, size=(10,dims), random_state=None)
-print("dmin, dmax: ", dmin, dmax, ", mean, std: ", mean, std)
+# dims=3
+# center = np.random.rand(dims)
+# dmin = np.random.rand(dims)*center
+# dmax = center + np.random.rand(dims)*(1-center)
+# dmin = np.ones(dims)*(-10000)
+# dmax = np.ones(dims)*(10000)
+#
+# mean = np.random.rand(dims)*(dmax-dmin)+dmin
+#
+# std = np.random.rand(dims)
+#
+#
+# d=truncnorm.rvs((dmin-mean)/std, (dmax-mean)/std, loc=mean, scale=std, size=(10,dims), random_state=None)
+# print("dmin, dmax: ", dmin, dmax, ", mean, std: ", mean, std)
 
 # plt.hist(d,bins=100)
 # plt.show()
-print("d shape: ", d.shape)
-pval_d = trunc_norm_pvalue(d,mean,std,dmin,dmax)
-print("pval shape: ", pval_d.shape)
-print("pval: ", pval_d[0:15])
-print("mean pval: ", np.mean(pval_d))
+# print("d shape: ", d.shape)
+# pval_d = trunc_norm_pvalue(d,mean,std,dmin,dmax)
+# print("pval shape: ", pval_d.shape)
+# print("pval: ", pval_d[0:15])
+# print("mean pval: ", np.mean(pval_d))
 # for i in range(dims):
 #     print("pval(", i, "): ", trunc_norm_pvalue(mean[i],mean[i],std[i],dmin[i],dmax[i]))
 # print("pval(0.2): ", trunc_norm_pvalue(np.ones(dims)*0.2,mean,std,dmin,dmax))
