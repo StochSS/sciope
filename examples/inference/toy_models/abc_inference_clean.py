@@ -40,7 +40,7 @@ print("true_param shape: ", true_param.shape)
 num_timestamps=401
 endtime=200
 
-true_param = np.ones((15))*0.8
+# true_param = np.ones((15))*0.8
 
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
