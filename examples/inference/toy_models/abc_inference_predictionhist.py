@@ -107,15 +107,15 @@ def nnlf(params, data,lower,upper):
 
 
 for x in range(15):
-    bins = np.linspace(dmin[x],dmax[x],10)
-    ret = ax[0,x].hist(data_pred_denorm[:, x],bins=bins, density=True, color='green')
+    bins = np.linspace(dmin[x],dmax[x],25)
+    ret = ax[0,x].hist(data_pred_denorm[:, x], density=True, color='green')
     peak_val = np.max(ret[0])
 
     ax[0,x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
     ax[0,x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
     ax[0,x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
-    ret = ax[1, x].hist(abc_trial_pred_denorm[:, x], density=True, color='green')
+    ret = ax[1, x].hist(abc_trial_pred_denorm[:, x], density=True, bins=bins, color='green')
     peak_val = np.max(ret[0])
 
     ax[1, x].plot([true_param[x], true_param[x]], [0, peak_val], c='black', lw=4)
