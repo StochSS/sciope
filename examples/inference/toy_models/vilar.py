@@ -101,7 +101,9 @@ class Vilar_model:
         species_list = ['C','A','R']
         # extract just the trajectories for Specie A with index 8 into a numpy array
         print("simple traj type: ", type(simple_trajectories[0]), ", len: ", len(simple_trajectories[0]))
-        s_trajectories = np.array(simple_trajectories[:, species_list])
+        s_trajectories = np.array([simple_trajectories[s] for s in species_list])
+        print("s traj shape: ", s_trajectories.shape)
+
 
         return s_trajectories.T
 
