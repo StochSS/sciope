@@ -94,13 +94,14 @@ class Vilar_model:
         # Set up simulation density
         num_sim_trajectories = 1
         model.tspan = np.linspace(0, endtime, num_timestamps)
-        simple_trajectories = model.run(solver=StochKitSolver, show_labels=True, number_of_trajectories=num_sim_trajectories)
+        simple_trajectories = model.run(solver=StochKitSolver, show_labels=True, number_of_trajectories=1)
 
         # extract time values
         #time = np.array(simple_trajectories[0][:, 0])
         species_list = ['C','A','R']
         # extract just the trajectories for Specie A with index 8 into a numpy array
-        s_trajectories = np.array([simple_trajectories[i][:, species_list] for i in range(num_sim_trajectories)]).T
+        print("simple traj type: ", type(simple_trajectories), ", len: ", len(simple_trajectories))
+        s_trajectories = np.array(simple_trajectories[:, species_list])
 
         return s_trajectories.T
 
