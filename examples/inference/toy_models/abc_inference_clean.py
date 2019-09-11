@@ -159,7 +159,7 @@ for accepted_para_ in accepted_para:
         density_functions[y,x]=p
         ax[y, x].plot(l, p)
         col ='red'
-        if loc_opt<lower or loc_opt>upper:
+        if loc_opt<dmin[x] or loc_opt>dmax[x]:
             col = 'orange'
             if loc_opt<lower:
                 loc_opt=lower
