@@ -48,7 +48,12 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 
 
 simulate = Vilar_.simulate
+
+print("true param normalized: ")
+for nd in normalize_data(true_param,dmin,dmax):
+    print(": ", nd)
 print("before simulation")
+
 data = np.array([np.squeeze(simulate(normalize_data(true_param,dmin,dmax))) for i in range(1000)])
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
