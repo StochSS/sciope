@@ -172,12 +172,14 @@ for accepted_para_ in accepted_para:
             ax[0, x].set_title(para_names[x] + ", mae: " + '{0:.3f}'.format(mae) + "\n me: " + '{0:.3f}'.format(me))
     y+=1
 
+
+im_post = np.prod(density_functions,axis=0)
+print("im_post shape: ", im_post.shape)
 for x in range(15):
-    im_post = np.prod(density_functions,axis=0)
-    print("im_post shape: ", im_post.shape)
-    peak_val=1
+
+    peak_val=np.max(im_post[x])
     ax[5, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
-    ax[5, x].plot(l, p[])
+    ax[5, x].plot(l, im_post[x])
     ax[5, x].plot([1, 1], [0, peak_val], c='b')
     ax[5, x].plot([0, 0], [0, peak_val], c='b')
 
