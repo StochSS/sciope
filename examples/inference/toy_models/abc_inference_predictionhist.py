@@ -114,23 +114,23 @@ for x in range(15):
     ax[x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
     ax[x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
-    loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(data_pred_denorm[:, x]), np.std(data_pred_denorm[:, x])),
-                                       args=(data_pred_denorm[:, x],dmin[x],dmax[x]), disp=False)
-
-    left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
-    right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
-
-    l = np.linspace(dmin[x], dmax[x], 1000)
-    p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-    ax[x].plot(l, p)
-    col ='red'
-    if loc_opt<dmin[x] or loc_opt>dmax[x]:
-        col = 'orange'
-        if loc_opt<dmin[x]:
-            loc_opt=dmin[x]
-        if loc_opt>dmax[x]:
-            loc_opt=dmax[x]
-    ax[x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
+    # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(data_pred_denorm[:, x]), np.std(data_pred_denorm[:, x])),
+    #                                    args=(data_pred_denorm[:, x],dmin[x],dmax[x]), disp=False)
+    #
+    # left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
+    # right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
+    #
+    # l = np.linspace(dmin[x], dmax[x], 1000)
+    # p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+    # ax[x].plot(l, p)
+    # col ='red'
+    # if loc_opt<dmin[x] or loc_opt>dmax[x]:
+    #     col = 'orange'
+    #     if loc_opt<dmin[x]:
+    #         loc_opt=dmin[x]
+    #     if loc_opt>dmax[x]:
+    #         loc_opt=dmax[x]
+    # ax[x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
 
 
 
