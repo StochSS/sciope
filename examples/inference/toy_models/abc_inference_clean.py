@@ -128,7 +128,7 @@ def nnlf(params, data):
 
 y=0
 abc_pred = np.zeros((accepted_para.shape[0],15))
-density_functions = np.zeros(accepted_para.shape[0],100)
+density_functions = np.zeros((accepted_para.shape[0],100))
 
 for accepted_para_ in accepted_para:
     print("accepted_para_ shape: ", accepted_para_.shape)
