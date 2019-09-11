@@ -40,7 +40,7 @@ print("true_param shape: ", true_param.shape)
 num_timestamps=401
 endtime=200
 
-true_param = np.ones((15))*0.8
+true_param = np.ones((15))*0.2
 
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
@@ -171,7 +171,7 @@ for accepted_para_ in accepted_para:
             ax[0, x].set_title(para_names[x] + ", mae: " + '{0:.3f}'.format(mae) + "\n me: " + '{0:.3f}'.format(me))
     y+=1
 
-plt.savefig('posterior_abc7_other08')
+plt.savefig('posterior_abc7_other02')
 
 mae = np.mean(abs(abc_pred-true_param),axis=0)
 me = np.mean(abc_pred-true_param,axis=0)
