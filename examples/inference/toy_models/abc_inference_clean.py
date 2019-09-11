@@ -119,7 +119,7 @@ accepted_para = np.array([ abc_trial_thetas[accepted_ind_] for accepted_ind_ in 
 lower, upper = 0, 1
 print("true param: ", true_param)
 def nnlf(params, data,lower,upper):
-    print("inside nnlf: data shape: ", data.shape)
+    # print("inside nnlf: data shape: ", data.shape)
     loc, scale = params
     left_trunc_norm = (lower - loc)/scale
     right_trunc_norm = (upper - loc) / scale
@@ -138,9 +138,10 @@ for accepted_para_ in accepted_para:
 
         ret = ax[y, x].hist(accepted_para_[:, x], density=True, bins=bins, color='green')
         peak_val = np.max(ret[0])
+        print("y,x: ", x, y, ", peak_val: ", peak_val)
         ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
         # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-        ax[y, x].plot([data_pred[y,x], data_pred[y,x]], [0,peak_val], c='gray', ls='--')
+        ax[y, x].plot([data_pred[y,x], data_pred[y,x]], [0,peak_val], c='orange', ls='--')
 
         ax[y, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
         ax[y, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
