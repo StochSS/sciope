@@ -54,7 +54,7 @@ for nd in normalize_data(true_param,dmin,dmax):
     print(": ", nd)
 print("before simulation")
 
-data = np.array([np.squeeze(simulate(normalize_data(true_param,dmin,dmax))) for i in range(1000)])
+data = np.array([np.squeeze(simulate(true_param)) for i in range(1000)])
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
@@ -86,7 +86,7 @@ abc_trial_pred_denorm = denormalize_data(abc_trial_pred,dmin,dmax)
 
 alt_param = np.ones(15)*0.8
 alt_param_denorm = denormalize_data(alt_param,dmin,dmax)
-alt_data = np.array([np.squeeze(simulate(alt_param)) for i in range(1000)])
+alt_data = np.array([np.squeeze(simulate(alt_param_denorm)) for i in range(1000)])
 alt_data_pred = nnm.predict(alt_data)
 alt_data_pred = np.squeeze(alt_data_pred)
 alt_data_pred_denorm = denormalize_data(alt_data_pred,dmin,dmax)
