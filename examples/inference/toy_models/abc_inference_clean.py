@@ -137,7 +137,7 @@ for accepted_para_ in accepted_para:
     for x in range(15):
         print("accepted para mean: ", np.mean(accepted_para_[:, x]))
         print("data pred: ", data_pred[y,x], ", true_param: ", true_param[x])
-        ret = ax[y, x].hist(accepted_para_[:, x], density=True, bins=bins, color='green')
+        ret = ax[y, x].hist(accepted_para_[:, x], density=True, color='green')
         peak_val = np.max(ret[0])
         print("y,x: ", x, y, ", peak_val: ", peak_val)
         ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
