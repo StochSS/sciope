@@ -43,20 +43,25 @@ endtime=200
 # true_param = np.ones((15))*0.8
 
 
+
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 
 
 simulate = Vilar_.simulate
 print("before simulation")
 data = np.array([np.squeeze(simulate(normalize_data(true_param,dmin,dmax))) for i in range(1000)])
-print("data shape: ", data.shape)
-
-print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
-print("data pred shape: ", data_pred.shape)
 print("data_pred mae: ", np.mean(abs(data_pred - normalize_data(true_param, dmin, dmax))))
+
+data_pack = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
+data_pack_pred = nnm.predict(data_pack)
+data_pack_pred_denorm = denormalize_data(data_pack_pred,dmin,dmax)
+
+print("data pack_pred mae: ", np.mean(abs(data_pack_pred - normalize_data(true_param, dmin, dmax))))
+
+
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
 abc_trial_pred = nnm.predict(abc_trial_ts)
@@ -121,6 +126,13 @@ for x in range(15):
     ax[1, x].plot([true_param[x], true_param[x]], [0, peak_val], c='black', lw=4)
     ax[1, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
     ax[1, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
+
+    ret = ax[2, x].hist(data_pack_pred_denorm[:, x], density=True, color='green')
+    peak_val = np.max(ret[0])
+
+    ax[2, x].plot([true_param[x], true_param[x]], [0, peak_val], c='black', lw=4)
+    ax[2, x].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
+    ax[2, x].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
     # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(data_pred_denorm[:, x]), np.std(data_pred_denorm[:, x])),
     #                                    args=(data_pred_denorm[:, x],dmin[x],dmax[x]), disp=False)
