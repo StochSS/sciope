@@ -117,7 +117,7 @@ accepted_para = np.array([ abc_trial_thetas[accepted_ind_] for accepted_ind_ in 
 # accepted_mean = np.mean(accepted_para, axis=0)
 
 lower, upper = 0, 1
-
+print("true param: ", true_param)
 def nnlf(params, data):
     loc, scale = params
     left_trunc_norm = (lower - loc)/scale
