@@ -103,7 +103,7 @@ for i in range(15):
 
 
 plt.axis('equal')
-f, ax = plt.subplots(5,15,figsize=(30,90))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(5,15,figsize=(90,20))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
