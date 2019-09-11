@@ -102,7 +102,7 @@ for i in range(15):
 
 
 plt.axis('equal')
-f, ax = plt.subplots(5,15,figsize=(30,90))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(5,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
@@ -170,7 +170,7 @@ for accepted_para_ in accepted_para:
             ax[0, x].set_title(para_names[x] + ", mae: " + '{0:.3f}'.format(mae) + "\n me: " + '{0:.3f}'.format(me))
     y+=1
 
-plt.savefig('posterior_abc7_other08')
+plt.savefig('posterior_abc7_clean')
 
 mae = np.mean(abs(abc_pred-true_param),axis=0)
 me = np.mean(abc_pred-true_param,axis=0)
