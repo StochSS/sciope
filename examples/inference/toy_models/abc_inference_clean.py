@@ -118,7 +118,7 @@ accepted_para = np.array([ abc_trial_thetas[accepted_ind_] for accepted_ind_ in 
 
 lower, upper = 0, 1
 print("true param: ", true_param)
-def nnlf(params, data):
+def nnlf(params, data,lower,upper):
     print("inside nnlf: data shape: ", data.shape)
     loc, scale = params
     left_trunc_norm = (lower - loc)/scale
