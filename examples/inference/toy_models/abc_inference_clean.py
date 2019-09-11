@@ -128,7 +128,7 @@ def nnlf(params, data):
 
 y=0
 abc_pred = np.zeros((accepted_para.shape[0],15))
-density_functions = np.zeros((accepted_para.shape[0],100))
+density_functions = np.zeros((accepted_para.shape[0],15,100))
 
 for accepted_para_ in accepted_para:
     print("accepted_para_ shape: ", accepted_para_.shape)
@@ -152,7 +152,7 @@ for accepted_para_ in accepted_para:
 
         l = np.linspace(lower, upper, 100)
         p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-        density_functions[y]=p
+        density_functions[y,x]=p
         ax[y, x].plot(l, p)
         col ='red'
         if loc_opt<lower or loc_opt>upper:
@@ -177,7 +177,7 @@ for x in range(15):
     print("im_post shape: ", im_post.shape)
     peak_val=1
     ax[5, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
-    ax[5, x].plot(l, p)
+    ax[5, x].plot(l, p[])
     ax[5, x].plot([1, 1], [0, peak_val], c='b')
     ax[5, x].plot([0, 0], [0, peak_val], c='b')
 
