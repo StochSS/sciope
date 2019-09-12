@@ -14,10 +14,18 @@ import time
 from normalize_data import normalize_data
 from load_data import load_spec
 
-modelname = "vilar_ACR_200_401"
+
+
+num_timestamps=401
+endtime=200
+modelname = "vilar_ACR_prior2_" + str(endtime) + "_" + str(num_timestamps)
+dmin = [0 , 0  , 0, 0 , 0 ,  0,  0, 0, 0,   0,   0, 0, 0, 0,  0]
+dmax = [70, 600, 1, 70, 70, 8, 12, 0.8, 1.5, 0.5, 1.5, 1.5, 3, 70, 120]
+
+# modelname = "vilar_ACR_200_401"
 #parameter range
-dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
-dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
+# dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
+# dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
 #Load data
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
@@ -55,20 +63,20 @@ print("mean absolute error: ", np.mean(abs(validation_thetas-validation_pred)))
 #validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
 
 
-test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
-test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
-test_thetas = normalize_data(test_thetas,dmin,dmax)
-test_pred = nnm.predict(test_ts)
-test_pred = np.reshape(test_pred,(-1,15))
-
-test_mse = np.mean((test_thetas-test_pred)**2)
-test_mae = np.mean(abs(test_thetas-test_pred))
-test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
-
-print("Model name: ", nnm.name)
-print("mean square error: ", test_mse)
-print("mean square error: ", test_mae)
-
-test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae}
-pickle.dump(test_results, open('results/training_results_' + modelname + '.p', "wb"))
-
+# test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
+# test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+# test_thetas = normalize_data(test_thetas,dmin,dmax)
+# test_pred = nnm.predict(test_ts)
+# test_pred = np.reshape(test_pred,(-1,15))
+#
+# test_mse = np.mean((test_thetas-test_pred)**2)
+# test_mae = np.mean(abs(test_thetas-test_pred))
+# test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
+#
+# print("Model name: ", nnm.name)
+# print("mean square error: ", test_mse)
+# print("mean square error: ", test_mae)
+#
+# test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae}
+# pickle.dump(test_results, open('results/training_results_' + modelname + '.p', "wb"))
+#
