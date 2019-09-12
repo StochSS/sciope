@@ -122,12 +122,20 @@ for nr in range(nr,3):
 
 validation_thetas = np.zeros((0,15))
 validation_ts = np.zeros((0,num_timestamps,3))
+start_time = time.time()
+last_time = start_time
+last_nr = 0
 for i in range(20):
     param, ts = dg.gen(batch_size=1000)
     validation_thetas = np.concatenate((validation_thetas,param),axis=0)
     validation_ts = np.concatenate((validation_ts,ts),axis=0)
     if i%10 == 0:
         print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
+        intermediate_time = time.time() - last_time
+        last_time = time.time()
+        delta_nr = train_ts.shape[0] - last_nr
+        last_nr = train_ts.shape[0]
+        print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr / last_time * 60))
 
 print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
 
@@ -137,12 +145,20 @@ pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', 
 
 test_thetas = np.zeros((0,15))
 test_ts = np.zeros((0,num_timestamps,3))
+start_time = time.time()
+last_time = start_time
+last_nr = 0
 for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     test_thetas = np.concatenate((test_thetas,param),axis=0)
     test_ts = np.concatenate((test_ts,ts),axis=0)
     if i%10 == 0:
         print("test data shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
+        intermediate_time = time.time() - last_time
+        last_time = time.time()
+        delta_nr = train_ts.shape[0] - last_nr
+        last_nr = train_ts.shape[0]
+        print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr / last_time * 60))
 
 print("generating test data done, shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
 pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb" ) )
@@ -150,12 +166,20 @@ pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
 
 abc_trial_thetas = np.zeros((0,15))
 abc_trial_ts = np.zeros((0,num_timestamps,3))
+start_time = time.time()
+last_time = start_time
+last_nr = 0
 for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     abc_trial_thetas = np.concatenate((abc_trial_thetas,param),axis=0)
     abc_trial_ts = np.concatenate((abc_trial_ts,ts),axis=0)
     if i%10 == 0:
         print("abc_trial data shape: abc_trial_ts: ", abc_trial_ts.shape, ", abc_trial_thetas: ", abc_trial_thetas.shape)
+        intermediate_time = time.time() - last_time
+        last_time = time.time()
+        delta_nr = train_ts.shape[0] - last_nr
+        last_nr = train_ts.shape[0]
+        print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr / last_time * 60))
 
 pickle.dump( abc_trial_thetas, open( 'datasets/' + modelname + '/abc_trial_thetas.p', "wb" ) )
 pickle.dump( abc_trial_ts, open( 'datasets/' + modelname + '/abc_trial_ts.p', "wb" ) )
