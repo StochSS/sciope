@@ -113,7 +113,7 @@ for nr in range(nr,3):
             delta_nr = train_ts.shape[0] - last_nr
             last_nr = train_ts.shape[0]
             print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-            print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr/last_time*60) )
+            print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr/intermediate_time*60) )
 
     print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
