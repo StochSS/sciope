@@ -12,6 +12,8 @@ from vilar import Vilar_model
 import dask
 import pickle
 import os
+import time
+
 from sklearn.metrics import mean_absolute_error
 
 
@@ -94,7 +96,9 @@ print("generating some data")
 nr=0
 while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
     nr += 1
-
+start_time = time.time()
+last_time = start_time
+last_nr = 0
 for nr in range(nr,3):
     train_thetas = np.zeros((0,15))
     train_ts = np.zeros((0,num_timestamps,3))
@@ -104,7 +108,12 @@ for nr in range(nr,3):
         # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
         train_ts = np.concatenate((train_ts,ts),axis=0)
         if i%10 == 0:
+            intermediate_time = time.time() - last_time
+            last_time = time.time()
+            delta_nr = train_ts.shape[0] - last_nr
+            last_nr = train_ts.shape[0]
             print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+            print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr/last_time*60) )
 
     print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
