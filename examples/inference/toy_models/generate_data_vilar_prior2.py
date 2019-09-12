@@ -80,11 +80,11 @@ dmax = [70, 600, 1, 70, 70, 8, 12, 0.8, 1.5, 0.5, 1.5, 1.5, 3, 70, 120]
 # dmax = [70, 600, 1, 70, 70, 10, 12, 1,  2, 0.5, 1.5, 1.5, 3, 70, 120]
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-obs_data = np.zeros((20,num_timestamps,3))
-for i in range(20):
-    obs_data[i,:,:] = simulate(np.array(true_params))
-pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param_pack.p', "wb" ) )
-pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_pack.p', "wb" ) )
+# obs_data = np.zeros((20,num_timestamps,3))
+# for i in range(20):
+#     obs_data[i,:,:] = simulate(np.array(true_params))
+# pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param_pack.p', "wb" ) )
+# pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_pack.p', "wb" ) )
 
 
 # Set up the prior
@@ -96,29 +96,29 @@ print("generating some data")
 nr=0
 while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
     nr += 1
-start_time = time.time()
-last_time = start_time
-last_nr = 0
-for nr in range(nr,3):
-    train_thetas = np.zeros((0,15))
-    train_ts = np.zeros((0,num_timestamps,3))
-    for i in range(100):
-        param, ts = dg.gen(batch_size=1000)
-        train_thetas = np.concatenate((train_thetas,param),axis=0)
-        # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
-        train_ts = np.concatenate((train_ts,ts),axis=0)
-        if i%10 == 0:
-            intermediate_time = time.time() - last_time
-            last_time = time.time()
-            delta_nr = train_ts.shape[0] - last_nr
-            last_nr = train_ts.shape[0]
-            print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-            print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr/intermediate_time*60) )
-
-    print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-
-    pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas_'+str(nr)+'.p', "wb" ) )
-    pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
+# start_time = time.time()
+# last_time = start_time
+# last_nr = 0
+# for nr in range(nr,3):
+#     train_thetas = np.zeros((0,15))
+#     train_ts = np.zeros((0,num_timestamps,3))
+#     for i in range(100):
+#         param, ts = dg.gen(batch_size=1000)
+#         train_thetas = np.concatenate((train_thetas,param),axis=0)
+#         # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
+#         train_ts = np.concatenate((train_ts,ts),axis=0)
+#         if i%10 == 0:
+#             intermediate_time = time.time() - last_time
+#             last_time = time.time()
+#             delta_nr = train_ts.shape[0] - last_nr
+#             last_nr = train_ts.shape[0]
+#             print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+#             print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr/intermediate_time*60) )
+#
+#     print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+#
+#     pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas_'+str(nr)+'.p', "wb" ) )
+#     pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
 
 validation_thetas = np.zeros((0,15))
 validation_ts = np.zeros((0,num_timestamps,3))
