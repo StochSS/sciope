@@ -49,13 +49,10 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 print("before simulation")
 data = np.array([np.squeeze(simulate(true_param)) for i in range(5)])
-print("data shape: ", data.shape)
 
-print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
-print("data pred shape: ", data_pred.shape)
 print("data_pred mae: ", np.mean(abs(data_pred - normalize_data(true_param, dmin, dmax))))
 
 
@@ -66,18 +63,18 @@ test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" 
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
-print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
-print("abc_trial_ts shape: ", abc_trial_ts.shape)
+# print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
+# print("abc_trial_ts shape: ", abc_trial_ts.shape)
 abc_trial_thetas = np.concatenate((abc_trial_thetas,train_thetas,test_thetas),axis=0)
 abc_trial_ts = np.concatenate((abc_trial_ts,train_ts,test_ts),axis=0)
-print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
-print("abc_trial_ts shape: ", abc_trial_ts.shape)
+# print("abc_trial_thetas shape: ", abc_trial_thetas.shape)
+# print("abc_trial_ts shape: ", abc_trial_ts.shape)
 
 # abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
 abc_trial_pred = nnm.predict(abc_trial_ts)
 
 mean_dev = np.mean(abs(normalize_data(abc_trial_thetas,dmin,dmax)-abc_trial_pred), axis=0)
-print("mean dev shape: ", mean_dev.shape)
+# print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
 nr_of_accept = 1000
 nr_of_trial = abc_trial_thetas.shape[0]
