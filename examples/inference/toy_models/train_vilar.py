@@ -43,7 +43,7 @@ nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15))
 # nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
-# nnm.load_model()
+nnm.load_model()
 start_time = time.time()
 nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
           batch_size=32, epochs=40, plot_training_progress=False)
