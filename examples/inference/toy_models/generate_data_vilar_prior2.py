@@ -133,8 +133,8 @@ for i in range(20):
         print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
         intermediate_time = time.time() - last_time
         last_time = time.time()
-        delta_nr = train_ts.shape[0] - last_nr
-        last_nr = train_ts.shape[0]
+        delta_nr = validation_ts.shape[0] - last_nr
+        last_nr = validation_ts.shape[0]
         print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr / intermediate_time * 60))
 
 print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
@@ -156,8 +156,8 @@ for i in range(100):
         print("test data shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
         intermediate_time = time.time() - last_time
         last_time = time.time()
-        delta_nr = train_ts.shape[0] - last_nr
-        last_nr = train_ts.shape[0]
+        delta_nr = test_ts.shape[0] - last_nr
+        last_nr = test_ts.shape[0]
         print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr / intermediate_time * 60))
 
 print("generating test data done, shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
@@ -177,8 +177,8 @@ for i in range(100):
         print("abc_trial data shape: abc_trial_ts: ", abc_trial_ts.shape, ", abc_trial_thetas: ", abc_trial_thetas.shape)
         intermediate_time = time.time() - last_time
         last_time = time.time()
-        delta_nr = train_ts.shape[0] - last_nr
-        last_nr = train_ts.shape[0]
+        delta_nr = abc_trial_ts.shape[0] - last_nr
+        last_nr = abc_trial_ts.shape[0]
         print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr / intermediate_time * 60))
 
 pickle.dump( abc_trial_thetas, open( 'datasets/' + modelname + '/abc_trial_thetas.p', "wb" ) )
