@@ -14,6 +14,7 @@ import time
 from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
 import vilar
+from vilar import Vilar_model
 
 
 
@@ -85,6 +86,33 @@ validation_pred = denormalize_data(validation_pred, dmin, dmax)
 mean_dev = np.mean(abs(validation_thetas-validation_pred), axis=0)
 for dev, n in zip(mean_dev,para_names):
     print(n, " mean deviation: ", "{0:.4f}".format(dev), ", range: ", dmin[i], " - ", dmax[i])
+
+
+true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
+true_param = np.squeeze(np.array(true_param))
+print("true_param shape: ", true_param.shape)
+num_timestamps=401
+endtime=200
+
+# true_param = np.ones((15))*0.8
+
+
+Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
+
+
+simulate = Vilar_.simulate
+print("before simulation")
+data = np.array([np.squeeze(simulate(true_param)) for i in range(100)])
+
+data_pred = nnm.predict(data)
+data_pred = np.squeeze(data_pred)
+data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
+
+data_pred_meandev = np.mean( abs(data_pred_denorm- true_param), axis=0)
+
+for dev, n in zip(data_pred_meandev,para_names):
+    print(n, " mean deviation: ", "{0:.4f}".format(dev), ", range: ", dmin[i], " - ", dmax[i])
+
 
 
 # nnm.load_model()
