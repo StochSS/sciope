@@ -78,7 +78,7 @@ if not os.path.exists('datasets/'+modelname):
 dmin = [0 , 0  , 0, 0 , 0 ,  0,  0, 0, 0,   0,   0, 0, 0, 0,  0]
 dmax = [70, 600, 1, 70, 70, 8, 12, 0.8, 1.5, 0.5, 1.5, 1.5, 3, 70, 120]
 # dmax = [70, 600, 1, 70, 70, 10, 12, 1,  2, 0.5, 1.5, 1.5, 3, 70, 120]
-
+print("start")
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 obs_data = np.zeros((20,num_timestamps,3))
 for i in range(20):
@@ -93,9 +93,9 @@ prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax)) # .draw
 
 dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
-nr=0
-while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
-    nr += 1
+# nr=0
+# while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
+#     nr += 1
 # start_time = time.time()
 # last_time = start_time
 # last_nr = 0
