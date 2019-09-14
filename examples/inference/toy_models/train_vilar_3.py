@@ -11,8 +11,9 @@ from AutoRegressive_model import simulate, prior
 from sklearn.metrics import mean_absolute_error
 import pickle
 import time
-from normalize_data import normalize_data
+from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
+import vilar
 
 
 
@@ -47,11 +48,11 @@ nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=2, con_layers=
 
 # nnm.load_model()
 start_time = time.time()
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40, plot_training_progress=False)
-
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=4096, epochs=5, plot_training_progress=False)
+# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=32, epochs=40, plot_training_progress=False)
+#
+# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=4096, epochs=5, plot_training_progress=False)
 end_time = time.time()
 training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
@@ -59,6 +60,31 @@ validation_pred = np.reshape(validation_pred,(-1,15))
 print("training time: ", training_time)
 print("mean square error: ", np.mean((validation_thetas-validation_pred)**2))
 print("mean absolute error: ", np.mean(abs(validation_thetas-validation_pred)))
+
+
+para_names = vilar.get_parameter_names()
+
+for i in range(15):
+    pk = para_names[i]
+    pks = pk.split("_")
+    if len(pks) > 1:
+        pk_p = "\hat{\\" + pks[0].lower() + "}_{" + pks[1].upper() + "}"
+        pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
+    if len(pks) == 3:
+        print("len 3: ", pks[2])
+        if pks[2] == 'prime':
+            pk_p = pk_p + "'"
+            pk = pk + "'"
+
+    para_name_p = "$" + pk_p + "$"
+    para_names[i] = "$\\" + pk + "$"
+
+validation_thetas = denormalize_data(validation_thetas, dmin, dmax)
+validation_pred = denormalize_data(validation_pred, dmin, dmax)
+
+mean_dev = np.mean(abs(validation_thetas-validation_pred), axis=0)
+for dev, n in zip(mean_dev,para_names):
+    print(n, " mean deviation: ", "{0:.4f}".format(dev), ", range: ", dmin[i], " - ", dmax[i])
 
 
 # nnm.load_model()
