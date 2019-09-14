@@ -69,7 +69,7 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 
 simulate = Vilar_.simulate
 
-modelname = "vilar_ACR_prior2_" + str(endtime) + "_" + str(num_timestamps)
+modelname = "vilar_ACR_prior3_" + str(endtime) + "_" + str(num_timestamps)
 
 
 if not os.path.exists('datasets/'+modelname):
