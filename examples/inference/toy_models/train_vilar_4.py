@@ -27,6 +27,8 @@ modelname = "vilar_ACR_prior4_" + str(endtime) + "_" + str(num_timestamps)
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
+dmin = [48, 450,  0,  49, 48, 3,  9,  0.45,  0.9,   0.1, 0.8, 0.9, 1.9, 45, 96]
+dmax = [51, 510, 0.1, 52, 51, 6, 12,   0.7,  1.2,  0.22, 1.1, 1.2, 2.2, 52, 102]
 
 
 print("dmin:", dmin)
