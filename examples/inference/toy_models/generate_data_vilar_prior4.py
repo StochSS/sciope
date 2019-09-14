@@ -69,14 +69,14 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 
 simulate = Vilar_.simulate
 
-modelname = "vilar_ACR_prior3_" + str(endtime) + "_" + str(num_timestamps)
+modelname = "vilar_ACR_prior4_" + str(endtime) + "_" + str(num_timestamps)
 
 
 if not os.path.exists('datasets/'+modelname):
     os.mkdir('datasets/'+modelname)
 
-dmin = [35, 200,  0,  30, 30, 2,  5,  0,  0.9,   0, 0.5, 0.5, 1.8, 30, 80]
-dmax = [55, 550, 0.1, 55, 55, 6, 12, 0.7, 1.4, 0.3, 1.1, 1.2, 2.2, 60, 110]
+dmin = [48, 450,  0,  49, 48, 3,  9,  0.45,  0.9,   0.1, 0.8, 0.9, 1.9, 45, 96]
+dmax = [51, 510, 0.1, 52, 51, 6, 12,   0.7,  1.2,  0.22, 1.1, 1.2, 2.2, 52, 102]
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 # obs_data = np.zeros((20,num_timestamps,3))
