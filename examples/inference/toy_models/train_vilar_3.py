@@ -113,7 +113,7 @@ data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 data_pred_meandev = np.mean( abs(data_pred_denorm- true_param), axis=0)
 i=0
 for dev, n in zip(data_pred_meandev,para_names):
-    print(n, ", true: ", true_param[i], ", predicted: ", "{0:.4f}".format(data_pred_denorm[i]), ", mean deviation: ", "{0:.4f}".format(dev), ", range: ", dmin[i], " - ", dmax[i])
+    print(n, ", true: ", true_param[i], ", predicted: ", "{0:.4f}".format(data_pred_denorm[0,i]), ", mean deviation: ", "{0:.4f}".format(dev), ", range: ", dmin[i], " - ", dmax[i])
     i+=1
 
 
