@@ -131,14 +131,14 @@ abc_pred = np.zeros((accepted_para.shape[0],15))
 density_functions = np.zeros((accepted_para.shape[0],15,100))
 
 for accepted_para_ in accepted_para:
-    print("accepted_para_ shape: ", accepted_para_.shape)
-    print("y: ", y)
+    # print("accepted_para_ shape: ", accepted_para_.shape)
+    # print("y: ", y)
     for x in range(15):
-        print("accepted para mean: ", np.mean(accepted_para_[:, x]))
-        print("data pred: ", data_pred[y,x], ", true_param: ", true_param[x])
+        # print("accepted para mean: ", np.mean(accepted_para_[:, x]))
+        # print("data pred: ", data_pred[y,x], ", true_param: ", true_param[x])
         ret = ax[y, x].hist(accepted_para_[:, x], density=True, color='green')
         peak_val = np.max(ret[0])
-        print("y,x: ", x, y, ", peak_val: ", peak_val)
+        # print("y,x: ", x, y, ", peak_val: ", peak_val)
         ax[y, x].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
         # ax[0, x].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
         ax[y, x].plot([data_pred_denorm[y,x], data_pred_denorm[y,x]], [0,peak_val], c='gray', ls='--')
@@ -170,7 +170,7 @@ for accepted_para_ in accepted_para:
             me = np.mean(abc_pred[:,x]-true_param[x],axis=0)
             nnmae = np.mean(abs(data_pred[:,x]-true_param[x]),axis=0)
             nnme = np.mean(data_pred[:,x]-true_param[x],axis=0)
-            print("mae, me: ", mae,me, "nn mea, me: ", nnmae, nnme)
+            # print("mae, me: ", mae,me, "nn mea, me: ", nnmae, nnme)
             ax[0, x].set_title(para_names[x] + ", mae: " + '{0:.3f}'.format(mae) + "\n me: " + '{0:.3f}'.format(me))
     y+=1
 
@@ -193,6 +193,8 @@ mae = np.mean(abs(abc_pred-true_param),axis=0)
 me = np.mean(abc_pred-true_param,axis=0)
 nnmae = np.mean(abs(data_pred-true_param),axis=0)
 nnme = np.mean(data_pred-true_param,axis=0)
+
+
 
 save_results = {"abc_mae": mae, "abc_me": me, "nn_mae": nnmae, "nn_me":nnme}
 pickle.dump( save_results, open( "abc_results_t08_" + str(nr_of_accept), "wb"))
