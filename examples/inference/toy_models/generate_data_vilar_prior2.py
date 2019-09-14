@@ -86,6 +86,8 @@ for i in range(20):
 pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param_pack.p', "wb" ) )
 pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_pack.p', "wb" ) )
 
+data = simulate(np.array(true_params))
+pickle.dump( data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
 
 # Set up the prior
 
