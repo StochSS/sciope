@@ -79,13 +79,14 @@ dmin = [48, 450,  0,  49, 48, 3,  9,  0.45,  0.9,   0.1, 0.8, 0.9, 1.9, 45, 96]
 dmax = [51, 510, 0.1, 52, 51, 6, 12,   0.7,  1.2,  0.22, 1.1, 1.2, 2.2, 52, 102]
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-# obs_data = np.zeros((20,num_timestamps,3))
-# for i in range(20):
-#     obs_data[i,:,:] = simulate(np.array(true_params))
-# pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param_pack.p', "wb" ) )
-# pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_pack.p', "wb" ) )
+obs_data = np.zeros((20,num_timestamps,3))
+for i in range(20):
+    obs_data[i,:,:] = simulate(np.array(true_params))
+pickle.dump( true_params, open( 'datasets/' + modelname + '/true_param_pack.p', "wb" ) )
+pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_pack.p', "wb" ) )
 
-
+data = simulate(np.array(true_params))
+pickle.dump( data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
 # Set up the prior
 
 prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax)) # .draw
