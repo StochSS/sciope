@@ -19,13 +19,13 @@ class CNNModel(ModelBase):
     """
     
 
-    def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, con_len=3, con_layers=[25, 50]):
+    def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, con_len=3, con_layers=[25, 50], last_pooling=keras.layers.AvgPool1D):
         self.name = 'CNNModel'
         super(CNNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
-        self.model = construct_model(input_shape,output_shape, con_len=con_len, con_layers=con_layers)
+        self.model = construct_model(input_shape,output_shape, con_len=con_len, con_layers=con_layers, last_pooling = last_pooling)
         self.save_as = 'saved_models/cnn_light10'
     
     # train the CNN model given the data
@@ -64,7 +64,7 @@ class CNNModel(ModelBase):
         save_as = self.save_as
         self.model = keras.models.load_model(save_as+'.hdf5')
     
-def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 100]):
+def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 100], last_pooling=keras.layers.AvgPool1D):
     #TODO: add a **kwargs to specify the hyperparameters
     activation = 'relu'
     dense_activation = 'relu'
@@ -113,7 +113,8 @@ def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 1
             depth=depth//maxpool
         
     #Using Maxpooling to downsample the temporal dimension size to 1.
-    model.add(keras.layers.MaxPooling1D(depth,padding=poolpadding))
+    # model.add(keras.layers.MaxPooling1D(depth,padding=poolpadding))
+    model.add(pool(last_pooling, padding=poolpadding))
     #Reshape previous layer to 1 dimension (feature state).
     model.add(keras.layers.Flatten())
     
