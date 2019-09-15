@@ -114,7 +114,7 @@ def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 1
         
     #Using Maxpooling to downsample the temporal dimension size to 1.
     # model.add(keras.layers.MaxPooling1D(depth,padding=poolpadding))
-    model.add(pool(last_pooling, padding=poolpadding))
+    model.add(pool(last_pooling, padding=depth))
     #Reshape previous layer to 1 dimension (feature state).
     model.add(keras.layers.Flatten())
     
