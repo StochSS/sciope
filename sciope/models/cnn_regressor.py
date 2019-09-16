@@ -108,7 +108,7 @@ def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 1
         
         if padding == 'valid':
             depth-=(con_len-1)*2
-        if i<levels-1:
+        if i<len(con_layers)-1:
             model.add(pool(maxpool,padding=poolpadding))
             depth=depth//maxpool
         
