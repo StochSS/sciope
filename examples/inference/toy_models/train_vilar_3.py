@@ -51,11 +51,11 @@ nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=5, con_layers=
 
 # nnm.load_model()
 start_time = time.time()
-# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-#           batch_size=32, epochs=40, plot_training_progress=False)
-#
-# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-#           batch_size=4096, epochs=5, plot_training_progress=False)
+nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+          batch_size=32, epochs=40, plot_training_progress=False)
+
+nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+          batch_size=4096, epochs=5, plot_training_progress=False)
 end_time = time.time()
 training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
