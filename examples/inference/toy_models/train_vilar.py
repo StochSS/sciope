@@ -37,7 +37,7 @@ validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 
 ts_len = train_ts.shape[1]
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=6, con_layers=[50,80,120,150])
+nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=5, con_layers=[32,48,64,96])
 # nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
