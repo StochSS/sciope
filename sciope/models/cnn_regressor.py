@@ -9,7 +9,6 @@ from sciope.models.model_base import ModelBase
 from tensorflow import keras
 from sciope.utilities.housekeeping import sciope_logger as ml
 import matplotlib.pyplot as plt
-import ipykernel
 
 
 # Class definition
