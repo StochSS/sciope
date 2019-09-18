@@ -144,7 +144,7 @@ print("rel_e shape: ", rel_e.shape)
 
 
 i=0
-for dev, re, n in zip(test_mae, rel_e, para_names):
+for dev, re, n in zip(test_ae, rel_e, para_names):
     print(n, " mean deviation: ", "{0:.4f}".format(dev), ", rel dev: ", "{0:.4f}".format(re), ", range: ", dmin[i], " - ", dmax[i])
     i+=1
 
