@@ -42,13 +42,13 @@ ts_len = train_ts.shape[1]
 nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 print("Model name: ", nnm.name)
 
-# nnm.load_model()
+nnm.load_model()
 start_time = time.time()
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40, plot_training_progress=False)
-
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=4096, epochs=5, plot_training_progress=False)
+# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=32, epochs=40, plot_training_progress=False)
+#
+# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=4096, epochs=5, plot_training_progress=False)
 end_time = time.time()
 training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
@@ -57,6 +57,7 @@ print("training time: ", training_time)
 print("mean square error: ", np.mean((validation_thetas-validation_pred)**2))
 print("mean absolute error: ", np.mean(abs(validation_thetas-validation_pred)))
 
+validation_mae = np.mean(abs(validation_thetas-validation_pred), axis=0)
 
 para_names = vilar.get_parameter_names()
 
@@ -83,8 +84,8 @@ mean_dev = np.mean(abs(validation_thetas-validation_pred), axis=0)
 
 
 i=0
-for dev, n in zip(mean_dev,para_names):
-    print(n, " mean deviation: ", "{0:.4f}".format(dev), ", range: ", dmin[i], " - ", dmax[i])
+for dev, rdev, n in zip(mean_dev,validation_mae ,para_names):
+    print(n, " mean deviation: ", "{0:.4f}".format(dev), " real mean deviation: ", "{0:.4f}".format(rdev), ", range: ", dmin[i], " - ", dmax[i])
     i+=1
 
 
@@ -127,7 +128,7 @@ for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
 
 
 nnm.load_model()
-validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
+# validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
 
 
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
@@ -153,8 +154,8 @@ for dev, re, n in zip(test_ae, test_ae_norm, para_names):
 
 print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
-print("mean square error: ", test_mae)
-
-test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_e": rel_e, "rel_test_ae": test_ae_norm}
-pickle.dump(test_results, open('results/training_results_' + modelname + '_' + nnm.name + '.p', "wb"))
+print("mean absolute error: ", test_mae)
+#
+# test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_e": rel_e, "rel_test_ae": test_ae_norm}
+# pickle.dump(test_results, open('results/training_results_' + modelname + '_' + nnm.name + '.p', "wb"))
 

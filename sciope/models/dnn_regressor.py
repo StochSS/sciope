@@ -18,8 +18,8 @@ class ANNModel(ModelBase):
     We use keras to define CNN and DNN layers to the model
     """
 
-    def __init__(self, use_logger=False, input_shape=(499, 3), output_shape=15, layers=[100,100, 100], modelname="None"):
-        self.name = 'DNNModel'
+    def __init__(self, use_logger=False, input_shape=(499, 3), output_shape=15, layers=[100,100,100], modelname="None"):
+        self.name = 'DNNModel_l' + str(layers)
         self.modelname = modelname
         super(ANNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
