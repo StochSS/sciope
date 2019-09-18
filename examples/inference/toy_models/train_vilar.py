@@ -108,7 +108,7 @@ data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 
 data_pred_meandev = np.mean( abs(data_pred_denorm- true_param), axis=0)
-rel_e1 = np.mean(abs(data_pred_denorm - true_param) / abs((dmin-dmax)/2 - true_param),axis=0)
+rel_e1 = np.mean(abs(data_pred_denorm - true_param) / abs(np.array(dmin-dmax)/2 - true_param),axis=0)
 
 i=0
 for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
