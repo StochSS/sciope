@@ -8,7 +8,8 @@ print("type(sys.argv[0]): ", type(sys.argv[0]))
 print(sys.argv[1],",",sys.argv[2])
 trial = int(sys.argv[1]) # 3000
 accept = int(sys.argv[2]) # 100
-std = 0.1
+std = 0.04
+true_points = 0.1
 
 def nnlf(params, data,lower,upper):
     # print("inside nnlf: data shape: ", data.shape)
@@ -25,9 +26,9 @@ def pred_func(theta):
     post_max = truncnorm.rvs(a=-theta/std, b=(1-theta)/std, loc=theta, scale=std, size=theta.shape)
     # loc = norm.rvs(loc=theta, scale=std, size=theta.shape)
     print("post max shape: ", post_max.shape)
-
-    post_mean = np.array([[truncnorm.mean(a=-j/std, b=(1-j)/std, loc=j, scale=std) for j in i] for i in post_max])
-
+    # if post_max.ndim == 1:
+    #     post_max = np.expand_dims(post_max,axis=0)
+    post_mean = np.array([truncnorm.mean(a=-post_max.T[i]/std, b=(1-post_max.T[i])/std, loc=post_max.T[i], scale=std) for i in range(post_max.shape[-1])]).T
     # post_mean = truncnorm.mean(a=-post_max/std, b=(1-post_max)/std, loc=post_max, scale=std)
     print("post mean shape: ", post_mean.shape)
     return np.array([post_max, post_mean])
@@ -40,7 +41,7 @@ f.suptitle('Accepted/Trial = ' + str(accept) + '/' + str(trial),fontsize=16)
 for i in range(14):
 
     dim = i+2
-    true_param = np.ones(dim)*0.25
+    true_param = np.ones(dim)*true_points
     theta = np.random.rand(trial,dim)
 
     # pred_theta = truncnorm.rvs(a=-theta/std, b=(1-theta)/std, loc=theta, scale=std, size=theta.shape)
@@ -59,10 +60,12 @@ for i in range(14):
         loc_opt[j], scale_opt[j] = optimize.fmin(nnlf, (np.mean(accepted_para[:, j]), np.std(accepted_para[:, j])),
                                                  args=(accepted_para[:, j], 0, 1), disp=False)
     print("accepted_para shape: ", accepted_para.shape)
-    ax[i // 4, i % 4].scatter(accepted_para[:,0],accepted_para[:,1], c='b', s=2)
+    ax[i // 4, i % 4].scatter(accepted_para[:,0],accepted_para[:,1], c='b', alpha=0.2, s=2)
     ax[i // 4, i % 4].scatter(true_param[0], true_param[1], marker='x', c='black')
     ax[i // 4, i % 4].scatter(accepted_mean[0], accepted_mean[1], marker='x', c='orange', )
     ax[i // 4, i % 4].scatter(loc_opt[0], loc_opt[1], marker='x', c='red')
+    ax[i // 4, i % 4].scatter(pred_param[0], pred_param[1], marker='x', c='green')
+
 
     ax[i // 4, i % 4].plot([0,1,1,0,0], [0,0,1,1,0])
     ax[i // 4, i % 4].set_title(str(dim) + '-D, e: ' + '{0:.3f}'.format(deviation) + ', std: '
@@ -72,19 +75,23 @@ for i in range(14):
         right_trunc_norm = (1 - loc_opt[0]) / scale_opt[0]
         l = np.linspace(-0.1, 1.1, 1000)
         p = truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt[0], scale_opt[0])
-        d=ax[3,2].hist(accepted_para[:,0], density=True)
+        d=ax[3,2].hist(accepted_para[:,0], density=True, alpha = 0.2)
         h=np.max(d[0])
         ax[3,2].plot([true_param[0], true_param[0]],[h,0], c='black')
         ax[3, 2].plot([loc_opt[0], loc_opt[0]], [h, 0], c='red',linestyle=':')
+        ax[3, 2].plot([pred_param[0], pred_param[0]], [h, 0], c='green',linestyle='--')
+
         ax[3, 2].plot([accepted_mean[0], accepted_mean[0]],[h,0], c='orange')
         ax[3, 2].plot(l, p, c='red')
         left_trunc_norm = (0 - loc_opt[1]) / scale_opt[1]
         right_trunc_norm = (1 - loc_opt[1]) / scale_opt[1]
         p = truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt[1], scale_opt[1])
-        d = ax[3, 3].hist(accepted_para[:, 1], density=True)
+        d = ax[3, 3].hist(accepted_para[:, 1], alpha=0.2, density=True)
         h = np.max(d[0])
         ax[3, 3].plot([true_param[1], true_param[1]], [h, 0],c='black')
         ax[3, 3].plot([loc_opt[1], loc_opt[1]], [h, 0], c='red', linestyle=':')
+        ax[3, 3].plot([pred_param[1], pred_param[1]], [h, 0], c='green',linestyle='--')
+
         ax[3, 3].plot([accepted_mean[1], accepted_mean[1]], [h, 0], c='orange')
         ax[3, 3].plot(l, p, c='red')
         print("d ")
