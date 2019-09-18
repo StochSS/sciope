@@ -78,6 +78,9 @@ validation_thetas = denormalize_data(validation_thetas, dmin, dmax)
 validation_pred = denormalize_data(validation_pred, dmin, dmax)
 
 mean_dev = np.mean(abs(validation_thetas-validation_pred), axis=0)
+
+
+
 i=0
 for dev, n in zip(mean_dev,para_names):
     print(n, " mean deviation: ", "{0:.4f}".format(dev), ", range: ", dmin[i], " - ", dmax[i])
@@ -105,9 +108,12 @@ data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 
 data_pred_meandev = np.mean( abs(data_pred_denorm- true_param), axis=0)
+rel_e1 = np.mean(abs(data_pred_denorm - true_param) / abs((dmin-dmax)/2 - true_param),axis=0)
+
 i=0
-for dev, n in zip(data_pred_meandev,para_names):
-    print(n, ", true: ", true_param[i], ", predicted: ", "{0:.4f}".format(data_pred_denorm[0,i]), ", mean deviation: ", "{0:.4f}".format(dev), ", range: ", dmin[i], " - ", dmax[i])
+for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
+    print(n, ", true: ", true_param[i], ", predicted: ", "{0:.4f}".format(data_pred_denorm[0,i]), ", mean deviation: ",
+          "{0:.4f}".format(dev), ", rel dev: ", "{0:.4f}".format(re), ", range: ", dmin[i], " - ", dmax[i])
     i+=1
 
 
@@ -125,7 +131,14 @@ test_mse = np.mean((test_thetas-test_pred)**2)
 test_mae = np.mean(abs(test_thetas-test_pred))
 test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
 
-rel_e = np.mean(abs(test_thetas-test_pred) / abs((dmax+dmin)/2 - test_thetas),axis=0)
+rel_e = np.mean(abs(test_thetas-test_pred) / abs(1/2 - test_thetas),axis=0)
+
+
+i=0
+for dev, re, n in zip(test_mae, rel_e, para_names):
+    print(n, " mean deviation: ", "{0:.4f}".format(dev), ", rel dev: ", "{0:.4f}".format(re), ", range: ", dmin[i], " - ", dmax[i])
+    i+=1
+
 
 print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
