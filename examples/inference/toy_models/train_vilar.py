@@ -110,11 +110,11 @@ data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 data_pred_meandev = np.mean( abs(data_pred_denorm- true_param), axis=0)
 
 true_param = np.squeeze(np.array(true_param))
-print("true_param shape: ", true_param.shape)
+# print("true_param shape: ", true_param.shape)
+#
+# print("abs(data_pred_denorm - true_param) = ", abs(data_pred_denorm - true_param) )
 
-print("abs(data_pred_denorm - true_param) = ", abs(data_pred_denorm - true_param) )
-
-rel_e1 = np.mean(abs(data_pred_denorm - true_param) / abs(np.array(dmin-dmax)/2 - true_param),axis=0)
+rel_e1 = np.mean(abs(data_pred_denorm - true_param) / abs(np.array(dmin)-np.array(dmax))/2 - true_param),axis=0)
 
 i=0
 for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
