@@ -68,7 +68,9 @@ class ANNModel(ModelBase):
         # predict
         return self.model.predict(xt)
 
-    def load_model(self, save_as='saved_models/dnn'):
+    def load_model(self, save_as=None ):
+        if not save_as:
+            save_as = self.save_as
         self.model = keras.models.load_model(save_as+'.hdf5')
 
 

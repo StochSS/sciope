@@ -130,7 +130,7 @@ for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
     i+=1
 
 
-nnm.load_model()
+# nnm.load_model()
 # validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
 
 
