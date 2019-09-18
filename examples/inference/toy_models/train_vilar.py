@@ -40,6 +40,7 @@ ts_len = train_ts.shape[1]
 # nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=3, con_layers=[32,48,64,96])
 nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
+print("Model name: ", nnm.name)
 
 # nnm.load_model()
 start_time = time.time()
