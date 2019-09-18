@@ -50,13 +50,13 @@ nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=3, con_layers=
 # nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
-# nnm.load_model()
+nnm.load_model()
 start_time = time.time()
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40, plot_training_progress=False)
-
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=4096, epochs=5, plot_training_progress=False)
+# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=32, epochs=40, plot_training_progress=False)
+#
+# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=4096, epochs=5, plot_training_progress=False)
 end_time = time.time()
 training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
@@ -112,30 +112,52 @@ data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 
 data_pred_meandev = np.mean( abs(data_pred_denorm- true_param), axis=0)
+
+true_param = np.squeeze(np.array(true_param))
+# print("true_param shape: ", true_param.shape)
+#
+# print("abs(data_pred_denorm - true_param) = ", abs(data_pred_denorm - true_param) )
+
+rel_e1 = np.mean(abs(data_pred_denorm - true_param),axis=0) / np.mean(abs( (np.array(dmin)+np.array(dmax))/2 - true_param),axis=0)
+
+print("rel_e1 shape: ", rel_e1.shape)
+
 i=0
-for dev, n in zip(data_pred_meandev,para_names):
-    print(n, ", true: ", true_param[i], ", predicted: ", "{0:.4f}".format(data_pred_denorm[0,i]), ", mean deviation: ", "{0:.4f}".format(dev), ", range: ", dmin[i], " - ", dmax[i])
+for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
+    print(n, ", true: ", true_param[i], ", predicted: ", "{0:.4f}".format(data_pred_denorm[0,i]), ", mean deviation: ",
+          "{0:.4f}".format(dev), ", rel dev: ", "{0:.4f}".format(re), ", range: ", dmin[i], " - ", dmax[i])
     i+=1
 
 
-# nnm.load_model()
-#validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
+nnm.load_model()
+validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
 
 
-# test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
-# test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
-# test_thetas = normalize_data(test_thetas,dmin,dmax)
-# test_pred = nnm.predict(test_ts)
-# test_pred = np.reshape(test_pred,(-1,15))
-#
-# test_mse = np.mean((test_thetas-test_pred)**2)
-# test_mae = np.mean(abs(test_thetas-test_pred))
-# test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
-#
-# print("Model name: ", nnm.name)
-# print("mean square error: ", test_mse)
-# print("mean square error: ", test_mae)
-#
-# test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae}
-# pickle.dump(test_results, open('results/training_results_' + modelname + '.p', "wb"))
-#
+test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
+test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+test_thetas_n = normalize_data(test_thetas,dmin,dmax)
+test_pred = nnm.predict(test_ts)
+test_pred = np.reshape(test_pred,(-1,15))
+test_pred_d = denormalize_data(test_pred,dmin,dmax)
+test_mse = np.mean((test_thetas-test_pred)**2)
+test_mae = np.mean(abs(test_thetas-test_pred_d))
+test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
+test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
+
+rel_e = np.mean(abs(test_thetas-test_pred),axis=0) / np.mean(abs(1/2 - test_thetas),axis=0)
+print("rel_e shape: ", rel_e.shape)
+
+
+i=0
+for dev, re, n in zip(test_ae, test_ae_norm, para_names):
+    print(n, " mean deviation: ", "{0:.4f}".format(dev), ", rel dev: ", "{0:.4f}".format(re), ", range: ", dmin[i], " - ", dmax[i])
+    i+=1
+
+
+print("Model name: ", nnm.name)
+print("mean square error: ", test_mse)
+print("mean square error: ", test_mae)
+
+test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_e": rel_e, "rel_test_ae": test_ae_norm}
+pickle.dump(test_results, open('results/training_results_' + modelname + '_' + nnm.name + '.p', "wb"))
+
