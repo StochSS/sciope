@@ -116,6 +116,8 @@ true_param = np.squeeze(np.array(true_param))
 
 rel_e1 = np.mean(abs(data_pred_denorm - true_param) / abs( (np.array(dmin)+np.array(dmax))/2 - true_param),axis=0)
 
+print("rel_e1 shape: ", rel_e1.shape)
+
 i=0
 for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
     print(n, ", true: ", true_param[i], ", predicted: ", "{0:.4f}".format(data_pred_denorm[0,i]), ", mean deviation: ",
@@ -138,6 +140,7 @@ test_mae = np.mean(abs(test_thetas-test_pred))
 test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
 
 rel_e = np.mean(abs(test_thetas-test_pred) / abs(1/2 - test_thetas),axis=0)
+print("rel_e shape: ", rel_e.shape)
 
 
 i=0
