@@ -18,14 +18,14 @@ class ANNModel(ModelBase):
     We use keras to define CNN and DNN layers to the model
     """
 
-    def __init__(self, use_logger=False, input_shape=(499, 3), output_shape=15, modelname="None"):
+    def __init__(self, use_logger=False, input_shape=(499, 3), output_shape=15, layers=[100,100, 100], modelname="None"):
         self.name = 'DNNModel'
         self.modelname = modelname
         super(ANNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
-        self.model = construct_model(input_shape, output_shape)
+        self.model = construct_model(input_shape, output_shape, layers = layers)
         self.save_as = 'saved_models/'  + self.modelname + "_" +  self.name
 
     # train the ANN model given the data
@@ -72,7 +72,7 @@ class ANNModel(ModelBase):
         self.model = keras.models.load_model(save_as+'.hdf5')
 
 
-def construct_model(input_shape, output_shape):
+def construct_model(input_shape, output_shape,layers=[100, 100, 100]):
     # TODO: add a **kwargs to specify the hyperparameters
     dense_activation = 'relu'
     batch_mom = 0.99
@@ -81,11 +81,11 @@ def construct_model(input_shape, output_shape):
     model.add(keras.layers.Reshape((new_shape,), input_shape=input_shape))
 
     # Add 3 layers of Dense layers with activation function and Batch Norm.
-    for i in range(0, 3):
+    for i in range(0, len(layers)):
         if i == 0:
-            model.add(keras.layers.Dense(100, input_dim=100))
+            model.add(keras.layers.Dense(layers[i], input_dim=100))
         else:
-            model.add(keras.layers.Dense(100))
+            model.add(keras.layers.Dense(layers[i]))
 
         model.add(keras.layers.BatchNormalization(momentum=batch_mom))
         model.add(keras.layers.Activation(dense_activation))

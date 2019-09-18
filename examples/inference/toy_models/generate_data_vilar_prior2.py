@@ -163,8 +163,8 @@ for i in range(100):
     print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr / intermediate_time * 60))
 
 print("generating test data done, shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
-# pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb" ) )
-# pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
+pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb" ) )
+pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
 
 # abc_trial_thetas = np.zeros((0,15))
 # abc_trial_ts = np.zeros((0,num_timestamps,3))
