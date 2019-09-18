@@ -154,13 +154,13 @@ for i in range(100):
     param, ts = dg.gen(batch_size=1000)
     test_thetas = np.concatenate((test_thetas,param),axis=0)
     test_ts = np.concatenate((test_ts,ts),axis=0)
-    if i%10 == 0:
-        print("test data shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
-        intermediate_time = time.time() - last_time
-        last_time = time.time()
-        delta_nr = test_ts.shape[0] - last_nr
-        last_nr = test_ts.shape[0]
-        print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr / intermediate_time * 60))
+
+    print("test data shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
+    intermediate_time = time.time() - last_time
+    last_time = time.time()
+    delta_nr = test_ts.shape[0] - last_nr
+    last_nr = test_ts.shape[0]
+    print("intermediate time: ", int(intermediate_time), "s, dataset/min: ", int(delta_nr / intermediate_time * 60))
 
 print("generating test data done, shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
 # pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb" ) )
