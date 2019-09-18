@@ -53,9 +53,12 @@ end_time = time.time()
 training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
 validation_pred = np.reshape(validation_pred,(-1,15))
+train_pred = nnm.predict(train_ts)
+train_pred = np.reshape(train_pred,(-1,15))
 print("training time: ", training_time)
-print("mean square error: ", np.mean((validation_thetas-validation_pred)**2))
-print("mean absolute error: ", np.mean(abs(validation_thetas-validation_pred)))
+print("validation mean square error: ", np.mean((validation_thetas-validation_pred)**2))
+print("validation mean absolute error: ", np.mean(abs(validation_thetas-validation_pred)))
+print("training mean absolute error: ", np.mean(abs(train_thetas-train_pred)))
 
 validation_mae = np.mean(abs(validation_thetas-validation_pred), axis=0)
 
