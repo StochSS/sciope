@@ -41,13 +41,13 @@ nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=3, con_layers=
 # nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
-# nnm.load_model()
+nnm.load_model()
 start_time = time.time()
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40, plot_training_progress=False)
-
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=4096, epochs=5, plot_training_progress=False)
+# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=32, epochs=40, plot_training_progress=False)
+#
+# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=4096, epochs=5, plot_training_progress=False)
 end_time = time.time()
 training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
@@ -125,10 +125,12 @@ test_mse = np.mean((test_thetas-test_pred)**2)
 test_mae = np.mean(abs(test_thetas-test_pred))
 test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
 
+rel_e = np.mean(abs(test_thetas-test_pred) / abs((dmax+dmin)/2 - test_thetas),axis=0)
+
 print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean square error: ", test_mae)
 
-test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae}
-pickle.dump(test_results, open('results/training_results_' + modelname + '.p', "wb"))
+test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_e": rel_e}
+pickle.dump(test_results, open('results/training_results_' + modelname + '_' + nnm.name + '.p', "wb"))
 

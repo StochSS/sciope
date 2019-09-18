@@ -19,7 +19,7 @@ class CNNModel(ModelBase):
     
 
     def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, con_len=3, con_layers=[25, 50], last_pooling=keras.layers.AvgPool1D):
-        self.name = 'CNNModel'
+        self.name = 'CNNModel_'
         super(CNNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
