@@ -114,7 +114,7 @@ true_param = np.squeeze(np.array(true_param))
 #
 # print("abs(data_pred_denorm - true_param) = ", abs(data_pred_denorm - true_param) )
 
-rel_e1 = np.mean(abs(data_pred_denorm - true_param) / abs( (np.array(dmin)+np.array(dmax))/2 - true_param),axis=0)
+rel_e1 = np.mean(abs(data_pred_denorm - true_param),axis=0) / np.mean(abs( (np.array(dmin)+np.array(dmax))/2 - true_param),axis=0)
 
 print("rel_e1 shape: ", rel_e1.shape)
 
@@ -139,7 +139,7 @@ test_mse = np.mean((test_thetas-test_pred)**2)
 test_mae = np.mean(abs(test_thetas-test_pred))
 test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
 
-rel_e = np.mean(abs(test_thetas-test_pred) / abs(1/2 - test_thetas),axis=0)
+rel_e = np.mean(abs(test_thetas-test_pred),axis=0) / np.mean(abs(1/2 - test_thetas),axis=0)
 print("rel_e shape: ", rel_e.shape)
 
 
