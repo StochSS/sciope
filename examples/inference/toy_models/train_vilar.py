@@ -34,12 +34,12 @@ validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "
 train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 
-
+clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
-# nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=3, con_layers=[32,48,64,96])
+nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=3, con_layers=[25,40,75])
 # nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
-nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15), layers=[400,400,400])
+# nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15), layers=[400,400,400])
 print("Model name: ", nnm.name)
 
 # nnm.load_model('saved_models/None_DNNModel')
