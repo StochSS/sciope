@@ -44,11 +44,18 @@ print("Model name: ", nnm.name)
 
 # nnm.load_model('saved_models/None_DNNModel')
 start_time = time.time()
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
           batch_size=32, epochs=40, plot_training_progress=False)
 
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+pickle.dump(history1, open('history1.p', "wb"))
+
+
+history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
           batch_size=4096, epochs=5, plot_training_progress=False)
+
+
+
+
 end_time = time.time()
 training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
