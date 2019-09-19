@@ -158,7 +158,7 @@ for dev, re, n in zip(test_ae, test_ae_norm, para_names):
 print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean absolute error: ", test_mae)
-#
-# test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_e": rel_e, "rel_test_ae": test_ae_norm}
-# pickle.dump(test_results, open('results/training_results_' + modelname + '_' + nnm.name + '.p', "wb"))
+
+test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_e": rel_e, "rel_test_ae": test_ae_norm}
+pickle.dump(test_results, open('results/training_results_' + modelname + '_' + nnm.name + '.p', "wb"))
 
