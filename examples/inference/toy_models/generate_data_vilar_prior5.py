@@ -89,25 +89,32 @@ prior = uniform_prior.UniformPrior(np.asarray(dmin), np.asarray(dmax)) # .draw
 
 dg = DataGenerator(prior_function=prior, sim=simulate)
 print("generating some data")
-# nr=0
-# while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
-#     nr += 1
-#
-# for nr in range(nr,3):
-#     train_thetas = np.zeros((0,15))
-#     train_ts = np.zeros((0,num_timestamps,3))
-#     for i in range(10):
-#         param, ts = dg.gen(batch_size=10000)
-#         train_thetas = np.concatenate((train_thetas,param),axis=0)
-#         # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
-#         train_ts = np.concatenate((train_ts,ts),axis=0)
-#
-#         print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-#
-#     print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-#
-#     pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas_'+str(nr)+'.p', "wb" ) )
-#     pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
+nr=0
+while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
+    nr += 1
+
+for nr in range(nr,3):
+    train_thetas = np.zeros((0,15))
+    train_ts = np.zeros((0,num_timestamps,3))
+    for i in range(10):
+        param, ts = dg.gen(batch_size=10000)
+        train_thetas = np.concatenate((train_thetas,param),axis=0)
+        # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
+        train_ts = np.concatenate((train_ts,ts),axis=0)
+        if i == 0:
+            tmin = np.min(train_thetas,axis=0)
+            tmax = np.min(train_thetas,axis=0)
+
+            for j in range(15):
+                print("index: ", i, ", tmin: ", "{0:.1f}".format(tmin[i]), ", tmax: ", "{0:.1f}".format(tmax[i]),
+                      ", dmin: ", "{0:.1f}".format(dmin[i]), ", dmax: ", "{0:.1f}".format(dmax[i]))
+
+        print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+
+    print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+
+    pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas_'+str(nr)+'.p', "wb" ) )
+    pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
 
 validation_thetas = np.zeros((0,15))
 validation_ts = np.zeros((0,num_timestamps,3))
