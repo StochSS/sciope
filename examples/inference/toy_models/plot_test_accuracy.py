@@ -41,5 +41,6 @@ for x in range(5):
     for y in range(3):
         i = x*3 + y
         ax[y,x].scatter(test_thetas[:,i],test_pred[:,i])
+        ax[y,x].plot([dmin[i], dmin[i], dmax[i], dmax[i],dmin[i]],[dmin[i], dmax[i], dmax[i],dmin[i], dmin[i]])
 
 plt.savefig('testplot')
