@@ -26,6 +26,7 @@ nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=2, con_layers=
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
 nnm.load_model()
+print("model loaded")
 
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
@@ -39,4 +40,6 @@ f, ax = plt.subplots(3,5,figsize=(30,30))# ,sharex=True,sharey=True)
 for x in range(5):
     for y in range(3):
         i = x*3 + y
-        ax[x,y].scatter(test_thetas[:,i],test_pred[:,i])
+        ax[y,x].scatter(test_thetas[:,i],test_pred[:,i])
+
+plt.savefig('testplot')
