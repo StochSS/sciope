@@ -35,10 +35,10 @@ class CNNModel(ModelBase):
                                                        save_best_only=True, 
                                                        monitor='val_loss', 
                                                        mode='min')
-        # Using Adam optimizer with learning rate 0.001
+        # Using Adam optimizer
         self.model.compile(optimizer=keras.optimizers.Adam(learning_rate),
                       loss='mean_squared_error', metrics=['mae'])
-        history1 = self.model.fit(
+        history = self.model.fit(
                 inputs, targets, validation_data=(validation_inputs,
                 validation_targets), epochs=epochs, batch_size=batch_size, shuffle=True,
                 callbacks=[mcp_save])#,EarlyStopping])
@@ -51,8 +51,10 @@ class CNNModel(ModelBase):
         #TODO: concatenate history1 and history2 to plot all the training 
         #progress       
         if plot_training_progress:
-            plt.plot(history1.history['mae'])
-            plt.plot(history1.history['val_mae'])
+            plt.plot(history.history['mae'])
+            plt.plot(history.history['val_mae'])
+
+    return history
             
     # Predict
     def predict(self, xt):
