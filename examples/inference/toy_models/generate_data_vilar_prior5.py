@@ -12,6 +12,7 @@ from vilar import Vilar_model
 import dask
 import pickle
 import os
+import time
 from sklearn.metrics import mean_absolute_error
 
 
@@ -92,7 +93,7 @@ print("generating some data")
 nr=0
 while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
     nr += 1
-
+start_t = time.time()
 for nr in range(nr,3):
     train_thetas = np.zeros((0,15))
     train_ts = np.zeros((0,num_timestamps,3))
@@ -126,6 +127,8 @@ for i in range(20):
         print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
 
 print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
+tot_t = time.time() - start_t
+print("time for gen train+val data: ", tot_t )
 
 pickle.dump( validation_thetas, open( 'datasets/' + modelname + '/validation_thetas.p', "wb" ) )
 pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', "wb" ) )
