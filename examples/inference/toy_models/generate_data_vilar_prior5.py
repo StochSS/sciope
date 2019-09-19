@@ -106,8 +106,8 @@ for nr in range(nr,3):
             tmax = np.min(train_thetas,axis=0)
 
             for j in range(15):
-                print("index: ", i, ", tmin: ", "{0:.1f}".format(tmin[i]), ", tmax: ", "{0:.1f}".format(tmax[i]),
-                      ", dmin: ", "{0:.1f}".format(dmin[i]), ", dmax: ", "{0:.1f}".format(dmax[i]))
+                print("index: ", j, ", tmin: ", "{0:.1f}".format(tmin[j]), ", tmax: ", "{0:.1f}".format(tmax[j]),
+                      ", dmin: ", "{0:.1f}".format(dmin[j]), ", dmax: ", "{0:.1f}".format(dmax[j]))
 
         print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
