@@ -7,6 +7,7 @@ from normalize_data import normalize_data, denormalize_data
 from sciope.models.cnn_regressor import CNNModel
 from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
+from load_data import load_spec
 
 endtime = 200
 num_timestamps = 401
@@ -28,12 +29,18 @@ nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=2, con_layers=
 nnm.load_model()
 print("model loaded")
 
-test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
-test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+# test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
+# test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+# test_pred = nnm.predict(test_ts)
+# test_pred = np.reshape(test_pred,(-1,15))
+# test_pred = denormalize_data(test_pred,dmin,dmax)
+
+test_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
+test_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
 test_pred = nnm.predict(test_ts)
 test_pred = np.reshape(test_pred,(-1,15))
 test_pred = denormalize_data(test_pred,dmin,dmax)
-
+print("validation shape: ", test_pred.shape)
 print("are we here?")
 f, ax = plt.subplots(3,5,figsize=(30,30))# ,sharex=True,sharey=True)
 
