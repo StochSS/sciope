@@ -103,7 +103,7 @@ for nr in range(nr,3):
         train_ts = np.concatenate((train_ts,ts),axis=0)
         if i == 0:
             tmin = np.min(train_thetas,axis=0)
-            tmax = np.min(train_thetas,axis=0)
+            tmax = np.max(train_thetas,axis=0)
 
             for j in range(15):
                 print("index: ", j, ", tmin: ", "{0:.1f}".format(tmin[j]), ", tmax: ", "{0:.1f}".format(tmax[j]),
