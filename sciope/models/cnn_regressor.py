@@ -54,7 +54,7 @@ class CNNModel(ModelBase):
             plt.plot(history.history['mae'])
             plt.plot(history.history['val_mae'])
 
-    return history
+        return history
             
     # Predict
     def predict(self, xt):
