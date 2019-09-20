@@ -21,7 +21,7 @@ from vilar import Vilar_model
 num_timestamps=401
 endtime=200
 
-modelname = "vilar_ACR_prior5_" + str(endtime) + "_" + str(num_timestamps)
+modelname = "vilar_ACR_prior5" + str(endtime) + "_" + str(num_timestamps)
 
 #Load data
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
