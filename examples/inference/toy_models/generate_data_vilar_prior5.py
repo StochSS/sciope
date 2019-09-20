@@ -133,8 +133,7 @@ for i in range(20):
         print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
 
 print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
-tot_t = time.time() - start_t
-print("time for gen train+val data: ", tot_t )
+
 
 pickle.dump( validation_thetas, open( 'datasets/' + modelname + '/validation_thetas.p', "wb" ) )
 pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', "wb" ) )
