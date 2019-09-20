@@ -93,12 +93,14 @@ print("generating some data")
 nr=0
 while os.path.isfile('datasets/' + modelname + '/train_thetas_'+str(nr)+'.p'):
     nr += 1
-start_t = time.time()
+delta_t = time.time()
 for nr in range(nr,3):
     train_thetas = np.zeros((0,15))
     train_ts = np.zeros((0,num_timestamps,3))
-    for i in range(10):
-        param, ts = dg.gen(batch_size=10000)
+    delta_datapoints = train_thetas.shape[0]
+
+    for i in range(100):
+        param, ts = dg.gen(batch_size=1000)
         train_thetas = np.concatenate((train_thetas,param),axis=0)
         # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
         train_ts = np.concatenate((train_ts,ts),axis=0)
@@ -111,6 +113,10 @@ for nr in range(nr,3):
                       ", dmin: ", "{0:.1f}".format(dmin[j]), ", dmax: ", "{0:.1f}".format(dmax[j]))
 
         print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+        delta_t = time.time() - delta_t
+        delta_datapoints = train_thetas.shape[0] - delta_datapoints
+
+        print("delta time: ", delta_t, "s, delta_datapoints/delta_t: ", "{0:.2f}".format( delta_datapoints/delta_t ))
 
     print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
