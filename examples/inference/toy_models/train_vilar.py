@@ -30,6 +30,8 @@ train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
 
+training_size = 30000
+
 train_thetas = train_thetas[0:30000]
 train_ts = train_ts[0:30000]
 #Normalize parameter values
@@ -47,7 +49,7 @@ print("Model name: ", nnm.name)
 # nnm.load_model('saved_models/None_DNNModel')
 start_time = time.time()
 history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=1, plot_training_progress=False)
+          batch_size=32, epochs=40, plot_training_progress=False)
 
 
 print("history: ", history1.history)
@@ -171,5 +173,6 @@ print("mean square error: ", test_mse)
 print("mean absolute error: ", test_mae)
 
 test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_e": rel_e, "rel_test_ae": test_ae_norm}
-pickle.dump(test_results, open('results/training_results_' + modelname + '_' + nnm.name + '.p', "wb"))
+pickle.dump(test_results,
+            open('results/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) + '.p', "wb"))
 
