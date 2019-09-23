@@ -31,7 +31,7 @@ class CNNModel(ModelBase):
     def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs, learning_rate=0.001,
               save_model = True, plot_training_progress=False):
 
-        es = keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=5)
+        es = keras.callbacks.EarlyStopping(monitor='val_mse', mode='min', verbose=1)
 
         if save_model:
             mcp_save = keras.callbacks.ModelCheckpoint(self.save_as+'.hdf5',
