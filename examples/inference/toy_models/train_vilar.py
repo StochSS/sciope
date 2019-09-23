@@ -26,10 +26,12 @@ dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
 #Load data
-train_thetas, train_ts = load_spec(modelname=modelname, type = "train")[0:30000]
-validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )[0:30000]
+train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
+validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
 
+train_thetas = train_thetas[0:30000]
+validation_thetas = validation_thetas[0:30000]
 #Normalize parameter values
 train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
