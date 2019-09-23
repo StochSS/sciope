@@ -26,8 +26,8 @@ dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
 #Load data
-train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
-validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
+train_thetas, train_ts = load_spec(modelname=modelname, type = "train")[0:30000]
+validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )[0:30000]
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
 
 #Normalize parameter values
@@ -37,7 +37,7 @@ validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=7, con_layers=clay)
+nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=3, con_layers=clay)
 # nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15), layers=[200,200,200])
 print("Model name: ", nnm.name)
