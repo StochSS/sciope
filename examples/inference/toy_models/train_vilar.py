@@ -32,8 +32,8 @@ validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "
 
 training_size = 300000
 
-train_thetas = train_thetas[0:30000]
-train_ts = train_ts[0:30000]
+train_thetas = train_thetas[0:training_size]
+train_ts = train_ts[0:training_size]
 #Normalize parameter values
 train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
