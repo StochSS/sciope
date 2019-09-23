@@ -29,9 +29,9 @@ class CNNModel(ModelBase):
     
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs, learning_rate=0.001,
-              save_model = True, plot_training_progress=False):
+              save_model = True, val_freq=1, early_stopping_patience=5, plot_training_progress=False):
 
-        es = keras.callbacks.EarlyStopping(monitor='val_mse', mode='min', verbose=1)
+        es = keras.callbacks.EarlyStopping(monitor='val_mse', mode='min', verbose=1,patience=early_stopping_patience)
 
         if save_model:
             mcp_save = keras.callbacks.ModelCheckpoint(self.save_as+'.hdf5',
@@ -44,7 +44,7 @@ class CNNModel(ModelBase):
         history = self.model.fit(
                 inputs, targets, validation_data=(validation_inputs,
                 validation_targets), epochs=epochs, batch_size=batch_size, shuffle=True,
-                callbacks=[mcp_save, es])#,EarlyStopping])
+                callbacks=[mcp_save, es], validation_freq=val_freq)#,EarlyStopping])
         
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
