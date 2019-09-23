@@ -47,9 +47,11 @@ print("Model name: ", nnm.name)
 # nnm.load_model('saved_models/None_DNNModel')
 start_time = time.time()
 history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40, plot_training_progress=False)
+          batch_size=32, epochs=1, plot_training_progress=False)
 
-pickle.dump(history1, open('history1.p', "wb"))
+
+print("history: ", history1.history)
+pickle.dump(history1.history, open('history1.p', "wb"))
 
 
 history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
