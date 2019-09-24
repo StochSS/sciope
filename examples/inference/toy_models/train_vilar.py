@@ -39,7 +39,7 @@ train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 step=2
 train_ts = train_ts[:,::step]
-validation_ts[:,::step]
+validation_ts = validation_ts[:,::step]
 clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
