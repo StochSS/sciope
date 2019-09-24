@@ -30,7 +30,7 @@ train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
 
-training_size = 100000
+training_size = 200000
 
 train_thetas = train_thetas[0:training_size]
 train_ts = train_ts[0:training_size]
