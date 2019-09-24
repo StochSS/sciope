@@ -30,14 +30,16 @@ train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
 
-training_size = 200000
+training_size = 300000
 
 train_thetas = train_thetas[0:training_size]
 train_ts = train_ts[0:training_size]
 #Normalize parameter values
 train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
-
+step=2
+train_ts = train_ts[:,::step]
+validation_ts[:,::step]
 clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
@@ -120,7 +122,7 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 print("before simulation")
 data = np.array([np.squeeze(simulate(true_param)) for i in range(100)])
-
+data = data[:,::step]
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
@@ -149,6 +151,7 @@ for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
 
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+test_ts = test_ts[:,::step]
 test_thetas_n = normalize_data(test_thetas,dmin,dmax)
 test_pred = nnm.predict(test_ts)
 test_pred = np.reshape(test_pred,(-1,15))
@@ -174,5 +177,5 @@ print("mean absolute error: ", test_mae)
 
 test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_e": rel_e, "rel_test_ae": test_ae_norm}
 pickle.dump(test_results,
-            open('results/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) + '.p', "wb"))
+            open('results/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) + '_step_' + str(step) + '.p', "wb"))
 
