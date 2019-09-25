@@ -39,6 +39,7 @@ train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 step=1
 end_step = 51
+print("end_step: ", end_step)
 train_ts = train_ts[:,:end_step:step]
 validation_ts = validation_ts[:,:end_step:step]
 clay=[32,48,64,96]
