@@ -40,7 +40,7 @@ validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 step=16
 train_ts = train_ts[:,::step]
 validation_ts = validation_ts[:,::step]
-clay=[32,48,64,96]
+clay=[32,48,64]#,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
 nnm = CNNModel(input_shape=(ts_len,3), output_shape=(15), con_len=3, con_layers=clay)
