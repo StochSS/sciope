@@ -37,7 +37,7 @@ train_ts = train_ts[0:training_size]
 #Normalize parameter values
 train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
-step=2
+step=4
 train_ts = train_ts[:,::step]
 validation_ts = validation_ts[:,::step]
 clay=[32,48,64,96]
