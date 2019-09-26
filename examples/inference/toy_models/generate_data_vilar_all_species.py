@@ -101,8 +101,8 @@ for nr in range(nr,3):
         train_thetas = np.concatenate((train_thetas,param),axis=0)
         # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
         train_ts = np.concatenate((train_ts,ts),axis=0)
-        if i%10 == 0:
-            print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+
+        print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
     print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
