@@ -98,10 +98,10 @@ class Vilar_model:
 
         # extract time values
         #time = np.array(simple_trajectories[0][:, 0])
-        species_list = ['C','A','R']
+        species_list =  ['Da', 'Da_prime', 'Ma', 'Dr', 'Dr_prime', 'Mr', 'C', 'A', 'R']
         # extract just the trajectories for Specie A with index 8 into a numpy array
         # print("simple traj type: ", type(simple_trajectories[0]), ", len: ", len(simple_trajectories[0]))
-        print("trajs keys: ", simple_trajectories[0].keys())
+        # print("trajs keys: ", simple_trajectories[0].keys())
         s_trajectories = np.array([simple_trajectories[0][s] for s in species_list])
         # print("s traj shape: ", s_trajectories.shape)
 
