@@ -11,7 +11,7 @@ def load_spec(modelname="vilar_ACR_100_201", type = "train",species=None):
     while os.path.isfile("datasets/"+modelname+"/"+type+"_thetas_"+str(nr)+".p") and os.path.isfile("datasets/"+modelname+"/"+type+"_ts_"+str(nr)+".p"):
         if species:
             thetas = pickle.load(open('datasets/' + modelname + '/' + type + '_thetas_' + str(nr) + '.p', "rb"))
-            ts = pickle.load(open('datasets/' + modelname + '/' + type + '_ts_' + str(nr) + '.p', "rb"))[::,species]
+            ts = pickle.load(open('datasets/' + modelname + '/' + type + '_ts_' + str(nr) + '.p', "rb"))[:,:,species]
         else:
             thetas = pickle.load(open('datasets/' + modelname + '/' + type + '_thetas_' + str(nr) + '.p', "rb"))
             ts = pickle.load(open('datasets/' + modelname + '/' + type + '_ts_' + str(nr) + '.p', "rb"))
