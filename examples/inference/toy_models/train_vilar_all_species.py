@@ -159,7 +159,7 @@ for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
 
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
-test_ts = test_ts[:,:end_step:step,:]
+test_ts = test_ts[:,:end_step:step,species]
 test_thetas_n = normalize_data(test_thetas,dmin,dmax)
 test_pred = nnm.predict(test_ts)
 test_pred = np.reshape(test_pred,(-1,15))
