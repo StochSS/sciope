@@ -27,10 +27,12 @@ modelname = "vilar_ACR_" + str(endtime) + "_" + str(num_timestamps) + '_all_spec
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
+species = [1,2,3]
+
 #Load data
-train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
-validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
-validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
+train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
+validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )[:,:,species]
+validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )[:,:,species]
 
 training_size = 300000
 
@@ -41,11 +43,10 @@ train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 step=1
 end_step = 401
-species = range(9)
 print("end_step: ", end_step)
-train_ts = train_ts[:,:end_step:step,species]
+train_ts = train_ts[:,:end_step:step,:]
 print("ts shape: ", train_ts.shape)
-validation_ts = validation_ts[:,:end_step:step,species]
+validation_ts = validation_ts[:,:end_step:step,:]
 clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
@@ -128,7 +129,7 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 print("before simulation")
 data = np.array([np.squeeze(simulate(true_param)) for i in range(100)])
-data = data[:,:end_step:step,species]
+data = data[:,:end_step:step,:]
 data_pred = nnm.predict(data)
 data_pred = np.squeeze(data_pred)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
@@ -157,7 +158,7 @@ for dev, re, n in zip(data_pred_meandev,rel_e1,para_names):
 
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
-test_ts = test_ts[:,:end_step:step,species]
+test_ts = test_ts[:,:end_step:step,:]
 test_thetas_n = normalize_data(test_thetas,dmin,dmax)
 test_pred = nnm.predict(test_ts)
 test_pred = np.reshape(test_pred,(-1,15))

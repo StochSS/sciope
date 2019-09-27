@@ -4,13 +4,17 @@ import os
 import numpy as np
 
 
-def load_spec(modelname="vilar_ACR_100_201", type = "train"):
+def load_spec(modelname="vilar_ACR_100_201", type = "train",species=None):
     loaded_thetas = None
     loaded_ts = None
     nr=0
     while os.path.isfile("datasets/"+modelname+"/"+type+"_thetas_"+str(nr)+".p") and os.path.isfile("datasets/"+modelname+"/"+type+"_ts_"+str(nr)+".p"):
-        thetas = pickle.load(open('datasets/' + modelname + '/' + type + '_thetas_' + str(nr) + '.p', "rb"))
-        ts = pickle.load(open('datasets/' + modelname + '/' + type + '_ts_' + str(nr) + '.p', "rb"))
+        if species:
+            thetas = pickle.load(open('datasets/' + modelname + '/' + type + '_thetas_' + str(nr) + '.p', "rb"))[species]
+            ts = pickle.load(open('datasets/' + modelname + '/' + type + '_ts_' + str(nr) + '.p', "rb"))[species]
+        else:
+            thetas = pickle.load(open('datasets/' + modelname + '/' + type + '_thetas_' + str(nr) + '.p', "rb"))
+            ts = pickle.load(open('datasets/' + modelname + '/' + type + '_ts_' + str(nr) + '.p', "rb"))
 
         if nr == 0:
             loaded_thetas = thetas
