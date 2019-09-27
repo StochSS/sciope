@@ -31,6 +31,7 @@ species = [1,2,3]
 
 #Load data
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
+print("load train data done!")
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )[:,:,species]
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )[:,:,species]
 
