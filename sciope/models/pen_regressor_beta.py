@@ -50,7 +50,7 @@ class PEN_CNNModel(ModelBase):
             inputs, targets, validation_data=(validation_inputs,
                                               validation_targets), epochs=epochs, batch_size=batch_size, shuffle=True,
             callbacks=[mcp_save, es], validation_freq=val_freq)
-        
+
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
         if save_model:
@@ -66,8 +66,9 @@ class PEN_CNNModel(ModelBase):
         #TODO: concatenate history1 and history2 to plot all the training 
         #progress       
         if plot_training_progress:
-            plt.plot(history1.history['mae'])
-            plt.plot(history1.history['val_mae'])
+            plt.plot(history.history['mae'])
+            plt.plot(history.history['val_mae'])
+        return history
             
     # Predict
     def predict(self, xt):
