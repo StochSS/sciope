@@ -34,7 +34,7 @@ class ANNModel(ModelBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
 
-        self.model = construct_model
+        self.model = construct_model()
 
     # train the ANN model given the data
     def train(self, inputs, targets):

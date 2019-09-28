@@ -48,8 +48,8 @@ clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
 # nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay)
-nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=10)
-# nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15), layers=[200,200,200])
+# nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=10)
+nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[200,200,200])
 print("Model name: ", nnm.name)
 
 # nnm.load_model('saved_models/None_DNNModel')

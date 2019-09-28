@@ -30,7 +30,11 @@ class ANNModel(ModelBase):
 
     # train the ANN model given the data
     def train(self, inputs, targets, validation_inputs, validation_targets, batch_size, epochs, learning_rate = 0.001,
-              save_model=True, plot_training_progress=False):
+              save_model=True, val_freq=1, early_stopping_patience=5, plot_training_progress=False):
+
+        es = keras.callbacks.EarlyStopping(monitor='val_mean_absolute_error', mode='min', verbose=1,
+                                           patience=early_stopping_patience)
+
         if save_model:
             mcp_save = keras.callbacks.ModelCheckpoint(self.save_as + '.hdf5',
                                                        save_best_only=True,
@@ -44,7 +48,7 @@ class ANNModel(ModelBase):
         history = self.model.fit(
             inputs, targets, validation_data=(validation_inputs,
                                               validation_targets), epochs=epochs, batch_size=batch_size, shuffle=True,
-            callbacks=[mcp_save])
+            callbacks=[mcp_save, es], validation_freq=val_freq)
 
         if save_model:
             self.model = keras.models.load_model(self.save_as + '.hdf5')
