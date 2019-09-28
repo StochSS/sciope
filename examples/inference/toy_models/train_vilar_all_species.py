@@ -56,14 +56,14 @@ nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_le
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15), layers=[200,200,200])
 print("Model name: ", nnm.name)
 
-# nnm.load_model()
+nnm.load_model()
 start_time = time.time()
-history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+# history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
 
 
-print("history: ", history1.history)
-pickle.dump(history1.history, open('history1.p', "wb"))
+# print("history: ", history1.history)
+# pickle.dump(history1.history, open('history1.p', "wb"))
 
 
 history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
