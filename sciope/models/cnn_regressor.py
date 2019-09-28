@@ -18,13 +18,14 @@ class CNNModel(ModelBase):
     """
     
 
-    def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, con_len=3, con_layers=[25, 50], last_pooling=keras.layers.AvgPool1D):
+    def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, con_len=3, con_layers=[25, 50],
+                 last_pooling=keras.layers.AvgPool1D,dense_layers=[100,100]):
         self.name = 'CNNModel_con_len' + str(con_len) + '_con_layers' + str(con_layers)
         super(CNNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
-        self.model = construct_model(input_shape,output_shape, con_len=con_len, con_layers=con_layers, last_pooling = last_pooling)
+        self.model = construct_model(input_shape,output_shape, con_len=con_len, con_layers=con_layers, last_pooling = last_pooling, dense_layers=dense_layers)
         self.save_as = 'saved_models/cnn_light10'
     
     # train the CNN model given the data
@@ -68,7 +69,7 @@ class CNNModel(ModelBase):
         save_as = self.save_as
         self.model = keras.models.load_model(save_as+'.hdf5')
     
-def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 100], last_pooling=keras.layers.AvgPool1D):
+def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 100], last_pooling=keras.layers.AvgPool1D, dense_layers = [100,100]):
     #TODO: add a **kwargs to specify the hyperparameters
     activation = 'relu'
     dense_activation = 'relu'
@@ -123,14 +124,13 @@ def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 1
     model.add(keras.layers.Flatten())
     
     #Add 3 layers of Dense layers with activation function and Batch Norm.
-    for i in range(1,3):
-        model.add(keras.layers.Dense(100))
+    for i in range(len(dense_layers)):
+        model.add(keras.layers.Dense(dense_layers[i]))
         model.add(keras.layers.BatchNormalization(momentum=batch_mom))
         model.add(keras.layers.Activation(dense_activation))
     
     #Add output layer without Activation or Batch Normalization
     model.add(keras.layers.Dense(output_shape))
-        
 
     model.summary()
     return model  
