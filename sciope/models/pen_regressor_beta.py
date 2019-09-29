@@ -20,7 +20,7 @@ class PEN_CNNModel(ModelBase):
     
 
     def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, pen_nr=3, con_layers=[25, 50]):
-        self.name = 'PEN_NNModel' + str(pen_nr)
+        self.name = 'PEN_NNModel' + str(pen_nr) + '_conlayers_' + str(con_layers)
         super(PEN_CNNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
