@@ -52,7 +52,7 @@ clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
 # nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay)
-nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=2, con_layers=[32,64,128], dense_layers=[100,100])
+nnm = PEN_CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(15), pen_nr=2, con_layers=[32,64,128], dense_layers=[100,100])
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15), layers=[200,200,200])
 print("Model name: ", nnm.name)
 
