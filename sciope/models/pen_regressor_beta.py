@@ -19,13 +19,14 @@ class PEN_CNNModel(ModelBase):
     """
     
 
-    def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, pen_nr=3, con_layers=[25, 50]):
+    def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, pen_nr=3, con_layers=[25, 50],
+                 dense_layers=[100, 100, 100]):
         self.name = 'PEN_NNModel' + str(pen_nr) + '_conlayers_' + str(con_layers)
         super(PEN_CNNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
-        self.model = construct_model(input_shape,output_shape,pen_nr,con_layers)
+        self.model = construct_model(input_shape,output_shape,pen_nr,con_layers,dense_layers=dense_layers)
         self.pen_nr = pen_nr
         self.save_as = 'saved_models/pen'+str(self.pen_nr)
 
@@ -77,7 +78,7 @@ class PEN_CNNModel(ModelBase):
     def load_model(self):
         self.model = keras.models.load_model(self.save_as+'.hdf5', custom_objects={"keras": keras})
     
-def construct_model(input_shape, output_shape, pen_nr = 3, con_layers=[25, 50, 100] ):
+def construct_model(input_shape, output_shape, pen_nr = 3, con_layers=[25, 50, 100],dense_layers = [100, 100, 100] ):
     #TODO: add a **kwargs to specify the hyperparameters
 
     activation = 'relu'
@@ -85,7 +86,7 @@ def construct_model(input_shape, output_shape, pen_nr = 3, con_layers=[25, 50, 1
     padding = 'same'
     poolpadding = 'valid'
     con_len = 1
-    dense_layers = [100, 100, 100]
+
     maxpool = con_len
 
     batch_mom = 0.99
