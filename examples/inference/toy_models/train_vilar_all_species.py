@@ -27,7 +27,7 @@ modelname = "vilar_ACR_" + str(endtime) + "_" + str(num_timestamps) + '_all_spec
 dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
-species = [6,7,8]
+species = [6]
 
 #Load data
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
@@ -51,8 +51,8 @@ validation_ts = validation_ts[:,:end_step:step,:]
 clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay)
-# nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
+# nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay)
+nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=2, con_layers=[32,64,128], dense_layers=[100,100])
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15), layers=[200,200,200])
 print("Model name: ", nnm.name)
 
