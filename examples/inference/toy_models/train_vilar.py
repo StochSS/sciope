@@ -39,7 +39,7 @@ train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 step=1
 end_step = 401
-species = [0]
+species = [1]
 print("end_step: ", end_step)
 train_ts = train_ts[:,:end_step:step,species]
 print("ts shape: ", train_ts.shape)
