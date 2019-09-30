@@ -32,6 +32,7 @@ class CNNModel(ModelBase):
     def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs, learning_rate=0.001,
               save_model = True, val_freq=1, early_stopping_patience=5, plot_training_progress=False,verbose=1):
 
+        print("verbose = ", verbose)
         es = keras.callbacks.EarlyStopping(monitor='val_mean_absolute_error', mode='min', verbose=verbose,patience=early_stopping_patience)
 
         if save_model:
@@ -46,7 +47,7 @@ class CNNModel(ModelBase):
                 inputs, targets, validation_data=(validation_inputs,
                 validation_targets), epochs=epochs, batch_size=batch_size, shuffle=True,
                 callbacks=[mcp_save, es], validation_freq=val_freq, verbose=2)
-        print("verbose = 2")
+
         #To avoid overfitting load the model with best validation results after 
         #the first training part.        
         if save_model:
