@@ -54,6 +54,7 @@ nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=
 print("Model name: ", nnm.name)
 verb = 0
 print("verb: ", verb)
+print("species: ", species)
 # nnm.load_model('saved_models/None_DNNModel')
 start_time = time.time()
 history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
