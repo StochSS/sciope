@@ -56,7 +56,7 @@ print("Model name: ", nnm.name)
 # nnm.load_model('saved_models/None_DNNModel')
 start_time = time.time()
 history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+          batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=2)
 
 
 print("history: ", history1.history)

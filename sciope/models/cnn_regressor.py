@@ -30,9 +30,9 @@ class CNNModel(ModelBase):
     
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs, learning_rate=0.001,
-              save_model = True, val_freq=1, early_stopping_patience=5, plot_training_progress=False):
+              save_model = True, val_freq=1, early_stopping_patience=5, plot_training_progress=False,verbose=1):
 
-        es = keras.callbacks.EarlyStopping(monitor='val_mean_absolute_error', mode='min', verbose=1,patience=early_stopping_patience)
+        es = keras.callbacks.EarlyStopping(monitor='val_mean_absolute_error', mode='min', verbose=verbose,patience=early_stopping_patience)
 
         if save_model:
             mcp_save = keras.callbacks.ModelCheckpoint(self.save_as+'.hdf5',
