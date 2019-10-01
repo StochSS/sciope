@@ -120,24 +120,24 @@ for dev, n in zip(data_pred_meandev,para_names):
 
 
 
-# nnm.load_model()
-#validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
+nnm.load_model()
+validation_pred = np.array([nnm.predict(validation_ts[i*100:(i+1)*100]) for i in range(500)])
 
 
-# test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
-# test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
-# test_thetas = normalize_data(test_thetas,dmin,dmax)
-# test_pred = nnm.predict(test_ts)
-# test_pred = np.reshape(test_pred,(-1,15))
-#
-# test_mse = np.mean((test_thetas-test_pred)**2)
-# test_mae = np.mean(abs(test_thetas-test_pred))
-# test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
-#
-# print("Model name: ", nnm.name)
-# print("mean square error: ", test_mse)
-# print("mean square error: ", test_mae)
-#
-# test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae}
-# pickle.dump(test_results, open('results/training_results_' + modelname + '.p', "wb"))
-#
+test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
+test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+test_thetas = normalize_data(test_thetas,dmin,dmax)
+test_pred = nnm.predict(test_ts)
+test_pred = np.reshape(test_pred,(-1,15))
+
+test_mse = np.mean((test_thetas-test_pred)**2)
+test_mae = np.mean(abs(test_thetas-test_pred))
+test_ae = np.mean(abs(test_thetas-test_pred),axis=0)
+
+print("Model name: ", nnm.name)
+print("mean square error: ", test_mse)
+print("mean square error: ", test_mae)
+
+test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae}
+pickle.dump(test_results, open('results/training_results_' + modelname + '.p', "wb"))
+
