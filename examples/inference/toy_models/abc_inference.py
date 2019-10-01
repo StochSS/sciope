@@ -16,12 +16,14 @@ from load_data import load_spec
 
 
 # choose neural network model
-nnm = CNNModel(input_shape=(401,3), output_shape=(15))
+# nnm = CNNModel(input_shape=(401,3), output_shape=(15))
 # nnm = PEN_CNNModel(input_shape=(201,3), output_shape=(15), pen_nr=10)
 # nm = ANNModel(input_shape=(100,1), output_shape=(2))
 
-nnm.load_model()
-
+# nnm.load_model()
+clay=[32,48,64,96]
+nnm = CNNModel(input_shape=(401,3), output_shape=15, con_len=3, con_layers=clay, dense_layers=[200,200,200])
+nnm.load_model('saved_models/cnn_light10')
 
 #ABC algorithm
 
@@ -105,4 +107,4 @@ for i in range(16):
 #plt.plot([-2,2,0,-2],[-1,-1,1,-1],color="red")
 
 
-plt.savefig('posterior_abc')
+plt.savefig('posterior_abc1_new')

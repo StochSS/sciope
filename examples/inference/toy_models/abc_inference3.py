@@ -117,7 +117,7 @@ for x in range(15):
     for y in range(x,15):
         print("x: ", x, ", y: ", y)
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
-        if x==y:
+        if x == y:
             dist = abs(abc_trial_pred[:, x] - data_pred[x])
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:2000]
             accepted_para = abc_trial_thetas[accepted_ind]
