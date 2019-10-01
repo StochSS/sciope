@@ -66,7 +66,7 @@ class UniformPrior(PriorBase):
     @delayed
     def _uniform_scale(self, n, d):
         # Generate samples in [0,1)
-        generated_samples = np.random.random((n, d)) * 2 - 1
+        generated_samples = np.random.random((n, d))
 
         # scale from [0,1) to problem range
         scaled_values = generated_samples
