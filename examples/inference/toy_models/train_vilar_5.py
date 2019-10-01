@@ -31,10 +31,7 @@ dmin = [40, 200,  0,  20, 10, 1,  1, 0, 0,  0,  0.5, 0.2, 0, 0, 20]
 dmax = [80, 600, 0.1, 60, 60, 7, 12, 2, 3, 0.7, 2.5,  2,  3, 70, 120]
 
 
-print("dmin:", dmin)
-print("train thetas min: ", np.min(train_thetas, axis=0))
-print("dmax:", dmax)
-print("train thetas max: ", np.max(train_thetas, axis=0))
+print("train_thetas shape: ", train_thetas.shape)
 
 #Normalize parameter values
 train_thetas = normalize_data(train_thetas,dmin,dmax)
