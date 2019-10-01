@@ -21,7 +21,7 @@ from vilar import Vilar_model
 num_timestamps=401
 endtime=200
 
-modelname = "vilar_ACR_prior5" + str(endtime) + "_" + str(num_timestamps)
+modelname = "vilar_ACR_prior5_" + str(endtime) + "_" + str(num_timestamps)
 
 #Load data
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
@@ -46,13 +46,13 @@ nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=
 # nnm = PEN_CNNModel(input_shape=(ts_len,3), output_shape=(15), pen_nr=10)
 # nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15))
 
-# nnm.load_model()
+nnm.load_model()
 start_time = time.time()
-nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40, plot_training_progress=False)
+# nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=32, epochs=40, plot_training_progress=False)
 
 nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=4096, epochs=5, plot_training_progress=False)
+          batch_size=4096, epochs=5*5, plot_training_progress=False)
 end_time = time.time()
 training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
