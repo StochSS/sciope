@@ -158,7 +158,7 @@ for x in range(15):
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
-
+            ax[x, y].set_title("mean x: ", np.mean(accepted_para[:, x]), ", mean y: ", np.mean(accepted_para[:, y]))
 
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
             ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=1, alpha=0.5)
