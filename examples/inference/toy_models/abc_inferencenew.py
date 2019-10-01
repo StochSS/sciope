@@ -133,14 +133,6 @@ for x in range(15):
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=bins, color='green', alpha=0.5)
-            peak_val = np.max(ret[0])
-            ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
-            # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
-            # ax[x, y].plot([data_pred[x], data_pred[x]], [0, peak_val], c='gray')
-
-            ax[x, y].plot([1, 1], [0, peak_val], c='b')
-            ax[x, y].plot([0, 0], [0, peak_val], c='b')
 
             loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
                                                args=(accepted_para[:, x],), disp=False)
@@ -152,6 +144,17 @@ for x in range(15):
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
             ax[y, x].plot(l, p, c='green')
+
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=bins, color='green', alpha=0.5)
+            peak_val = np.maximum(np.max(ret[0]), np.max(p))
+            ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
+            # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
+            # ax[x, y].plot([data_pred[x], data_pred[x]], [0, peak_val], c='gray')
+
+            ax[x, y].plot([1, 1], [0, peak_val], c='b')
+            ax[x, y].plot([0, 0], [0, peak_val], c='b')
+
+
 
         else:
             dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[[x,y]], axis=1)
@@ -170,32 +173,32 @@ for x in range(15):
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
-            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
-                                              args=(accepted_para[:, y],), disp=False)
-
-            left_trunc_norm = (lower - loc_opt) / scale_opt
-            right_trunc_norm = (upper - loc_opt) / scale_opt
-
-            l = np.linspace(lower, upper, 100)
-            p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-            ax[y, y].plot(l, p, c='red', alpha=0.2)
-            ax[x,y].hist(accepted_para[:, y], color='red', alpha=0.1, density=True)
-
-            ax[x, y].plot(l, p, c='red', alpha=0.2)
-
-
-            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
-                                              args=(accepted_para[:, x],), disp=False)
-
-            left_trunc_norm = (lower - loc_opt) / scale_opt
-            right_trunc_norm = (upper - loc_opt) / scale_opt
-
-            l = np.linspace(lower, upper, 100)
-            p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-            ax[x, x].plot(l, p, c='gray', alpha=0.4)
-            ax[x,y].hist(accepted_para[:, x], color='gray', alpha=0.1, density=True)
-
-            ax[x, y].plot(l, p, c='gray', alpha=0.4)
+            # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
+            #                                   args=(accepted_para[:, y],), disp=False)
+            #
+            # left_trunc_norm = (lower - loc_opt) / scale_opt
+            # right_trunc_norm = (upper - loc_opt) / scale_opt
+            #
+            # l = np.linspace(lower, upper, 100)
+            # p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+            # ax[y, y].plot(l, p, c='red', alpha=0.2)
+            # ax[x,y].hist(accepted_para[:, y], color='red', alpha=0.1, density=True)
+            #
+            # ax[x, y].plot(l, p, c='red', alpha=0.2)
+            #
+            #
+            # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
+            #                                   args=(accepted_para[:, x],), disp=False)
+            #
+            # left_trunc_norm = (lower - loc_opt) / scale_opt
+            # right_trunc_norm = (upper - loc_opt) / scale_opt
+            #
+            # l = np.linspace(lower, upper, 100)
+            # p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+            # ax[x, x].plot(l, p, c='gray', alpha=0.4)
+            # ax[x,y].hist(accepted_para[:, x], color='gray', alpha=0.1, density=True)
+            #
+            # ax[x, y].plot(l, p, c='gray', alpha=0.4)
 
 
 
