@@ -158,6 +158,7 @@ for x in range(15):
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
+            print("accepted para shape: ", accepted_para.shape)
             print("(", x, ",", y, ") mean x: " + "{0:.2f}".format(np.mean(accepted_para[:, x])) + ", mean y: " + "{0:.2f}".format(np.mean(accepted_para[:, y])))
 
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
@@ -169,7 +170,7 @@ for x in range(15):
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
 
-            oc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
+            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
                                               args=(accepted_para[:, y],), disp=False)
 
             left_trunc_norm = (lower - loc_opt) / scale_opt
