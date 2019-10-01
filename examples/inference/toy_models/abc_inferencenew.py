@@ -169,13 +169,24 @@ for x in range(15):
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
             ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=1, alpha=0.5)
 
-            for i in range(20):
-                ax[x, y].scatter(data_pack_pred[i,y],data_pack_pred[i,x], color="yellow", marker="o")
 
             ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="*")
-            ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
-            ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
+            # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
+            # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
+
+            oc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
+                                              args=(accepted_para[:, x],), disp=False)
+
+            left_trunc_norm = (lower - loc_opt) / scale_opt
+            right_trunc_norm = (upper - loc_opt) / scale_opt
+
+            l = np.linspace(lower, upper, 100)
+            p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+
+            ax[y, y].plot(l, p, c='red', alpha=0.7)
+            ax[x, x].plot(l, p, c='red', alpha=0.7)
+
 
 bin_points = [(bins[i+1]+bins[i])/2 for i in range(bins_nr)]
 for i in range(15):
