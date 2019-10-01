@@ -183,7 +183,7 @@ for x in range(15):
 
             l = np.linspace(lower, upper, 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-            ax[x, x].plot(l, p, c='red', alpha=0.4)
+            ax[x, x].plot(l, p, c='gray', alpha=0.4)
 
             oc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
                                               args=(accepted_para[:, y],), disp=False)
@@ -193,6 +193,6 @@ for x in range(15):
 
             l = np.linspace(lower, upper, 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-            ax[y, y].plot(l, p, c='red', alpha=0.4)
+            ax[y, y].plot(l, p, c='red', alpha=0.2)
 
 plt.savefig('posterior_abc_new')
