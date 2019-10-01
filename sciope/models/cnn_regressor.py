@@ -66,8 +66,8 @@ class CNNModel(ModelBase):
         # predict
         return self.model.predict(xt)
 
-    def load_model(self, save_as):
-        if not save_as:
+    def load_model(self, save_as=None):
+        if save_as is None:
             save_as = self.save_as
         self.model = keras.models.load_model(save_as+'.hdf5')
     
