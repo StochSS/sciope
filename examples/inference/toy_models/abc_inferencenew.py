@@ -184,7 +184,7 @@ for x in range(15):
             ax[x, y].plot(l, p, c='red', alpha=0.2)
 
 
-            oc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
+            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
                                               args=(accepted_para[:, x],), disp=False)
 
             left_trunc_norm = (lower - loc_opt) / scale_opt
