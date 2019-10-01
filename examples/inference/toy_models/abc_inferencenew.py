@@ -183,37 +183,16 @@ for x in range(15):
 
             l = np.linspace(lower, upper, 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+            ax[x, x].plot(l, p, c='red', alpha=0.4)
 
-            ax[y, y].plot(l, p, c='red', alpha=0.7)
-            ax[x, x].plot(l, p, c='red', alpha=0.7)
+            oc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
+                                              args=(accepted_para[:, y],), disp=False)
 
+            left_trunc_norm = (lower - loc_opt) / scale_opt
+            right_trunc_norm = (upper - loc_opt) / scale_opt
 
-bin_points = [(bins[i+1]+bins[i])/2 for i in range(bins_nr)]
-for i in range(15):
-    ax[i+1, i].plot(bin_points, hist_data[i,:])
-    peak_val = np.max(hist_data[i,:])
-    ax[i+1, i].plot([true_param[i], true_param[i]], [0, peak_val], c='black')
-    # ax[i+1, i].plot([accepted_mean[i], accepted_mean[i]], [0, peak_val], c='red')
-    ax[i+1, i].plot([data_pred[i], data_pred[i]], [0, peak_val], c='gray')
-    for j in range(15):
-        if j != i:
-            ax[i+3, i].plot(bin_points, hist_data_all[i,j,:])
-
-    bin_prod = np.prod(hist_data_all,axis=1)
-    ax[i+2, i].plot(bin_points, bin_prod[i,:])
-
-    # peak_val = np.max(hist_data_add[i,:])
-    #
-    # ax[i + 2, i].plot([true_param[i], true_param[i]], [0, peak_val], c='black')
-    # # ax[i + 2, i].plot([accepted_mean[i], accepted_mean[i]], [0, peak_val], c='red')
-    # ax[i + 2, i].plot([data_pred[i], data_pred[i]], [0, peak_val], c='gray')
-
-
-# plt.scatter(more_pred[:,0],more_pred[:,1], color="gold", marker="o")
-
-# plt.plot([0,1,1,0,0],[0,0,1,1,0])
-
-#plt.plot([-2,2,0,-2],[1,1,-1,1],color="red")
-#plt.plot([-2,2,0,-2],[-1,-1,1,-1],color="red")
+            l = np.linspace(lower, upper, 100)
+            p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+            ax[y, y].plot(l, p, c='red', alpha=0.4)
 
 plt.savefig('posterior_abc_new')
