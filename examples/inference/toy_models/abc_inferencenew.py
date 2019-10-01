@@ -105,7 +105,7 @@ for i in range(15):
 
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
-f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
 f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
@@ -158,13 +158,7 @@ for x in range(15):
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
-            print("hist_data[x] shape: ", hist_data[x].shape, ", np.histogram(accepted_para[:,x], bins=bins)[0] shape: ", np.histogram(accepted_para[:,x], bins=bins)[0].shape)
-            hist_data[x] *= np.histogram(accepted_para[:,x], bins=bins)[0]
-            hist_data[y] *= np.histogram(accepted_para[:,y], bins=bins)[0]
-            hist_data_add[x] += np.histogram(accepted_para[:, x], bins=bins)[0]
-            hist_data_add[y] += np.histogram(accepted_para[:, y], bins=bins)[0]
-            hist_data_all[x,y,:] = np.histogram(accepted_para[:, x], bins=bins)[0]
-            hist_data_all[y,x,:] = np.histogram(accepted_para[:, y], bins=bins)[0]
+
 
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
             ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=1, alpha=0.5)
@@ -174,6 +168,17 @@ for x in range(15):
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
+
+            oc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
+                                              args=(accepted_para[:, y],), disp=False)
+
+            left_trunc_norm = (lower - loc_opt) / scale_opt
+            right_trunc_norm = (upper - loc_opt) / scale_opt
+
+            l = np.linspace(lower, upper, 100)
+            p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+            ax[y, y].plot(l, p, c='red', alpha=0.2)
+
 
             oc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
                                               args=(accepted_para[:, x],), disp=False)
@@ -185,14 +190,6 @@ for x in range(15):
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
             ax[x, x].plot(l, p, c='gray', alpha=0.4)
 
-            oc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
-                                              args=(accepted_para[:, y],), disp=False)
 
-            left_trunc_norm = (lower - loc_opt) / scale_opt
-            right_trunc_norm = (upper - loc_opt) / scale_opt
-
-            l = np.linspace(lower, upper, 100)
-            p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-            ax[y, y].plot(l, p, c='red', alpha=0.2)
 
 plt.savefig('posterior_abc_new')
