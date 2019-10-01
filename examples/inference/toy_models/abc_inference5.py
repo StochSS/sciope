@@ -21,7 +21,7 @@ nnm = CNNModel(input_shape=(401,3), output_shape=(15))
 # nnm = PEN_CNNModel(input_shape=(201,3), output_shape=(15), pen_nr=10)
 # nm = ANNModel(input_shape=(100,1), output_shape=(2))
 
-nnm.load_model('cnn_light10')
+nnm.load_model('saved_models/cnn_light10')
 
 
 #ABC algorithm
