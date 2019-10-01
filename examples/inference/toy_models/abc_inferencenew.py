@@ -178,7 +178,7 @@ for x in range(15):
             l = np.linspace(lower, upper, 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
             ax[y, y].plot(l, p, c='red', alpha=0.2)
-            ax[x,y].hist(accepted_para[:, y], color='red', alpha=0.1)
+            ax[x,y].hist(accepted_para[:, y], color='red', alpha=0.1, density=True)
 
             ax[x, y].plot(l, p, c='red', alpha=0.2)
 
@@ -192,7 +192,7 @@ for x in range(15):
             l = np.linspace(lower, upper, 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
             ax[x, x].plot(l, p, c='gray', alpha=0.4)
-            ax[x,y].hist(accepted_para[:, x], color='gray', alpha=0.1)
+            ax[x,y].hist(accepted_para[:, x], color='gray', alpha=0.1, density=True)
 
             ax[x, y].plot(l, p, c='gray', alpha=0.4)
 
