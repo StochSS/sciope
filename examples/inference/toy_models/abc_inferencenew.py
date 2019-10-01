@@ -130,10 +130,10 @@ for x in range(15):
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
         if x == y:
             dist = abs(abc_trial_pred[:, x] - data_pred[x])
-            accepted_ind = np.argpartition(dist, nr_of_accept)[0:2000]
+            accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=bins, color='green')
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=bins, color='green', alpha=0.5)
             peak_val = np.max(ret[0])
             ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
