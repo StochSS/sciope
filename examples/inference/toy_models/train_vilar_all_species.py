@@ -50,6 +50,7 @@ print("ts shape: ", train_ts.shape)
 validation_ts = validation_ts[:,:end_step:step,:]
 clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
+print("species: ", species)
 # choose neural network model
 # nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay)
 nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay, dense_layers=[100,100])
