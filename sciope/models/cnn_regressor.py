@@ -19,14 +19,14 @@ class CNNModel(ModelBase):
     
 
     def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, con_len=3, con_layers=[25, 50],
-                 last_pooling=keras.layers.AvgPool1D,dense_layers=[100,100]):
-        self.name = 'CNNModel_con_len' + str(con_len) + '_con_layers' + str(con_layers)
+                 last_pooling=keras.layers.AvgPool1D,dense_layers=[100,100], dataname='noname'):
+        self.name = 'CNNModel_con_len' + str(con_len) + '_con_layers' + str(con_layers) + '_data' + dataname
         super(CNNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
         self.model = construct_model(input_shape,output_shape, con_len=con_len, con_layers=con_layers, last_pooling = last_pooling, dense_layers=dense_layers)
-        self.save_as = 'saved_models/cnn_light10'
+        self.save_as = 'saved_models/' + self.name
     
     # train the CNN model given the data
     def train(self, inputs, targets,validation_inputs,validation_targets, batch_size, epochs, learning_rate=0.001,
