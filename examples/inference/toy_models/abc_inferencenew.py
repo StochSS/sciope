@@ -122,7 +122,7 @@ bins = np.linspace(0,1,bins_nr+1)
 hist_data = np.ones((15,bins_nr))
 hist_data_add = np.ones((15,bins_nr))
 hist_data_all = np.ones((15,15,bins_nr))
-gaussian_data_all = np.zeros((15,15,100))
+# gaussian_data_all = np.zeros((15,15,100))
 
 
 # lower, upper = 0, 1
@@ -217,28 +217,28 @@ for x in range(15):
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith, c = range_color)
 
-            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
-                                               args=([accepted_para[:, x], dmin[x], dmax[x]],), disp=False)
-
-            left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
-            right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
-
-            l = np.linspace(dmin[x], dmax[x], 100)
-            p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-            ax[x, x].plot(l, p, c='gray', alpha=0.2, lw=1)
-            gaussian_data_all[x,y,:] = p
-
-
-            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
-                                               args=([accepted_para[:, y], dmin[y], dmax[y]],), disp=False)
-
-            left_trunc_norm = (dmin[y] - loc_opt) / scale_opt
-            right_trunc_norm = (dmax[y] - loc_opt) / scale_opt
-
-            l = np.linspace(dmin[y], dmax[y], 100)
-            p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-            ax[y, y].plot(l, p, c='gray', alpha=0.2, lw = 1)
-            gaussian_data_all[y, x,:] = p
+            # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
+            #                                    args=([accepted_para[:, x], dmin[x], dmax[x]],), disp=False)
+            #
+            # left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
+            # right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
+            #
+            # l = np.linspace(dmin[x], dmax[x], 100)
+            # p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+            # ax[x, x].plot(l, p, c='gray', alpha=0.2, lw=1)
+            # gaussian_data_all[x,y,:] = p
+            #
+            #
+            # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
+            #                                    args=([accepted_para[:, y], dmin[y], dmax[y]],), disp=False)
+            #
+            # left_trunc_norm = (dmin[y] - loc_opt) / scale_opt
+            # right_trunc_norm = (dmax[y] - loc_opt) / scale_opt
+            #
+            # l = np.linspace(dmin[y], dmax[y], 100)
+            # p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+            # ax[y, y].plot(l, p, c='gray', alpha=0.2, lw = 1)
+            # gaussian_data_all[y, x,:] = p
 
 
 
@@ -259,11 +259,11 @@ for x in range(15):
         ax[x, y].tick_params(axis='both', which='major', labelsize=20)
         # ax.tick_params(axis='both', which='minor', labelsize=8)
 
-for x in range(15):
-    l = np.linspace(dmin[x], dmax[x], 100)
-    pr = np.mean(gaussian_data_all[x, :, :], axis=0)
-    print("pr shape: ", pr.shape)
-    ax[x,x].plot(l, pr, c='red')
+# for x in range(15):
+#     l = np.linspace(dmin[x], dmax[x], 100)
+#     pr = np.mean(gaussian_data_all[x, :, :], axis=0)
+#     print("pr shape: ", pr.shape)
+#     ax[x,x].plot(l, pr, c='red')
 
 
 plt.savefig('posterior_abc_new')
