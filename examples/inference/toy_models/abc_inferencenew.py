@@ -156,8 +156,9 @@ def smart_ticks(dmin,dmax):
 
 for x in range(15):
     ax[0, x].set_title(para_names[x], fontsize=fsize)
-    ax[x,14].yaxis.set_label_position("right")
-    ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=fsize, labelpad=20)
+    if x<14:
+        ax[x,14].yaxis.set_label_position("right")
+        ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=fsize, labelpad=20)
 
 
     for y in range(x,15):
@@ -184,7 +185,7 @@ for x in range(15):
             ax[y, x].plot(l, p, c='green', lw=lwith)
             ax[x, y].set_xlabel(para_names[x], fontsize=fsize)
             # ax[x, y].yaxis.set_label_position("left")
-            # ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
+            ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.2)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
@@ -211,7 +212,7 @@ for x in range(15):
             ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="*")
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
-            ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith)
+            ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith, c = range_color)
 
 
 
