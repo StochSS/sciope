@@ -63,7 +63,7 @@ print("data_pack_pred shape: ", data_pack_pred.shape)
 
 
 nr_of_trial = abc_trial_thetas.shape[0]
-nr_of_accept = 100
+nr_of_accept = 1000
 nr_of_accept_cross = 100
 range_color = 'cornflowerblue'
 fsize=30
