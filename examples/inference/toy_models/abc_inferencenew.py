@@ -65,7 +65,7 @@ print("data_pack_pred shape: ", data_pack_pred.shape)
 nr_of_trial = abc_trial_thetas.shape[0]
 nr_of_accept = 1000
 nr_of_accept_cross = 100
-range_color = '#ff7f0e'
+range_color = '#1f77b4'
 fsize=30
 lwith=5
 scattersize = 5
