@@ -65,7 +65,7 @@ print("data_pack_pred shape: ", data_pack_pred.shape)
 nr_of_trial = abc_trial_thetas.shape[0]
 nr_of_accept = 1000
 nr_of_accept_cross = 100
-range_color = 'cornflowerblue'
+range_color = '#ff7f0e'
 fsize=30
 lwith=5
 scattersize = 5
@@ -211,8 +211,8 @@ for x in range(15):
             ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="*")
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
-            p = ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith)
-            p.get_color()
+            ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith)
+
 
 
             if y < 15:
