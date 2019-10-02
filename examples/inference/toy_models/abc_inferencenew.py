@@ -140,7 +140,7 @@ for x in range(15):
             accepted_mean = np.mean(accepted_para, axis=0)
 
             loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
-                                               args=(accepted_para[:, x],dmin[x],dmax[x]), disp=False)
+                                               args=([accepted_para[:, x],dmin[x],dmax[x]],), disp=False)
 
             left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
             right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
