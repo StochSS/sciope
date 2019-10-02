@@ -63,7 +63,7 @@ print("data_pack_pred shape: ", data_pack_pred.shape)
 
 
 nr_of_trial = abc_trial_thetas.shape[0]
-nr_of_accept = 1000
+nr_of_accept = 100
 nr_of_accept_cross = 100
 
 
@@ -149,7 +149,7 @@ for x in range(15):
 
             ax[y, x].plot(l, p, c='green')
 
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=20, color='green', alpha=0.5)
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.5)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
             ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
