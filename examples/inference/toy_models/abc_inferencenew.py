@@ -104,7 +104,7 @@ for i in range(15):
     para_names[i] = "$\\" + pk + "$"
 
 
-true_param = normalize_data(true_param,dmin,dmax)
+# true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
 f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
 # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
