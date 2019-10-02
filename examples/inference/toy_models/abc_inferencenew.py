@@ -153,7 +153,10 @@ for x in range(15):
 
             l = np.linspace(dmin[x], dmax[x], 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-
+            box = ax[x,y].get_position()
+            box.x0 = box.x0 - 0.05
+            # box.x1 = box.x1 + 0.05
+            ax[x,y].set_position(box)
             ax[y, x].plot(l, p, c='green')
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.5)
