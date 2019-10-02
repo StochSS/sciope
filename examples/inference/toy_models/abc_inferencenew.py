@@ -65,6 +65,7 @@ print("data_pack_pred shape: ", data_pack_pred.shape)
 nr_of_trial = abc_trial_thetas.shape[0]
 nr_of_accept = 100
 nr_of_accept_cross = 100
+range_color = 'cornflowerblue'
 
 
 dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
@@ -156,8 +157,8 @@ for x in range(15):
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
             # ax[x, y].plot([data_pred[x], data_pred[x]], [0, peak_val], c='gray')
 
-            ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
-            ax[x, y].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
+            ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c=range_color)
+            ax[x, y].plot([dmin[x], dmin[x]], [0, peak_val], c=range_color)
 
 
 
