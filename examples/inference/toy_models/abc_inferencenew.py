@@ -111,7 +111,7 @@ for i in range(15):
 # plt.rcParams['xtick.bottom'] = plt.rcParams['xtick.labelbottom'] = False
 # plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = True
 
-f, ax = plt.subplots(15,15,figsize=(30,30) ,sharex=True ) #,sharey=True)
+f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True ) #,sharey=True)
 # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
@@ -181,7 +181,11 @@ for x in range(15):
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]])
-            ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
+
+            if y == 14:
+                ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
+            else:
+                ax[x, y].tick_params(labelbottom=False)
             ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=False)
 
             f.delaxes(ax[y, x])
