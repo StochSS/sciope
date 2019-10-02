@@ -108,10 +108,10 @@ for i in range(15):
 # true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
 
-plt.rcParams['xtick.bottom'] = plt.rcParams['xtick.labelbottom'] = False
-plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = True
+# plt.rcParams['xtick.bottom'] = plt.rcParams['xtick.labelbottom'] = False
+# plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = True
 
-f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
+f, ax = plt.subplots(15,15,figsize=(30,30) ,sharex=True ) #,sharey=True)
 # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
