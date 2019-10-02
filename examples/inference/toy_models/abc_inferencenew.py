@@ -114,7 +114,7 @@ hist_data = np.ones((15,bins_nr))
 hist_data_add = np.ones((15,bins_nr))
 hist_data_all = np.ones((15,15,bins_nr))
 
-lower, upper = 0, 1
+# lower, upper = 0, 1
 
 def nnlf(params, data):
     loc, scale, lower, upper = params
@@ -141,10 +141,10 @@ for x in range(15):
             loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x]),dmin[x],dmax[x]),
                                                args=(accepted_para[:, x],), disp=False)
 
-            left_trunc_norm = (lower - loc_opt) / scale_opt
-            right_trunc_norm = (upper - loc_opt) / scale_opt
+            left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
+            right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
 
-            l = np.linspace(lower, upper, 100)
+            l = np.linspace(dmin[x], dmax[x], 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
             ax[y, x].plot(l, p, c='green')
