@@ -208,7 +208,7 @@ for x in range(15):
             ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]])
 
 
-            if y < 14:
+            if y < 15:
                 ax[x, y].tick_params(labelbottom=False)
 
             ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=True)
@@ -217,7 +217,7 @@ for x in range(15):
 
             f.delaxes(ax[y, x])
 
-        ax[x, y].tick_params(axis='both', which='major', labelsize=40)
+        ax[x, y].tick_params(axis='both', which='major', labelsize=20)
         # ax.tick_params(axis='both', which='minor', labelsize=8)
 
 
