@@ -77,6 +77,12 @@ if not os.path.exists('datasets/'+modelname):
 dmin = [40, 200,  0,  20, 10, 1,  1, 0, 0,  0,  0.5, 0.2, 0, 0, 20]
 dmax = [80, 600, 0.1, 60, 60, 7, 12, 2, 3, 0.7, 2.5,  2,  3, 70, 120]
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+
+obs_data = simulate(np.array(true_params))
+pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
+print("done!!!")
+
+
 obs_data = np.zeros((20,num_timestamps,3))
 for i in range(20):
     obs_data[i,:,:] = simulate(np.array(true_params))
