@@ -174,45 +174,28 @@
 <p>Burstiness Summary statictics
 Burstiness = (sigma-mu)/(sigma+mu)</p>
 <p>Ref: Burstiness and memory in complex systems, Europhys. Let., 81, pp. 48002, 2008.</p>
-<dl class="attribute">
+<dl class="method">
 <dt id="sciope.utilities.summarystats.burstiness.Burstiness.compute">
-<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness.compute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the value(s) of the summary statistic(s)</p>
+<dl class="simple">
+<dt>data<span class="classifier">[type]</span></dt><dd><p>simulated or data set in the form N x S X T - num data points x num species x num time steps</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>computed statistic value</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="sciope-utilities-summarystats-global-max-module">
 <h2>sciope.utilities.summarystats.global_max module<a class="headerlink" href="#sciope-utilities-summarystats-global-max-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-sciope.utilities.summarystats.global_max"></span><p>The global maximum summary statistic</p>
-<dl class="class">
-<dt id="sciope.utilities.summarystats.global_max.GlobalMax">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.global_max.</code><code class="sig-name descname">GlobalMax</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/global_max.html#GlobalMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.global_max.GlobalMax" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
-<p>The maximum value observed across the entire time span</p>
-<dl class="attribute">
-<dt id="sciope.utilities.summarystats.global_max.GlobalMax.compute">
-<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.global_max.GlobalMax.compute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="sciope-utilities-summarystats-global-min-module">
 <h2>sciope.utilities.summarystats.global_min module<a class="headerlink" href="#sciope-utilities-summarystats-global-min-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-sciope.utilities.summarystats.global_min"></span><p>The global minimum summary statistic</p>
-<dl class="class">
-<dt id="sciope.utilities.summarystats.global_min.GlobalMin">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.global_min.</code><code class="sig-name descname">GlobalMin</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/global_min.html#GlobalMin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.global_min.GlobalMin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
-<p>The minimum value observed across the entire time span</p>
-<dl class="attribute">
-<dt id="sciope.utilities.summarystats.global_min.GlobalMin.compute">
-<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.global_min.GlobalMin.compute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="sciope-utilities-summarystats-summary-base-module">
 <h2>sciope.utilities.summarystats.summary_base module<a class="headerlink" href="#sciope-utilities-summarystats-summary-base-module" title="Permalink to this headline">¶</a></h2>
@@ -235,35 +218,9 @@ Burstiness = (sigma-mu)/(sigma+mu)</p>
 </div>
 <div class="section" id="sciope-utilities-summarystats-temporal-mean-module">
 <h2>sciope.utilities.summarystats.temporal_mean module<a class="headerlink" href="#sciope-utilities-summarystats-temporal-mean-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-sciope.utilities.summarystats.temporal_mean"></span><p>The temporal mean summary statistic</p>
-<dl class="class">
-<dt id="sciope.utilities.summarystats.temporal_mean.TemporalMean">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.temporal_mean.</code><code class="sig-name descname">TemporalMean</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/temporal_mean.html#TemporalMean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.temporal_mean.TemporalMean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
-<p>Simply the mean taken over the entire time span</p>
-<dl class="attribute">
-<dt id="sciope.utilities.summarystats.temporal_mean.TemporalMean.compute">
-<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.temporal_mean.TemporalMean.compute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="sciope-utilities-summarystats-temporal-variance-module">
 <h2>sciope.utilities.summarystats.temporal_variance module<a class="headerlink" href="#sciope-utilities-summarystats-temporal-variance-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-sciope.utilities.summarystats.temporal_variance"></span><p>The temporal variance summary statistic</p>
-<dl class="class">
-<dt id="sciope.utilities.summarystats.temporal_variance.TemporalVariance">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.temporal_variance.</code><code class="sig-name descname">TemporalVariance</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/temporal_variance.html#TemporalVariance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.temporal_variance.TemporalVariance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
-<p>Simply the variance taken over the entire time span</p>
-<dl class="attribute">
-<dt id="sciope.utilities.summarystats.temporal_variance.TemporalVariance.compute">
-<code class="sig-name descname">compute</code><a class="headerlink" href="#sciope.utilities.summarystats.temporal_variance.TemporalVariance.compute" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="module-sciope.utilities.summarystats">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sciope.utilities.summarystats" title="Permalink to this headline">¶</a></h2>
