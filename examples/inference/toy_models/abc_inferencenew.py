@@ -177,7 +177,7 @@ for x in range(15):
             # box.x0 = box.x0 - 0.05
             # # box.x1 = box.x1 + 0.05
             # ax[x,y].set_position(box)
-            # ax[y, x].plot(l, p, c='green')
+            ax[y, x].plot(l, p, c='green')
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.5)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
