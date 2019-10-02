@@ -111,8 +111,8 @@ for i in range(15):
 # plt.rcParams['xtick.bottom'] = plt.rcParams['xtick.labelbottom'] = False
 # plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = True
 
-f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True ) #,sharey=True)
-plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.5, hspace=0.5)
+f, ax = plt.subplots(15,15,figsize=(60,60))# ,sharex=True ) #,sharey=True)
+plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.2, hspace=0.2)
 # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
@@ -153,11 +153,11 @@ for x in range(15):
 
             l = np.linspace(dmin[x], dmax[x], 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-            box = ax[x,y].get_position()
-            box.x0 = box.x0 - 0.05
-            # box.x1 = box.x1 + 0.05
-            ax[x,y].set_position(box)
-            ax[y, x].plot(l, p, c='green')
+            # box = ax[x,y].get_position()
+            # box.x0 = box.x0 - 0.05
+            # # box.x1 = box.x1 + 0.05
+            # ax[x,y].set_position(box)
+            # ax[y, x].plot(l, p, c='green')
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.5)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
