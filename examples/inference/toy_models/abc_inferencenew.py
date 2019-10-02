@@ -131,6 +131,26 @@ def nnlf(params, datapack):
     value = stats.truncnorm.nnlf(theta, data)
     return value
 
+def smart_ticks(dmin,dmax):
+    range = dmax-dmin
+    if range > 80:
+        ticks = list(np.arange(dmin,dmax,20)) + [dmax]
+    elif range > 40:
+        ticks = list(np.arange(dmin, dmax, 10)) + [dmax]
+    elif range > 20:
+        ticks = list(np.arange(dmin, dmax, 5)) + [dmax]
+    elif range > 8:
+        ticks = list(np.arange(dmin, dmax, 2)) + [dmax]
+    elif range > 4:
+        ticks = list(np.arange(dmin, dmax, 1)) + [dmax]
+    elif range > 1:
+        ticks = list(np.arange(dmin, dmax, 0.5)) + [dmax]
+    else:
+        ticks = list(np.around(np.linspace(dmin,dmax,5),2))
+
+    return ticks
+
+
 for x in range(15):
     ax[0, x].set_title(para_names[x], fontsize=20)
     ax[x,14].yaxis.set_label_position("right")
@@ -190,7 +210,7 @@ for x in range(15):
             ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
             if y < 14:
                 ax[x, y].tick_params(labelbottom=False)
-            ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=False)
+            ax[x, y].set_yticks(ticks=smart_ticks(dmin[x], dmax[x]), minor=False)
 
             f.delaxes(ax[y, x])
             # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
