@@ -188,7 +188,7 @@ for x in range(15):
             # ax[x, y].yaxis.set_label_position("left")
             ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.2)
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=25, color='green', alpha=0.2)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
             ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
