@@ -66,6 +66,8 @@ nr_of_trial = abc_trial_thetas.shape[0]
 nr_of_accept = 100
 nr_of_accept_cross = 100
 range_color = 'cornflowerblue'
+fsize=30
+lwith=5
 
 
 dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
@@ -152,9 +154,9 @@ def smart_ticks(dmin,dmax):
 
 
 for x in range(15):
-    ax[0, x].set_title(para_names[x], fontsize=20)
+    ax[0, x].set_title(para_names[x], fontsize=fsize)
     ax[x,14].yaxis.set_label_position("right")
-    ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=20, labelpad=20)
+    ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=fsize, labelpad=20)
 
 
     for y in range(x,15):
@@ -178,11 +180,11 @@ for x in range(15):
             # box.x0 = box.x0 - 0.05
             # # box.x1 = box.x1 + 0.05
             # ax[x,y].set_position(box)
-            ax[y, x].plot(l, p, c='green')
-            ax[x, y].set_xlabel(para_names[x], fontsize=20)
-            ax[x, y].set_ylabel('density', fontsize=20)
+            ax[y, x].plot(l, p, c='green', lw=lwith)
+            ax[x, y].set_xlabel(para_names[x], fontsize=fsize)
+            ax[x, y].set_ylabel('density', fontsize=fsize)
 
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.3)
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.2)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
             ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
