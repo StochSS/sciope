@@ -262,6 +262,7 @@ for x in range(15):
 for x in range(15):
     l = np.linspace(dmin[x], dmax[x], 100)
     pr = np.sum(gaussian_data_all[x, :, :], axis=1)
+    print("pr shape: ", pr.shape)
     plt.plot(l, pr, c='red')
 
 
