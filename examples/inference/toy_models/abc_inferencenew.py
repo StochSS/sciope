@@ -125,7 +125,7 @@ def nnlf(params, data):
     return value
 
 for x in range(15):
-    ax[0, x].set_title(para_names[x])
+    ax[0, x].set_title(para_names[x], fontsize=20)
     ax[x,14].yaxis.set_label_position("right")
     ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=20, labelpad=20)
 
