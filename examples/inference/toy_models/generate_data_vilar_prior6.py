@@ -68,19 +68,18 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 
 simulate = Vilar_.simulate
 
-modelname = "vilar_ACR_prior5" + str(endtime) + "_" + str(num_timestamps)
+modelname = "vilar_ACR_prior6_" + str(endtime) + "_" + str(num_timestamps)
 
 
 if not os.path.exists('datasets/'+modelname):
     os.mkdir('datasets/'+modelname)
 
-dmin =           [40,   200,    0,   20,   10,   1,    1,   0,   0,   0, 0.5, 0.2,   0,    0,   20]
-dmax =         [  80,   600,  0.1,   60,   60,   7,   12,   2,   3, 0.7, 2.5,   2,   3,   70,   120]
+dmin =           [0,   100,    0,   20,   10,   1,    1,   0,   0,   0, 0.5,    0,   0,    0,   0]
+dmax =         [  80,   600,    4,   60,   60,   7,   12,   2,   3, 0.7, 2.5,   4,   3,   70,   300]
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 
 obs_data = simulate(np.array(true_params))
 pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data.p', "wb" ) )
-print("done!!!")
 
 
 obs_data = np.zeros((20,num_timestamps,3))
@@ -129,34 +128,34 @@ for nr in range(nr,3):
     pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas_'+str(nr)+'.p', "wb" ) )
     pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
 
-# validation_thetas = np.zeros((0,15))
-# validation_ts = np.zeros((0,num_timestamps,3))
-# for i in range(20):
-#     param, ts = dg.gen(batch_size=1000)
-#     validation_thetas = np.concatenate((validation_thetas,param),axis=0)
-#     validation_ts = np.concatenate((validation_ts,ts),axis=0)
-#     if i%10 == 0:
-#         print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
-#
-# print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
-#
-#
-# pickle.dump( validation_thetas, open( 'datasets/' + modelname + '/validation_thetas.p', "wb" ) )
-# pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', "wb" ) )
+validation_thetas = np.zeros((0,15))
+validation_ts = np.zeros((0,num_timestamps,3))
+for i in range(20):
+    param, ts = dg.gen(batch_size=1000)
+    validation_thetas = np.concatenate((validation_thetas,param),axis=0)
+    validation_ts = np.concatenate((validation_ts,ts),axis=0)
+    if i%10 == 0:
+        print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
+
+print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
 
 
-# test_thetas = np.zeros((0,15))
-# test_ts = np.zeros((0,num_timestamps,3))
-# for i in range(100):
-#     param, ts = dg.gen(batch_size=1000)
-#     test_thetas = np.concatenate((test_thetas,param),axis=0)
-#     test_ts = np.concatenate((test_ts,ts),axis=0)
-#
-#     print("test data shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
-#
-# print("generating test data done, shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
-# pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb" ) )
-# pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
+pickle.dump( validation_thetas, open( 'datasets/' + modelname + '/validation_thetas.p', "wb" ) )
+pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', "wb" ) )
+
+
+test_thetas = np.zeros((0,15))
+test_ts = np.zeros((0,num_timestamps,3))
+for i in range(100):
+    param, ts = dg.gen(batch_size=1000)
+    test_thetas = np.concatenate((test_thetas,param),axis=0)
+    test_ts = np.concatenate((test_ts,ts),axis=0)
+
+    print("test data shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
+
+print("generating test data done, shape: test_ts: ", test_ts.shape, ", test_thetas: ", test_thetas.shape)
+pickle.dump( test_thetas, open( 'datasets/' + modelname + '/test_thetas.p', "wb" ) )
+pickle.dump( test_ts, open( 'datasets/' + modelname + '/test_ts.p', "wb" ) )
 
 abc_trial_thetas = np.zeros((0,15))
 abc_trial_ts = np.zeros((0,num_timestamps,3))
