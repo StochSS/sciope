@@ -25,15 +25,18 @@ from scipy import stats, optimize
 # nm = ANNModel(input_shape=(100,1), output_shape=(2))
 clay=[32,48,64,96]
 nnm = CNNModel(input_shape=(401,3), output_shape=15, con_len=3, con_layers=clay, dense_layers=[200,200,200])
-nnm.load_model('saved_models/cnn_light10')
+nnm.load_model()
 
 
 #ABC algorithm
 
 
-modelname = "vilar_ACR_200_401"
-dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
-dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
+num_timestamps=401
+endtime=200
+
+modelname = "vilar_ACR_prior5" + str(endtime) + "_" + str(num_timestamps)
+dmin = [40, 200,  0,  20, 10, 1,  1, 0, 0,  0,  0.5, 0.2, 0, 0, 20]
+dmax = [80, 600, 0.1, 60, 60, 7, 12, 2, 3, 0.7, 2.5,  2,  3, 70, 120]
 
 true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
 true_param = np.squeeze(np.array(true_param))
