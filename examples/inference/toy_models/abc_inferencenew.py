@@ -187,6 +187,7 @@ for x in range(15):
 
             ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c=range_color)
             ax[x, y].plot([dmin[x], dmin[x]], [0, peak_val], c=range_color)
+            ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=True)
 
 
 
@@ -207,7 +208,6 @@ for x in range(15):
             ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]])
 
 
-            ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=True)
             if y < 14:
                 ax[x, y].tick_params(labelbottom=False)
 
