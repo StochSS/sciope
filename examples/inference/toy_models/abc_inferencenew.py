@@ -213,7 +213,7 @@ for x in range(15):
 
             ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=True)
             if y > x+1:
-                ax[x, y].tick_params(labelbottom=False)
+                ax[x, y].tick_params(labelleft=False)
 
             f.delaxes(ax[y, x])
 
