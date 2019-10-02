@@ -183,8 +183,8 @@ for x in range(15):
             # ax[x,y].set_position(box)
             ax[y, x].plot(l, p, c='green', lw=lwith)
             ax[x, y].set_xlabel(para_names[x], fontsize=fsize)
-            ax[x, y].yaxis.set_label_position("left")
-            ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
+            # ax[x, y].yaxis.set_label_position("left")
+            # ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.2)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
