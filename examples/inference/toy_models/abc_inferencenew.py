@@ -158,7 +158,6 @@ for x in range(15):
 
 
     for y in range(x,15):
-        ax[x, y].yaxis.tick_right()
         print("x: ", x, ", y: ", y)
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
         if x == y:
@@ -215,6 +214,7 @@ for x in range(15):
 
             ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=False)
             ax[x, y].tick_params(labelleft=False)
+            ax[x, y].tick_params(right=True)
             if y == 14:
                 ax[x, y].tick_params(labelright=True)
 
