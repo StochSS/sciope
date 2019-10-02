@@ -116,8 +116,9 @@ hist_data_all = np.ones((15,15,bins_nr))
 
 # lower, upper = 0, 1
 
-def nnlf(params, data):
-    loc, scale, lower, upper = params
+def nnlf(params, datapack):
+    loc, scale,  = params
+    data, lower, upper = datapack
     left_trunc_norm = (lower - loc)/scale
     right_trunc_norm = (upper - loc) / scale
     theta = (left_trunc_norm, right_trunc_norm, loc, scale)
@@ -138,8 +139,8 @@ for x in range(15):
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
 
-            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x]),dmin[x],dmax[x]),
-                                               args=(accepted_para[:, x],), disp=False)
+            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
+                                               args=(accepted_para[:, x],dmin[x],dmax[x]), disp=False)
 
             left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
             right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
