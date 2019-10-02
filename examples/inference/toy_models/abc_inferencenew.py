@@ -112,6 +112,7 @@ for i in range(15):
 # plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = True
 
 f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True ) #,sharey=True)
+plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.5, hspace=0.5)
 # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
