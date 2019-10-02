@@ -179,7 +179,7 @@ for x in range(15):
             # ax[x,y].set_position(box)
             ax[y, x].plot(l, p, c='green')
 
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.5)
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.3)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
             ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
@@ -214,6 +214,9 @@ for x in range(15):
             ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=False)
             if y > x+1:
                 ax[x, y].tick_params(labelleft=False)
+            if y == 14:
+                ax[x, y].tick_params(labelright=True)
+
 
             f.delaxes(ax[y, x])
         ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
