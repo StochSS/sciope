@@ -49,6 +49,10 @@ data_pred = nnm.predict(data)
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
 # abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
+
+abc_trial_thetas, abc_trial_ts  = load_spec(modelname=modelname, type = "train")
+
+
 abc_trial_pred = nnm.predict(abc_trial_ts)
 mean_dev = np.mean(abs(abc_trial_thetas-abc_trial_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
