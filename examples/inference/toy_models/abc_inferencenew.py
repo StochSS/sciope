@@ -164,7 +164,7 @@ for x in range(15):
             dist = abs(abc_trial_pred[:, x] - data_pred[x])
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
-            accepted_mean = np.mean(accepted_para, axis=0)
+            # accepted_mean = np.mean(accepted_para, axis=0)
 
             loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
                                                args=([accepted_para[:, x],dmin[x],dmax[x]],), disp=False)
@@ -179,8 +179,8 @@ for x in range(15):
             # # box.x1 = box.x1 + 0.05
             # ax[x,y].set_position(box)
             ax[y, x].plot(l, p, c='green')
-            ax[x, y].set_xlabel(para_names[x])
-            ax[x, y].set_ylabel('density')
+            ax[x, y].set_xlabel(para_names[x], fontsize=20)
+            ax[x, y].set_ylabel('density', fontsize=20)
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.3)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
