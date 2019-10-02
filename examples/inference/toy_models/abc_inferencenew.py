@@ -68,6 +68,7 @@ nr_of_accept_cross = 100
 range_color = 'cornflowerblue'
 fsize=30
 lwith=5
+scattersize = 5
 
 
 dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
@@ -182,6 +183,7 @@ for x in range(15):
             # ax[x,y].set_position(box)
             ax[y, x].plot(l, p, c='green', lw=lwith)
             ax[x, y].set_xlabel(para_names[x], fontsize=fsize)
+            ax[x, y].yaxis.set_label_position("left")
             ax[x, y].set_ylabel('density', fontsize=fsize)
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.2)
@@ -204,7 +206,7 @@ for x in range(15):
             print("(", x, ",", y, ") mean x: " + "{0:.2f}".format(np.mean(accepted_para[:, x])) + ", mean y: " + "{0:.2f}".format(np.mean(accepted_para[:, y])))
 
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
-            ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=1, alpha=0.5)
+            ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=scattersize, alpha=1)
 
             ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="*")
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
