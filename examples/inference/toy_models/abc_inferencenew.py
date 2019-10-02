@@ -117,7 +117,7 @@ hist_data_all = np.ones((15,15,bins_nr))
 lower, upper = 0, 1
 
 def nnlf(params, data):
-    loc, scale = params
+    loc, scale, lower, upper = params
     left_trunc_norm = (lower - loc)/scale
     right_trunc_norm = (upper - loc) / scale
     theta = (left_trunc_norm, right_trunc_norm, loc, scale)
@@ -138,7 +138,7 @@ for x in range(15):
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
 
-            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
+            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x]),dmin[x],dmax[x]),
                                                args=(accepted_para[:, x],), disp=False)
 
             left_trunc_norm = (lower - loc_opt) / scale_opt
@@ -174,7 +174,7 @@ for x in range(15):
             ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="*")
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
-            ax[x, y].plot([dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]],[dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]])
+            ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]])
             f.delaxes(ax[y, x])
             # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
             #                                   args=(accepted_para[:, y],), disp=False)
