@@ -103,6 +103,7 @@ class Burstiness(SummaryBase):
             bs_value = self._compute(data_arr[:, i, :].reshape((data_arr.shape[0], data_arr.shape[2])))
             res.append(bs_value.ravel())
         res = np.asarray(res)
+        res = res.transpose()
 
         if self.mean_trajectories:
             res = np.asarray(np.mean(res, axis=0))  # returns a scalar, so we cast it as an array
