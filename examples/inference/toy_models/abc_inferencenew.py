@@ -112,7 +112,7 @@ for i in range(15):
 # plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = True
 
 f, ax = plt.subplots(15,15,figsize=(60,60))# ,sharex=True ) #,sharey=True)
-plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.2, hspace=0.2)
+plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.1, hspace=0.1)
 # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
@@ -179,6 +179,8 @@ for x in range(15):
             # # box.x1 = box.x1 + 0.05
             # ax[x,y].set_position(box)
             ax[y, x].plot(l, p, c='green')
+            ax[x, y].set_xlabel(para_names[x])
+            ax[x, y].set_ylabel('density')
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.3)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
@@ -215,6 +217,8 @@ for x in range(15):
             ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=False)
             ax[x, y].tick_params(labelleft=False)
             ax[x, y].tick_params(right=True)
+            ax[x, y].tick_params(left=False)
+
             if y == 14:
                 ax[x, y].tick_params(labelright=True)
 
