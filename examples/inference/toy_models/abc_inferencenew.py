@@ -68,7 +68,7 @@ nr_of_accept_cross = 100
 range_color = 'cornflowerblue'
 fsize=30
 lwith=5
-scattersize = 5
+scattersize = 3
 
 
 dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
