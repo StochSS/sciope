@@ -192,8 +192,8 @@ for x in range(15):
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
             # ax[x, y].plot([data_pred[x], data_pred[x]], [0, peak_val], c='gray')
 
-            ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c=range_color)
-            ax[x, y].plot([dmin[x], dmin[x]], [0, peak_val], c=range_color)
+            ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c=range_color, lw=lwith)
+            ax[x, y].plot([dmin[x], dmin[x]], [0, peak_val], c=range_color, lw=lwith)
 
 
 
@@ -211,8 +211,8 @@ for x in range(15):
             ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="*")
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
-            ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]])
-
+            p = ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith)
+            p.get_color()
 
 
             if y < 15:
