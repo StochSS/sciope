@@ -176,6 +176,9 @@ for x in range(15):
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]])
+            ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
+            ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=False)
+
             f.delaxes(ax[y, x])
             # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
             #                                   args=(accepted_para[:, y],), disp=False)
