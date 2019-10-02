@@ -67,7 +67,7 @@ nr_of_accept = 1000
 nr_of_accept_cross = 100
 range_color = '#1f77b4'
 fsize=30
-lwith=5
+lwith=3
 scattersize = 5
 
 
