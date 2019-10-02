@@ -47,7 +47,7 @@ data_pred = nnm.predict(data)
 
 
 abc_trial_thetas = pickle.load(open('datasets/' + modelname + '/abc_trial_thetas.p', "rb" ) )
-abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
+# abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
 abc_trial_ts = pickle.load(open('datasets/' + modelname + '/abc_trial_ts.p', "rb" ) )
 abc_trial_pred = nnm.predict(abc_trial_ts)
 mean_dev = np.mean(abs(abc_trial_thetas-abc_trial_pred), axis=0)
@@ -155,8 +155,8 @@ for x in range(15):
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
             # ax[x, y].plot([data_pred[x], data_pred[x]], [0, peak_val], c='gray')
 
-            ax[x, y].plot([1, 1], [0, peak_val], c='b')
-            ax[x, y].plot([0, 0], [0, peak_val], c='b')
+            ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
+            ax[x, y].plot([dmin[x], dmin[x]], [0, peak_val], c='b')
 
 
 
@@ -174,7 +174,7 @@ for x in range(15):
             ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="*")
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
-            ax[x, y].plot([0,1,1,0,0],[0,0,1,1,0])
+            ax[x, y].plot([dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]],[dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]])
             f.delaxes(ax[y, x])
             # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
             #                                   args=(accepted_para[:, y],), disp=False)
