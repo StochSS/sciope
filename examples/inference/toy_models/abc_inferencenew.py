@@ -122,6 +122,8 @@ bins = np.linspace(0,1,bins_nr+1)
 hist_data = np.ones((15,bins_nr))
 hist_data_add = np.ones((15,bins_nr))
 hist_data_all = np.ones((15,15,bins_nr))
+gaussian_data_all = np.zeros((15,15,100))
+
 
 # lower, upper = 0, 1
 
@@ -210,7 +212,7 @@ for x in range(15):
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
             ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=scattersize, alpha=1)
 
-            ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="x", s=10)
+            ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="x", s=20)
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith, c = range_color)
@@ -224,6 +226,7 @@ for x in range(15):
             l = np.linspace(dmin[x], dmax[x], 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
             ax[x, x].plot(l, p, c='gray', alpha=0.2, lw=1)
+            gaussian_data_all[x,y,:] = p
 
 
             loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
@@ -235,6 +238,7 @@ for x in range(15):
             l = np.linspace(dmin[y], dmax[y], 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
             ax[y, y].plot(l, p, c='gray', alpha=0.2, lw = 1)
+            gaussian_data_all[y, x,:] = p
 
 
 
@@ -254,6 +258,11 @@ for x in range(15):
         ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
         ax[x, y].tick_params(axis='both', which='major', labelsize=20)
         # ax.tick_params(axis='both', which='minor', labelsize=8)
+
+for x in range(15):
+    l = np.linspace(dmin[x], dmax[x], 100)
+    pr = np.sum(gaussian_data_all[x, :, :], axis=1)
+    plt.plot(l, pr, c='red')
 
 
 plt.savefig('posterior_abc_new')
