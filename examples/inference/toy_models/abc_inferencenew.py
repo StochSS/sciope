@@ -150,7 +150,8 @@ def smart_ticks(dmin,dmax):
 
     return ticks
 
-
+ax.tick_params(axis='both', which='major', labelsize=20)
+# ax.tick_params(axis='both', which='minor', labelsize=8)
 for x in range(15):
     ax[0, x].set_title(para_names[x], fontsize=20)
     ax[x,14].yaxis.set_label_position("right")
@@ -207,10 +208,12 @@ for x in range(15):
             ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]])
 
 
-            ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
+            ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False,)
             if y < 14:
                 ax[x, y].tick_params(labelbottom=False)
-            ax[x, y].set_yticks(ticks=smart_ticks(dmin[x], dmax[x]), minor=False)
+            ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=True)
+            if x > y+1:
+                ax[x, y].tick_params(labelbottom=False)
 
             f.delaxes(ax[y, x])
             # loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
