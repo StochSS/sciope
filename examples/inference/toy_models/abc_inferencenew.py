@@ -186,9 +186,9 @@ for x in range(15):
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]])
 
-            if y == 14:
-                ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
-            else:
+
+            ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
+            if y < 14:
                 ax[x, y].tick_params(labelbottom=False)
             ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=False)
 
