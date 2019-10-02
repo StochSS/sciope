@@ -107,7 +107,7 @@ for i in range(15):
 true_param = normalize_data(true_param,dmin,dmax)
 # plt.axis('equal')
 f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
-f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
+# f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
 hist_data = np.ones((15,bins_nr))
@@ -126,6 +126,9 @@ def nnlf(params, data):
 
 for x in range(15):
     ax[0, x].set_title(para_names[x])
+    ax[x,14].yaxis.set_label_position("right")
+    ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=20, labelpad=20)
+
     for y in range(x,15):
         print("x: ", x, ", y: ", y)
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
@@ -167,7 +170,6 @@ for x in range(15):
 
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
             ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=1, alpha=0.5)
-
 
             ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="*")
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
