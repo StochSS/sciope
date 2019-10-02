@@ -68,7 +68,7 @@ nr_of_accept_cross = 100
 range_color = 'cornflowerblue'
 fsize=30
 lwith=5
-scattersize = 3
+scattersize = 5
 
 
 dist = np.linalg.norm(abc_trial_pred[:,bpi] - data_pred[:,bpi],axis=1)
@@ -184,7 +184,7 @@ for x in range(15):
             ax[y, x].plot(l, p, c='green', lw=lwith)
             ax[x, y].set_xlabel(para_names[x], fontsize=fsize)
             ax[x, y].yaxis.set_label_position("left")
-            ax[x, y].set_ylabel('density', fontsize=fsize)
+            ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.2)
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
