@@ -236,6 +236,8 @@ for x in range(15):
             print("(", x, ",", y, ") mean x: " + "{0:.2f}".format(np.mean(accepted_para[:, x])) + ", mean y: " + "{0:.2f}".format(np.mean(accepted_para[:, y])))
 
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
+            ax[x, y].scatter(accepted_para_full[:, y], accepted_para_full[:, x], color="red", s=scattersize, alpha=0.1)
+
             ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=scattersize, alpha=1)
 
             ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="x", s=20)
