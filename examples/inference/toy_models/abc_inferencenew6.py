@@ -43,7 +43,7 @@ true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) 
 true_param = np.squeeze(np.array(true_param))
 print("true_param shape: ", true_param.shape)
 data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
-data = data[1]
+data = data[2]
 data = np.expand_dims(data,0)
 print("data shape: ", data.shape)
 # data_exp = np.expand_dims( np.expand_dims(data,axis=0), axis=2 )
