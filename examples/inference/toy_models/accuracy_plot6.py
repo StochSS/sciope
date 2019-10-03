@@ -86,13 +86,16 @@ for i in range(15):
     para_names[i] = "$\\" + pk + "$"
 
 
-f,ax = plt.subplots(3,5)
+f,ax = plt.subplots(3,5,figsize=(30,50))
+plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.15, hspace=0.15)
 for x in range(3):
     for y in range(5):
         i = x*5+y
         ax[x,y].set_title(para_names[i])
-        ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.1,alpha=0.1)
+        ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.1,alpha=0.02)
         ax[x,y].plot([dmin[i], dmax[i]],[dmin[i],dmax[i]],c='black')
+        ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]],
+                      lw=2, c='b')
 
 
 
