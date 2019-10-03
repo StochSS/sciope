@@ -159,6 +159,9 @@ def smart_ticks(dmin,dmax):
 
     return ticks
 
+dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[[x,y]], axis=1)
+accepted_ind = np.argpartition(dist, nr_of_accept_cross)[0:nr_of_accept_cross]
+accepted_para_full = abc_trial_thetas[accepted_ind]
 
 for x in range(15):
     ax[0, x].set_title(para_names[x], fontsize=fsize)
@@ -171,6 +174,27 @@ for x in range(15):
         print("x: ", x, ", y: ", y)
         print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
         if x == y:
+
+            #Real posterior
+            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para_full[:, x]), np.std(accepted_para_full[:, x])),
+                                               args=([accepted_para_full[:, x], dmin[x], dmax[x]],), disp=False)
+
+            left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
+            right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
+
+            l = np.linspace(dmin[x], dmax[x], 100)
+            p_full = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+
+            ax[x, y].hist(accepted_para_full[:, x], density=True, bins=25, color='red', alpha=1)
+
+
+
+
+
+
+
+
+
             dist = abs(abc_trial_pred[:, x] - data_pred[x])
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
@@ -184,12 +208,10 @@ for x in range(15):
 
             l = np.linspace(dmin[x], dmax[x], 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-            # box = ax[x,y].get_position()
-            # box.x0 = box.x0 - 0.05
-            # # box.x1 = box.x1 + 0.05
-            # ax[x,y].set_position(box)
+
             ax[x, y].tick_params(labelleft=False)
             ax[y, x].plot(l, p, c='green', lw=lwith)
+            ax[y, x].plot(l, p_full, c='red', lw=lwith, ls='-')
             ax[x, y].set_xlabel(para_names[x], fontsize=fsize)
             # ax[x, y].yaxis.set_label_position("left")
             ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
