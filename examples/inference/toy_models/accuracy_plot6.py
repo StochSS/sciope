@@ -74,7 +74,8 @@ f,ax = plt.subplots(3,5)
 for x in range(3):
     for y in range(5):
         i = x*5+y
-        ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i])
+        ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.3,alpha=0.2)
+        ax[x,y].plot([dmin[i], dmax[i]],[dmin[i],dmax[i]],c='black')
 
 
 
