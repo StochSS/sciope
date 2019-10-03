@@ -23,7 +23,7 @@ from vilar import Vilar_model
 num_timestamps=401
 endtime=200
 
-modelname = "vilar_ACR_prior5" + str(endtime) + "_" + str(num_timestamps)
+modelname = "vilar_ACR_prior6_" + str(endtime) + "_" + str(num_timestamps)
 
 dmin =           [40,   200,    0,   20,   10,   1,    1,   0,   0,   0, 0.5, 0.2,   0,    0,   20]
 dmax =         [  80,   600,  0.1,   60,   60,   7,   12,   2,   3, 0.7, 2.5,   2,   3,   70,   120]
