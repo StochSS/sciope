@@ -190,16 +190,6 @@ for x in range(15):
             l = np.linspace(dmin[x], dmax[x], 100)
             p_full = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
-            ax[x, y].hist(accepted_para_full[:, x], density=True, bins=25, color='red', alpha=0.1)
-
-
-
-
-
-
-
-
-
             dist = abs(abc_trial_pred[:, x] - data_pred[x])
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
@@ -214,6 +204,8 @@ for x in range(15):
             l = np.linspace(dmin[x], dmax[x], 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
+
+
             ax[x, y].tick_params(labelleft=False)
             ax[y, x].plot(l, p, c='green', lw=lwith)
             ax[y, x].plot(l, p_full, c='red', lw=lwith, ls='-')
@@ -221,7 +213,9 @@ for x in range(15):
             # ax[x, y].yaxis.set_label_position("left")
             ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=25, color='green', alpha=0.2)
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=25, color='green', alpha=1)
+            ax[x, y].hist(accepted_para_full[:, x], density=True, bins=25, color='red', alpha=0.1)
+
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
             ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
             # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
