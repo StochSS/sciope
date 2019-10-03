@@ -177,8 +177,8 @@ for x in range(15):
 
 
     for y in range(x,15):
-        print("x: ", x, ", y: ", y)
-        print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
+        # print("x: ", x, ", y: ", y)
+        # print("abc_trial_pred.shape: ", abc_trial_pred.shape, ", data_pred.shape: ", data_pred.shape)
         if x == y:
 
             #Real posterior
@@ -234,8 +234,8 @@ for x in range(15):
             accepted_ind = np.argpartition(dist, nr_of_accept_cross)[0:nr_of_accept_cross]
             accepted_para = abc_trial_thetas[accepted_ind]
             accepted_mean = np.mean(accepted_para, axis=0)
-            print("accepted para shape: ", accepted_para.shape)
-            print("(", x, ",", y, ") mean x: " + "{0:.2f}".format(np.mean(accepted_para[:, x])) + ", mean y: " + "{0:.2f}".format(np.mean(accepted_para[:, y])))
+            # print("accepted para shape: ", accepted_para.shape)
+            # print("(", x, ",", y, ") mean x: " + "{0:.2f}".format(np.mean(accepted_para[:, x])) + ", mean y: " + "{0:.2f}".format(np.mean(accepted_para[:, y])))
 
             # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
             ax[x, y].scatter(accepted_para_full[:, y], accepted_para_full[:, x], color="red", s=scattersize, alpha=0.1)
@@ -295,5 +295,4 @@ for x in range(15):
 #     print("pr shape: ", pr.shape)
 #     ax[x,x].plot(l, pr, c='red')
 
-print("updated posterior figure.")
 plt.savefig('posterior_abc_new6')
