@@ -73,7 +73,7 @@ print("data_pack_pred shape: ", data_pack_pred.shape)
 
 
 nr_of_trial = abc_trial_thetas.shape[0]
-nr_of_accept = 1000
+nr_of_accept = 3000
 nr_of_accept_cross = 1000
 range_color = '#1f77b4'
 fsize=30
@@ -214,8 +214,8 @@ for x in range(15):
             # ax[x, y].yaxis.set_label_position("left")
             ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.5)
-            ax[x, y].hist(accepted_para_full[:, x], density=True, bins=10, color='red', alpha=0.1)
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=30, color='green', alpha=0.5)
+            ax[x, y].hist(accepted_para_full[:, x], density=True, bins=30, color='red', alpha=0.1)
 
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
             ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
