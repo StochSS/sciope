@@ -291,5 +291,5 @@ for x in range(15):
 #     print("pr shape: ", pr.shape)
 #     ax[x,x].plot(l, pr, c='red')
 
-
+print("updated posterior figure.")
 plt.savefig('posterior_abc_new')
