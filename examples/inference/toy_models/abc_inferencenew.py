@@ -159,7 +159,7 @@ def smart_ticks(dmin,dmax):
 
     return ticks
 
-dist = np.linalg.norm(abc_trial_pred[:, [x,y]] - data_pred[[x,y]], axis=1)
+dist = np.linalg.norm(abc_trial_pred - data_pred, axis=1)
 accepted_ind = np.argpartition(dist, nr_of_accept_cross)[0:nr_of_accept_cross]
 accepted_para_full = abc_trial_thetas[accepted_ind]
 
