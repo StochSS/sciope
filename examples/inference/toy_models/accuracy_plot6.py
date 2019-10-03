@@ -92,7 +92,7 @@ for x in range(3):
     for y in range(5):
         i = x*5+y
         ax[x,y].set_title(para_names[i])
-        ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.1,alpha=0.02)
+        ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.1,alpha=0.06)
         ax[x,y].plot([dmin[i], dmax[i]],[dmin[i],dmax[i]],c='black')
         ax[x, y].plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]],
                       lw=2, c='b')
