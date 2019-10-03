@@ -52,9 +52,9 @@ print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 
-test_thetas = pickle.load(open('datasets/' + modelname + '/abc_test_thetas.p', "rb" ) )
+test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 # abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
-test_ts = pickle.load(open('datasets/' + modelname + '/abc_test_ts.p', "rb" ) )
+test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 
 
 
