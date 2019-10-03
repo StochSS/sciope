@@ -241,7 +241,7 @@ for x in range(15):
 
             ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=scattersize, alpha=1)
 
-            ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="x", s=20)
+            ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="x", s=100)
             # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
             # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
             ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]], [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith, c = range_color)
