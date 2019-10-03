@@ -68,14 +68,30 @@ print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
 
 bpi = np.argsort(mean_dev)[:4] # best_param_ind
+para_names = vilar.get_parameter_names()
+
+for i in range(15):
+    pk = para_names[i]
+    pks = pk.split("_")
+    if len(pks) > 1:
+        pk_p = "\hat{\\" + pks[0].lower() + "}_{" + pks[1].upper() + "}"
+        pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
+    if len(pks) == 3:
+        print("len 3: ", pks[2])
+        if pks[2] == 'prime':
+            pk_p = pk_p + "'"
+            pk = pk + "'"
+
+    para_name_p = "$" + pk_p + "$"
+    para_names[i] = "$\\" + pk + "$"
 
 
 f,ax = plt.subplots(3,5)
 for x in range(3):
     for y in range(5):
         i = x*5+y
-        ax[x,y].set_title(str(i))
-        ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.3,alpha=0.2)
+        ax[x,y].set_title(para_names[i])
+        ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.1,alpha=0.1)
         ax[x,y].plot([dmin[i], dmax[i]],[dmin[i],dmax[i]],c='black')
 
 
