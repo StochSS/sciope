@@ -43,7 +43,7 @@ true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) 
 true_param = np.squeeze(np.array(true_param))
 print("true_param shape: ", true_param.shape)
 data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
-data = data[0]
+data = data[1]
 data = np.expand_dims(data,0)
 print("data shape: ", data.shape)
 # data_exp = np.expand_dims( np.expand_dims(data,axis=0), axis=2 )
@@ -214,8 +214,8 @@ for x in range(15):
             # ax[x, y].yaxis.set_label_position("left")
             ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
-            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=25, color='green', alpha=1)
-            ax[x, y].hist(accepted_para_full[:, x], density=True, bins=25, color='red', alpha=0.1)
+            ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=10, color='green', alpha=0.5)
+            ax[x, y].hist(accepted_para_full[:, x], density=True, bins=10, color='red', alpha=0.1)
 
             peak_val = np.maximum(np.max(ret[0]), np.max(p))
             ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
