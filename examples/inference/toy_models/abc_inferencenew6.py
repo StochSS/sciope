@@ -125,7 +125,7 @@ for i in range(15):
 # plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = True
 
 f, ax = plt.subplots(15,15,figsize=(60,60))# ,sharex=True ) #,sharey=True)
-plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.1, hspace=0.1)
+plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.03, hspace=0.03)
 # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
 bins_nr = 10
 bins = np.linspace(0,1,bins_nr+1)
@@ -182,15 +182,15 @@ for x in range(15):
         if x == y:
 
             #Real posterior
-            loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para_full[:, x]), np.std(accepted_para_full[:, x])),
+            loc_opt_full, scale_opt_full = optimize.fmin(nnlf, (np.mean(accepted_para_full[:, x]), np.std(accepted_para_full[:, x])),
                                                args=([accepted_para_full[:, x], dmin[x], dmax[x]],), disp=False)
 
-            left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
-            right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
+            left_trunc_norm_full = (dmin[x] - loc_opt_full) / scale_opt_full
+            right_trunc_norm_full = (dmax[x] - loc_opt_full) / scale_opt_full
 
             l = np.linspace(dmin[x], dmax[x], 100)
-            p_full = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-
+            p_full = stats.truncnorm.pdf(l, left_trunc_norm_full, right_trunc_norm_full, loc_opt_full, scale_opt_full)
+            print("x: ", x, ", params full: ", left_trunc_norm_full, right_trunc_norm_full, loc_opt_full, scale_opt_full)
             dist = abs(abc_trial_pred[:, x] - data_pred[x])
             accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
             accepted_para = abc_trial_thetas[accepted_ind]
@@ -201,6 +201,7 @@ for x in range(15):
 
             left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
             right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
+            print("x: ", x, ", params full: ", left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
             l = np.linspace(dmin[x], dmax[x], 100)
             p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
