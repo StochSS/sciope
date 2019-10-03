@@ -68,7 +68,7 @@ print("data_pack_pred shape: ", data_pack_pred.shape)
 
 nr_of_trial = abc_trial_thetas.shape[0]
 nr_of_accept = 1000
-nr_of_accept_cross = 100
+nr_of_accept_cross = 1000
 range_color = '#1f77b4'
 fsize=30
 lwith=3
@@ -185,7 +185,7 @@ for x in range(15):
             l = np.linspace(dmin[x], dmax[x], 100)
             p_full = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
-            ax[x, y].hist(accepted_para_full[:, x], density=True, bins=25, color='red', alpha=1)
+            ax[x, y].hist(accepted_para_full[:, x], density=True, bins=25, color='red', alpha=0.1)
 
 
 
