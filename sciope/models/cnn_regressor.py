@@ -69,6 +69,7 @@ class CNNModel(ModelBase):
     def load_model(self, save_as=None):
         if save_as is None:
             save_as = self.save_as
+        print("model load: ", save_as)
         self.model = keras.models.load_model(save_as+'.hdf5')
     
 def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 100], last_pooling=keras.layers.AvgPool1D, dense_layers = [100,100]):
