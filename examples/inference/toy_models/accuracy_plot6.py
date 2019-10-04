@@ -102,3 +102,4 @@ for x in range(3):
 
 
 plt.savefig('accuracyplot6')
+print("new save")
