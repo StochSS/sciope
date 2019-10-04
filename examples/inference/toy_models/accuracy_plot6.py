@@ -66,12 +66,17 @@ test_thetas_max_text = ["{0:.1f}".format(s) for s in test_thetas_max]
 print("min: ", test_thetas_min_text)
 print("max: ", test_thetas_max_text)
 
-
 test_pred = nnm.predict(test_ts)
+
+pred_min = np.min(test_pred,0)
+pred_min_text = ["{0:.1f}".format(s) for s in pred_min]
+
+print("predict min: ", pred_min_text)
+
 
 test_pred_denorm = denormalize_data(test_pred,dmin,dmax)
 test_thetas_norm = normalize_data(test_thetas,dmin,dmax)
-mean_dev = np.mean(abs(test_thetas-test_pred), axis=0)
+mean_dev = np.mean(abs(test_thetas_norm-test_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
 
