@@ -62,7 +62,7 @@ test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 test_pred = nnm.predict(test_ts)
 
 test_pred_denorm = denormalize_data(test_pred,dmin,dmax)
-
+test_thetas_norm = normalize_data(test_thetas,dmin,dmax)
 mean_dev = np.mean(abs(test_thetas-test_pred), axis=0)
 print("mean dev shape: ", mean_dev.shape)
 print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
@@ -93,13 +93,15 @@ for x in range(3):
         i = x*5+y
         ax[x,y].set_title(para_names[i])
         # ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.4,alpha=0.1)
-        ax[x,y].hist2d(test_thetas[:,i],test_pred_denorm[:,i],bins=50)
-        ax[x,y].plot([dmin[i], dmax[i]],[dmin[i],dmax[i]],c='green',ls='--',lw=lwidth)
-        ax[x, y].plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]],
+        # ax[x,y].hist2d(test_thetas[:,i],test_pred_denorm[:,i],bins=50)
+        ax[x,y].hist2d(test_thetas_norm[:,i],test_pred[:,i],bins=100)
+
+        # ax[x,y].plot([dmin[i], dmax[i]],[dmin[i],dmax[i]],c='green',ls='--',lw=lwidth)
+        # ax[x, y].plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]],
+        #               lw=lwidth, c='b')
+
+        ax[x, y].plot([0, 0, 1, 1, 0], [0, 1, 1, 0, 0],
                       lw=lwidth, c='b')
-
-
-
 
 plt.savefig('accuracyplot6')
 print("new save")
