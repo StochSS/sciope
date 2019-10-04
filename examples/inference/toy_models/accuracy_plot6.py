@@ -85,7 +85,7 @@ for i in range(15):
     para_name_p = "$" + pk_p + "$"
     para_names[i] = "$\\" + pk + "$"
 
-lwidth = 5
+lwidth = 3
 f,ax = plt.subplots(3,5,figsize=(50,30))
 plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.15, hspace=0.15)
 for x in range(3):
@@ -93,7 +93,7 @@ for x in range(3):
         i = x*5+y
         ax[x,y].set_title(para_names[i])
         # ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.4,alpha=0.1)
-        ax[x,y].hist2d(test_thetas[:,i],test_pred_denorm[:,i],bins=4)
+        ax[x,y].hist2d(test_thetas[:,i],test_pred_denorm[:,i],bins=50)
         ax[x,y].plot([dmin[i], dmax[i]],[dmin[i],dmax[i]],c='green',ls='--',lw=lwidth)
         ax[x, y].plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]],
                       lw=lwidth, c='b')
