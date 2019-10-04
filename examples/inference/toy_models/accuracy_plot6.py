@@ -39,6 +39,7 @@ modelname = "vilar_ACR_prior6_" + str(endtime) + "_" + str(num_timestamps)
 dmin = [0,    100,    0,   20,   10,   1,    1,   0,   0,   0, 0.5,    0,   0,    0,   0]
 dmax = [80,   600,    4,   60,   60,   7,   12,   2,   3, 0.7, 2.5,   4,   3,   70,   300]
 
+
 true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
 true_param = np.squeeze(np.array(true_param))
 print("true_param shape: ", true_param.shape)
@@ -56,7 +57,14 @@ test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" 
 # abc_trial_thetas = normalize_data(abc_trial_thetas,dmin,dmax)
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 
+test_thetas_min = np.min(test_thetas,0)
+test_thetas_min_text = ["{0:.1f}".format(s) for s in test_thetas_min]
 
+test_thetas_max = np.max(test_thetas,0)
+test_thetas_max_text = ["{0:.1f}".format(s) for s in test_thetas_max]
+
+print("min: ", test_thetas_min_text)
+print("max: ", test_thetas_max_text)
 
 
 test_pred = nnm.predict(test_ts)
