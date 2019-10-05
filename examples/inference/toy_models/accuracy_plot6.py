@@ -70,8 +70,12 @@ test_pred = nnm.predict(test_ts)
 
 pred_min = np.min(test_pred,0)
 pred_min_text = ["{0:.1f}".format(s) for s in pred_min]
+pred_max = np.max(test_pred,0)
+pred_max_text = ["{0:.1f}".format(s) for s in pred_max]
+
 
 print("predict min: ", pred_min_text)
+print("predict max: ", pred_max_text)
 
 
 test_pred_denorm = denormalize_data(test_pred,dmin,dmax)
