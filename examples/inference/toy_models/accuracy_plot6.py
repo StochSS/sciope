@@ -24,7 +24,7 @@ from scipy import stats, optimize
 # nnm = PEN_CNNModel(input_shape=(201,3), output_shape=(15), pen_nr=10)
 # nm = ANNModel(input_shape=(100,1), output_shape=(2))
 clay=[32,48,64,96]
-nnm = CNNModel(input_shape=(401,3), output_shape=15, con_len=3, con_layers=clay, dense_layers=[200,200,200])
+nnm = CNNModel(input_shape=(401,3), output_shape=15, con_len=3, con_layers=clay, dense_layers=[100,100])
 nnm.load_model()
 
 
