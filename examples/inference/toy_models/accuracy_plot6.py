@@ -103,7 +103,7 @@ for x in range(3):
     for y in range(5):
         i = x*5+y
         ax[x, y].set_title("parameter: " + para_names[i])
-        ax[x, y].hist(test_pred[i])
+        ax[x, y].hist(test_pred[:,i])
 
 plt.savefig('distplot6')
 
