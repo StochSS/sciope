@@ -58,7 +58,7 @@ data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 
 test_thetas, test_ts = load_spec(modelname=modelname, type = "train")
 
-
+print("train test data example")
 test_thetas_min = np.min(test_thetas,0)
 test_thetas_min_text = ["{0:.1f}".format(s) for s in test_thetas_min]
 
