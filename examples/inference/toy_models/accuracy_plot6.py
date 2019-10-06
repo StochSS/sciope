@@ -128,7 +128,7 @@ for x in range(3):
         ax[x,y].set_title(para_names[i])
         # ax[x,y].scatter(test_thetas[:,i],test_pred_denorm[:,i],s=0.4,alpha=0.1)
         # ax[x,y].hist2d(test_thetas[:,i],test_pred_denorm[:,i],bins=50)
-        ax[x,y].hist2d(test_thetas_norm[:,i],test_pred[:,i],bins=100)
+        ax[x,y].hist2d(test_thetas_norm[:,i],test_pred[:,i],bins=20)
 
         # ax[x,y].plot([dmin[i], dmax[i]],[dmin[i],dmax[i]],c='green',ls='--',lw=lwidth)
         # ax[x, y].plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]],
