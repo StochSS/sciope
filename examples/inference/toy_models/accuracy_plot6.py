@@ -96,6 +96,7 @@ for i in range(15):
     para_name_p = "$" + pk_p + "$"
     para_names[i] = "$\\" + pk + "$"
 
+print("test pred shape: ", test_pred.shape)
 f, ax = plt.subplots(3,5,figsize=(15,25))
 bins = np.linspace(-2,2,41)
 for x in range(3):
