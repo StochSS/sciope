@@ -97,7 +97,7 @@ for i in range(15):
     para_names[i] = "$\\" + pk + "$"
 
 f, ax = plt.subplots(3,5,figsize=(15,25))
-
+bins = np.linspace(-2,2,41)
 for x in range(3):
     for y in range(5):
         i = x*5+y
