@@ -103,7 +103,10 @@ for x in range(3):
     for y in range(5):
         i = x*5+y
         ax[x, y].set_title("parameter: " + para_names[i])
-        ax[x, y].hist(test_pred[:,i], bins=bins)
+        d = ax[x, y].hist(test_pred[:,i], bins=bins)
+        peak_val = np.max(d[0])
+        plt.plot([0, 0], [peak_val,0])
+        plt.plot([1, 1], [peak_val, 0])
 
 plt.savefig('distplot6')
 
