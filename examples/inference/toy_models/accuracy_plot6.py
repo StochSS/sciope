@@ -79,14 +79,6 @@ pred_max_text = ["{0:.1f}".format(s) for s in pred_max]
 print("predict min: ", pred_min_text)
 print("predict max: ", pred_max_text)
 
-
-test_pred_denorm = denormalize_data(test_pred,dmin,dmax)
-test_thetas_norm = normalize_data(test_thetas,dmin,dmax)
-mean_dev = np.mean(abs(test_thetas_norm-test_pred), axis=0)
-print("mean dev shape: ", mean_dev.shape)
-print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
-
-bpi = np.argsort(mean_dev)[:4] # best_param_ind
 para_names = vilar.get_parameter_names()
 
 for i in range(15):
@@ -103,6 +95,25 @@ for i in range(15):
 
     para_name_p = "$" + pk_p + "$"
     para_names[i] = "$\\" + pk + "$"
+
+f, ax = plt.subplots(3,5,figsize=(15,25))
+
+for x in range(3):
+    for y in range(5):
+        i = x*5+y
+        ax[x, y].set_title("parameter: ", para_names[i])
+        ax[x, y].hist(test_pred[i])
+
+plt.savefig('distplot6')
+
+test_pred_denorm = denormalize_data(test_pred,dmin,dmax)
+test_thetas_norm = normalize_data(test_thetas,dmin,dmax)
+mean_dev = np.mean(abs(test_thetas_norm-test_pred), axis=0)
+print("mean dev shape: ", mean_dev.shape)
+print("mean deviation(", np.mean(mean_dev), "):: ", mean_dev)
+
+bpi = np.argsort(mean_dev)[:4] # best_param_ind
+
 
 lwidth = 3
 f,ax = plt.subplots(3,5,figsize=(50,30))
