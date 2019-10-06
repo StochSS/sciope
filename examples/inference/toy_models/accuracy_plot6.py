@@ -53,10 +53,10 @@ print("data shape: ", data.shape)
 data_pred = nnm.predict(data)
 data_pred_denorm = denormalize_data(data_pred,dmin,dmax)
 
-# test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
-# test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
+test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 
-test_thetas, test_ts = load_spec(modelname=modelname, type = "train")
+# test_thetas, test_ts = load_spec(modelname=modelname, type = "train")
 
 print("train test data example")
 test_thetas_min = np.min(test_thetas,0)
