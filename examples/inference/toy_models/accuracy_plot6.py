@@ -102,7 +102,7 @@ bins = np.linspace(-2,2,41)
 for x in range(3):
     for y in range(5):
         i = x*5+y
-        ax[x, y].set_title("parameter: " + para_names[i])
+        ax[x, y].set_title("parameter: " + para_names[i], bins=bins)
         ax[x, y].hist(test_pred[:,i])
 
 plt.savefig('distplot6')
