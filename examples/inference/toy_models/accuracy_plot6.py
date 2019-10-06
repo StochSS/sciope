@@ -58,7 +58,7 @@ test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 
 # test_thetas, test_ts = load_spec(modelname=modelname, type = "train")
 
-print("train test data example")
+print("test test data example")
 test_thetas_min = np.min(test_thetas,0)
 test_thetas_min_text = ["{0:.1f}".format(s) for s in test_thetas_min]
 
