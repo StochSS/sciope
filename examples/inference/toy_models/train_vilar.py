@@ -52,7 +52,7 @@ nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=
 # nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=3, con_layers=[32,64,128], dense_layers=[100,100])
 # nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[200,200,00])
 print("Model name: ", nnm.name)
-verb = 0
+verb = 2
 print("verbose: ", verb)
 print("species: ", species)
 # nnm.load_model('saved_models/None_DNNModel')
@@ -60,7 +60,7 @@ print("batch size 16")
 
 start_time = time.time()
 history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=16, epochs=40*10, learning_rate==0.0003, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=verb)
+          batch_size=16, epochs=40*10, learning_rate=0.0003, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=verb)
 
 
 print("history: ", history1.history)
