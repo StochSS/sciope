@@ -76,7 +76,7 @@ nr_of_trial = abc_trial_thetas.shape[0]
 nr_of_accept = 3000
 nr_of_accept_cross = 1000
 range_color = '#1f77b4'
-fsize=30
+fsize=80
 lwith=3
 scattersize = 5
 
@@ -213,7 +213,7 @@ for x in range(15):
             # ax[y, x].plot(l, p_full, c='red', lw=lwith, ls='--')
             ax[x, y].set_xlabel(para_names[x], fontsize=fsize)
             # ax[x, y].yaxis.set_label_position("left")
-            ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
+            # ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
             ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=20, color='green', alpha=1)
             ax[x, y].hist(accepted_para_full[:, x], density=True, bins=20, color='red', alpha=0.3)
