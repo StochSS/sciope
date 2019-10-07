@@ -48,7 +48,8 @@ clay=[32,48,64,96]
 
 ts_len = train_ts.shape[1]
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=[200,200,200],dataname='vilar_prior1')
+print("big neural net.")
+nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=[500,500,500],dataname='vilar_prior1')
 # nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=3, con_layers=[32,64,128], dense_layers=[100,100])
 # nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[200,200,00])
 print("Model name: ", nnm.name)
@@ -60,7 +61,7 @@ print("batch size 64")
 
 start_time = time.time()
 history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=64, epochs=40*10, learning_rate=0.001, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=verb)
+          batch_size=32, epochs=40*10, learning_rate=0.001, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=verb)
 
 
 print("history: ", history1.history)
