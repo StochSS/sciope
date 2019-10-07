@@ -23,7 +23,7 @@ from vilar import Vilar_model
 num_timestamps=401
 endtime=200
 
-modelname = "vilar_ACR_prior6_" + str(endtime) + "_" + str(num_timestamps)
+modelname = "vilar_CAR_prior6_" + str(endtime) + "_" + str(num_timestamps)
 
 dmin = [0,    100,    0,   20,   10,   1,    1,   0,   0,   0, 0.5,    0,   0,    0,   0]
 dmax = [80,   600,    4,   60,   60,   7,   12,   2,   3, 0.7, 2.5,   4,   3,   70,   300]
@@ -51,7 +51,7 @@ clay=[32,48,64,96]
 
 ts_len = train_ts.shape[1]
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=[100,100])
+nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=[200,200,200])
 # nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=3, con_layers=[32,64,128], dense_layers=[100,100])
 # nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[200,200,00])
 print("Model name: ", nnm.name)
