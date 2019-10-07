@@ -173,7 +173,7 @@ for x in range(15):
     ax[0, x].set_title(para_names[x], fontsize=fsize, y=1.08)
     if x<14:
         ax[x,14].yaxis.set_label_position("right")
-        ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=fsize, labelpad=50)
+        ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=fsize, labelpad=70)
 
 
     for y in range(x,15):
@@ -211,7 +211,7 @@ for x in range(15):
             ax[x, y].tick_params(labelleft=False)
             # ax[y, x].plot(l, p, c='green', lw=lwith)
             # ax[y, x].plot(l, p_full, c='red', lw=lwith, ls='--')
-            ax[x, y].set_xlabel(para_names[x], fontsize=fsize)
+            ax[x, y].set_xlabel(para_names[x], fontsize=fsize, y=1.5)
             # ax[x, y].yaxis.set_label_position("left")
             # ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
