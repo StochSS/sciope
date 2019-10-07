@@ -287,7 +287,7 @@ for x in range(15):
 
 
             f.delaxes(ax[y, x])
-        ax[x, y].set_xticks(ticks=[dmin[y], dmax[y]], minor=False)
+        ax[x, y].set_xticks(ticks=[], minor=False)
         ax[x, y].tick_params(axis='both', which='major', labelsize=20)
         # ax.tick_params(axis='both', which='minor', labelsize=8)
 
