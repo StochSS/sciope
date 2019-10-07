@@ -173,7 +173,7 @@ for x in range(15):
     ax[0, x].set_title(para_names[x], fontsize=fsize)
     if x<14:
         ax[x,14].yaxis.set_label_position("right")
-        ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=fsize, labelpad=20)
+        ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=fsize, labelpad=50)
 
 
     for y in range(x,15):
