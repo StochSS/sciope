@@ -170,7 +170,7 @@ accepted_ind = np.argpartition(dist, nr_of_accept_cross)[0:nr_of_accept_cross]
 accepted_para_full = abc_trial_thetas[accepted_ind]
 
 for x in range(15):
-    ax[0, x].set_title(para_names[x], fontsize=fsize)
+    ax[0, x].set_title(para_names[x], fontsize=fsize, y=1.08)
     if x<14:
         ax[x,14].yaxis.set_label_position("right")
         ax[x,14].set_ylabel(para_names[x], rotation=0, fontsize=fsize, labelpad=50)
