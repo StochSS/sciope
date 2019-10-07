@@ -275,7 +275,9 @@ for x in range(15):
             if y < 15:
                 ax[x, y].tick_params(labelbottom=False)
 
-            ax[x, y].set_yticks(ticks=[dmin[x], dmax[x]], minor=False)
+            ax[x, y].set_yticks(ticks=[], minor=False)
+            ax[x, y].set_xticks(ticks=[], minor=False)
+
             ax[x, y].tick_params(labelleft=False)
             ax[x, y].tick_params(right=True)
             ax[x, y].tick_params(left=False)
