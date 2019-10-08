@@ -126,7 +126,7 @@ def get_parameter_names_raw():
 
 def get_parameter_names():
     raw_names = get_parameter_names_raw()
-    para_names = np.chararray(15)
+    para_names = np.chararray(15,3)
     for i in range(15):
         pk = raw_names[i]
         pks = pk.split("_")
