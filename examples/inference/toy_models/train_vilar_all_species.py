@@ -28,7 +28,7 @@ dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
 dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
 #5,6,7,8
-species = [6,7,8]
+species = [1]
 
 #Load data
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
@@ -54,7 +54,7 @@ ts_len = train_ts.shape[1]
 print("species: ", species)
 # choose neural network model
 # nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay)
-nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay, dense_layers=[100,100])
+nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay, dense_layers=[100,100,100])
 
 # nnm = PEN_CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(15), pen_nr=10, con_layers=[32,64,128], dense_layers=[100,100])
 
@@ -67,14 +67,10 @@ history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=val
           batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
 
 
-print("history: ", history1.history)
 pickle.dump(history1.history, open('history1.p', "wb"))
-
 
 history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
           batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
-
-
 
 
 end_time = time.time()
@@ -92,20 +88,6 @@ validation_mae = np.mean(abs(validation_thetas-validation_pred), axis=0)
 
 para_names = vilar.get_parameter_names()
 
-for i in range(15):
-    pk = para_names[i]
-    pks = pk.split("_")
-    if len(pks) > 1:
-        pk_p = "\hat{\\" + pks[0].lower() + "}_{" + pks[1].upper() + "}"
-        pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
-    if len(pks) == 3:
-        print("len 3: ", pks[2])
-        if pks[2] == 'prime':
-            pk_p = pk_p + "'"
-            pk = pk + "'"
-
-    para_name_p = "$" + pk_p + "$"
-    para_names[i] = "$\\" + pk + "$"
 
 validation_thetas = denormalize_data(validation_thetas, dmin, dmax)
 validation_pred = denormalize_data(validation_pred, dmin, dmax)

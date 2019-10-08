@@ -120,6 +120,21 @@ def get_model():
     model = model_doc.to_model("vilar")
     return model
 
-def get_parameter_names():
+def get_parameter_names_raw():
     model = get_model()
     return [k for k in model.listOfParameters.keys()]
+
+def get_parameter_names():
+    raw_names = get_parameter_names_raw()
+    para_names = np.zeros(15)
+    for i in range(15):
+        pk = raw_names[i]
+        pks = pk.split("_")
+        if len(pks) > 1:
+            pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
+        if len(pks) == 3:
+            if pks[2] == 'prime':
+                pk = pk + "'"
+
+        para_names[i] = "$\\" + pk + "$"
+    return para_names
