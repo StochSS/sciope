@@ -52,7 +52,7 @@ def train_routine(species = [0,2], training_size = 300000, step=2, end_step=401,
         nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=dlay)
     elif model == 'DNN':
         nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[100,100,100])
-    elif model = 'PEN':
+    elif model == 'PEN':
         nnm = PEN_CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(15), pen_nr=10, con_layers=clay, dense_layers=[100,100,100])
     else:
         print("invalid model name!")
