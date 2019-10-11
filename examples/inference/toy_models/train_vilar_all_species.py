@@ -57,12 +57,11 @@ clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 print("species: ", species)
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay, dense_layers=[100,100,100])
-# nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[100,100,100])
+# nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay, dense_layers=[100,100,100])
+nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[100,100,100])
 # nnm = PEN_CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(15), pen_nr=10, con_layers=clay, dense_layers=[100,100,100])
 print("save results as: ", 'results/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) +
                  '_step_' + str(step) + '_endstep_' + str(end_step) + '_species_' + str(species) + '.p', "wb")
-# nnm = ANNModel(input_shape=(ts_len, 3), output_shape=(15), layers=[200,200,200])
 print("Model name: ", nnm.name)
 para_names = vilar.get_parameter_names()
 
