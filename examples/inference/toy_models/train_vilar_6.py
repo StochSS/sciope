@@ -89,20 +89,6 @@ validation_mae = np.mean(abs(validation_thetas-validation_pred), axis=0)
 
 para_names = vilar.get_parameter_names()
 
-for i in range(15):
-    pk = para_names[i]
-    pks = pk.split("_")
-    if len(pks) > 1:
-        pk_p = "\hat{\\" + pks[0].lower() + "}_{" + pks[1].upper() + "}"
-        pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
-    if len(pks) == 3:
-        print("len 3: ", pks[2])
-        if pks[2] == 'prime':
-            pk_p = pk_p + "'"
-            pk = pk + "'"
-
-    para_name_p = "$" + pk_p + "$"
-    para_names[i] = "$\\" + pk + "$"
 
 validation_thetas = denormalize_data(validation_thetas, dmin, dmax)
 validation_pred = denormalize_data(validation_pred, dmin, dmax)

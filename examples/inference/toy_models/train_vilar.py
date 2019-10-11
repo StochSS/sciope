@@ -50,7 +50,7 @@ ts_len = train_ts.shape[1]
 # choose neural network model
 print("big neural net.")
 # nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=[500,500,500],dataname='vilar_prior1')
-nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=48, con_layers=[32,64,128], dense_layers=[100,100,100])
+nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=5, con_layers=[32,64,128], dense_layers=[100,100,100])
 # nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[200,200,00])
 print("Model name: ", nnm.name)
 verb = 2
@@ -88,21 +88,6 @@ print("training mean absolute error: ", np.mean(abs(train_thetas-train_pred)))
 validation_mae = np.mean(abs(validation_thetas-validation_pred), axis=0)
 
 para_names = vilar.get_parameter_names()
-
-for i in range(15):
-    pk = para_names[i]
-    pks = pk.split("_")
-    if len(pks) > 1:
-        pk_p = "\hat{\\" + pks[0].lower() + "}_{" + pks[1].upper() + "}"
-        pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
-    if len(pks) == 3:
-        print("len 3: ", pks[2])
-        if pks[2] == 'prime':
-            pk_p = pk_p + "'"
-            pk = pk + "'"
-
-    para_name_p = "$" + pk_p + "$"
-    para_names[i] = "$\\" + pk + "$"
 
 validation_thetas = denormalize_data(validation_thetas, dmin, dmax)
 validation_pred = denormalize_data(validation_pred, dmin, dmax)
