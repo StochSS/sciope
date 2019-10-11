@@ -29,7 +29,7 @@ dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 
 #5,6,7,8
 #6=C, 7=A, 8=R
-species = [6]
+species = [0,1]
 
 
 
@@ -57,10 +57,8 @@ clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 print("species: ", species)
 # choose neural network model
-# nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay)
-# nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay, dense_layers=[100,100,100])
-nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[100,100,100])
-
+nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay, dense_layers=[100,100,100])
+# nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[100,100,100])
 # nnm = PEN_CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(15), pen_nr=10, con_layers=clay, dense_layers=[100,100,100])
 print("save results as: ", 'results/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) +
                  '_step_' + str(step) + '_endstep_' + str(end_step) + '_species_' + str(species) + '.p', "wb")
@@ -74,14 +72,14 @@ for p in para_names:
 
 # nnm.load_model()
 start_time = time.time()
-history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
-
-
-pickle.dump(history1.history, open('history1.p', "wb"))
-
-history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+# history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+#
+#
+# pickle.dump(history1.history, open('history1.p', "wb"))
+#
+# history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
 
 
 end_time = time.time()
@@ -122,9 +120,13 @@ test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean absolute error: ", test_mae)
+print("test_ae: ")
+for ta in test_ae:
+    print(ta)
+print("mean test_ae: ", np.mean(test_ae))
 
-test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_test_ae": test_ae_norm}
-pickle.dump(test_results,
-            open('results/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) +
-                 '_step_' + str(step) + '_endstep_' + str(end_step) + '_species_' + str(species) + '.p', "wb"))
+# test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_test_ae": test_ae_norm}
+# pickle.dump(test_results,
+#             open('results/twospecies/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) +
+#                  '_step_' + str(step) + '_endstep_' + str(end_step) + '_species_' + str(species) + '.p', "wb"))
 
