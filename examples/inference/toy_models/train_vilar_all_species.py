@@ -70,7 +70,7 @@ print("parameter names: ")
 for p in para_names:
     print(p)
 
-# nnm.load_model()
+nnm.load_model()
 start_time = time.time()
 # history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
 #           batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
