@@ -135,6 +135,5 @@ def get_parameter_names():
         if len(pks) == 3:
             if pks[2] == 'prime':
                 pk = pk + "'"
-        print("pk: ", pk)
         para_names[i] = "$\\" + pk + "$"
     return para_names
