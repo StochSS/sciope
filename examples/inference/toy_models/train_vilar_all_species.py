@@ -47,7 +47,7 @@ train_ts = train_ts[0:training_size]
 #Normalize parameter values
 train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
-step=2
+step=1
 end_step = 401
 print("end_step: ", end_step)
 train_ts = train_ts[:,:end_step:step,:]
