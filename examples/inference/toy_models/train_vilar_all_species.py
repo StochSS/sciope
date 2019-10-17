@@ -124,8 +124,8 @@ print("mean absolute error: ", test_mae)
 #     print(ta)
 # print("mean test_ae: ", np.mean(test_ae))
 
-test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_test_ae": test_ae_norm}
-pickle.dump(test_results,
-            open('results/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) +
-                 '_step_' + str(step) + '_endstep_' + str(end_step) + '_species_' + str(species) + '.p', "wb"))
-
+# test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_test_ae": test_ae_norm}
+# pickle.dump(test_results,
+#             open('results/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) +
+#                  '_step_' + str(step) + '_endstep_' + str(end_step) + '_species_' + str(species) + '.p', "wb"))
+#
