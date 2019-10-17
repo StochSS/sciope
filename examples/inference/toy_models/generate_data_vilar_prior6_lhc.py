@@ -90,10 +90,18 @@ dg = DataGenerator(sim=simulate)
 print("generating some data")
 nr=0
 
+if not os.path.exists('datasets/lhc'):
+    os.mkdir('datasets/lhc')
 
 if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'):
-    nr = +=1
-    if nr == 1:
+    lhs_obj = lhs.LatinHypercube(dmin, dmax)
+    lhs_delayed = lhs_obj.generate(300000)
+    train_thetas, = dask.compute(lhs_delayed)
+
+train_thetas = np.reshape(train_thetas,(3,-1))
+print("train_thetas shape: ", train_thetas.shape)
+
+
 
 
 nr=0
