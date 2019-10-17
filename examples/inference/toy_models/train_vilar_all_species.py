@@ -92,15 +92,6 @@ print("validation mean square error: ", np.mean((validation_thetas-validation_pr
 print("validation mean absolute error: ", np.mean(abs(validation_thetas-validation_pred)))
 print("training mean absolute error: ", np.mean(abs(train_thetas-train_pred)))
 
-
-
-
-
-
-
-
-
-
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 test_ts = test_ts[:,:end_step:step,species]

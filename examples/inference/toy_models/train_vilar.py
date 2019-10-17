@@ -49,8 +49,8 @@ clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 # choose neural network model
 print("big neural net.")
-nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=[64], dense_layers=[200,200,200],dataname='vilar_prior1')
-# nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=10, con_layers=clay, dense_layers=[100,100,100])
+# nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=[64], dense_layers=[200,200,200],dataname='vilar_prior1')
+nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=10, con_layers=[100,50,10], dense_layers=[100,100,100])
 # nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[200,200,00])
 print("Model name: ", nnm.name)
 verb = 2
