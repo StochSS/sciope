@@ -47,6 +47,15 @@ nnm = CNNModel(input_shape=(ts_len,nr_of_species), output_shape=(15), con_len=3,
 
 print("Model name: ", nnm.name)
 
+
+true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
+true_param = np.squeeze(np.array(true_param))
+print("true_param shape: ", true_param.shape)
+data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
+# data = data[3]
+# data = np.expand_dims(data,0)
+print("data shape: ", data.shape)
+
 nnm.load_model()
 
 

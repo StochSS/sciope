@@ -69,20 +69,20 @@ print("Model name: ", nnm.name)
 # for p in para_names:
 #     print(p)
 
-nnm.load_model()
-# start_time = time.time()
-# history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-#           batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
-#
-#
-# pickle.dump(history1.history, open('history1.p', "wb"))
-#
-# history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-#           batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
-#
+# nnm.load_model()
+start_time = time.time()
+history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+          batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
 
-# end_time = time.time()
-# training_time = end_time - start_time
+
+pickle.dump(history1.history, open('history1.p', "wb"))
+
+history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+          batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+
+
+end_time = time.time()
+training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
 validation_pred = np.reshape(validation_pred,(-1,15))
 train_pred = nnm.predict(train_ts)
@@ -118,7 +118,8 @@ test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 
 print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
-print("mean absolute error: ", test_mae)
+print("mean rel absolute error: ", np.mean(test_ae_norm))
+
 # print("test_ae: ")
 # for ta in test_ae:
 #     print(ta)
