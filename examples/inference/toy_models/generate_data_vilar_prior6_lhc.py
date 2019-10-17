@@ -95,7 +95,7 @@ if not os.path.exists('datasets/lhc'):
 
 if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'):
     lhs_obj = lhs.LatinHypercube(dmin, dmax)
-    lhs_delayed = lhs_obj.generate(100000)
+    lhs_delayed = lhs_obj.generate(10000)
     train_thetas, = dask.compute(lhs_delayed)
 
 train_thetas = np.reshape(train_thetas,(3,-1))
