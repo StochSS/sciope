@@ -98,7 +98,8 @@ if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'
     lhs_delayed = lhs_obj.generate(300000)
     print("delayed")
     print("lhs_delayed shape: ", lhs_delayed.shape)
-    train_thetas, = dask.compute(lhs_delayed)
+    train_thetas, = [dask.compute(lhs_delayed)(i)
+           for i in range(3)]
 
 print("train_thetas shape: ", train_thetas.shape)
 train_thetas = np.reshape(train_thetas,(3,-1,15))
