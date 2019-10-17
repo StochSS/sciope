@@ -57,37 +57,37 @@ clay=[32,48,64,96]
 ts_len = train_ts.shape[1]
 print("species: ", species)
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=[32,48], dense_layers=[100,100,100])
+nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), con_len=3, con_layers=clay, dense_layers=[100,100,100])
 # nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[100,100,100])
 # nnm = PEN_CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(15), pen_nr=3, con_layers=clay, dense_layers=[100,100,100])
 print("save results as: ", 'results/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) +
                  '_step_' + str(step) + '_endstep_' + str(end_step) + '_species_' + str(species) + '.p', "wb")
 print("Model name: ", nnm.name)
-para_names = vilar.get_parameter_names()
+# para_names = vilar.get_parameter_names()
+#
+# print("parameter names: ")
+# for p in para_names:
+#     print(p)
 
-print("parameter names: ")
-for p in para_names:
-    print(p)
+nnm.load_model()
+# start_time = time.time()
+# history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+#
+#
+# pickle.dump(history1.history, open('history1.p', "wb"))
+#
+# history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+#
 
-# nnm.load_model()
-start_time = time.time()
-history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
-
-
-pickle.dump(history1.history, open('history1.p', "wb"))
-
-history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
-
-
-end_time = time.time()
-training_time = end_time - start_time
+# end_time = time.time()
+# training_time = end_time - start_time
 validation_pred = nnm.predict(validation_ts)
 validation_pred = np.reshape(validation_pred,(-1,15))
 train_pred = nnm.predict(train_ts)
 train_pred = np.reshape(train_pred,(-1,15))
-print("training time: ", training_time)
+# print("training time: ", training_time)
 print("validation mean square error: ", np.mean((validation_thetas-validation_pred)**2))
 print("validation mean absolute error: ", np.mean(abs(validation_thetas-validation_pred)))
 print("training mean absolute error: ", np.mean(abs(train_thetas-train_pred)))
