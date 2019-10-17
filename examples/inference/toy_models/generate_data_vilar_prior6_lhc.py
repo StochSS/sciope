@@ -97,6 +97,7 @@ if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'
     lhs_obj = lhs.LatinHypercube(dmin, dmax)
     lhs_delayed = lhs_obj.generate(300000)
     print("delayed")
+    print("lhs_delayed shape: ", lhs_delayed.shape)
     train_thetas, = dask.compute(lhs_delayed)
 
 print("train_thetas shape: ", train_thetas.shape)
