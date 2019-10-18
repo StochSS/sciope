@@ -79,23 +79,23 @@ print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
 
-
+nrs = 5
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-obs_data = np.zeros((20,num_timestamps,1))
-for i in range(20):
+obs_data = np.zeros((nrs,num_timestamps,1))
+for i in range(nrs):
     od = simulate(np.array(true_params))[:,species]
     # print("od shape: ", od.shape)
     obs_data[i,:,:] = od
 
 pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
 
-gen_data = np.zeros((20,num_timestamps,1))
+gen_data = np.zeros((nrs,num_timestamps,1))
 
-for i in range(20):
+for i in range(nrs):
     od = simulate(pred_param[i])[:,species]
     # print("od shape: ", od.shape)
     gen_data[i,:,:] = od
