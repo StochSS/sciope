@@ -45,7 +45,7 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
 
     # true_param = normalize_data(true_param,dmin,dmax)
     # plt.axis('equal')
-    f, ax = plt.subplots(18,15,figsize=(30,30))# ,sharex=True,sharey=True)
+    f, ax = plt.subplots(15,15,figsize=(30,30))# ,sharex=True,sharey=True)
     f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
     bins_nr = 10
     bins = np.linspace(0,1,bins_nr+1)
@@ -53,7 +53,6 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
 
 
 
-    lower, upper = 0, 1
     bg=0
 
     def nnlf(params, datapack):
@@ -98,8 +97,6 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
 
                 peak_val = np.maximum(np.max(ret[0]), np.max(p))
                 ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
-                # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
-                # ax[x, y].plot([data_pred[x], data_pred[x]], [0, peak_val], c='gray')
 
                 ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c=range_color, lw=lwith)
                 ax[x, y].plot([dmin[x], dmin[x]], [0, peak_val], c=range_color, lw=lwith)
@@ -111,20 +108,20 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
                                                    args=([accepted_para[:, x], dmin[x], dmax[x]],), disp=False)
                 Cov_Matrix[x,y] = scale_opt
                 Mean_Vector[y] = loc_opt
-                left_trunc_norm = (lower - loc_opt) / scale_opt
-                right_trunc_norm = (upper - loc_opt) / scale_opt
+                left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
+                right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
 
-                l = np.linspace(lower, upper, 100)
+                l = np.linspace(dmin[x],dmax[x], 100)
                 p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
 
                 ax[x, x].plot(l, p)
                 col ='red'
-                if loc_opt<lower or loc_opt>upper:
+                if loc_opt<dmin[x] or loc_opt>dmax[x]:
                     col = 'orange'
-                    if loc_opt<lower:
-                        loc_opt=lower
-                    if loc_opt>upper:
-                        loc_opt=upper
+                    if loc_opt<dmin[x]:
+                        loc_opt=dmin[x]
+                    if loc_opt>dmax[x]:
+                        loc_opt=dmax[x]
                 ax[x, x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
 
             else:
