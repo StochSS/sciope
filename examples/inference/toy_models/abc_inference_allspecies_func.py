@@ -11,10 +11,12 @@ from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
 import vilar
 from scipy import stats, optimize
+import os
 
 
 
-def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax, nr_of_accept = 100, nr_of_accept_cross=100):
+def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax, nr_of_accept = 100,
+                  nr_of_accept_cross=100, index = 0):
 
 
     data_pred = nnm.predict(data)
@@ -109,11 +111,11 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
                 ax[y, y].plot(l, p, c='gray', alpha=0.2, lw = 1)
                 ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=1, alpha=0.5)
                 ax[x, y].scatter(true_param[y],true_param[x], color="black", marker="*")
-                ax[x, y].scatter(accepted_mean[y],accepted_mean[x], color="red", marker="x")
-                ax[x, y].scatter(data_pred[y],data_pred[x], color="gray", marker="o")
                 ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]],
                               [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith, c=range_color)
 
-    plt.savefig('posterior_abc6')
+    if not os.path.exists('posterior_plots'):
+        os.mkdir('posterior_plots')
+    plt.savefig('posterior_plots/posterior_abc' + str(index))
 
     return Mean_Vector, Cov_Matrix
