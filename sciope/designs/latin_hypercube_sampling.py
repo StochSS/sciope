@@ -15,7 +15,6 @@
 Latin Hypercube Sampling Initial Design
 Implemented as a Translational Propagation LHD
 Implementation follows structure from the original reference below.
-
 Ref:
 Viana, Felipe AC, Gerhard Venter, and Vladimir Balabanov.
 "An algorithm for fast optimal Latin hypercube design of experiments."
@@ -28,23 +27,49 @@ from sciope.utilities.housekeeping import sciope_logger as ml
 from scipy.spatial.distance import cdist, pdist
 import numpy as np
 from dask import delayed
+from dask.distributed import wait, get_client
+import dask.array as da
+from toolz import partition_all
+
+
+def _cluster_mode():
+    try:
+        get_client()
+        return True
+    except ValueError:
+        return False
 
 
 # Class definition
 class LatinHypercube(InitialDesignBase):
     """
     Translational Propagation Latin Hypercube Sampling
-
-    * InitialDesignBase.generate(n)
+    Properties/variables:
+    * name						(LatinHypercube)
+    * xmin						(lower bound of multi-dimensional space encompassing generated points)
+    * xmax						(upper bound of multi-dimensional space encompassing generated points)
+    * logger                    (a logging object to display/save events - set by derived classes)
+    * use_logger     			(a boolean variable controlling whether logging is enabled or disabled)
+    * seed_size                 (number of points in the LHS seed design)
+    Methods:
+    * generate					(returns the generated samples)
     """
 
     def __init__(self, xmin, xmax, use_logger=False, seed_size=None):
         """
         LatinHypercube constructor
-        :param xmin: lower bounds for domain in form of a np array containing one value per dimension/variable
-        :param xmax: upper bounds, as above
-        :param use_logger: enable/disable logging to file and console output
-        :param seed_size: number of points in the LHS seed design
+        Parameters
+        ----------
+        levels : integer
+            The number of levels of the factorial design. Number of generated points will be levels^dimensionality
+        xmin : vector or 1D array
+            Specifies the lower bound of the hypercube within which the design is generated
+        xmax : vector or 1D array
+            Specifies the upper bound of the hypercube within which the design is generated
+        use_logger : bool, optional
+            controls whether logging is enabled or disabled, by default False
+        seed_size : int, optional
+            number of points in the LHS seed design
         """
         name = 'LatinHypercube'
         super(LatinHypercube, self).__init__(name, xmin, xmax, use_logger)
@@ -59,10 +84,17 @@ class LatinHypercube(InitialDesignBase):
     def _tplhsdesign(self, n, seed, ns):
         """
         Creates a LH using translational propagation.
-        :param n:      # of desired points
-        :param seed:    initial seed design
-        :param ns:      # of points in the seed design
-        :return:        generated LHD x
+        Parameters
+        ----------
+        n : integer
+            # of desired points
+        seed: vector/array-like
+            initial seed design
+        ns: integer
+            # of points in the seed design
+        Returns
+        -------
+        vector/array
         """
         # Define the size of TPLHD
         # Num. of divisions
@@ -91,11 +123,19 @@ class LatinHypercube(InitialDesignBase):
     def _reshape_seed(self, seed, ns, np_star, nd_star):
         """
         Scales the seed design as needed.
-        :param seed:    initial seed design (between 1 and ns)
-        :param ns:      # of points in the seed design
-        :param np_star: # of points in the LH
-        :param nd_star: # of divisions in the LH
-        :return:        the scaled design
+        Parameters
+        ----------
+        seed: vector/array-like
+            initial seed design
+        ns: integer
+            # of points in the seed design
+        np_star : integer
+            # of points in the LH
+        nd_star : integer
+            # of divisions in the LH
+        Returns
+        -------
+        vector/array
         """
         if ns == 1:
             seed = np.ones(shape=(1, self._nv))
@@ -111,10 +151,17 @@ class LatinHypercube(InitialDesignBase):
     def _create_tplhd(self, seed, np_star, nd_star):
         """
         Generate a TP LHD
-        :param seed:    initial seed design
-        :param np_star: # points in the LH
-        :param nd_star: # divisions in the LH
-        :return:        generated design x
+        Parameters
+        ----------
+        seed: vector/array-like
+            initial seed design
+        np_star : integer
+            # of points in the LH
+        nd_star : integer
+            # of divisions in the LH
+        Returns
+        -------
+        vector/array
         """
         x = seed
         for c1 in range(0, self._nv):
@@ -136,10 +183,17 @@ class LatinHypercube(InitialDesignBase):
     def _resize_tplhd(self, x, np_star, n):
         """
         In case the design is larger than requested, resize it. Else, return unchanged.
-        :param x:       initial design
-        :param np_star: # of initial design points
-        :param n:       # of desired design points
-        :return:        design x of correct dimensions
+        Parameters
+        ----------
+        x: vector/array-like
+            initial design
+        np_star : integer
+            # of initial design points
+        n : integer
+            # of desired design points
+        Returns
+        -------
+        vector/array
         """
         # centre of the design space
         centre = np_star * np.ones((1, self._nv)) / 2.
@@ -166,6 +220,13 @@ class LatinHypercube(InitialDesignBase):
         Sub-classable method for generating 'n' points in the given 'domain'.
         Generate several candidate designs, rank them based on inter-site distance and select the top-ranked candidate
         Implementation similar to gpflowopt/LHD
+        Parameters
+        ----------
+        n: integer
+            # of desired points in the initial design
+        Returns
+        -------
+        dask.delayed
         """
         candidates = []
         scores = []
@@ -192,4 +253,80 @@ class LatinHypercube(InitialDesignBase):
 
         if self.use_logger:
             self.logger.info("Latin hypercube design: generated {0} points in {1} dimensions".format(n, nv))
+
         return lhd_scaled
+
+    def generate_array(self, n, chunk_size=('auto', 'auto')):
+        """
+        Generate a partial design of specified points
+        Parameters
+        ----------
+        n: integer
+            # of desired points
+        Returns
+        -------
+        vector/array
+        """
+        if _cluster_mode:
+            lhd = self.generate(n).persist()
+            wait(lhd)
+        else:
+            lhd = self.generate(n)
+
+        lhd_array = da.from_delayed(lhd, shape=(n, self._nv), dtype=np.float)
+        lhd_array = lhd_array.rechunk(chunk_size)
+        self.generated = lhd_array  # store for sampling of design
+
+    def draw(self, n_samples, n=50, chunk_size=1, auto_redesign=True):
+        """
+        Draw specified number of points from a generated LHD
+        Parameters
+        ----------
+        n_samples : integer
+            []
+        n: integer
+            []
+        auto_redesign : boolean
+            []
+        Returns
+        -------
+        vector/array
+        """
+        if not hasattr(self, 'generated'):
+            self.generate_array(n)
+
+        if not hasattr(self, 'random_idx'):
+            self.random_idx = np.arange(self.generated.shape[0])
+
+        len_random = len(self.random_idx)
+        if len_random == 0:
+            del self.generated
+            del self.random_idx
+            if auto_redesign:
+                if self.use_logger:
+                    self.logger.info("{0} points left to draw form Latin hypercube design:\
+                    computing new design for {0} points".format(n))
+                return self.draw(n_samples, n, chunk_size=chunk_size)
+            else:
+                raise (ValueError)("{0} points left to draw form Latin hypercube design:\
+                 clearing design".format(len_random))
+
+        if n_samples > len_random:
+            if self.use_logger:
+                self.logger.info("Only {0} points left to draw form Latin hypercube design:\
+                    setting n_samples to {0}".format(len_random))
+            idx = range(len_random)
+        else:
+            idx = np.random.choice(range(len_random), n_samples, replace=False)
+
+        idx_chunks = partition_all(chunk_size, idx)
+        delays = []
+        for i in idx_chunks:
+            i = list(i)
+            rand_idx = self.random_idx[i]
+            delay = self.generated[rand_idx].to_delayed()[0]
+            delays.append(delay[0])
+
+        self.random_idx = np.delete(self.random_idx, idx)
+
+        return delays
