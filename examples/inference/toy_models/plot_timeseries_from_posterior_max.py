@@ -196,7 +196,7 @@ for x in range(3):
         for p in abc_post[:,i]:
             ax[x, y].plot(l,p, c='r')
 
-        pm = np.prod(abc_post,0)
+        pm = np.prod(abc_post,0)[i]
         ax[x, y].plot(l,pm, c='yellow')
 
         ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
