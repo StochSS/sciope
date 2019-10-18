@@ -95,9 +95,9 @@ for i in range(nrs):
     od = simulate(np.array(true_params))[:,species]
     print("od shape: ", od.shape)
     obs_data[i,:,:] = od
-    Mean_Vector, Cov_Matrix = abc_inference(data=np.expand_dims(od,0), true_param=true_params, abc_trial_thetas=train_thetas,
-                                            abc_trial_ts=train_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
-                                            nr_of_accept_cross=100,index = i)
+    Mean_Vector, Cov_Matrix = abc_inference(data=np.expand_dims(od,0), true_param=true_params, abc_trial_thetas=test_thetas,
+                                            abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
+                                            nr_of_accept_cross=100,index=i)
     abc_pred[i] = Mean_Vector
 
 
