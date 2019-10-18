@@ -118,8 +118,10 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
                 ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]],
                               [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith, c=range_color)
 
+
+    print("index before saving: ", index)
     if not os.path.exists('posterior_plots'):
         os.mkdir('posterior_plots')
     plt.savefig('posterior_plots/posterior_abc' + str(index))
-
+    print("saved")
     return Mean_Vector, Cov_Matrix
