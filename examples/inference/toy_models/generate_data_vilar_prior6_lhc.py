@@ -116,7 +116,7 @@ for i in range(epochs):
     ts = dg.gen(thetas=train_thetas[i*bs:(i+1)*bs])
     print("ts shape: ", ts.shape)
     # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
-    if ts.shape == [100,401,3]:
+    if ts.shape == [1000,401,3]:
         train_ts = np.concatenate((train_ts,ts),axis=0)
 
     print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
