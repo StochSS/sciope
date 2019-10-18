@@ -68,14 +68,37 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
                 dist = abs(abc_trial_pred[:, x] - data_pred[x])
                 accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
                 accepted_para = abc_trial_thetas[accepted_ind]
-                ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=bins, color='green')
-                peak_val = np.max(ret[0])
-                ax[x, y].plot([true_param[x], true_param[x]], [0,peak_val], c='black', lw=4)
-                # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0,peak_val], c='red')
-                ax[x, y].plot([data_pred[x], data_pred[x]], [0,peak_val], c='gray', ls='--')
 
-                ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c='b')
-                ax[x, y].plot([dmin[x], dmax[x]], [0, peak_val], c='b')
+                loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
+                                                   args=([accepted_para[:, x], dmin[x], dmax[x]],), disp=False)
+
+                left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
+                right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
+                print("x: ", x, ", params full: ", left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+
+                l = np.linspace(dmin[x], dmax[x], 100)
+                p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
+
+                ax[x, y].tick_params(labelleft=False)
+                # ax[y, x].plot(l, p, c='green', lw=lwith)
+                # ax[y, x].plot(l, p_full, c='red', lw=lwith, ls='--')
+                ax[x, y].set_xlabel(para_names[x], fontsize=fsize, y=5)
+                # ax[x, y].yaxis.set_label_position("left")
+                # ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
+
+                ret = ax[x, y].hist(accepted_para[:, x], density=True, bins=20, color='green', alpha=1)
+                # ax[x, y].hist(accepted_para_full[:, x], density=True, bins=20, color='red', alpha=0.3)
+
+                peak_val = np.maximum(np.max(ret[0]), np.max(p))
+                ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black')
+                # ax[x, y].plot([accepted_mean[x], accepted_mean[x]], [0, peak_val], c='red')
+                # ax[x, y].plot([data_pred[x], data_pred[x]], [0, peak_val], c='gray')
+
+                ax[x, y].plot([dmax[x], dmax[x]], [0, peak_val], c=range_color, lw=lwith)
+                ax[x, y].plot([dmin[x], dmin[x]], [0, peak_val], c=range_color, lw=lwith)
+                ax[x, y].plot([true_param[x], true_param[x]], [0, peak_val], c='black', lw=lwith, ls='--')
+
+
 
                 loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
                                                    args=([accepted_para[:, x], dmin[x], dmax[x]],), disp=False)
@@ -101,20 +124,18 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
                 dist = np.linalg.norm(abc_trial_pred[:, [x, y]] - data_pred[[x, y]], axis=1)
                 accepted_ind = np.argpartition(dist, nr_of_accept_cross)[0:nr_of_accept_cross]
                 accepted_para = abc_trial_thetas[accepted_ind]
-                loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, y]), np.std(accepted_para[:, y])),
-                                                   args=([accepted_para[:, y], dmin[y], dmax[y]],), disp=False)
+                # print("accepted para shape: ", accepted_para.shape)
+                # print("(", x, ",", y, ") mean x: " + "{0:.2f}".format(np.mean(accepted_para[:, x])) + ", mean y: " + "{0:.2f}".format(np.mean(accepted_para[:, y])))
 
-                Cov_Matrix[x,y] = scale_opt
-                Cov_Matrix[y,x] = scale_opt
+                # ax[x, y].scatter(abc_trial_thetas[:, y], abc_trial_thetas[:, x], color="yellow", s=2)
+                # ax[x, y].scatter(accepted_para_full[:, y], accepted_para_full[:, x], color="red", s=scattersize,
+                #                  alpha=0.1)
 
-                left_trunc_norm = (dmin[y] - loc_opt) / scale_opt
-                right_trunc_norm = (dmax[y] - loc_opt) / scale_opt
+                ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=scattersize, alpha=1)
 
-                l = np.linspace(dmin[y], dmax[y], 100)
-                p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-                ax[y, y].plot(l, p, c='gray', alpha=0.2, lw = 1)
-                ax[x, y].scatter(accepted_para[:, y], accepted_para[:, x], color="green", s=1, alpha=0.5)
-                ax[x, y].scatter(true_param[y],true_param[x], color="black", marker="*")
+                ax[x, y].scatter(true_param[y], true_param[x], color="black", marker="x", s=100)
+                # ax[x, y].scatter(accepted_mean[y], accepted_mean[x], color="red", marker="x")
+                # ax[x, y].scatter(data_pred[y], data_pred[x], color="gray", marker="o")
                 ax[x, y].plot([dmin[y], dmin[y], dmax[y], dmax[y], dmin[y]],
                               [dmin[x], dmax[x], dmax[x], dmin[x], dmin[x]], lw=lwith, c=range_color)
 
