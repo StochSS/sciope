@@ -1,10 +1,8 @@
 from sciope.inference import abc_inference
 from sciope.models.cnn_regressor import CNNModel
-# from sciope.models.cnn_regressor_normal import CNNModel
-
 from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
-from load_data_from_julia import load_data
+
 
 import numpy as np
 import matplotlib
@@ -17,7 +15,8 @@ from load_data import load_spec
 from vilar_all_species import Vilar_model
 
 
-
+plt.plot(np.random.rand(100))
+plt.savefig('randomplot.png')
 
 num_timestamps=401
 endtime=200
