@@ -11,7 +11,7 @@ import pickle
 import time
 from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
-Vilar_all_species import Vilar_model
+from Vilar_all_species import Vilar_model
 
 
 
