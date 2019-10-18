@@ -89,7 +89,7 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
                 ax[x, y].tick_params(labelleft=False)
                 # ax[y, x].plot(l, p, c='green', lw=lwith)
                 # ax[y, x].plot(l, p_full, c='red', lw=lwith, ls='--')
-                ax[x, y].set_xlabel(para_names[x], fontsize=fsize, y=5)
+                # ax[x, y].set_xlabel(para_names[x], fontsize=fsize, y=5)
                 # ax[x, y].yaxis.set_label_position("left")
                 # ax[x, y].set_ylabel('density', fontsize=fsize, rotation=90)
 
