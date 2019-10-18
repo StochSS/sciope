@@ -101,7 +101,7 @@ for i in range(nrs):
     gen_data[i,:,:] = od
 
 
-f,ax = plt.subplots(3,1,figsize=(60,20))
+f,ax = plt.subplots(3,1,figsize=(45,15))
 linew = 1
 t= np.linspace(0,200,401)
 first = True
@@ -136,6 +136,9 @@ ax[2].legend()
 
 plt.savefig('comp.png')
 
+
+
+f,ax = plt.subplots(3,1,figsize=(60,20))
 
 
 
