@@ -105,7 +105,7 @@ f,ax = plt.subplots(2,1)
 
 t= np.linspace(0,200,401)
 for ts in obs_data:
-    ax[0].plt.plot(t,ts[:,0])
+    ax[0].plot(t,ts[:,0])
 
 plt.savefig('comp.png')
 
