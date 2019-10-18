@@ -73,7 +73,7 @@ test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
 test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
-train_ts = train_ts[:,:,species]
+print("train_ts shape: ", train_ts.shape)
 
 
 
