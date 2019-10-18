@@ -5,7 +5,10 @@ from sciope.models.cnn_regressor import CNNModel
 from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
 from load_data_from_julia import load_data
+
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pylab as plt
 import pickle
 import time
