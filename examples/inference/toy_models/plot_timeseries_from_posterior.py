@@ -99,7 +99,7 @@ for i in range(20):
     gen_data[i,:,:] = od
 
 
-f,ax = plt.subplots((2,1))
+f,ax = plt.subplots(2,1)
 
 t= np.linspace(0,200,401)
 for ts in obs_data:
