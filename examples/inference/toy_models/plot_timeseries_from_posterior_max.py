@@ -149,6 +149,18 @@ ax[2].legend()
 
 plt.savefig('comp.png')
 
+od = [simulate(abc_pred[i])[:, species] for i in range(10)]
+f,ax = plt.subplots(3,1,figsize=(45,15))
+ax[0].plot(t,obs_data[0,:,0],c='b')
+for o in od:
+    ax[1].plot(t,o,c='r')
+    ax[2].plot(t,o,c='r')
+
+
+ax[2].plot(t,obs_data[0,:,0],c='b')
+
+plt.savefig('comp2.png')
+
 
 
 f,ax = plt.subplots(3,5,figsize=(15,25))

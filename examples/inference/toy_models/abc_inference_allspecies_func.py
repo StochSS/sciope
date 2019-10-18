@@ -66,7 +66,7 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
 
     Cov_Matrix = np.zeros((15,15))
     Mean_Vector = np.zeros(15)
-    Posterior_fit = np.zeros(15,100)
+    Posterior_fit = np.zeros((15,100))
     for x in range(15):
         # ax[0, x].set_title(para_names[x])
         for y in range(x,15):
