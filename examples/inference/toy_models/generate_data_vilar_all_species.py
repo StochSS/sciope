@@ -63,8 +63,6 @@ num_timestamps=401
 endtime=200
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
-
-
 simulate = Vilar_.simulate
 
 modelname = "vilar_ACR_" + str(endtime) + "_" + str(num_timestamps) + '_all_species'

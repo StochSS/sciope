@@ -6,16 +6,12 @@ from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
 from load_data_from_julia import load_data
 import numpy as np
-from AutoRegressive_model import simulate, prior
-# from MovingAverage_model import simulate, prior
-from sklearn.metrics import mean_absolute_error
+from matplotlib import pylab as plt
 import pickle
 import time
 from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
-import vilar
-from vilar import Vilar_model
-
+Vilar_all_species import Vilar_model
 
 
 
@@ -57,6 +53,24 @@ data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
 print("data shape: ", data.shape)
 
 nnm.load_model()
+
+Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
+simulate = Vilar_.simulate
+
+true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+obs_data = np.zeros((20,num_timestamps,1))
+for i in range(20):
+    od = simulate(np.array(true_params))[:,:,species]
+    print("od shape: ", od.shape)
+    obs_data[i,:,:] = od
+
+pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
+
+gen_data =
+
+
+
+
 
 
 

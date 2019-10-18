@@ -111,12 +111,13 @@ epochs = int(train_thetas.shape[0]/bs)
 print("epochs: ", epochs)
 
 train_ts = np.zeros((0,num_timestamps,3))
-for i in range(100):
+for i in range(epochs):
     print("thetas shape: ", train_thetas[i*bs:(i+1)*bs].shape)
     ts = dg.gen(thetas=train_thetas[i*bs:(i+1)*bs])
     print("ts shape: ", ts.shape)
     # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
-    train_ts = np.concatenate((train_ts,ts),axis=0)
+    if ts.shape == [100,401,3]:
+        train_ts = np.concatenate((train_ts,ts),axis=0)
 
     print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
