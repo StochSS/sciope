@@ -138,7 +138,15 @@ plt.savefig('comp.png')
 
 
 
-f,ax = plt.subplots(3,1,figsize=(60,20))
+f,ax = plt.subplots(3,5,figsize=(15,25))
+
+for x in range(3):
+    for y in range(5):
+        i = x*5 +y
+        ax[x,y].hist(pred_param[:,i], density=True)
+        ax[x,y].plot([true_param[i], true_param[i]], [1, 0])
+
+plt.savefig('dist.png')
 
 
 
