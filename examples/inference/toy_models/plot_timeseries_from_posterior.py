@@ -9,7 +9,7 @@ from load_data_from_julia import load_data
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
-from matplotlib import pylab as plt
+import matplotlib.pyplot as plt
 import pickle
 import time
 from normalize_data import normalize_data, denormalize_data
