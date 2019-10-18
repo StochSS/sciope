@@ -23,6 +23,13 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
     data_pred = np.squeeze(data_pred)
     lwith = 1
     range_color = 'blue'
+    nr_of_trial = abc_trial_thetas.shape[0]
+    nr_of_accept = 3000
+    nr_of_accept_cross = 1000
+    range_color = '#1f77b4'
+    fsize = 80
+    lwith = 6
+    scattersize = 5
 
 
     abc_trial_pred = nnm.predict(abc_trial_ts)
