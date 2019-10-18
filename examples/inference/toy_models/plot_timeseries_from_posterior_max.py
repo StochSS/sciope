@@ -160,6 +160,9 @@ for x in range(3):
         for p in pred_param[:,i]:
             ax[x, y].plot([p,p], [1, 0], c='r')
 
+        pm = np.mean(pred_param[:,i])
+        ax[x, y].plot([pm, pm], [1, 0], c='yellow')
+
         ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
 
 plt.savefig('dist.png')

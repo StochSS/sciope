@@ -107,7 +107,6 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
                 loc_opt, scale_opt = optimize.fmin(nnlf, (np.mean(accepted_para[:, x]), np.std(accepted_para[:, x])),
                                                    args=([accepted_para[:, x], dmin[x], dmax[x]],), disp=False)
                 Cov_Matrix[x,y] = scale_opt
-                Mean_Vector[y] = loc_opt
                 left_trunc_norm = (dmin[x] - loc_opt) / scale_opt
                 right_trunc_norm = (dmax[x] - loc_opt) / scale_opt
 
@@ -123,6 +122,8 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
                     if loc_opt>dmax[x]:
                         loc_opt=dmax[x]
                 ax[x, x].plot([loc_opt, loc_opt], [peak_val, 0], c=col, ls='--')
+                Mean_Vector[y] = loc_opt
+
 
             else:
                 dist = np.linalg.norm(abc_trial_pred[:, [x, y]] - data_pred[[x, y]], axis=1)
