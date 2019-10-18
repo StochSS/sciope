@@ -104,17 +104,31 @@ for i in range(nrs):
 f,ax = plt.subplots(3,1)
 
 t= np.linspace(0,200,401)
+first = True
 for ts in obs_data:
     ax[0].plot(t,ts[:,0],c='blue')
-    ax[2].plot(t,ts[:,0],c='blue',label='true param.')
+    if first:
+        ax[2].plot(t,ts[:,0],c='blue',label='true param.')
+        first = False
+    else:
+        ax[2].plot(t, ts[:, 0], c='blue')
+
 
 ax[0].set_title("Specie C from true parameter")
 ax[1].set_title("Specie C from predicted parameter")
-ax[0].set_title("Specie C from both true parameter and predicted parameter")
+ax[2].set_title("Specie C from both true parameter and predicted parameter")
+first = True
 
 for ts in gen_data:
     ax[1].plot(t,ts[:,0],c='red')
-    ax[2].plot(t,ts[:,0],c='red',label='pred param.')
+    if first:
+        ax[2].plot(t,ts[:,0],c='red',label='pred param.')
+        first = False
+    else:
+        ax[2].plot(t,ts[:,0],c='red',label='pred param.')
+
+
+
 ax[2].legend()
 
 
