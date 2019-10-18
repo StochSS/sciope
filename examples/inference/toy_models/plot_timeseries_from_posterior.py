@@ -125,7 +125,7 @@ for ts in gen_data:
         ax[2].plot(t,ts[:,0],c='red',label='pred param.')
         first = False
     else:
-        ax[2].plot(t,ts[:,0],c='red',label='pred param.')
+        ax[2].plot(t,ts[:,0],c='red')
 
 
 
