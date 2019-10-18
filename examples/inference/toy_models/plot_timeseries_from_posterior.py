@@ -108,12 +108,12 @@ first = True
 for ts in obs_data:
     rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
 
-    ax[0].plot(t,ts[:,0],c=rcol)
+    ax[0].plot(t,ts[:,0],c=rcol,lw=0.5)
     if first:
-        ax[2].plot(t,ts[:,0],c=rcol,label='true param.')
+        ax[2].plot(t,ts[:,0],c=rcol,label='true param.',lw=0.5)
         first = False
     else:
-        ax[2].plot(t, ts[:, 0], c=rcol)
+        ax[2].plot(t, ts[:, 0], c=rcol,lw=0.5)
 
 
 ax[0].set_title("Specie C from true parameter")
@@ -123,12 +123,12 @@ first = True
 
 for ts in gen_data:
     rcol = np.random.rand(3)*np.array([0.5,0.2,0.2]) + np.array([0.5,0,0])
-    ax[1].plot(t,ts[:,0],c=rcol)
+    ax[1].plot(t,ts[:,0],c=rcol,lw=0.5)
     if first:
-        ax[2].plot(t,ts[:,0],c=rcol,label='pred param.')
+        ax[2].plot(t,ts[:,0],c=rcol,label='pred param.',lw=0.5)
         first = False
     else:
-        ax[2].plot(t,ts[:,0],c=rcol)
+        ax[2].plot(t,ts[:,0],c=rcol,lw=0.5)
 
 
 
