@@ -101,11 +101,18 @@ for i in range(20):
     gen_data[i,:,:] = od
 
 
-f,ax = plt.subplots(2,1)
+f,ax = plt.subplots(3,1)
 
 t= np.linspace(0,200,401)
 for ts in obs_data:
-    ax[0].plot(t,ts[:,0])
+    ax[0].plot(t,ts[:,0],c='blue')
+    ax[2].plot(t,ts[:,0],c='blue')
+
+
+for ts in gen_data:
+    ax[1].plot(t,ts[:,0],c='red')
+    ax[2].plot(t,ts[:,0],c='red')
+
 
 plt.savefig('comp.png')
 
