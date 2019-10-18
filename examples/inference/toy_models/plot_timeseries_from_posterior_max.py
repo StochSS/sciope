@@ -91,6 +91,7 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 obs_data = np.zeros((nrs,num_timestamps,1))
 abc_pred = np.zeros((nrs,15))
 for i in range(nrs):
+    print("i: ", i)
     od = simulate(np.array(true_params))[:,species]
     # print("od shape: ", od.shape)
     obs_data[i,:,:] = od
