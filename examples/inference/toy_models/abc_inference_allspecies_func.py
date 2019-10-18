@@ -31,6 +31,9 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
 
     para_names = vilar.get_parameter_names()
 
+    for p in para_names:
+        print(p)
+
 
 
     true_param = normalize_data(true_param,dmin,dmax)
