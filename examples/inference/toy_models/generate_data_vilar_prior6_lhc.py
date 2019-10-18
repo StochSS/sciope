@@ -107,6 +107,7 @@ if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'
     pickle.dump(train_thetas, open('datasets/lhc/' + modelname + '/train_thetas_.p', "wb"))
 
 bs = 1000
+
 epochs = int(train_thetas.shape[0]/bs)
 print("epochs: ", epochs)
 
