@@ -88,57 +88,51 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 
 dg = DataGenerator(sim=simulate)
 print("generating some data")
-nr=0
+training_samples = 50000
 
 if not os.path.exists('datasets/lhc'):
     os.mkdir('datasets/lhc')
 
 if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'):
     lhs_obj = lhs.LatinHypercube(dmin, dmax)
-    lhs_delayed = lhs_obj.generate(50000)
+    lhs_delayed = lhs_obj.generate(training_samples)
     print("delayed")
     print("lhs_delayed shape: ", lhs_delayed.shape)
     train_thetas, = dask.compute(lhs_delayed)
 
 
-print("train_thetas shape: ", train_thetas.shape)
-train_thetas = np.reshape(train_thetas,(5,-1,15))
-print("train_thetas shape: ", train_thetas.shape)
+    print("train_thetas shape: ", train_thetas.shape)
+    train_thetas = np.squeeze(train_thetas)
+    print("train_thetas shape: ", train_thetas.shape)
 
 
+bs = 1000
+epochs = int(train_thetas.shape[0]/bs)
+print("epochs: ", epochs)
 
-
-nr=0
-while os.path.isfile('datasets/lhc/' + modelname + '/train_ts_'+str(nr)+'.p'):
-    nr += 1
 delta_t = time.time()
-for nr in range(nr,3):
-    train_thetas = pickle.load(open())
-    train_ts = np.zeros((0,num_timestamps,3))
-    delta_datapoints = train_thetas.shape[0]
+train_ts = np.zeros((0,num_timestamps,3))
+for i in range(100):
+    ts = dg.gen(thetas=train_thetas[i*bs:(i+1)*bs])
+    # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
+    train_ts = np.concatenate((train_ts,ts),axis=0)
+    if i == 0:
+        tmin = np.min(train_thetas,axis=0)
+        tmax = np.max(train_thetas,axis=0)
 
-    for i in range(100):
-        ts = dg.gen(thetas=t[i])
-        train_ts = np.concatenate((train_thetas,param),axis=0)
-        # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
-        train_ts = np.concatenate((train_ts,ts),axis=0)
-        if i == 0:
-            tmin = np.min(train_thetas,axis=0)
-            tmax = np.max(train_thetas,axis=0)
+        for j in range(15):
+            print("index: ", j, ", tmin: ", "{0:.1f}".format(tmin[j]), ", tmax: ", "{0:.1f}".format(tmax[j]),
+                  ", dmin: ", "{0:.1f}".format(dmin[j]), ", dmax: ", "{0:.1f}".format(dmax[j]))
 
-            for j in range(15):
-                print("index: ", j, ", tmin: ", "{0:.1f}".format(tmin[j]), ", tmax: ", "{0:.1f}".format(tmax[j]),
-                      ", dmin: ", "{0:.1f}".format(dmin[j]), ", dmax: ", "{0:.1f}".format(dmax[j]))
+    print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
+    delta_t = time.time() - delta_t
+    delta_datapoints = train_thetas.shape[0] - delta_datapoints
 
-        print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-        delta_t = time.time() - delta_t
-        delta_datapoints = train_thetas.shape[0] - delta_datapoints
+    print("delta time: ", delta_t, "s, delta_datapoints/delta_t: ", "{0:.2f}".format( delta_datapoints/delta_t ))
 
-        print("delta time: ", delta_t, "s, delta_datapoints/delta_t: ", "{0:.2f}".format( delta_datapoints/delta_t ))
+print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
-    print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-
-    pickle.dump( train_ts, open( 'datasets/lhc/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
+pickle.dump( train_ts, open( 'datasets/lhc/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
 
 # validation_thetas = np.zeros((0,15))
 # validation_ts = np.zeros((0,num_timestamps,3))
