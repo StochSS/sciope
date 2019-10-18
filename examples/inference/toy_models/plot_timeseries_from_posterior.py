@@ -79,7 +79,7 @@ print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
 
-nrs = 2
+nrs = 10
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
@@ -106,6 +106,8 @@ f,ax = plt.subplots(3,1)
 t= np.linspace(0,200,401)
 first = True
 for ts in obs_data:
+    rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
+
     ax[0].plot(t,ts[:,0],c='blue')
     if first:
         ax[2].plot(t,ts[:,0],c='blue',label='true param.')
