@@ -104,7 +104,7 @@ if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'
     print("train_thetas shape: ", train_thetas.shape)
     train_thetas = np.squeeze(train_thetas)
     print("train_thetas shape: ", train_thetas.shape)
-
+    pickle.dump(train_thetas, open('datasets/lhc/' + modelname + '/train_thetas_.p', "wb"))
 
 bs = 1000
 epochs = int(train_thetas.shape[0]/bs)
@@ -113,16 +113,11 @@ print("epochs: ", epochs)
 delta_t = time.time()
 train_ts = np.zeros((0,num_timestamps,3))
 for i in range(100):
+    print("thetas shape: ", train_thetas[i*bs:(i+1)*bs].shape)
     ts = dg.gen(thetas=train_thetas[i*bs:(i+1)*bs])
+    print("ts shape: ", ts.shape)
     # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
     train_ts = np.concatenate((train_ts,ts),axis=0)
-    if i == 0:
-        tmin = np.min(train_thetas,axis=0)
-        tmax = np.max(train_thetas,axis=0)
-
-        for j in range(15):
-            print("index: ", j, ", tmin: ", "{0:.1f}".format(tmin[j]), ", tmax: ", "{0:.1f}".format(tmax[j]),
-                  ", dmin: ", "{0:.1f}".format(dmin[j]), ", dmax: ", "{0:.1f}".format(dmax[j]))
 
     print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
     delta_t = time.time() - delta_t
@@ -132,7 +127,7 @@ for i in range(100):
 
 print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
-pickle.dump( train_ts, open( 'datasets/lhc/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
+pickle.dump( train_ts, open( 'datasets/lhc/' + modelname + '/train_ts_.p', "wb" ) )
 
 # validation_thetas = np.zeros((0,15))
 # validation_ts = np.zeros((0,num_timestamps,3))
