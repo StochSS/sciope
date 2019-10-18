@@ -93,7 +93,7 @@ abc_pred = np.zeros((nrs,15))
 for i in range(nrs):
     print("i: ", i)
     od = simulate(np.array(true_params))[:,species]
-    # print("od shape: ", od.shape)
+    print("od shape: ", od.shape)
     obs_data[i,:,:] = od
     Mean_Vector, Cov_Matrix = abc_inference(data=od, true_param=true_params, abc_trial_thetas=train_thetas,
                                             abc_trial_ts=train_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,

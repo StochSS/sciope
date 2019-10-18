@@ -15,6 +15,8 @@ from scipy import stats, optimize
 
 
 def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax, nr_of_accept = 100, nr_of_accept_cross=100):
+
+
     data_pred = nnm.predict(data)
     data_pred = np.squeeze(data_pred)
     lwith = 1
@@ -35,18 +37,9 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
     f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
     bins_nr = 10
     bins = np.linspace(0,1,bins_nr+1)
-    hist_data = np.ones((15,bins_nr))
-    hist_data_add = np.ones((15,bins_nr))
-    hist_data_all = np.ones((15,15,bins_nr))
 
 
-    dist = np.linalg.norm(abc_trial_pred - data_pred, axis=1)
-    print("dist shape: ", dist.shape)
-    accepted_ind = np.argpartition(dist,nr_of_accept)
-    print("accepted_ind shape: ", accepted_ind.shape)
-    accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
-    accepted_para = abc_trial_thetas[accepted_ind]
-    accepted_mean = np.mean(accepted_para, axis=0)
+
 
     lower, upper = 0, 1
     bg=0
