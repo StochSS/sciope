@@ -54,6 +54,28 @@ print("data shape: ", data.shape)
 
 nnm.load_model()
 
+
+test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
+test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+test_ts = test_ts[:,:,species]
+test_thetas_n = normalize_data(test_thetas,dmin,dmax)
+test_pred = nnm.predict(test_ts)
+test_pred = np.reshape(test_pred,(-1,15))
+test_pred_d = denormalize_data(test_pred,dmin,dmax)
+test_mse = np.mean((test_thetas-test_pred)**2)
+test_mae = np.mean(abs(test_thetas-test_pred_d))
+test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
+test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
+
+
+
+
+print("Model name: ", nnm.name)
+print("mean square error: ", test_mse)
+print("mean rel absolute error: ", np.mean(test_ae_norm))
+
+
+
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 
@@ -66,7 +88,12 @@ for i in range(20):
 
 pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
 
-gen_data =
+gen_data = np.zeros((20,num_timestamps,1))
+
+for i in range(20):
+    od = simulate(pred_param[i])[:,:,species]
+    print("od shape: ", od.shape)
+    gen_data[i,:,:] = od
 
 
 
