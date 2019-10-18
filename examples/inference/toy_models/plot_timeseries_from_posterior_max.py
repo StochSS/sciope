@@ -90,15 +90,18 @@ simulate = Vilar_.simulate
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 obs_data = np.zeros((nrs,num_timestamps,1))
 abc_pred = np.zeros((nrs,15))
+abc_post = np.zeros((nrs,15,100))
+
 for i in range(nrs):
     print("i: ", i)
     od = simulate(np.array(true_params))[:,species]
     print("od shape: ", od.shape)
     obs_data[i,:,:] = od
-    Mean_Vector, Cov_Matrix = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
+    Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
                                             abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
                                             nr_of_accept_cross=100,index=i)
     abc_pred[i] = Mean_Vector
+    abc_post[i] = Posterior_fit
 
 
 pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
@@ -166,6 +169,27 @@ for x in range(3):
         ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
 
 plt.savefig('dist.png')
+
+
+f,ax = plt.subplots(3,5,figsize=(15,25))
+
+for x in range(3):
+    for y in range(5):
+        i = x*5 +y
+        ax[x, y].plot([dmin[i], dmin[i]], [1, 0], c='black')
+        ax[x, y].plot([dmax[i], dmax[i]], [1, 0], c='black')
+
+        # ax[x,y].hist(pred_param[:,i], density=True)
+        l = np.linspace(dmin[i],dmax[i],100)
+        for p in abc_post[:,i]:
+            ax[x, y].plot(l,p, c='r')
+
+        pm = np.prod(abc_post,0)
+        ax[x, y].plot(l,pm, c='yellow')
+
+        ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
+
+plt.savefig('post.png')
 
 
 

@@ -66,6 +66,7 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
 
     Cov_Matrix = np.zeros((15,15))
     Mean_Vector = np.zeros(15)
+    Posterior_fit = np.zeros(15,100)
     for x in range(15):
         # ax[0, x].set_title(para_names[x])
         for y in range(x,15):
@@ -84,7 +85,7 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
 
                 l = np.linspace(dmin[x], dmax[x], 100)
                 p = stats.truncnorm.pdf(l, left_trunc_norm, right_trunc_norm, loc_opt, scale_opt)
-
+                Posterior_fit[x] = p
                 ax[x, y].tick_params(labelleft=False)
                 # ax[y, x].plot(l, p, c='green', lw=lwith)
                 # ax[y, x].plot(l, p_full, c='red', lw=lwith, ls='--')
@@ -150,4 +151,4 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
         os.mkdir('posterior_plots')
     plt.savefig('posterior_plots/posterior_abc' + str(index))
     print("saved")
-    return Mean_Vector, Cov_Matrix
+    return Mean_Vector, Cov_Matrix, Posterior_fit
