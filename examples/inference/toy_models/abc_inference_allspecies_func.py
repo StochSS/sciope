@@ -46,9 +46,10 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
     lower, upper = 0, 1
     bg=0
 
-    def nnlf(params, data):
-        loc, scale = params
-        left_trunc_norm = (lower - loc)/scale
+    def nnlf(params, datapack):
+        loc, scale, = params
+        data, lower, upper = datapack
+        left_trunc_norm = (lower - loc) / scale
         right_trunc_norm = (upper - loc) / scale
         theta = (left_trunc_norm, right_trunc_norm, loc, scale)
         value = stats.truncnorm.nnlf(theta, data)
