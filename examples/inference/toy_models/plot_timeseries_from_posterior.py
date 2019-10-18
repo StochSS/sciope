@@ -79,7 +79,7 @@ print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
 
-nrs = 5
+nrs = 2
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
@@ -120,12 +120,13 @@ ax[2].set_title("Specie C from both true parameter and predicted parameter")
 first = True
 
 for ts in gen_data:
-    ax[1].plot(t,ts[:,0],c='red')
+    rcol = np.random.rand(3)*np.array([0.5,0.2,0.2]) + np.array([0.5,0,0])
+    ax[1].plot(t,ts[:,0],c=rcol)
     if first:
-        ax[2].plot(t,ts[:,0],c='red',label='pred param.')
+        ax[2].plot(t,ts[:,0],c=rcol,label='pred param.')
         first = False
     else:
-        ax[2].plot(t,ts[:,0],c='red')
+        ax[2].plot(t,ts[:,0],c=rcol)
 
 
 
