@@ -108,12 +108,12 @@ first = True
 for ts in obs_data:
     rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
 
-    ax[0].plot(t,ts[:,0],c='blue')
+    ax[0].plot(t,ts[:,0],c=rcol)
     if first:
-        ax[2].plot(t,ts[:,0],c='blue',label='true param.')
+        ax[2].plot(t,ts[:,0],c=rcol,label='true param.')
         first = False
     else:
-        ax[2].plot(t, ts[:, 0], c='blue')
+        ax[2].plot(t, ts[:, 0], c=rcol)
 
 
 ax[0].set_title("Specie C from true parameter")
