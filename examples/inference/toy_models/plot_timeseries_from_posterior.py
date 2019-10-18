@@ -101,19 +101,19 @@ for i in range(nrs):
     gen_data[i,:,:] = od
 
 
-f,ax = plt.subplots(3,1)
-
+f,ax = plt.subplots(3,1,figsize=(60,20))
+linew = 1
 t= np.linspace(0,200,401)
 first = True
 for ts in obs_data:
     rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
 
-    ax[0].plot(t,ts[:,0],c=rcol,lw=0.5)
+    ax[0].plot(t,ts[:,0],c=rcol,lw=linew)
     if first:
-        ax[2].plot(t,ts[:,0],c=rcol,label='true param.',lw=0.5)
+        ax[2].plot(t,ts[:,0],c=rcol,label='true param.',lw=linew)
         first = False
     else:
-        ax[2].plot(t, ts[:, 0], c=rcol,lw=0.5)
+        ax[2].plot(t, ts[:, 0], c=rcol,lw=linew)
 
 
 ax[0].set_title("Specie C from true parameter")
@@ -123,13 +123,12 @@ first = True
 
 for ts in gen_data:
     rcol = np.random.rand(3)*np.array([0.5,0.2,0.2]) + np.array([0.5,0,0])
-    ax[1].plot(t,ts[:,0],c=rcol,lw=0.5)
+    ax[1].plot(t,ts[:,0],c=rcol,lw=linew)
     if first:
-        ax[2].plot(t,ts[:,0],c=rcol,label='pred param.',lw=0.5)
+        ax[2].plot(t,ts[:,0],c=rcol,label='pred param.',lw=linew)
         first = False
     else:
-        ax[2].plot(t,ts[:,0],c=rcol,lw=0.5)
-
+        ax[2].plot(t,ts[:,0],c=rcol,lw=linew)
 
 
 ax[2].legend()
