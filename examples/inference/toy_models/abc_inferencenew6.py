@@ -291,10 +291,4 @@ for x in range(15):
         ax[x, y].tick_params(axis='both', which='major', labelsize=20)
         # ax.tick_params(axis='both', which='minor', labelsize=8)
 
-# for x in range(15):
-#     l = np.linspace(dmin[x], dmax[x], 100)
-#     pr = np.mean(gaussian_data_all[x, :, :], axis=0)
-#     print("pr shape: ", pr.shape)
-#     ax[x,x].plot(l, pr, c='red')
-
 plt.savefig('posterior_abc_new6')
