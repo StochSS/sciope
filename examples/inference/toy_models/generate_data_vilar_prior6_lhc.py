@@ -110,7 +110,6 @@ bs = 1000
 epochs = int(train_thetas.shape[0]/bs)
 print("epochs: ", epochs)
 
-delta_t = time.time()
 train_ts = np.zeros((0,num_timestamps,3))
 for i in range(100):
     print("thetas shape: ", train_thetas[i*bs:(i+1)*bs].shape)
@@ -120,10 +119,6 @@ for i in range(100):
     train_ts = np.concatenate((train_ts,ts),axis=0)
 
     print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
-    delta_t = time.time() - delta_t
-    delta_datapoints = train_thetas.shape[0] - delta_datapoints
-
-    print("delta time: ", delta_t, "s, delta_datapoints/delta_t: ", "{0:.2f}".format( delta_datapoints/delta_t ))
 
 print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
