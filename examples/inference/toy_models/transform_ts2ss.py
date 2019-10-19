@@ -21,7 +21,8 @@ test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 
 print("data loaded")
 start = time.time()
-val_sum = np.array([summarys(ts) for ts in validation_ts])
+itt=0
+val_sum = np.array([summarys(validation_ts[ts],ts) for ts in range(len(validation_ts))])
 end = time.time()
 print("validation summarys generated in ", end-start)
 pickle.dump( val_sum, open( 'datasets/' + modelname + '/val_sum.p', "wb" ) )

@@ -40,7 +40,9 @@ def std_dist(dist):
 
 
 
-def summarys(ts):
+def summarys(ts,itt=-1):
+    if itt%1000==0:
+        print(itt)
     peaks = find_peaks(ts)
     dist = peak_dist(peaks)
     m_dist = mean_dist(dist)
@@ -49,14 +51,14 @@ def summarys(ts):
     return np.array([m_dist,s_dist])
 
 
-# validation_ts = pickle.load(open('validation_ts.p', "rb" ) )[:,:,species]
-#
-# print("data loaded")
-# start = time.time()
-# val_sum = np.array([summarys(ts) for ts in validation_ts])
-# end = time.time()
-# print("summarys generated in ", end-start)
-# print(val_sum[200:210])
+validation_ts = pickle.load(open('validation_ts.p', "rb" ) )[:,:,species]
+
+print("data loaded")
+start = time.time()
+val_sum = np.array([summarys(ts) for ts in validation_ts])
+end = time.time()
+print("summarys generated in ", end-start)
+print(val_sum[200:210])
 
 # f,ax = plt.subplots(4)
 # j=0
