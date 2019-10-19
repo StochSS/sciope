@@ -35,4 +35,4 @@ print("test_mae: ", test_mae)
 
 print("test sum std: ", np.std(test_sum,0))
 print("test sum mean: ", np.mean(test_sum,0))
-print("optimal guessing deviation: ", np.mean(test_sum - np.mean(test_sum,0),0))
+print("optimal guessing deviation: ", np.mean(abs(test_sum - np.mean(test_sum,0)),0))
