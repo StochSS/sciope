@@ -7,7 +7,7 @@ import time
 
 from load_data import load_spec
 
-clay=[32,4864]#,96]
+clay=[32,48,64]#,96]
 num_timestamps=401
 endtime=200
 modelname = "vilar_ACR_" + str(endtime) + "_" + str(num_timestamps) + '_all_species'
