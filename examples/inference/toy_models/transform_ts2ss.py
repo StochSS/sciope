@@ -19,6 +19,7 @@ validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 
+print("data loaded")
 start = time.time()
 val_sum = np.array([summarys(ts) for ts in validation_ts])
 end = time.time()
