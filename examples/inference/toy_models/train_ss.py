@@ -21,7 +21,7 @@ test_thetas = pickle.load(open('datasets/' + modelname + '/test_sum.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )[:,:,species]
 
 
-nnm = CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(2), con_len=21, con_layers=clay, dense_layers=[100,100,100])
+nnm = CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(2), con_len=19, con_layers=clay, dense_layers=[100,100,100])
 
 history1 = nnm.train(inputs=train_ts, targets=train_sum,validation_inputs=validation_ts,validation_targets=validation_sum,
           batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=1)
