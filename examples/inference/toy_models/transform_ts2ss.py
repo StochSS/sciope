@@ -1,7 +1,7 @@
 
 
 import numpy as np
-
+from create_summary_statistics import summarys
 import pickle
 import time
 
@@ -18,4 +18,22 @@ validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thet
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )[:,:,species]
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+
+start = time.time()
+val_sum = np.array([summarys(ts) for ts in validation_ts])
+end = time.time()
+print("summarys generated in ", end-start)
+pickle.dump( val_sum, open( 'datasets/' + modelname + '/val_sum.p', "wb" ) )
+
+start = time.time()
+train_sum = np.array([summarys(ts) for ts in train_ts])
+end = time.time()
+print("summarys generated in ", end-start)
+pickle.dump( train_sum, open( 'datasets/' + modelname + '/train_sum.p', "wb" ) )
+
+start = time.time()
+test_sum = np.array([summarys(ts) for ts in test_ts])
+end = time.time()
+print("summarys generated in ", end-start)
+pickle.dump( test_sum, open( 'datasets/' + modelname + '/test_sum.p', "wb" ) )
 

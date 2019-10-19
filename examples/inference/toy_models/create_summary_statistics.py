@@ -53,9 +53,7 @@ validation_ts = pickle.load(open('validation_ts.p', "rb" ) )[:,:,species]
 
 print("data loaded")
 start = time.time()
-d_summarys = dask.delayed(summarys)
-val_sum =  np.array([d_summarys(ts) for ts in validation_ts])
-val_sum = np.array([dask.compute(v) for v in val_sum])
+val_sum = np.array([summarys(ts) for ts in validation_ts])
 end = time.time()
 print("summarys generated in ", end-start)
 print(val_sum[200:210])
