@@ -21,9 +21,14 @@ validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "
 test_sum = pickle.load(open('datasets/' + modelname + '/test_sum.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )[:,:,species]
 
+print("train sum shape: ", train_sum.shape)
+print("train ts shape: ", train_ts.shape)
+
 train_ind = np.where(train_sum > 0)[0]
 train_sum = train_sum[train_ind]
 train_ts = train_ts[train_ind]
+print("train sum shape: ", train_sum.shape)
+print("train ts shape: ", train_ts.shape)
 
 test_ind = np.where(test_sum > 0)[0]
 test_sum = test_sum[test_ind]
