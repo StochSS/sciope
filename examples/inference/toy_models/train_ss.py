@@ -46,6 +46,10 @@ nnm = CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(
 
 
 history1 = nnm.train(inputs=train_ts, targets=train_sum,validation_inputs=validation_ts,validation_targets=validation_sum,
+          batch_size=32, epochs=20, val_freq=1, early_stopping_patience=20, plot_training_progress=False, verbose=1)
+
+
+history1 = nnm.train(inputs=train_ts, targets=train_sum,validation_inputs=validation_ts,validation_targets=validation_sum,
           batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=1)
 
 
