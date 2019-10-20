@@ -36,7 +36,7 @@ test_sum = test_sum[test_ind]
 test_ts = test_ts[test_ind]
 
 validation_ind = np.where(validation_sum[:,0] >= 0)[0]
-validation_sum = train_sum[validation_ind]
+validation_sum = validation_sum[validation_ind]
 validation_ts = validation_ts[validation_ind]
 
 nnm = CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(2), con_len=3, con_layers=clay,
