@@ -36,7 +36,7 @@ validation_ts = validation_ts[validation_ind]
 nnm = CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(2), con_len=3, con_layers=clay,
                dense_layers=[100,100,100], dataname='wozeros')
 
-nnm.load_model()
+# nnm.load_model()
 
 
 history1 = nnm.train(inputs=train_ts, targets=train_sum,validation_inputs=validation_ts,validation_targets=validation_sum,
