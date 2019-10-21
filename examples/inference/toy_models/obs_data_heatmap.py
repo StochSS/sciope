@@ -77,11 +77,11 @@ for i in range(nrs):
     od = simulate(np.array(true_params))[:,species]
     print("od shape: ", od.shape)
     obs_data[i,:,:] = od
-    Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
-                                            abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
-                                            nr_of_accept_cross=100,index=i)
-    abc_pred[i] = Mean_Vector
-    abc_post[i] = Posterior_fit
+    # Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
+    #                                         abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
+    #                                         nr_of_accept_cross=100,index=i)
+    # abc_pred[i] = Mean_Vector
+    # abc_post[i] = Posterior_fit
 
 
 pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_1k_pack.p', "wb" ) )
