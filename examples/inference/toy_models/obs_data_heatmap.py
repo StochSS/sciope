@@ -99,7 +99,7 @@ density_data = np.zeros((ts_len,int(peak_value)))
 for i in range(ts_len):
     print("i: ", i)
     density_data[i] = np.histogram(obs_data[:,i,0],bins=bins)[0]
-    print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]))
+    print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
 
 plt.clf()
 plt.imshow(density_data.T)
