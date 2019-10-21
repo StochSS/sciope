@@ -76,9 +76,12 @@ print("optimal guessing deviation: ", np.mean(abs(test_sum - np.mean(test_sum,0)
 
 obs_pred = nnm.predict(obs_data)
 
+print("observed data:")
 for pred, true in zip(obs_pred,obs_sum):
     print("pred: ", pred, ", true: ", true)
 
+print()
+print("test samples:")
 
-# for i in range(5):
-#     print("test_sum: ", test_sum[i], ", test_pred: ", test_pred[i])
+for i in range(25):
+    print("test_sum: ", test_sum[i], ", test_pred: ", test_pred[i])
