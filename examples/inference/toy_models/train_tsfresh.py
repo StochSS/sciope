@@ -1,6 +1,7 @@
 from sciope.models.cnn_regressor import CNNModel
 from sciope.models.dnn_regressor import ANNModel
-from tsfresh import extract_features
+from tsfresh.feature_extraction import feature_calculators
+
 import numpy as np
 from create_summary_statistics import summarys
 import pickle
@@ -23,7 +24,7 @@ test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )[:,:,
 
 obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )[:,:,species]
 
-train_input = extract_features(np.squeeze(train_ts))
+train_input = feature_calculators(np.squeeze(train_ts))
 print("train_input_shape: ", train_input.shape)
 
 
