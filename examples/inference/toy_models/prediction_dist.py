@@ -74,6 +74,9 @@ test_mae = np.mean(abs(test_thetas-test_pred_d))
 test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
 test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 
+para_names = vilar.get_parameter_names()
+para_names_t = vilar.get_para_names_titles()
+
 
 
 f, ax = plt.subplots(3,5,figsize=(40,40))
@@ -85,6 +88,11 @@ for x in range(3):
         b = np.linspace(dmin[i], dmax[i], 26)
         ax[x,y].hist2d(test_thetas[:,i],test_pred_d[:,i], bins=b)
         ax[x,y].plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]], c='white',linewidth=10)
+        true = "true " + para_names[i]
+        pred = "predicted " + para_names[i]
+        print("true: ", true)
+        ax[x, y].set_xlabel(true, fontsize='xx-large')
+        ax[x, y].set_ylabel(pred, fontsize='xx-large')
 
 plt.savefig("heatmap_testset")
 
@@ -129,8 +137,6 @@ pred_data = nnm.predict(obs_data)
 pred_data = denormalize_data(pred_data,dmin,dmax)
 print("pred_data shape: ", pred_data.shape)
 
-para_names = vilar.get_parameter_names()
-para_names_t = vilar.get_para_names_titles()
 
 print("para names t shape: ", para_names_t.shape)
 
@@ -156,7 +162,6 @@ for x in range(3):
         true = "true " + para_names[i]
         pred = "predicted " + para_names[i]
         print("true: ", true)
-        ax[x,y].set_xlabel(true)
         ax[x,y].set_xlabel(pred, fontsize='xx-large')
 
 
