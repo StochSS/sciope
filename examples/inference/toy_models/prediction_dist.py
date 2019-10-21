@@ -144,8 +144,10 @@ for x in range(3):
         ax[x,y].plot([dmin[i], dmin[i]],[peak_val,0],c='b')
         ax[x,y].plot([dmax[i], dmax[i]],[peak_val,0],c='b')
         ax[x,y].plot([true_params[i], true_params[i]],[peak_val,0],c='black')
-        ax[x,y].set_xlabel("true " + para_names,fontsize='xx-large')
-        ax[x,y].set_xlabel("predicted " + para_names, fontsize='xx-large')
+        true = "true " + para_names
+        pred = "predicted " + para_names
+        ax[x,y].set_xlabel(true,fontsize='xx-large')
+        ax[x,y].set_xlabel(pred, fontsize='xx-large')
 
 
 
