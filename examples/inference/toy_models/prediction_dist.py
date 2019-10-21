@@ -118,10 +118,11 @@ f, ax = plt.subplots(3,5,figsize=(40,40))
 for x in range(3):
     for y in range(5):
         i = x*5+y
-        ax[x,y].hist(pred_data[i],density=True)
-        ax[x,y].plot([dmin[i], dmin[i]],[1,0],c='b')
-        ax[x,y].plot([dmax[i], dmax[i]],[1,0],c='b')
-        ax[x,y].plot([true_params[i], true_params[i]],[1,0],c='black')
+        d = ax[x,y].hist(pred_data[i],density=True)
+        peak_val = np.max(d[0])
+        ax[x,y].plot([dmin[i], dmin[i]],[peak_val,0],c='b')
+        ax[x,y].plot([dmax[i], dmax[i]],[peak_val,0],c='b')
+        ax[x,y].plot([true_params[i], true_params[i]],[peak_val,0],c='black')
 
 
 plt.savefig("prediction_dist")
