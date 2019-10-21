@@ -92,11 +92,13 @@ peak_value = np.max(obs_data)
 
 bins = np.arange(int(peak_value)+1)
 nr = int(obs_data.shape[0])
-print("nr: ", nr)
-density_data = np.zeros((nr,int(peak_value)))
-for i in range(nr):
+ts_len = int(obs_data.shape[1])
+print("nr: ", nr, ", ts_len: ", ts_len)
+print("obs_data shape: ", obs_data.shape)
+density_data = np.zeros((ts_len,int(peak_value)))
+for i in range(ts_len):
     print("i: ", i)
-    density_data[i] = plt.hist(obs_data[i,:,0],bins=bins)[0]
+    density_data[i] = plt.hist(obs_data[:,i,0],bins=bins)[0]
 
 plt.clf()
 plt.imshow(density_data.T)
