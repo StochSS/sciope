@@ -68,25 +68,25 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-obs_data = np.zeros((nrs,num_timestamps,1))
-abc_pred = np.zeros((nrs,15))
-abc_post = np.zeros((nrs,15,100))
+# obs_data = np.zeros((nrs,num_timestamps,1))
+# abc_pred = np.zeros((nrs,15))
+# abc_post = np.zeros((nrs,15,100))
+#
+# for i in range(nrs):
+#     print("i: ", i)
+#     od = simulate(np.array(true_params))[:,species]
+#     print("od shape: ", od.shape)
+#     obs_data[i,:,:] = od
+#     # Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
+#     #                                         abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
+#     #                                         nr_of_accept_cross=100,index=i)
+#     # abc_pred[i] = Mean_Vector
+#     # abc_post[i] = Posterior_fit
+#
+#
+# pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_1k_pack.p', "wb" ) )
 
-for i in range(nrs):
-    print("i: ", i)
-    od = simulate(np.array(true_params))
-    print("od shape: ", od.shape)
-    obs_data[i,:,:] = od
-    # Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
-    #                                         abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
-    #                                         nr_of_accept_cross=100,index=i)
-    # abc_pred[i] = Mean_Vector
-    # abc_post[i] = Posterior_fit
-
-
-pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_1k_pack.p', "wb" ) )
-
-obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb" ) )[:,:,8]
+obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb" ) )
 
 peak_value = np.max(obs_data)
 nr_bins = 50
@@ -106,7 +106,6 @@ density_data = density_data[:,::-1]
 density_data = density_data.T
 density_data = density_data**(1/3)
 plt.imshow(density_data, aspect='auto', extent=[0,201,0,peak_value])
-plt.suptitle('Species R')
 plt.xlabel('time')
 plt.ylabel('# of species')
 plt.savefig('obs_data_density')
