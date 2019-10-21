@@ -130,6 +130,9 @@ pred_data = denormalize_data(pred_data,dmin,dmax)
 print("pred_data shape: ", pred_data.shape)
 
 para_names = vilar.get_parameter_names()
+print("para names:")
+for p in para_names
+    print(p)
 
 f, ax = plt.subplots(3,5,figsize=(40,40))
 
@@ -144,8 +147,8 @@ for x in range(3):
         ax[x,y].plot([dmin[i], dmin[i]],[peak_val,0],c='b')
         ax[x,y].plot([dmax[i], dmax[i]],[peak_val,0],c='b')
         ax[x,y].plot([true_params[i], true_params[i]],[peak_val,0],c='black')
-        true = "true " + para_names[i]
-        pred = "predicted " + para_names[i]
+        true = "true " + str(para_names[i])
+        pred = "predicted " + str(para_names[i])
         print("true: ", true)
         ax[x,y].set_xlabel(true)
         ax[x,y].set_xlabel(pred, fontsize='xx-large')
