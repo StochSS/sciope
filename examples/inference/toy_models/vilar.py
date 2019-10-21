@@ -137,3 +137,20 @@ def get_parameter_names():
                 pk = pk + "'"
         para_names[i] = "$\\" + pk + "$"
     return para_names
+
+def get_para_names_titles():
+    raw_names = get_parameter_names_raw()
+    para_names = np.chararray(15, 25)
+    for i in range(15):
+        pk = raw_names[i]
+        pks = pk.split("_")
+        if len(pks) > 1:
+            pk_p = "\hat{\\" + pks[0].lower() + "}_{" + pks[1].upper() + "}"
+            pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
+        if len(pks) == 3:
+            print("len 3: ", pks[2])
+            if pks[2] == 'prime':
+                pk_p = pk_p + "'"
+        para_name_p = "$" + pk_p + "$"
+
+        return para_name_p
