@@ -103,7 +103,9 @@ for i in range(ts_len):
 
 plt.clf()
 density_data = density_data[:,::-1]
-plt.imshow(density_data.T, aspect='auto', extent=[0,201,0,peak_value])
+density_data = density_data.T
+density_data = np.sqrt(density_data)
+plt.imshow(density_data, aspect='auto', extent=[0,201,0,peak_value])
 plt.xlabel('time')
 plt.ylabel('# of species')
 plt.savefig('obs_data_density')
