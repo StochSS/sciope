@@ -1,5 +1,5 @@
 from sciope.models.cnn_regressor import CNNModel
-from sciope.models.dnn_regressior import ANNModel
+from sciope.models.dnn_regressor import ANNModel
 from tsfresh import extract_features
 import numpy as np
 from create_summary_statistics import summarys
