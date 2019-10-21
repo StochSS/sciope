@@ -64,7 +64,10 @@ test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
 test_ts = test_ts[:,:,species]
 test_thetas_n = normalize_data(test_thetas,dmin,dmax)
 test_pred = nnm.predict(test_ts)
+print("test_pred shape: ", test_pred.shape)
 test_pred = np.reshape(test_pred,(-1,15))
+print("test_pred shape: ", test_pred.shape)
+
 test_pred_d = denormalize_data(test_pred,dmin,dmax)
 test_mse = np.mean((test_thetas-test_pred)**2)
 test_mae = np.mean(abs(test_thetas-test_pred_d))
