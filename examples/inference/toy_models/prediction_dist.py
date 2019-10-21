@@ -151,7 +151,7 @@ for x in range(3):
         i = x*5+y
         print("i: ", i)
 
-        b = np.linspace(dmin[i],dmax[i],11)
+        b = np.linspace(dmin[i],dmax[i],26)
         d = ax[x,y].hist(pred_data[:,i], bins=b, density=True)
         peak_val = np.max(d[0])
         ax[x,y].plot([dmin[i], dmin[i]],[peak_val,0],c='b')
