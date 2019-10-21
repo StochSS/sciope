@@ -131,8 +131,11 @@ print("pred_data shape: ", pred_data.shape)
 
 para_names = vilar.get_parameter_names()
 para_names_t = vilar.get_para_names_titles()
-print("para names:")
-for p in para_names:
+
+print("para names t shape: ", para_names_t.shape)
+
+print("para names_t:")
+for p in para_names_t:
     print(p)
 
 f, ax = plt.subplots(3,5,figsize=(40,40))
