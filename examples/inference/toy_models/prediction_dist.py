@@ -80,7 +80,7 @@ for x in range(3):
         i = x*5+y
         b = np.linspace(dmin[i], dmax[i], 26)
         ax[x,y].hist2d(test_thetas[:,i],test_pred_d[:,i], bins=b)
-        ax[x,y].plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]], c='white')
+        ax[x,y].plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]], c='white',linewidth=10)
 
 plt.savefig("heatmap_testset")
 
