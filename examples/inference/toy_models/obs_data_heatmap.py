@@ -91,9 +91,10 @@ obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb
 peak_value = np.max(obs_data)
 
 bins = np.arange(peak_value)
-
-density_data = np.zeros((obs_data.shape[0],peak_value))
-for i in range(obs_data.shape[0]):
+nr = int(obs_data.shape[0])
+print("nr: ", nr)
+density_data = np.zeros((nr,peak_value))
+for i in range(nr):
     density_data[i] = plt.hist(obs_data[i,:,0],bins=bins)[0]
 
 plt.clf()
