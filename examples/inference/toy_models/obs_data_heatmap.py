@@ -111,16 +111,16 @@ density_data = density_data[:,:,::-1]
 density_data = density_data
 density_data = density_data**(1/2)
 
-f, ax = plt.subplots(2,1,figsize=(30,15))
-ax[0].imshow(density_data[0].T, aspect='auto', extent=[0,201,0,peak_value])
-ax[0].set_title('Species C')
+f, ax = plt.subplots(1,1)#,figsize=(30,15))
+ax[0].imshow(density_data[2].T, aspect='auto', extent=[0,201,0,peak_value])
+ax[0].set_title('Species R')
 ax[0].set_xlabel('time')
 ax[0].set_ylabel('# of species')
-ax[1].imshow(density_data[2].T, aspect='auto', extent=[0,201,0,peak_value])
-ax[1].set_title('Species R')
-ax[1].set_xlabel('time')
-ax[1].set_ylabel('# of species')
-plt.savefig('obs_data_density')
+# ax[1].imshow(density_data[2].T, aspect='auto', extent=[0,201,0,peak_value])
+# ax[1].set_title('Species R')
+# ax[1].set_xlabel('time')
+# ax[1].set_ylabel('# of species')
+plt.savefig('obs_data_density_speciesR')
 
 
 # pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
