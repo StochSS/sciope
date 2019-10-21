@@ -59,7 +59,24 @@ print("data shape: ", data.shape)
 
 nnm.load_model()
 
+test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
+test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
+test_ts = test_ts[:,:end_step:step,species]
+test_thetas_n = normalize_data(test_thetas,dmin,dmax)
+test_pred = nnm.predict(test_ts)
+test_pred = np.reshape(test_pred,(-1,15))
+test_pred_d = denormalize_data(test_pred,dmin,dmax)
+test_mse = np.mean((test_thetas-test_pred)**2)
+test_mae = np.mean(abs(test_thetas-test_pred_d))
+test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
+test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 
+
+
+
+print("Model name: ", nnm.name)
+print("mean square error: ", test_mse)
+print("mean rel absolute error: ", np.mean(test_ae_norm))
 
 
 nrs = 1000
