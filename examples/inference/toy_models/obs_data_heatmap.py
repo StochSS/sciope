@@ -90,7 +90,7 @@ obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb
 
 peak_value = np.max(obs_data)
 
-bins = np.arange(int(peak_value))
+bins = np.arange(int(peak_value)+1)
 nr = int(obs_data.shape[0])
 print("nr: ", nr)
 density_data = np.zeros((nr,int(peak_value)))
