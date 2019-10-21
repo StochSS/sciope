@@ -74,8 +74,8 @@ modelname = "vilar_ACR_prior6_" + str(endtime) + "_" + str(num_timestamps)
 if not os.path.exists('datasets/'+modelname):
     os.mkdir('datasets/'+modelname)
 
-dmin =           [0,   100,    0,   20,   10,   1,    1,   0,   0,   0, 0.5,    0,   0,    0,   0]
-dmax =         [  80,   600,    4,   60,   60,   7,   12,   2,   3, 0.7, 2.5,   4,   3,   70,   300]
+dmin = [0, 100, 0, 20, 10, 1, 1, 0, 0, 0, 0.5, 0, 0, 0, 0]
+dmax = [  80, 600, 4, 60, 60, 7, 12, 2, 3, 0.7, 2.5, 4, 3, 70, 300]
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 
 obs_data = simulate(np.array(true_params))

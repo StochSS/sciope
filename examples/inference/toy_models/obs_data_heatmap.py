@@ -68,7 +68,7 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-obs_data = np.zeros((nrs,num_timestamps,1))
+obs_data = np.zeros((nrs,num_timestamps,9))
 abc_pred = np.zeros((nrs,15))
 abc_post = np.zeros((nrs,15,100))
 
