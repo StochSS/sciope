@@ -78,7 +78,7 @@ f, ax = plt.subplots(3,5,figsize=(40,40))
 for x in range(3):
     for y in range(5):
         i = x*5+y
-        b = np.linspace(dmin[i], dmax[i], 11)
+        b = np.linspace(dmin[i], dmax[i], 26)
         ax[x,y].hist2d(test_thetas[:,i],test_pred_d[:,i], bins=b)
         plt.plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]], c='white')
 
