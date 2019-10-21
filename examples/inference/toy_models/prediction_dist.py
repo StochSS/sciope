@@ -107,7 +107,7 @@ obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb
 
 print("obs_data shape: ", obs_data.shape)
 
-pred_data = nnm.predict(obs_data)
+pred_data = nnm.predict(normalize_data(obs_data,dmin,dmax))
 pred_data = denormalize_data(pred_data,dmin,dmax)
 print("pred_data shape: ", pred_data.shape)
 
