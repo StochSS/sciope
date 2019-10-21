@@ -141,11 +141,18 @@ def get_parameter_names():
 def get_para_names_titles():
     raw_names = get_parameter_names_raw()
     para_name_p = np.chararray(15, 25)
+    print("para names titles:")
     for i in range(15):
+        print("i: ", i)
         pk = raw_names[i]
+        print("pk: ", pk)
         pks = pk.split("_")
+        print("pks: ", pks)
+
         if len(pks) > 1:
             pk_p = "\hat{\\" + pks[0].lower() + "}_{" + pks[1].upper() + "}"
+            print("pk_p: ", pk_p)
+
             pk = pks[0].lower() + "_{" + pks[1].upper() + "}"
         if len(pks) == 3:
             print("len 3: ", pks[2])
