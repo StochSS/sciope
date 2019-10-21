@@ -8,7 +8,7 @@ from sciope.models.cnn_regressor import CNNModel
 from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
 from abc_inference_allspecies_func import abc_inference
-
+import vilar
 import numpy as np
 
 import pickle
@@ -67,7 +67,7 @@ nrs = 1000
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
 
-true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+true_params = [50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]
 # obs_data = np.zeros((nrs,num_timestamps,1))
 # abc_pred = np.zeros((nrs,15))
 # abc_post = np.zeros((nrs,15,100))
@@ -86,139 +86,24 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 #
 # pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_1k_pack.p', "wb" ) )
 
-obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb" ) )
+obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb" ) )[:,:,[6]]
 
-peak_value = np.max(obs_data)
-nr_bins = 50
-bins = np.linspace(0,int(peak_value)+1,nr_bins+1)
-nr = int(obs_data.shape[0])
-ts_len = int(obs_data.shape[1])
-print("nr: ", nr, ", ts_len: ", ts_len)
 print("obs_data shape: ", obs_data.shape)
-density_data = np.zeros((ts_len,nr_bins))
-for i in range(ts_len):
-    print("i: ", i)
-    density_data[i] = np.histogram(obs_data[:,i,0],bins=bins)[0]
-    print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
 
-plt.clf()
-density_data = density_data[:,::-1]
-density_data = density_data.T
-density_data = density_data**(1/3)
-plt.imshow(density_data, aspect='auto', extent=[0,201,0,peak_value])
-plt.xlabel('time')
-plt.ylabel('# of species')
-plt.savefig('obs_data_density')
+pred_data = nnm.predict(obs_data)
+print("pred_data shape: ", pred_data.shape)
+
+para_names = vilar.get_parameter_names()
+
+f, ax = plt.subplots(3,5,figsize=(40,40))
+
+for x in range(3):
+    for y in range(5):
+        i = x*5+y
+        ax[x,y].hist(pred_data[i],density=True)
+        ax[x,y].plot([dmin[i], dmin[i]],[1,0])
+        ax[x,y].plot([dmax[i], dmax[i]],[1,0])
+        ax[x,y].plot([true_params[i], true_params[i]],[1,0])
 
 
-# pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
-#
-# gen_data = np.zeros((nrs,num_timestamps,1))
-#
-# for i in range(nrs):
-#     od = simulate(abc_pred[i])[:,species]
-#     # print("od shape: ", od.shape)
-#     gen_data[i,:,:] = od
-#
-#
-# f,ax = plt.subplots(3,1,figsize=(45,15))
-# linew = 1
-# t= np.linspace(0,200,401)
-# first = True
-# for ts in obs_data:
-#     rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
-#
-#     ax[0].plot(t,ts[:,0],c=rcol,lw=linew)
-#     if first:
-#         ax[2].plot(t,ts[:,0],c=rcol,label='true param.',lw=linew)
-#         first = False
-#     else:
-#         ax[2].plot(t, ts[:, 0], c=rcol,lw=linew)
-#
-#
-# ax[0].set_title("Specie C from true parameter")
-# ax[1].set_title("Specie C from predicted parameter")
-# ax[2].set_title("Specie C from both true parameter and predicted parameter")
-# first = True
-#
-# for ts in gen_data:
-#     rcol = np.random.rand(3)*np.array([0.5,0.2,0.2]) + np.array([0.5,0,0])
-#     ax[1].plot(t,ts[:,0],c=rcol,lw=linew)
-#     if first:
-#         ax[2].plot(t,ts[:,0],c=rcol,label='pred param.',lw=linew)
-#         first = False
-#     else:
-#         ax[2].plot(t,ts[:,0],c=rcol,lw=linew)
-#
-#
-# ax[2].legend()
-#
-#
-# plt.savefig('comp.png')
-#
-# od = [simulate(abc_pred[i])[:, species] for i in range(10)]
-# f,ax = plt.subplots(3,1,figsize=(45,15))
-# ax[0].plot(t,obs_data[0,:,0],c='b')
-# for o in od:
-#     ax[1].plot(t,o,c='r')
-#     ax[2].plot(t,o,c='r')
-#
-#
-# ax[2].plot(t,obs_data[0,:,0],c='b')
-#
-# plt.savefig('comp2.png')
-#
-#
-#
-# f,ax = plt.subplots(3,5,figsize=(15,25))
-#
-# for x in range(3):
-#     for y in range(5):
-#         i = x*5 +y
-#         ax[x, y].plot([dmin[i], dmin[i]], [1, 0], c='black')
-#         ax[x, y].plot([dmax[i], dmax[i]], [1, 0], c='black')
-#
-#         # ax[x,y].hist(pred_param[:,i], density=True)
-#         for p in pred_param[:,i]:
-#             ax[x, y].plot([p,p], [1, 0], c='r')
-#
-#         pm = np.mean(pred_param[:,i])
-#         ax[x, y].plot([pm, pm], [1, 0], c='yellow')
-#
-#         ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
-#
-# plt.savefig('dist.png')
-#
-#
-# f,ax = plt.subplots(3,5,figsize=(15,25))
-#
-# for x in range(3):
-#     for y in range(5):
-#         i = x*5 +y
-#         ax[x, y].plot([dmin[i], dmin[i]], [1, 0], c='black')
-#         ax[x, y].plot([dmax[i], dmax[i]], [1, 0], c='black')
-#
-#         # ax[x,y].hist(pred_param[:,i], density=True)
-#         l = np.linspace(dmin[i],dmax[i],100)
-#         for p in abc_post[:,i]:
-#             ax[x, y].plot(l,p, c='r')
-#
-#         pm = np.prod(abc_post,0)[i]
-#         ax[x, y].plot(l,pm, c='yellow')
-#
-#         ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
-#
-# plt.savefig('post.png')
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
+plt.savefig("prediction_dist")
