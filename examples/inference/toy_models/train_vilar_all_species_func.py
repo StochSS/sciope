@@ -6,9 +6,7 @@ from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
 from load_data_from_julia import load_data
 import numpy as np
-from AutoRegressive_model import simulate, prior
-# from MovingAverage_model import simulate, prior
-from sklearn.metrics import mean_absolute_error
+
 import pickle
 import time
 from normalize_data import normalize_data, denormalize_data
