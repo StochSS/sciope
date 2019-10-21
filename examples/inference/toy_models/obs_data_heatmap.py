@@ -62,53 +62,64 @@ nnm.load_model()
 
 
 
-nrs = 1000
+# nrs = 1000
+#
+# Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
+# simulate = Vilar_.simulate
+#
+# true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
+# obs_data = np.zeros((nrs,num_timestamps,9))
+# abc_pred = np.zeros((nrs,15))
+# abc_post = np.zeros((nrs,15,100))
+#
+# for i in range(nrs):
+#     print("i: ", i)
+#     od = simulate(np.array(true_params))
+#     print("od shape: ", od.shape)
+#     obs_data[i,:,:] = od
+#     # Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
+#     #                                         abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
+#     #                                         nr_of_accept_cross=100,index=i)
+#     # abc_pred[i] = Mean_Vector
+#     # abc_post[i] = Posterior_fit
+#
+#
+# pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_1k_pack.p', "wb" ) )
 
-Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
-simulate = Vilar_.simulate
-
-true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
-obs_data = np.zeros((nrs,num_timestamps,9))
-abc_pred = np.zeros((nrs,15))
-abc_post = np.zeros((nrs,15,100))
-
-for i in range(nrs):
-    print("i: ", i)
-    od = simulate(np.array(true_params))
-    print("od shape: ", od.shape)
-    obs_data[i,:,:] = od
-    # Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
-    #                                         abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
-    #                                         nr_of_accept_cross=100,index=i)
-    # abc_pred[i] = Mean_Vector
-    # abc_post[i] = Posterior_fit
+obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb" ) )
 
 
-pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_1k_pack.p', "wb" ) )
-
-obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb" ) )[:,:,8]
-
-peak_value = np.max(obs_data)
 nr_bins = 50
-bins = np.linspace(0,int(peak_value)+1,nr_bins+1)
+
 nr = int(obs_data.shape[0])
 ts_len = int(obs_data.shape[1])
 print("nr: ", nr, ", ts_len: ", ts_len)
 print("obs_data shape: ", obs_data.shape)
-density_data = np.zeros((ts_len,nr_bins))
-for i in range(ts_len):
-    print("i: ", i)
-    density_data[i] = np.histogram(obs_data[:,i,0],bins=bins)[0]
-    print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
+density_data = np.zeros((3,ts_len,nr_bins))
+
+for j in range(3):
+    specie = 6+j
+    peak_value = np.max(obs_data[:,:,specie])
+    bins = np.linspace(0, int(peak_value) + 1, nr_bins + 1)
+    for i in range(ts_len):
+        print("i: ", i)
+        density_data[j,i] = np.histogram(obs_data[:,i,specie],bins=bins)[0]
+        print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
 
 plt.clf()
-density_data = density_data[:,::-1]
+density_data = density_data[:,:,::-1]
 density_data = density_data.T
-density_data = density_data**(1/3)
-plt.imshow(density_data, aspect='auto', extent=[0,201,0,peak_value])
-plt.suptitle('Species R')
-plt.xlabel('time')
-plt.ylabel('# of species')
+density_data = density_data**(1/2)
+
+f, ax = plt.subplots(3,1)
+ax[0].imshow(density_data[0], aspect='auto', extent=[0,201,0,peak_value])
+ax[0].set_title('Species C')
+ax[0].xlabel('time')
+ax[0].ylabel('# of species')
+ax[2].imshow(density_data[2], aspect='auto', extent=[0,201,0,peak_value])
+ax[2].set_title('Species R')
+ax[2].xlabel('time')
+ax[2].ylabel('# of species')
 plt.savefig('obs_data_density')
 
 
