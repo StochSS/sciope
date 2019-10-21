@@ -89,7 +89,7 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb" ) )
 
 peak_value = np.max(obs_data)
-nr_bins = 10
+nr_bins = 50
 bins = np.linspace(0,int(peak_value)+1,nr_bins+1)
 nr = int(obs_data.shape[0])
 ts_len = int(obs_data.shape[1])
@@ -103,7 +103,7 @@ for i in range(ts_len):
 
 plt.clf()
 density_data = density_data[:,::-1]
-plt.imshow(density_data.T, aspect='auto', extent=[0,201,0,peak_value])
+plt.imshow(density_data.T, aspect='auto', cmap='BuGn', extent=[0,201,0,peak_value])
 plt.xlabel('time')
 plt.ylabel('# of species')
 plt.savefig('obs_data_density')
