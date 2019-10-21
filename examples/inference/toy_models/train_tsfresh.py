@@ -23,7 +23,7 @@ test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )[:,:,
 
 obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )[:,:,species]
 
-train_input = extract_features(train_ts, column_id="id", column_sort="time")
+train_input = extract_features.feature_calculators(np.squeeze(train_ts))
 print("train_input_shape: ", train_input.shape)
 
 
