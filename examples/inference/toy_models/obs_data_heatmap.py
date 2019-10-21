@@ -104,7 +104,7 @@ for j in range(3):
     for i in range(ts_len):
         print("i: ", i)
         density_data[j,i] = np.histogram(obs_data[:,i,specie],bins=bins)[0]
-        print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
+        # print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
 
 plt.clf()
 density_data = density_data[:,:,::-1]
