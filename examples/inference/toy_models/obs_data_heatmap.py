@@ -102,7 +102,8 @@ for i in range(ts_len):
     print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
 
 plt.clf()
-plt.imshow(density_data.T)
+density_data = density_data[:,::-1]
+plt.imshow(density_data.T, extent=[0,201,0,peak_value])
 plt.xlabel('time')
 plt.ylabel('# of species')
 plt.savefig('obs_data_density')
