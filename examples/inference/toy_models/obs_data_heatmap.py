@@ -98,7 +98,7 @@ print("obs_data shape: ", obs_data.shape)
 density_data = np.zeros((ts_len,int(peak_value)))
 for i in range(ts_len):
     print("i: ", i)
-    density_data[i] = plt.hist(obs_data[:,i,0],bins=bins)[0]
+    density_data[i] = np.histogram(obs_data[:,i,0],bins=bins)[0]
 
 plt.clf()
 plt.imshow(density_data.T)
