@@ -108,18 +108,18 @@ for j in range(3):
 
 plt.clf()
 density_data = density_data[:,:,::-1]
-density_data = density_data.T
+density_data = density_data
 density_data = density_data**(1/2)
 
-f, ax = plt.subplots(3,1)
-ax[0].imshow(density_data[0], aspect='auto', extent=[0,201,0,peak_value])
+f, ax = plt.subplots(2,1)
+ax[0].imshow(density_data[0].T, aspect='auto', extent=[0,201,0,peak_value])
 ax[0].set_title('Species C')
 ax[0].set_xlabel('time')
 ax[0].set_ylabel('# of species')
-ax[2].imshow(density_data[2], aspect='auto', extent=[0,201,0,peak_value])
-ax[2].set_title('Species R')
-ax[2].set_xlabel('time')
-ax[2].set_ylabel('# of species')
+ax[1].imshow(density_data[2].T, aspect='auto', extent=[0,201,0,peak_value])
+ax[1].set_title('Species R')
+ax[1].set_xlabel('time')
+ax[1].set_ylabel('# of species')
 plt.savefig('obs_data_density')
 
 
