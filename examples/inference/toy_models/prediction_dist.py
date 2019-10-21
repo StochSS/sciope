@@ -152,6 +152,7 @@ for x in range(3):
         ax[x,y].plot([dmax[i], dmax[i]],[peak_val,0],c='b')
         ax[x,y].plot([true_params[i], true_params[i]],[peak_val,0],c='black')
         print("para names i: ", para_names[i])
+        print("type: ", type(para_names[i]))
         true = "true " + para_names[i]
         pred = "predicted " + para_names[i]
         print("true: ", true)
