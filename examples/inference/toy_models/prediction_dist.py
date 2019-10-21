@@ -81,6 +81,7 @@ f, ax = plt.subplots(3,5,figsize=(40,40))
 for x in range(3):
     for y in range(5):
         i = x*5+y
+        print("i: ", i)
         b = np.linspace(dmin[i], dmax[i], 26)
         ax[x,y].hist2d(test_thetas[:,i],test_pred_d[:,i], bins=b)
         ax[x,y].plot([dmin[i], dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]], c='white',linewidth=10)
@@ -135,6 +136,8 @@ f, ax = plt.subplots(3,5,figsize=(40,40))
 for x in range(3):
     for y in range(5):
         i = x*5+y
+        print("i: ", i)
+
         b = np.linspace(dmin[i],dmax[i],11)
         d = ax[x,y].hist(pred_data[i], bins=b, density=True)
         peak_val = np.max(d[0])
