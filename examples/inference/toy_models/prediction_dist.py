@@ -49,13 +49,13 @@ nnm = CNNModel(input_shape=(ts_len,nr_of_species), output_shape=(15), con_len=3,
 print("Model name: ", nnm.name)
 
 
-true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
-true_param = np.squeeze(np.array(true_param))
-print("true_param shape: ", true_param.shape)
-data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
-# data = data[3]
-# data = np.expand_dims(data,0)
-print("data shape: ", data.shape)
+# true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
+# true_param = np.squeeze(np.array(true_param))
+# print("true_param shape: ", true_param.shape)
+# data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
+# # data = data[3]
+# # data = np.expand_dims(data,0)
+# print("data shape: ", data.shape)
 
 nnm.load_model()
 
@@ -70,6 +70,16 @@ test_mse = np.mean((test_thetas-test_pred)**2)
 test_mae = np.mean(abs(test_thetas-test_pred_d))
 test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
 test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
+
+f, ax = plt.subplots(3,5,figsize=(40,40))
+
+for x in range(3):
+    for y in range(5):
+        i = x*5+y
+        ax[x,y].hist2d(test_thetas[i],test_pred_d[i])
+
+plt.savefig("heatmap_testset")
+
 
 
 
@@ -107,7 +117,7 @@ obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb
 
 print("obs_data shape: ", obs_data.shape)
 
-pred_data = nnm.predict(normalize_data(obs_data,dmin,dmax))
+pred_data = nnm.predict(obs_data)
 pred_data = denormalize_data(pred_data,dmin,dmax)
 print("pred_data shape: ", pred_data.shape)
 
@@ -118,7 +128,8 @@ f, ax = plt.subplots(3,5,figsize=(40,40))
 for x in range(3):
     for y in range(5):
         i = x*5+y
-        d = ax[x,y].hist(pred_data[i],density=True)
+        b = np.linspace(dmin[i],dmax[i],11)
+        d = ax[x,y].hist(pred_data[i], bins=b, density=True)
         peak_val = np.max(d[0])
         ax[x,y].plot([dmin[i], dmin[i]],[peak_val,0],c='b')
         ax[x,y].plot([dmax[i], dmax[i]],[peak_val,0],c='b')
