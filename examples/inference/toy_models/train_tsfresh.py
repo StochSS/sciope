@@ -16,7 +16,7 @@ modelname = "vilar_ACR_" + str(endtime) + "_" + str(num_timestamps) + '_all_spec
 species = [6]
 
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
-validation_thetas = pickle.load(open('datasets/' + modelname + '/val_thetas.p', "rb" ) )
+validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )[:,:,species]
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )[:,:,species]
