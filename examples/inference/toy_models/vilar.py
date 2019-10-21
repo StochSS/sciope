@@ -127,6 +127,7 @@ def get_parameter_names_raw():
 def get_parameter_names():
     raw_names = get_parameter_names_raw()
     para_names = np.chararray(15,25)
+    para_names = []
     for i in range(15):
         pk = raw_names[i]
         pks = pk.split("_")
@@ -135,7 +136,9 @@ def get_parameter_names():
         if len(pks) == 3:
             if pks[2] == 'prime':
                 pk = pk + "'"
-        para_names[i] = "$\\" + pk + "$"
+        # para_names[i] = "$\\" + pk + "$"
+        para_names.append("$\\" + pk + "$")
+
     return para_names
 
 def get_para_names_titles():
