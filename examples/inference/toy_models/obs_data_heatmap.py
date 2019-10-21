@@ -102,7 +102,7 @@ for j in range(3):
     peak_value = np.max(obs_data[:,:,specie])
     bins = np.linspace(0, int(peak_value) + 1, nr_bins + 1)
     for i in range(ts_len):
-        print("i: ", i)
+        # print("i: ", i)
         density_data[j,i] = np.histogram(obs_data[:,i,specie],bins=bins)[0]
         # print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
 
@@ -114,12 +114,12 @@ density_data = density_data**(1/2)
 f, ax = plt.subplots(3,1)
 ax[0].imshow(density_data[0], aspect='auto', extent=[0,201,0,peak_value])
 ax[0].set_title('Species C')
-ax[0].xlabel('time')
-ax[0].ylabel('# of species')
+ax[0].set_xlabel('time')
+ax[0].set_ylabel('# of species')
 ax[2].imshow(density_data[2], aspect='auto', extent=[0,201,0,peak_value])
 ax[2].set_title('Species R')
-ax[2].xlabel('time')
-ax[2].ylabel('# of species')
+ax[2].set_xlabel('time')
+ax[2].set_ylabel('# of species')
 plt.savefig('obs_data_density')
 
 
