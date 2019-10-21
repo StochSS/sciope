@@ -111,7 +111,7 @@ density_data = density_data[:,:,::-1]
 density_data = density_data
 density_data = density_data**(1/2)
 
-f, ax = plt.subplots(2,1)
+f, ax = plt.subplots(2,1,figsize=(40,20))
 ax[0].imshow(density_data[0].T, aspect='auto', extent=[0,201,0,peak_value])
 ax[0].set_title('Species C')
 ax[0].set_xlabel('time')
