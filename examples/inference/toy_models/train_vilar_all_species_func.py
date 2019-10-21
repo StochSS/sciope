@@ -17,7 +17,7 @@ from vilar import Vilar_model
 
 
 def train_routine(species = [0,2], training_size = 300000, step=2, end_step=401,clay=[32,48,64,96],dlay=[100,100,100],
-                  model='CNN',load_model=False, dataname =""):
+                  model='CNN',load_model=False, verbose=2, dataname =""):
 
     print("species: ", species)
 
@@ -65,7 +65,7 @@ def train_routine(species = [0,2], training_size = 300000, step=2, end_step=401,
     else:
         start_time = time.time()
         history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-                  batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+                  batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=verbose)
 
 
         pickle.dump(history1.history, open('history1.p', "wb"))
