@@ -89,13 +89,13 @@ true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.
 obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb" ) )
 
 peak_value = np.max(obs_data)
-
-bins = np.arange(int(peak_value)+1)
+nr_bins = 10
+bins = np.linspace(0,int(peak_value)+1,nr_bins+1)
 nr = int(obs_data.shape[0])
 ts_len = int(obs_data.shape[1])
 print("nr: ", nr, ", ts_len: ", ts_len)
 print("obs_data shape: ", obs_data.shape)
-density_data = np.zeros((ts_len,int(peak_value)))
+density_data = np.zeros((ts_len,nr_bins))
 for i in range(ts_len):
     print("i: ", i)
     density_data[i] = np.histogram(obs_data[:,i,0],bins=bins)[0]
