@@ -19,7 +19,7 @@ from vilar_all_species import Vilar_model
 
 
 
-def plot(posterior,bins_nr,nr,dmin,dmax,true_param):
+def plot(posterior,bins,nr,dmin,dmax,true_param):
     f, ax = plt.subplots(5, 3, figsize=(30, 30))  # ,sharex=True,sharey=True)
     # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial), fontsize=16)
 
