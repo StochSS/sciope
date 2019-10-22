@@ -1,8 +1,8 @@
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 from create_summary_statistics import summarys
-
-
 import numpy as np
-
 import pickle
 import time
 from normalize_data import normalize_data, denormalize_data
@@ -44,3 +44,21 @@ print("obs data shape: ", obs_data.shape)
 obs_sum = np.array([summarys(ts) for ts in obs_data])
 
 print("obs_sum shape: ", obs_sum.shape)
+
+observed_sum = obs_sum[0]
+
+#k-NN(rejection sampling)
+nr_of_accept = 1000
+dist = np.linalg.norm(train_sum - observed_sum, axis=1)
+print("dist shape: ", dist.shape)
+accepted_ind = np.argpartition(dist,nr_of_accept)[0:nr_of_accept]
+print("accepted_ind shape: ", accepted_ind.shape)
+
+accepted_para = train_thetas[accepted_ind]
+f ,ax = plt.subplots(3,5,figsize=(20,20))
+for x in range(5):
+    for y in range(3):
+        i=x*3+y
+        ax[x,y].hist(accepted_para[i],density=True)
+
+plt.savefig("ss_posterior")
