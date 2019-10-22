@@ -24,7 +24,7 @@ def plot(posterior,bins_nr,nr,dmin,dmax,true_param):
     # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial), fontsize=16)
 
     for i in range(15):
-        bins = np.linspace(dmin[i], dmax[i], bins_nr + 1)
+
         bin_c = (bins[:-1]+bins[1:])/2
         y = i % 3
         x = i // 3
@@ -100,6 +100,16 @@ print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
 
+
+#create bins
+bins = []
+nr_of_bins = []
+for i in range(15):
+    nr_of_bins.append[int(1/test_ae_norm[i])]
+    bin_ = np.linspace(dmin[i],dmax[i], nr_of_bins[i]+1)
+    bins.append(bin_)
+
+
 nrs = 10
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
@@ -108,7 +118,10 @@ bins_nr=25
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 obs_data = np.zeros((nrs,num_timestamps,1))
 abc_pred = np.zeros((nrs,15))
-abc_post = np.zeros((nrs,15,bins_nr))
+# abc_post = np.zeros((nrs,15,bins_nr))
+abc_post = []
+
+prod = []
 
 for i in range(nrs):
     print("i: ", i)
@@ -116,11 +129,21 @@ for i in range(nrs):
     print("od shape: ", od.shape)
     obs_data[i,:,:] = od
     Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=train_thetas,
-                                            abc_trial_ts=train_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=3000,
-                                            index=i,bins_nr = bins_nr)
-    abc_post[i] = Posterior_fit
+                                            abc_trial_ts=train_ts, nnm=nnm, dmin=dmin, dmax=dmax, bins=bins, nr_of_accept=3000,
+                                            index=i)
+    abc_post.append(Posterior_fit)
 
-    plot(np.prod(abc_post[:i+1],0), bins_nr=bins_nr, nr=i, dmin=dmin, dmax=dmax, true_param=true_params[0])
+
+    if i == 0:
+        prod = Posterior_fit
+    else:
+        for i in range(15):
+            prod[i] *= Posterior_fit[i]
+
+    print("prod shape: ", prod.shape)
+    for e in prod:
+        print("e shape: ", e.shape)
+    plot(prod, bins=bins, nr=i, dmin=dmin, dmax=dmax, true_param=true_params[0])
 
 
 # pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
