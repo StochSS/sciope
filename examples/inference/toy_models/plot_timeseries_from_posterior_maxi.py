@@ -119,7 +119,7 @@ for i in range(nrs):
                                             index=i,bins_nr = bins_nr)
     abc_post[i] = Posterior_fit
 
-    plot(np.prod(abc_post[:i+1],0), bins_nr=bins_nr, nr=i, dmin=dmin, dmax=dmax, true_param=true_params)
+    plot(np.prod(abc_post[:i+1],0), bins_nr=bins_nr, nr=i, dmin=dmin, dmax=dmax, true_param=true_params[0])
 
 
 # pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
