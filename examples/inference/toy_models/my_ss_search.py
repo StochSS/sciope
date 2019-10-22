@@ -55,7 +55,7 @@ accepted_ind = np.argpartition(dist,nr_of_accept)[0:nr_of_accept]
 print("accepted_ind shape: ", accepted_ind.shape)
 
 accepted_para = train_thetas[accepted_ind]
-f ,ax = plt.subplots(3,5,figsize=(20,20))
+f ,ax = plt.subplots(5,3,figsize=(20,20))
 for x in range(5):
     for y in range(3):
         i=x*3+y
