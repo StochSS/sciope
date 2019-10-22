@@ -173,9 +173,9 @@ for x in range(3):
         ax[x, y].plot([dmin[i], dmin[i]], [1, 0], c='black')
         ax[x, y].plot([dmax[i], dmax[i]], [1, 0], c='black')
 
-        # ax[x,y].hist(pred_param[:,i], density=True)
-        for p in pred_param[:,i]:
-            ax[x, y].plot([p,p], [1, 0], c='r')
+        ax[x,y].hist(pred_param[:,i], density=True)
+        # for p in pred_param[:,i]:
+        #     ax[x, y].plot([p,p], [1, 0], c='r')
 
         pm = np.mean(pred_param[:,i])
         ax[x, y].plot([pm, pm], [1, 0], c='yellow')
