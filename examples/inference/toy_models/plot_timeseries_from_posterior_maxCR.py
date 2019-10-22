@@ -113,12 +113,12 @@ gen_data = np.zeros((nrs,num_timestamps,2))
 abc_pred_m = np.mean(pred_param,0)
 
 for i in range(nrs):
-    od = simulate(abc_pred_m[i])[:,species]
+    od = simulate(abc_pred_m)[:,species]
     # print("od shape: ", od.shape)
     gen_data[i,:,:] = od
 
 
-f,ax = plt.subplots(3,1,figsize=(45,15))
+f,ax = plt.subplots(3,1,figsize=(20,20))
 linew = 1
 t= np.linspace(0,200,401)
 first = True
@@ -170,7 +170,7 @@ plt.close()
 
 
 print("pred_param shape: ", pred_param.shape)
-f,ax = plt.subplots(3,5,figsize=(15,25))
+f,ax = plt.subplots(3,5,figsize=(20,20))
 
 for x in range(3):
     for y in range(5):
