@@ -42,7 +42,7 @@ train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
 step=1
 end_step = 401
-species = [0,1,2]
+species = [0]
 print("end_step: ", end_step)
 train_ts = train_ts[:,:end_step:step,species]
 print("ts shape: ", train_ts.shape)
@@ -51,11 +51,11 @@ clay=[32,48,64,96]
 
 ts_len = train_ts.shape[1]
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=[200,200,200])
+nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=[200,200,200],dataname='speciesC')
 # nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=3, con_layers=[32,64,128], dense_layers=[100,100])
 # nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[200,200,00])
 print("Model name: ", nnm.name)
-verb = 0
+verb = 2
 print("verbose: ", verb)
 print("species: ", species)
 # nnm.load_model('saved_models/None_DNNModel')
