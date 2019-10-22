@@ -120,8 +120,9 @@ for i in range(nrs):
 
 f,ax = plt.subplots(3,1,figsize=(20,20))
 linew = 1
-l = obs_data.shape[2]
+l = obs_data.shape[1]
 t= np.linspace(0,200,l)
+print("t shape: ", t.shape)
 first = True
 for ts in obs_data:
     rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
