@@ -16,7 +16,7 @@ import os
 
 
 def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax, nr_of_accept = 1000,
-                  index = 0,bins_nr = 10):
+                  index = 0,bins_nr = 100):
 
 
     data_pred = nnm.predict(data)
