@@ -20,7 +20,7 @@ class CNNModel(ModelBase):
 
     def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, con_len=3, con_layers=[25, 50],
                  last_pooling=keras.layers.AvgPool1D,dense_layers=[100,100],pooling_len=3, dataname='noname'):
-        self.name = 'CNNModel_con_len' + str(con_len) + '_con_layers' + str(con_layers) + '_dense_layers' + str(dense_layers) + '_data' + dataname
+        self.name = 'CNNModel_con_len' + str(con_len) + '_con_layers' + str(con_layers) + '_pl' + str(pooling_len) + '_dense_layers' + str(dense_layers) + '_data' + dataname
         super(CNNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
