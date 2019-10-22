@@ -58,11 +58,11 @@ data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
 print("data shape: ", data.shape)
 
 nnm.load_model()
-
+step=2
 
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
 test_ts = pickle.load(open('datasets/' + modelname + '/test_ts.p', "rb" ) )
-test_ts = test_ts[:,:,species]
+test_ts = test_ts[:,::step,species]
 test_thetas_n = normalize_data(test_thetas,dmin,dmax)
 test_pred = nnm.predict(test_ts)
 test_pred = np.reshape(test_pred,(-1,15))
@@ -73,6 +73,7 @@ test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
 test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
+train_ts=train_ts[:,::step]
 print("train_ts shape: ", train_ts.shape)
 
 
@@ -92,16 +93,16 @@ obs_data = np.zeros((nrs,num_timestamps,1))
 abc_pred = np.zeros((nrs,15))
 abc_post = np.zeros((nrs,15,100))
 
-for i in range(nrs):
-    print("i: ", i)
-    od = simulate(np.array(true_params))[:,species]
-    print("od shape: ", od.shape)
-    obs_data[i,:,:] = od
-    Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
-                                            abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
-                                            nr_of_accept_cross=100,index=i)
-    abc_pred[i] = Mean_Vector
-    abc_post[i] = Posterior_fit
+# for i in range(nrs):
+#     print("i: ", i)
+#     od = simulate(np.array(true_params))[:,species]
+#     print("od shape: ", od.shape)
+#     obs_data[i,:,:] = od
+#     Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
+#                                             abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
+#                                             nr_of_accept_cross=100,index=i)
+#     abc_pred[i] = Mean_Vector
+#     abc_post[i] = Posterior_fit
 
 
 pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
@@ -114,52 +115,52 @@ for i in range(nrs):
     gen_data[i,:,:] = od
 
 
-f,ax = plt.subplots(3,1,figsize=(45,15))
-linew = 1
-t= np.linspace(0,200,401)
-first = True
-for ts in obs_data:
-    rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
+# f,ax = plt.subplots(3,1,figsize=(45,15))
+# linew = 1
+# t= np.linspace(0,200,401)
+# first = True
+# for ts in obs_data:
+#     rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
+#
+#     ax[0].plot(t,ts[:,0],c=rcol,lw=linew)
+#     if first:
+#         ax[2].plot(t,ts[:,0],c=rcol,label='true param.',lw=linew)
+#         first = False
+#     else:
+#         ax[2].plot(t, ts[:, 0], c=rcol,lw=linew)
+#
+#
+# ax[0].set_title("Specie C from true parameter")
+# ax[1].set_title("Specie C from predicted parameter")
+# ax[2].set_title("Specie C from both true parameter and predicted parameter")
+# first = True
+#
+# for ts in gen_data:
+#     rcol = np.random.rand(3)*np.array([0.5,0.2,0.2]) + np.array([0.5,0,0])
+#     ax[1].plot(t,ts[:,0],c=rcol,lw=linew)
+#     if first:
+#         ax[2].plot(t,ts[:,0],c=rcol,label='pred param.',lw=linew)
+#         first = False
+#     else:
+#         ax[2].plot(t,ts[:,0],c=rcol,lw=linew)
+#
+#
+# ax[2].legend()
+#
+#
+# plt.savefig('comp.png')
 
-    ax[0].plot(t,ts[:,0],c=rcol,lw=linew)
-    if first:
-        ax[2].plot(t,ts[:,0],c=rcol,label='true param.',lw=linew)
-        first = False
-    else:
-        ax[2].plot(t, ts[:, 0], c=rcol,lw=linew)
-
-
-ax[0].set_title("Specie C from true parameter")
-ax[1].set_title("Specie C from predicted parameter")
-ax[2].set_title("Specie C from both true parameter and predicted parameter")
-first = True
-
-for ts in gen_data:
-    rcol = np.random.rand(3)*np.array([0.5,0.2,0.2]) + np.array([0.5,0,0])
-    ax[1].plot(t,ts[:,0],c=rcol,lw=linew)
-    if first:
-        ax[2].plot(t,ts[:,0],c=rcol,label='pred param.',lw=linew)
-        first = False
-    else:
-        ax[2].plot(t,ts[:,0],c=rcol,lw=linew)
-
-
-ax[2].legend()
-
-
-plt.savefig('comp.png')
-
-od = [simulate(abc_pred[i])[:, species] for i in range(10)]
-f,ax = plt.subplots(3,1,figsize=(45,15))
-ax[0].plot(t,obs_data[0,:,0],c='b')
-for o in od:
-    ax[1].plot(t,o,c='r')
-    ax[2].plot(t,o,c='r')
-
-
-ax[2].plot(t,obs_data[0,:,0],c='b')
-
-plt.savefig('comp2.png')
+# od = [simulate(abc_pred[i])[:, species] for i in range(10)]
+# f,ax = plt.subplots(3,1,figsize=(45,15))
+# ax[0].plot(t,obs_data[0,:,0],c='b')
+# for o in od:
+#     ax[1].plot(t,o,c='r')
+#     ax[2].plot(t,o,c='r')
+#
+#
+# ax[2].plot(t,obs_data[0,:,0],c='b')
+#
+# plt.savefig('comp2.png')
 
 
 
@@ -185,23 +186,23 @@ plt.savefig('dist.png')
 
 f,ax = plt.subplots(3,5,figsize=(15,25))
 
-for x in range(3):
-    for y in range(5):
-        i = x*5 +y
-        ax[x, y].plot([dmin[i], dmin[i]], [1, 0], c='black')
-        ax[x, y].plot([dmax[i], dmax[i]], [1, 0], c='black')
-
-        # ax[x,y].hist(pred_param[:,i], density=True)
-        l = np.linspace(dmin[i],dmax[i],100)
-        for p in abc_post[:,i]:
-            ax[x, y].plot(l,p, c='r')
-
-        pm = np.prod(abc_post,0)[i]
-        ax[x, y].plot(l,pm, c='yellow')
-
-        ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
-
-plt.savefig('post.png')
+# for x in range(3):
+#     for y in range(5):
+#         i = x*5 +y
+#         ax[x, y].plot([dmin[i], dmin[i]], [1, 0], c='black')
+#         ax[x, y].plot([dmax[i], dmax[i]], [1, 0], c='black')
+#
+#         # ax[x,y].hist(pred_param[:,i], density=True)
+#         l = np.linspace(dmin[i],dmax[i],100)
+#         for p in abc_post[:,i]:
+#             ax[x, y].plot(l,p, c='r')
+#
+#         pm = np.prod(abc_post,0)[i]
+#         ax[x, y].plot(l,pm, c='yellow')
+#
+#         ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
+#
+# plt.savefig('post.png')
 
 
 
