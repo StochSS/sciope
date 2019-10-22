@@ -103,7 +103,7 @@ nrs = 10
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
-bins_nr=50
+bins_nr=25
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 obs_data = np.zeros((nrs,num_timestamps,1))
 abc_pred = np.zeros((nrs,15))
@@ -114,8 +114,8 @@ for i in range(nrs):
     od = simulate(np.array(true_params))[:,species]
     print("od shape: ", od.shape)
     obs_data[i,:,:] = od
-    Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
-                                            abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=1000,
+    Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=train_thetas,
+                                            abc_trial_ts=train_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=3000,
                                             index=i,bins_nr = bins_nr)
     abc_post[i] = Posterior_fit
 
