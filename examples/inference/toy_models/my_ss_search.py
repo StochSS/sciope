@@ -91,9 +91,9 @@ for a in accepted_sum:
 
 f ,ax = plt.subplots(3,figsize=(20,20))
 
-ax[0].plt(obs_data[0,:,0],c='red')
+ax[0].pl0t(obs_data[0,:,0],c='red')
 for ts in accepted_ts:
-    ax[1].plt(ts,c='black')
+    ax[1].plot(ts,c='black')
 
 plt.savefig("compare_ss")
 plt.close()
