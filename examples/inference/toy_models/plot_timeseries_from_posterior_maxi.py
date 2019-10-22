@@ -106,7 +106,7 @@ print("mean rel absolute error: ", np.mean(test_ae_norm))
 bins = []
 nr_of_bins = []
 for i in range(15):
-    nr_of_bins.append(int(1/test_ae_norm[i]))
+    nr_of_bins.append(int(2/test_ae_norm[i]))
     bin_ = np.linspace(dmin[i],dmax[i], nr_of_bins[i]+1)
     bins.append(bin_)
 
