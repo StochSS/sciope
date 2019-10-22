@@ -33,6 +33,7 @@ def plot(posterior,bins_nr,nr,dmin,dmax,true_param):
         ax[x, y].plot([true_param[i], true_param[i]],[peakv, 0])
 
     plt.savefig('posterior_plots/posterior_abc_prod' + str(nr))
+    plt.close()
 
 
 plt.plot(np.random.rand(100))

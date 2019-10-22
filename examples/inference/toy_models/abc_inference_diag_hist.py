@@ -62,4 +62,6 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
 
 
     plt.savefig('posterior_plots/posterior_abc' + str(index))
+    plt.close()
+
     return Posterior_fit
