@@ -59,15 +59,19 @@ plt.hist(dist)
 plt.savefig("dist_plot")
 plt.close()
 
-accepted_ind = np.argpartition(dist,nr_of_accept)[0:nr_of_accept]
-acc_dist = dist[accepted_ind]
-print("acc_dist max: ", np.max(acc_dist))
-print("acc_dist mean: ", np.mean(acc_dist))
+
 
 print("dist max: ", np.max(dist))
 print("dist mean: ", np.mean(dist))
+print("dist median: ", np.median(dist))
 
+accepted_ind = np.argpartition(dist,nr_of_accept)[0:nr_of_accept]
+acc_dist = dist[accepted_ind]
+print("train sum max: ", np.max(train_sum,0))
+print("train sum mean: ", np.mean(train_sum,0))
 
+print("acc_dist max: ", np.max(acc_dist))
+print("acc_dist mean: ", np.mean(acc_dist))
 print("accepted_ind shape: ", accepted_ind.shape)
 
 accepted_para = train_thetas[accepted_ind]
