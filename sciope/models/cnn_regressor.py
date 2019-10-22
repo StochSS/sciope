@@ -19,13 +19,13 @@ class CNNModel(ModelBase):
     
 
     def __init__(self, use_logger=False, input_shape=(499,3), output_shape=15, con_len=3, con_layers=[25, 50],
-                 last_pooling=keras.layers.AvgPool1D,dense_layers=[100,100], dataname='noname'):
+                 last_pooling=keras.layers.AvgPool1D,dense_layers=[100,100],pooling_len=3, dataname='noname'):
         self.name = 'CNNModel_con_len' + str(con_len) + '_con_layers' + str(con_layers) + '_dense_layers' + str(dense_layers) + '_data' + dataname
         super(CNNModel, self).__init__(self.name, use_logger)
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
-        self.model = construct_model(input_shape,output_shape, con_len=con_len, con_layers=con_layers, last_pooling = last_pooling, dense_layers=dense_layers)
+        self.model = construct_model(input_shape,output_shape, con_len=con_len, con_layers=con_layers, pooling_len=pooling_len, last_pooling = last_pooling, dense_layers=dense_layers)
         self.save_as = 'saved_models/' + self.name
     
     # train the CNN model given the data
@@ -73,7 +73,7 @@ class CNNModel(ModelBase):
         print("self.name: ", self.name, ", self.save_as: ", self.save_as)
         self.model = keras.models.load_model(save_as+'.hdf5')
     
-def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 100], last_pooling=keras.layers.AvgPool1D, dense_layers = [100,100]):
+def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 100], pooling_len=3, last_pooling=keras.layers.AvgPool1D, dense_layers = [100,100]):
     #TODO: add a **kwargs to specify the hyperparameters
     activation = 'relu'
     dense_activation = 'relu'
@@ -100,10 +100,10 @@ def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 1
                                   padding=padding, activity_regularizer=reg))
     model.add(keras.layers.Activation(activation))
 
-    model.add(pool(maxpool,padding=poolpadding))
+    model.add(pool(pooling_len,padding=poolpadding))
     if padding == 'valid':
-        depth-=(con_len-1)*3
-    depth=depth//maxpool
+        depth-=(pooling_len-1)*3
+    depth=depth//pooling_len
     
     for i in range(1,len(con_layers)):
         model.add(keras.layers.Conv1D(con_layers[i], con_len, strides=1,
@@ -116,10 +116,10 @@ def construct_model(input_shape,output_shape, con_len=3, con_layers = [25, 50, 1
         model.add(keras.layers.Activation(activation))
         
         if padding == 'valid':
-            depth-=(con_len-1)*2
+            depth-=(pooling_len-1)*2
         if i<len(con_layers)-1:
-            model.add(pool(maxpool,padding=poolpadding))
-            depth=depth//maxpool
+            model.add(pool(pooling_len,padding=poolpadding))
+            depth=depth//pooling_len
         
     #Using Maxpooling to downsample the temporal dimension size to 1.
     # model.add(keras.layers.MaxPooling1D(depth,padding=poolpadding))
