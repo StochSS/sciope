@@ -52,7 +52,7 @@ dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
 true_param = [50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]
 
 #k-NN(rejection sampling)
-nr_of_accept = 100
+nr_of_accept = 10
 train_sum_std = np.std(train_sum,0)
 dist = np.linalg.norm((train_sum - observed_sum)/train_sum_std, axis=1)
 print("dist shape: ", dist.shape)
@@ -77,6 +77,14 @@ print("acc_dist mean: ", np.mean(acc_dist))
 print("accepted_ind shape: ", accepted_ind.shape)
 
 accepted_para = train_thetas[accepted_ind]
+
+accepted_sum = train_sum[accepted_ind]
+
+print("observed sum: ", observed_sum)
+print("accepted sum:")
+for a in accepted_sum:
+    print(a)
+
 f ,ax = plt.subplots(5,3,figsize=(20,20))
 for x in range(5):
     for y in range(3):
