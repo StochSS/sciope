@@ -105,8 +105,8 @@ for i in range(nrs):
     # abc_post[i] = Posterior_fit
 
 
-obs_data = obs_data[:,::step]
-pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
+obs_data_p = obs_data[:,::step]
+pred_param = denormalize_data(nnm.predict(obs_data_p),dmin,dmax)
 
 gen_data = np.zeros((nrs,num_timestamps,2))
 
@@ -121,7 +121,7 @@ for i in range(nrs):
 f,ax = plt.subplots(3,1,figsize=(20,20))
 linew = 1
 l = obs_data.shape[1]
-t= np.linspace(0,200,l)
+t= np.linspace(0,200,401)
 print("t shape: ", t.shape)
 first = True
 for ts in obs_data:
