@@ -55,7 +55,16 @@ true_param = [50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0,
 nr_of_accept = 1000
 dist = np.linalg.norm(train_sum - observed_sum, axis=1)
 print("dist shape: ", dist.shape)
+
 accepted_ind = np.argpartition(dist,nr_of_accept)[0:nr_of_accept]
+acc_dist = dist[accepted_ind]
+print("acc_dist max: ", np.max(acc_dist))
+print("acc_dist mean: ", np.mean(acc_dist))
+
+print("dist max: ", np.max(dist))
+print("dist mean: ", np.mean(acc_dist))
+
+
 print("accepted_ind shape: ", accepted_ind.shape)
 
 accepted_para = train_thetas[accepted_ind]
@@ -67,7 +76,7 @@ for x in range(5):
         peakv = np.max(ret[0])
         ax[x, y].plot([true_param[i], true_param[i]], [peakv, 0],c='red')
         ax[x, y].plot([dmin[i], dmin[i]], [peakv, 0],c='black')
-        ax[x, y].plot([dmin[i], dmin[i]], [peakv, 0],c='black')
+        ax[x, y].plot([dmax[i], dmax[i]], [peakv, 0],c='black')
 
 
 plt.savefig("ss_posterior")
