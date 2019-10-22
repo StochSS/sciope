@@ -110,47 +110,52 @@ pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
 
 gen_data = np.zeros((nrs,num_timestamps,2))
 
+abc_pred_m = np.mean(pred_param,0)
+
 for i in range(nrs):
-    od = simulate(abc_pred[i])[:,species]
+    od = simulate(abc_pred_m[i])[:,species]
     # print("od shape: ", od.shape)
     gen_data[i,:,:] = od
 
 
-# f,ax = plt.subplots(3,1,figsize=(45,15))
-# linew = 1
-# t= np.linspace(0,200,401)
-# first = True
-# for ts in obs_data:
-#     rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
-#
-#     ax[0].plot(t,ts[:,0],c=rcol,lw=linew)
-#     if first:
-#         ax[2].plot(t,ts[:,0],c=rcol,label='true param.',lw=linew)
-#         first = False
-#     else:
-#         ax[2].plot(t, ts[:, 0], c=rcol,lw=linew)
-#
-#
-# ax[0].set_title("Specie C from true parameter")
-# ax[1].set_title("Specie C from predicted parameter")
-# ax[2].set_title("Specie C from both true parameter and predicted parameter")
-# first = True
-#
-# for ts in gen_data:
-#     rcol = np.random.rand(3)*np.array([0.5,0.2,0.2]) + np.array([0.5,0,0])
-#     ax[1].plot(t,ts[:,0],c=rcol,lw=linew)
-#     if first:
-#         ax[2].plot(t,ts[:,0],c=rcol,label='pred param.',lw=linew)
-#         first = False
-#     else:
-#         ax[2].plot(t,ts[:,0],c=rcol,lw=linew)
-#
-#
-# ax[2].legend()
-#
-#
-# plt.savefig('comp.png')
+f,ax = plt.subplots(3,1,figsize=(45,15))
+linew = 1
+t= np.linspace(0,200,401)
+first = True
+for ts in obs_data:
+    rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
 
+    ax[0].plot(t,ts[:,0],c=rcol,lw=linew)
+    if first:
+        ax[2].plot(t,ts[:,0],c=rcol,label='true param.',lw=linew)
+        first = False
+    else:
+        ax[2].plot(t, ts[:, 0], c=rcol,lw=linew)
+
+
+ax[0].set_title("Specie C from true parameter")
+ax[1].set_title("Specie C from predicted parameter")
+ax[2].set_title("Specie C from both true parameter and predicted parameter")
+first = True
+
+
+
+
+for ts in gen_data:
+    rcol = np.random.rand(3)*np.array([0.5,0.2,0.2]) + np.array([0.5,0,0])
+    ax[1].plot(t,ts[:,0],c=rcol,lw=linew)
+    if first:
+        ax[2].plot(t,ts[:,0],c=rcol,label='pred param.',lw=linew)
+        first = False
+    else:
+        ax[2].plot(t,ts[:,0],c=rcol,lw=linew)
+
+
+ax[2].legend()
+
+
+plt.savefig('comp.png')
+plt.close()
 # od = [simulate(abc_pred[i])[:, species] for i in range(10)]
 # f,ax = plt.subplots(3,1,figsize=(45,15))
 # ax[0].plot(t,obs_data[0,:,0],c='b')
@@ -170,17 +175,19 @@ f,ax = plt.subplots(3,5,figsize=(15,25))
 for x in range(3):
     for y in range(5):
         i = x*5 +y
-        ax[x, y].plot([dmin[i], dmin[i]], [1, 0], c='black')
-        ax[x, y].plot([dmax[i], dmax[i]], [1, 0], c='black')
+        ret = ax[x, y].hist(pred_param[:, i], density=True)
+        peak_v = np.max(ret[0])
+        ax[x, y].plot([dmin[i], dmin[i]], [peak_v, 0], c='black')
+        ax[x, y].plot([dmax[i], dmax[i]], [peak_v, 0], c='black')
 
-        ax[x,y].hist(pred_param[:,i], density=True)
+
         # for p in pred_param[:,i]:
         #     ax[x, y].plot([p,p], [1, 0], c='r')
 
         pm = np.mean(pred_param[:,i])
-        ax[x, y].plot([pm, pm], [1, 0], c='yellow')
+        ax[x, y].plot([pm, pm], [peak_v, 0], c='yellow')
 
-        ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
+        ax[x,y].plot([true_param[i], true_param[i]], [peak_v, 0],c='b')
 
 plt.savefig('dist2.png')
 
