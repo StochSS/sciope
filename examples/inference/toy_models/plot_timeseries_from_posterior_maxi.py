@@ -30,7 +30,7 @@ def plot(posterior,bins_nr,nr,dmin,dmax,true_param):
         x = i // 3
         ax[x, y].plot(bin_c,posterior[i])
         peakv = np.max(posterior[i])
-        ax[x, y].plot[[true_param[i], true_param[i]],[peakv, 0]]
+        ax[x, y].plot([true_param[i], true_param[i]],[peakv, 0])
 
     plt.savefig('posterior_plots/posterior_abc_prod' + str(nr))
 
