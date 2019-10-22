@@ -93,18 +93,19 @@ obs_data = np.zeros((nrs,num_timestamps,1))
 abc_pred = np.zeros((nrs,15))
 abc_post = np.zeros((nrs,15,100))
 
-# for i in range(nrs):
-#     print("i: ", i)
-#     od = simulate(np.array(true_params))[:,species]
-#     print("od shape: ", od.shape)
-#     obs_data[i,:,:] = od
-#     Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
-#                                             abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
-#                                             nr_of_accept_cross=100,index=i)
-#     abc_pred[i] = Mean_Vector
-#     abc_post[i] = Posterior_fit
+for i in range(nrs):
+    print("i: ", i)
+    od = simulate(np.array(true_params))[:,species]
+    print("od shape: ", od.shape)
+    obs_data[i,:,:] = od
+    # Mean_Vector, Cov_Matrix, Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
+    #                                         abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=100,
+    #                                         nr_of_accept_cross=100,index=i)
+    # abc_pred[i] = Mean_Vector
+    # abc_post[i] = Posterior_fit
 
 
+obs_data = obs_data[:,::step]
 pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
 
 gen_data = np.zeros((nrs,num_timestamps,1))
