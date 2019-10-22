@@ -25,7 +25,7 @@ def plot(posterior,bins,nr,dmin,dmax,true_param):
 
     for i in range(15):
 
-        bin_c = (bins[:-1]+bins[1:])/2
+        bin_c = (bins[i][:-1]+bins[i][1:])/2
         y = i % 3
         x = i // 3
         ax[x, y].plot(bin_c,posterior[i])
