@@ -164,7 +164,7 @@ for i in range(nrs):
 # plt.savefig('comp2.png')
 
 
-
+print("pred_param shape: ", pred_param.shape)
 f,ax = plt.subplots(3,5,figsize=(15,25))
 
 for x in range(3):
@@ -182,7 +182,7 @@ for x in range(3):
 
         ax[x,y].plot([true_param[i], true_param[i]], [1, 0],c='b')
 
-plt.savefig('dist.png')
+plt.savefig('dist2.png')
 
 
 f,ax = plt.subplots(3,5,figsize=(15,25))
