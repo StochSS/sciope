@@ -47,6 +47,10 @@ print("obs_sum shape: ", obs_sum.shape)
 
 observed_sum = obs_sum[0]
 
+dmin = [30, 200, 0, 30, 30, 1, 1, 0, 0, 0, 0.5, 0.5, 1, 30, 80]
+dmax = [70, 600, 1, 70, 70, 10, 12, 1, 2, 0.5, 1.5, 1.5, 3, 70, 120]
+true_param = [50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]
+
 #k-NN(rejection sampling)
 nr_of_accept = 1000
 dist = np.linalg.norm(train_sum - observed_sum, axis=1)
@@ -59,6 +63,11 @@ f ,ax = plt.subplots(5,3,figsize=(20,20))
 for x in range(5):
     for y in range(3):
         i=x*3+y
-        ax[x,y].hist(accepted_para[:,i],density=True)
+        ret = ax[x,y].hist(accepted_para[:,i],density=True)
+        peakv = np.max(ret[0])
+        ax[x, y].plot([true_param[i], true_param[i]], [peakv, 0],c='red')
+        ax[x, y].plot([dmin[i], dmin[i]], [peakv, 0],c='black')
+        ax[x, y].plot([dmin[i], dmin[i]], [peakv, 0],c='black')
+
 
 plt.savefig("ss_posterior")
