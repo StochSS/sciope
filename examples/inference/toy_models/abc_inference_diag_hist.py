@@ -57,6 +57,9 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
         x = i//3
         d = ax[x,y].hist(accepted_para[:,i],bins=bins,density=True)
         Posterior_fit[i] = d[0]
+        peakv = np.max(d[0])
+        ax[x, y].plot([true_param[i], true_param[i]],[peakv, 0])
+
 
     plt.savefig('posterior_plots/posterior_abc' + str(index))
     return Posterior_fit

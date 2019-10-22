@@ -19,7 +19,7 @@ from vilar_all_species import Vilar_model
 
 
 
-def plot(posterior,bins_nr,nr,dmin,dmax):
+def plot(posterior,bins_nr,nr,dmin,dmax,true_param):
     f, ax = plt.subplots(5, 3, figsize=(30, 30))  # ,sharex=True,sharey=True)
     # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial), fontsize=16)
 
@@ -29,6 +29,8 @@ def plot(posterior,bins_nr,nr,dmin,dmax):
         y = i % 3
         x = i // 3
         ax[x, y].plot(bin_c,posterior[i])
+        peakv = np.max(posterior[i])
+        ax[x, y].plot[[true_param[i], true_param[i]],[peakv, 0]]
 
     plt.savefig('posterior_plots/posterior_abc_prod' + str(nr))
 
@@ -117,7 +119,7 @@ for i in range(nrs):
                                             index=i,bins_nr = bins_nr)
     abc_post[i] = Posterior_fit
 
-    plot(np.prod(abc_post[:i+1],0), bins_nr=bins_nr, nr=i, dmin=dmin, dmax=dmax)
+    plot(np.prod(abc_post[:i+1],0), bins_nr=bins_nr, nr=i, dmin=dmin, dmax=dmax, true_param=true_params)
 
 
 pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
