@@ -65,7 +65,7 @@ print("acc_dist max: ", np.max(acc_dist))
 print("acc_dist mean: ", np.mean(acc_dist))
 
 print("dist max: ", np.max(dist))
-print("dist mean: ", np.mean(acc_dist))
+print("dist mean: ", np.mean(dist))
 
 
 print("accepted_ind shape: ", accepted_ind.shape)
