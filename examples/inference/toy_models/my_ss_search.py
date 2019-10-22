@@ -59,6 +59,6 @@ f ,ax = plt.subplots(5,3,figsize=(20,20))
 for x in range(5):
     for y in range(3):
         i=x*3+y
-        ax[x,y].hist(accepted_para[i],density=True)
+        ax[x,y].hist(accepted_para[:,i],density=True)
 
 plt.savefig("ss_posterior")
