@@ -53,7 +53,8 @@ true_param = [50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0,
 
 #k-NN(rejection sampling)
 nr_of_accept = 1000
-dist = np.linalg.norm(train_sum - observed_sum, axis=1)
+train_sum_std = np.std(train_sum,0)
+dist = np.linalg.norm((train_sum - observed_sum)/train_sum_std, axis=1)
 print("dist shape: ", dist.shape)
 bins=np.linspace(0,4000,400)
 plt.hist(dist,bins=bins)
