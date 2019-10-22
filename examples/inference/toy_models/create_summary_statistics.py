@@ -35,13 +35,13 @@ def std_dist(dist):
 
 def mean_peak(ts,peaks):
     if peaks:
-        return np.mean(ts(peaks))
+        return np.mean(ts[peaks])
     else:
         return -1
 
 def std_peak(ts,peaks):
     if peaks:
-        return np.std(ts(peaks))
+        return np.std(ts[peaks])
     else:
         return -1
 
