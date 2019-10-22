@@ -37,7 +37,7 @@ print("load train data done!")
 
 train_sum = pickle.load(open('datasets/' + modelname + '/train_sum.p', "rb" ) )
 
-obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
+obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )[:,:,species]
 
 print("obs data shape: ", obs_data.shape)
 
