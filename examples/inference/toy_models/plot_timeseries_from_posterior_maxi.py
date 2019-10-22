@@ -18,6 +18,21 @@ from load_data import load_spec
 from vilar_all_species import Vilar_model
 
 
+
+def plot(posterior,bins_nr,nr,dmin,dmax):
+    f, ax = plt.subplots(5, 3, figsize=(30, 30))  # ,sharex=True,sharey=True)
+    # f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial), fontsize=16)
+
+    for i in range(15):
+        bins = np.linspace(dmin[i], dmax[i], bins_nr + 1)
+        bin_c = (bins[:-1]+bins[1:])/2
+        y = i % 3
+        x = i // 3
+        ax[x, y].plot(bin_c,posterior[i])
+
+    plt.savefig('posterior_plots/posterior_abc_prod' + str(nr))
+
+
 plt.plot(np.random.rand(100))
 plt.savefig('randomplot.png')
 
@@ -86,11 +101,11 @@ nrs = 10
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
-
+bins_nr=25
 true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 obs_data = np.zeros((nrs,num_timestamps,1))
 abc_pred = np.zeros((nrs,15))
-abc_post = np.zeros((nrs,15,100))
+abc_post = np.zeros((nrs,15,bins_nr))
 
 for i in range(nrs):
     print("i: ", i)
@@ -99,8 +114,10 @@ for i in range(nrs):
     obs_data[i,:,:] = od
     Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=test_thetas,
                                             abc_trial_ts=test_ts, nnm=nnm, dmin=dmin, dmax=dmax, nr_of_accept=1000,
-                                            index=i,bins_nr = 100)
+                                            index=i,bins_nr = bins_nr)
     abc_post[i] = Posterior_fit
+
+    plot(np.prod(abc_post[:i+1],0), bins_nr=bins_nr, nr=i, dmin=dmin, dmax=dmax)
 
 
 pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)

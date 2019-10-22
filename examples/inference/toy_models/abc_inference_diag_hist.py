@@ -45,13 +45,6 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
     # plt.axis('equal')
     f, ax = plt.subplots(5,3,figsize=(30,30))# ,sharex=True,sharey=True)
     f.suptitle('Accepted/Trial = ' + str(nr_of_accept) + '/' + str(nr_of_trial),fontsize=16)
-
-
-
-
-
-
-    print("bins nr: ", bins_nr)
     Posterior_fit = np.zeros((15,bins_nr))
     for i in range(15):
         bins = np.linspace(dmin[i], dmax[i], bins_nr + 1)
@@ -59,13 +52,10 @@ def abc_inference(data, true_param, abc_trial_thetas,abc_trial_ts, nnm,dmin,dmax
         dist = abs(abc_trial_pred[:, i] - data_pred[i])
         accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
         accepted_para = abc_trial_thetas[accepted_ind]
-        print("accepted para shape: ", accepted_para.shape)
 
         y = i%3
         x = i//3
         d = ax[x,y].hist(accepted_para[:,i],bins=bins,density=True)
-        print("d[0] shape: ", d[0].shape)
-        print("d[0]: ", d[0])
         Posterior_fit[i] = d[0]
 
     plt.savefig('posterior_plots/posterior_abc' + str(index))
