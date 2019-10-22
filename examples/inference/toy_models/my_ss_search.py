@@ -79,11 +79,29 @@ print("accepted_ind shape: ", accepted_ind.shape)
 accepted_para = train_thetas[accepted_ind]
 
 accepted_sum = train_sum[accepted_ind]
-
+accepted_ts = train_ts[accepted_ind]
 print("observed sum: ", observed_sum)
 print("accepted sum:")
 for a in accepted_sum:
     print(a)
+
+# Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
+# simulate = Vilar_.simulate
+
+
+f ,ax = plt.subplots(3,figsize=(20,20))
+
+ax[0].plt(obs_data[0,:,0],c='red')
+for ts in accepted_ts:
+    ax[1].plt(ts,c='black')
+
+plt.savefig("compare_ss")
+plt.close()
+
+
+
+
+
 
 f ,ax = plt.subplots(5,3,figsize=(20,20))
 for x in range(5):
