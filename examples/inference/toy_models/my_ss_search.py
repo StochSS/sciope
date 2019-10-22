@@ -31,8 +31,12 @@ species = [6]
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
 print("load train data done!")
 
-train_sum = np.array([summarys(train_ts[i],i) for i in range(len(train_ts))])
+# train_sum = np.array([summarys(train_ts[i],i) for i in range(len(train_ts))])
+#
+# pickle.dump(train_sum, open('datasets/' + modelname + '/train_sum.p', "wb"))
 
-pickle.dump(train_sum, open('datasets/' + modelname + '/train_sum.p', "wb"))
+train_sum = pickle.load(open('datasets/' + modelname + '/train_sum.p', "rb" ) )
 
-print("done!")
+obs_data = pickle.load(open('datasets/' + modelname + '/obs_data.p', "rb" ) )
+
+print("obs data shape: ", obs_data.shape)
