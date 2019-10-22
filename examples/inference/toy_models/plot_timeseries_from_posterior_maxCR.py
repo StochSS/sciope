@@ -83,7 +83,7 @@ print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
 
-nrs = 10
+nrs = 3
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
