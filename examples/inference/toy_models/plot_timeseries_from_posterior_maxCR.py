@@ -108,7 +108,7 @@ for i in range(nrs):
 obs_data = obs_data[:,::step]
 pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
 
-gen_data = np.zeros((nrs,num_timestamps,1))
+gen_data = np.zeros((nrs,num_timestamps,2))
 
 for i in range(nrs):
     od = simulate(abc_pred[i])[:,species]
