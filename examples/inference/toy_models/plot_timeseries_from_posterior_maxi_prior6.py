@@ -132,7 +132,7 @@ prod = []
 # pickle.dump( obs_data_big, open( 'datasets/' + modelname + '/obs_data_pack_1k.p', "wb" ) )
 # print("done generationg obs data pack big")
 
-obs_data_big = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
+obs_data_big = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )[:,:,[0]]
 
 
 
