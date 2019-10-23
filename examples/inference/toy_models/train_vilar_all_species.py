@@ -50,7 +50,7 @@ print("end_step: ", end_step)
 train_ts = train_ts[:,:end_step:step,:]
 print("ts shape: ", train_ts.shape)
 validation_ts = validation_ts[:,:end_step:step,:]
-clay=[32,48,64,96,128,196]
+clay=[32,48,64]
 ts_len = train_ts.shape[1]
 print("species: ", species)
 # choose neural network model
