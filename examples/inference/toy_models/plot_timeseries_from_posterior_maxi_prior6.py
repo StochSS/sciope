@@ -126,11 +126,14 @@ abc_post = []
 
 prod = []
 
-print("start generationg obs data pack big")
-obs_data_big = np.array([simulate(np.array(true_params))[:,[6]] for i in range(1000)])
+# print("start generationg obs data pack big")
+# obs_data_big = np.array([simulate(np.array(true_params))[:,[6]] for i in range(1000)])
+#
+# pickle.dump( obs_data_big, open( 'datasets/' + modelname + '/obs_data_pack_1k.p', "wb" ) )
+# print("done generationg obs data pack big")
 
-pickle.dump( obs_data_big, open( 'datasets/' + modelname + '/obs_data_pack_1k.p', "wb" ) )
-print("done generationg obs data pack big")
+obs_data_big = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
+
 
 
 for i in range(nrs):
@@ -155,13 +158,15 @@ for i in range(nrs):
     #     print("e shape: ", e.shape)
     # plot(prod, bins=bins, nr=i, dmin=dmin, dmax=dmax, true_param=true_params[0])
 
-pred_param = nnm.predict(obs_data)
+pred_param = nnm.predict(obs_data_big)
 pred_param = denormalize_data(pred_param,dmin,dmax)
+
+pred_param_m = np.mean(pred_param,0)
 
 gen_data = np.zeros((nrs,num_timestamps,1))
 abc_pred_m = np.mean(abc_pred,0)
 for i in range(nrs):
-    od = simulate(pred_param)[:,[6]]
+    od = simulate(pred_param_m)[:,[6]]
     # print("od shape: ", od.shape)
     gen_data[i,:,:] = od
 
