@@ -126,11 +126,11 @@ abc_post = []
 
 prod = []
 
-print("start generationg obs data pack big")
-obs_data_big = np.array([simulate(np.array(true_params)) for i in range(1000)])
-
-pickle.dump( obs_data_big, open( 'datasets/' + modelname + '/obs_data_pack_1k.p', "wb" ) )
-print("done generationg obs data pack big")
+# print("start generationg obs data pack big")
+# obs_data_big = np.array([simulate(np.array(true_params)) for i in range(1000)])
+#
+# pickle.dump( obs_data_big, open( 'datasets/' + modelname + '/obs_data_pack_1k.p', "wb" ) )
+# print("done generationg obs data pack big")
 
 obs_data_big = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
 print("obs_data_big shape: ", obs_data_big.shape)
@@ -227,7 +227,7 @@ plt.savefig('comp_prior6.png')
 
 print("pred param shape: ", pred_param.shape)
 print("true_param: ", true_param)
-f,ax = plt.subplots(3,5,figsize=(15,40))
+f,ax = plt.subplots(3,5,figsize=(40,20))
 
 for x in range(3):
     for y in range(5):
