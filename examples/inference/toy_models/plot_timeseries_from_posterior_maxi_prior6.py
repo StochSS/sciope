@@ -141,7 +141,8 @@ print("obs_data_big shape: ", obs_data_big.shape)
 
 for i in range(nrs):
     print("i: ", i)
-    od = simulate(np.array(true_params))[:,[6]]
+    # od = simulate(np.array(true_params))[:,[6]]
+    od = obs_data_big[i]
     print("od shape: ", od.shape)
     obs_data[i,:,:] = od
     # Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=train_thetas,
