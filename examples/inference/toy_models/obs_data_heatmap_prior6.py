@@ -86,7 +86,7 @@ nnm.load_model()
 #
 # pickle.dump( obs_data, open( 'datasets/' + modelname + '/obs_data_1k_pack.p', "wb" ) )
 
-obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_1k_pack.p', "rb" ) )
+obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_pack_1k.p', "rb" ) )
 
 
 nr_bins = 50
