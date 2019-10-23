@@ -16,6 +16,7 @@ import time
 from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
 from vilar_all_species import Vilar_model
+import vilar
 
 
 
@@ -224,6 +225,7 @@ plt.savefig('comp_prior6.png')
 #
 #
 #
+para_names = vilar.get_parameter_names()
 
 print("pred param shape: ", pred_param.shape)
 print("true_param: ", true_param)
@@ -244,6 +246,7 @@ for x in range(3):
         ax[x, y].plot([dmin[i], dmin[i]], [peakv, 0], c='blue')
         ax[x, y].plot([dmax[i], dmax[i]], [peakv, 0], c='blue')
         ax[x, y].plot([true_param[i], true_param[i]], [peakv, 0],c='black', ls='--')
+        ax[x, y].set_xaxis("predicted " + para_names[i])
 
 plt.savefig('dist_prior6.png')
 #
