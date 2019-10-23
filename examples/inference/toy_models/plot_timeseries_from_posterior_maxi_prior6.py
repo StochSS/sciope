@@ -165,7 +165,7 @@ t= np.linspace(0,200,401)
 first = True
 for ts in obs_data:
     rcol = np.random.rand(3)*np.array([0.2,0.2,0.5]) + np.array([0,0,0.5])
-
+    print("obs data ts shape: ", ts.shape)
     ax[0].plot(t,ts[:,0],c=rcol,lw=linew)
     if first:
         ax[2].plot(t,ts[:,0],c=rcol,label='true param.',lw=linew)
@@ -180,6 +180,8 @@ ax[2].set_title("Specie C from both true parameter and predicted parameter")
 first = True
 
 for ts in gen_data:
+    print("gen data ts shape: ", ts.shape)
+
     rcol = np.random.rand(3)*np.array([0.5,0.2,0.2]) + np.array([0.5,0,0])
     ax[1].plot(t,ts[:,0],c=rcol,lw=linew)
     if first:
