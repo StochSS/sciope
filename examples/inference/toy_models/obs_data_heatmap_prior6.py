@@ -52,7 +52,7 @@ print("Model name: ", nnm.name)
 true_param = pickle.load(open('datasets/' + modelname + '/true_param.p', "rb" ) )
 true_param = np.squeeze(np.array(true_param))
 print("true_param shape: ", true_param.shape)
-data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
+data = pickle.load(open('datasets/' + modelname + '/obs_data_pack_1k.p', "rb" ) )
 # data = data[3]
 # data = np.expand_dims(data,0)
 print("data shape: ", data.shape)
@@ -112,15 +112,15 @@ density_data = density_data
 density_data = density_data**(1/2)
 
 f, ax = plt.subplots(1,1)#,figsize=(30,15))
-ax.imshow(density_data[2].T, aspect='auto', extent=[0,201,0,peak_value])
-ax.set_title('Species R')
+ax.imshow(density_data[0].T, aspect='auto', extent=[0,201,0,peak_value])
+ax.set_title('Species C')
 ax.set_xlabel('time')
 ax.set_ylabel('# of species')
 # ax[1].imshow(density_data[2].T, aspect='auto', extent=[0,201,0,peak_value])
 # ax[1].set_title('Species R')
 # ax[1].set_xlabel('time')
 # ax[1].set_ylabel('# of species')
-plt.savefig('obs_data_density_speciesR')
+plt.savefig('obs_data_density_speciesC_prior6')
 
 
 # pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
