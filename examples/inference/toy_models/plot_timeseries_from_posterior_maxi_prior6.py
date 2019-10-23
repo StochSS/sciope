@@ -126,16 +126,17 @@ abc_post = []
 
 prod = []
 
-# print("start generationg obs data pack big")
-# obs_data_big = np.array([simulate(np.array(true_params))[:,[6]] for i in range(1000)])
-#
-# pickle.dump( obs_data_big, open( 'datasets/' + modelname + '/obs_data_pack_1k.p', "wb" ) )
-# print("done generationg obs data pack big")
+print("start generationg obs data pack big")
+obs_data_big = np.array([simulate(np.array(true_params)) for i in range(1000)])
+
+pickle.dump( obs_data_big, open( 'datasets/' + modelname + '/obs_data_pack_1k.p', "wb" ) )
+print("done generationg obs data pack big")
 
 obs_data_big = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
-print("pbs_data_bid shape: ", obs_data_big.shape)
+print("obs_data_big shape: ", obs_data_big.shape)
 
 obs_data_big = obs_data_big[:,:,[0]]
+print("obs_data_big shape: ", obs_data_big.shape)
 
 for i in range(nrs):
     print("i: ", i)
