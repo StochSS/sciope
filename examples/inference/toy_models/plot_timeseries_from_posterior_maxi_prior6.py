@@ -131,22 +131,22 @@ for i in range(nrs):
     od = simulate(np.array(true_params))[:,species]
     print("od shape: ", od.shape)
     obs_data[i,:,:] = od
-    Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=train_thetas,
-                                            abc_trial_ts=train_ts, nnm=nnm, dmin=dmin, dmax=dmax, bins=bins, nr_of_accept=3000,
-                                            index=i)
-    abc_post.append(Posterior_fit)
-
-
-    if i == 0:
-        prod = Posterior_fit
-    else:
-        for i in range(15):
-            prod[i] *= Posterior_fit[i]
-
-    print("prod shape: ", prod.shape)
-    for e in prod:
-        print("e shape: ", e.shape)
-    plot(prod, bins=bins, nr=i, dmin=dmin, dmax=dmax, true_param=true_params[0])
+    # Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=train_thetas,
+    #                                         abc_trial_ts=train_ts, nnm=nnm, dmin=dmin, dmax=dmax, bins=bins, nr_of_accept=3000,
+    #                                         index=i)
+    # abc_post.append(Posterior_fit)
+    #
+    #
+    # if i == 0:
+    #     prod = Posterior_fit
+    # else:
+    #     for i in range(15):
+    #         prod[i] *= Posterior_fit[i]
+    #
+    # print("prod shape: ", prod.shape)
+    # for e in prod:
+    #     print("e shape: ", e.shape)
+    # plot(prod, bins=bins, nr=i, dmin=dmin, dmax=dmax, true_param=true_params[0])
 
 
 pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
