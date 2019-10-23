@@ -64,8 +64,8 @@ nnm.load_model()
 
 # nrs = 1000
 #
-# Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
-# simulate = Vilar_.simulate
+Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
+simulate = Vilar_.simulate
 #
 # true_params = [[50.0, 500.0, 0.01, 50.0, 50.0, 5.0, 10.0, 0.5, 1.0, 0.2, 1.0, 1.0, 2.0, 50.0, 100.0]]
 # obs_data = np.zeros((nrs,num_timestamps,9))
@@ -88,7 +88,15 @@ nnm.load_model()
 
 obs_data = pickle.load(open('datasets/' + modelname + '/obs_data_pack_1k.p', "rb" ) )
 
+pred_param = nnm.predict(obs_data[:,:,[6]])
+pred_param = denormalize_data(pred_param,dmin,dmax)
+print("pred param shape: ", pred_param.shape)
+pred_param_m = np.mean(pred_param,0)
+print("start generating data")
+gen_data = np.array([simulate(pred_param_m) for i in range(1000)])
 
+pickle.dump( gen_data, open( 'datasets/' + modelname + '/gen_data_from_predicted_param_m.p', "wb" ) )
+print("done!")
 nr_bins = 50
 
 nr = int(obs_data.shape[0])
@@ -97,29 +105,35 @@ print("nr: ", nr, ", ts_len: ", ts_len)
 print("obs_data shape: ", obs_data.shape)
 density_data = np.zeros((3,ts_len,nr_bins))
 
-for j in range(3):
-    specie = 6+j
-    peak_value = np.max(obs_data[:,:,specie])
-    bins = np.linspace(0, int(peak_value) + 1, nr_bins + 1)
-    for i in range(ts_len):
-        # print("i: ", i)
-        density_data[j,i] = np.histogram(obs_data[:,i,specie],bins=bins)[0]
-        # print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
+
+specie = 6
+peak_value = np.max(obs_data[:,:,specie])
+bins = np.linspace(0, int(peak_value) + 1, nr_bins + 1)
+for i in range(ts_len):
+    # print("i: ", i)
+    density_data[0,i] = np.histogram(obs_data[:,i,specie],bins=bins)[0]
+    # print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
+
+for i in range(ts_len):
+    # print("i: ", i)
+    density_data[1,i] = np.histogram(gen_data[:,i,specie],bins=bins)[0]
+    # print("den i: ", i, " - mean: ", np.mean(density_data[i]), ", std: ", np.std(density_data[i]), ", max: ", np.max(density_data[i]))
+
 
 plt.clf()
 density_data = density_data[:,:,::-1]
 density_data = density_data
 density_data = density_data**(1/2)
 
-f, ax = plt.subplots(1,1)#,figsize=(30,15))
-ax.imshow(density_data[0].T, aspect='auto', extent=[0,201,0,peak_value])
-ax.set_title('Species C')
-ax.set_xlabel('time')
-ax.set_ylabel('# of species')
-# ax[1].imshow(density_data[2].T, aspect='auto', extent=[0,201,0,peak_value])
-# ax[1].set_title('Species R')
-# ax[1].set_xlabel('time')
-# ax[1].set_ylabel('# of species')
+f, ax = plt.subplots(2,1)#,figsize=(30,15))
+ax[0].imshow(density_data[0].T, aspect='auto', extent=[0,201,0,peak_value])
+ax[0].set_title('Species C from true parameters')
+ax[0].set_xlabel('time')
+ax[0].set_ylabel('# of species')
+ax[1].imshow(density_data[1].T, aspect='auto', extent=[0,201,0,peak_value])
+ax[1].set_title('Species C from predicted mean parameters')
+ax[1].set_xlabel('time')
+ax[1].set_ylabel('# of species')
 plt.savefig('obs_data_density_speciesC_prior6')
 
 
