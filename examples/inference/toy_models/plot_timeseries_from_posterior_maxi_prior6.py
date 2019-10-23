@@ -128,7 +128,7 @@ prod = []
 
 for i in range(nrs):
     print("i: ", i)
-    od = simulate(np.array(true_params))[:,species]
+    od = simulate(np.array(true_params))[:,6]
     print("od shape: ", od.shape)
     obs_data[i,:,:] = od
     # Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=train_thetas,
@@ -154,7 +154,7 @@ pred_param = denormalize_data(pred_param,dmin,dmax)
 gen_data = np.zeros((nrs,num_timestamps,1))
 abc_pred_m = np.mean(abc_pred,0)
 for i in range(nrs):
-    od = simulate(abc_pred_m)[:,species]
+    od = simulate(abc_pred_m)[:,6]
     # print("od shape: ", od.shape)
     gen_data[i,:,:] = od
 
@@ -212,7 +212,7 @@ plt.savefig('comp_prior6.png')
 #
 
 print("pred param shape: ", pred_param.shape)
-
+print("true_param: ", true_param)
 f,ax = plt.subplots(3,5,figsize=(15,25))
 
 for x in range(3):
