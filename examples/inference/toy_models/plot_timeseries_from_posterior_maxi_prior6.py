@@ -210,6 +210,9 @@ plt.savefig('comp_prior6.png')
 #
 #
 #
+
+print("pred param shape: ", pred_param.shape)
+
 f,ax = plt.subplots(3,5,figsize=(15,25))
 
 for x in range(3):
@@ -224,9 +227,9 @@ for x in range(3):
 
         pm = np.mean(pred_param[:,i])
         ax[x, y].plot([pm, pm], [1, 0], c='yellow')
-        ax[x, y].plot([dmin[i], dmin[i]], [peakv, 0], c='black')
-        ax[x, y].plot([dmax[i], dmax[i]], [peakv, 0], c='black')
-        ax[x,y].plot([true_param[i], true_param[i]], [peakv, 0],c='b')
+        ax[x, y].plot([dmin[i], dmin[i]], [peakv, 0], c='blue')
+        ax[x, y].plot([dmax[i], dmax[i]], [peakv, 0], c='blue')
+        ax[x,y].plot([true_param[i], true_param[i]], [peakv, 0],c='black', ls='--')
 
 plt.savefig('dist.png')
 #
