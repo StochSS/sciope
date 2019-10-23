@@ -126,6 +126,13 @@ abc_post = []
 
 prod = []
 
+print("start generationg obs data pack big")
+obs_data_big = np.array([simulate(np.array(true_params))[:,[6]] for i in range(1000)])
+
+pickle.dump( obs_data_big, open( 'datasets/' + modelname + '/obs_data_pack_1k.p', "wb" ) )
+print("done generationg obs data pack big")
+
+
 for i in range(nrs):
     print("i: ", i)
     od = simulate(np.array(true_params))[:,[6]]
