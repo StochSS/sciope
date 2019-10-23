@@ -92,11 +92,14 @@ pred_param = nnm.predict(obs_data[:,:,[6]])
 pred_param = denormalize_data(pred_param,dmin,dmax)
 print("pred param shape: ", pred_param.shape)
 pred_param_m = np.mean(pred_param,0)
-print("start generating data")
-gen_data = np.array([simulate(pred_param_m) for i in range(1000)])
+# print("start generating data")
+# gen_data = np.array([simulate(pred_param_m) for i in range(1000)])
+#
+# pickle.dump( gen_data, open( 'datasets/' + modelname + '/gen_data_from_predicted_param_m.p', "wb" ) )
+# print("done!")
 
-pickle.dump( gen_data, open( 'datasets/' + modelname + '/gen_data_from_predicted_param_m.p', "wb" ) )
-print("done!")
+gen_data = pickle.load(open('datasets/' + modelname + '/gen_data_from_predicted_param_m.p', "rb" ) )
+
 nr_bins = 50
 
 nr = int(obs_data.shape[0])
