@@ -234,7 +234,7 @@ for x in range(3):
         i = x*5 +y
 
 
-        ret = ax[x,y].hist(pred_param[:,i], density=True)
+        ret = ax[x,y].hist(pred_param[:,i], density=True,bins=25)
         peakv = np.max(ret[0])
         # for p in pred_param[:,i]:
         #     ax[x, y].plot([p,p], [1, 0], c='r')
