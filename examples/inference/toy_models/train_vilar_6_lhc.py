@@ -26,8 +26,8 @@ dmax = [80,   600,    4,   60,   60,   7,   12,   2,   3, 0.7, 2.5,   4,   3,   
 
 #Load data
 # train_thetas, train_ts = load_spec(modelname=modelname, type = "train")
-train_thetas = pickle.load(open('datasets/lhc/' + modelname + '/train_thetas.p', "rb" ) )
-train_ts = pickle.load(open('datasets/lhc/' + modelname + '/train_ts.p', "rb" ) )
+train_thetas = pickle.load(open('datasets/lhc/' + modelname + '/train_thetas_.p', "rb" ) )
+train_ts = pickle.load(open('datasets/lhc/' + modelname + '/train_ts_.p', "rb" ) )
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
 
