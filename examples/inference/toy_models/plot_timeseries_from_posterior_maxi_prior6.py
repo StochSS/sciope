@@ -148,8 +148,8 @@ for i in range(nrs):
     #     print("e shape: ", e.shape)
     # plot(prod, bins=bins, nr=i, dmin=dmin, dmax=dmax, true_param=true_params[0])
 
-
-pred_param = denormalize_data(nnm.predict(obs_data),dmin,dmax)
+pred_param = nnm.predict(obs_data)
+pred_param = denormalize_data(pred_param,dmin,dmax)
 
 gen_data = np.zeros((nrs,num_timestamps,1))
 abc_pred_m = np.mean(abc_pred,0)
@@ -224,14 +224,14 @@ for x in range(3):
         peakv = np.max(ret[0])
         # for p in pred_param[:,i]:
         #     ax[x, y].plot([p,p], [1, 0], c='r')
-
+        print("i: ", i, ", peakv: ", peakv)
         pm = np.mean(pred_param[:,i])
-        ax[x, y].plot([pm, pm], [1, 0], c='yellow')
+        ax[x, y].plot([pm, pm], [peakv, 0], c='yellow')
         ax[x, y].plot([dmin[i], dmin[i]], [peakv, 0], c='blue')
         ax[x, y].plot([dmax[i], dmax[i]], [peakv, 0], c='blue')
-        ax[x,y].plot([true_param[i], true_param[i]], [peakv, 0],c='black', ls='--')
+        ax[x, y].plot([true_param[i], true_param[i]], [peakv, 0],c='black', ls='--')
 
-plt.savefig('dist.png')
+plt.savefig('dist_prior6.png')
 #
 #
 # f,ax = plt.subplots(3,5,figsize=(15,25))
