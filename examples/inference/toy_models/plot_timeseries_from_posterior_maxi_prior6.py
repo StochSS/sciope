@@ -146,7 +146,7 @@ for i in range(nrs):
     obs_data[i,:,:] = od
     # Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=train_thetas,
     #                                         abc_trial_ts=train_ts, nnm=nnm, dmin=dmin, dmax=dmax, bins=bins, nr_of_accept=3000,
-    #                                         index=i)
+    #       F                                  index=i)
     # abc_post.append(Posterior_fit)
     #
     #
@@ -246,7 +246,7 @@ for x in range(3):
         ax[x, y].plot([dmin[i], dmin[i]], [peakv, 0], c='blue')
         ax[x, y].plot([dmax[i], dmax[i]], [peakv, 0], c='blue')
         ax[x, y].plot([true_param[i], true_param[i]], [peakv, 0],c='black', ls='--')
-        ax[x, y].set_xaxis("predicted " + para_names[i])
+        ax[x, y].set_xlabel("predicted " + para_names[i])
 
 plt.savefig('dist_prior6.png')
 #
