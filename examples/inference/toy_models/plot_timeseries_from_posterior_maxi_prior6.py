@@ -147,7 +147,7 @@ for i in range(nrs):
     obs_data[i,:,:] = od
     Posterior_fit = abc_inference(data=np.expand_dims(od,0), true_param=true_params[0], abc_trial_thetas=train_thetas,
                                             abc_trial_ts=train_ts, nnm=nnm, dmin=dmin, dmax=dmax, bins=bins, nr_of_accept=3000,
-          F                                  index=i)
+                                            index=i)
     # abc_post.append(Posterior_fit)
     #
     #
