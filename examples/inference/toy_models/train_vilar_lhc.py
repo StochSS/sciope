@@ -55,7 +55,7 @@ print("Model name: ", nnm.name)
 verb = 2
 print("verbose: ", verb)
 print("species: ", species)
-# nnm.load_model('saved_models/None_DNNModel')
+nnm.load_model()
 print("batch size 128")
 
 start_time = time.time()
