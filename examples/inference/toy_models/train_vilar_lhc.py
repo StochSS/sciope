@@ -29,7 +29,7 @@ train_ts = pickle.load(open('datasets/lhc2/' + modelname + '/train_ts_.p', "rb" 
 validation_thetas = pickle.load(open('datasets/' + modelname + '/validation_thetas.p', "rb" ) )
 validation_ts = pickle.load(open('datasets/' + modelname + '/validation_ts.p', "rb" ) )
 
-training_size = 300000
+training_size = 50000
 
 train_thetas = train_thetas[0:training_size]
 train_ts = train_ts[0:training_size]
