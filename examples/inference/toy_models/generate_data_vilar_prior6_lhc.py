@@ -89,8 +89,8 @@ dg = DataGenerator(sim=simulate)
 print("generating some data")
 training_samples = 50000
 
-if not os.path.exists('datasets/lhc'):
-    os.mkdir('datasets/lhc')
+if not os.path.exists('datasets/lhc2'):
+    os.mkdir('datasets/lhc2')
 
 if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'):
     lhs_obj = lhs.LatinHypercube(dmin, dmax)
@@ -103,7 +103,7 @@ if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'
     print("train_thetas shape: ", train_thetas.shape)
     train_thetas = np.squeeze(train_thetas)
     print("train_thetas shape: ", train_thetas.shape)
-    pickle.dump(train_thetas, open('datasets/lhc/' + modelname + '/train_thetas_.p', "wb"))
+    pickle.dump(train_thetas, open('datasets/lhc2/' + modelname + '/train_thetas_.p', "wb"))
 
 bs = 1000
 
@@ -112,18 +112,28 @@ print("epochs: ", epochs)
 
 train_ts = np.zeros((0,num_timestamps,3))
 for i in range(epochs):
-    print("thetas shape: ", train_thetas[i*bs:(i+1)*bs].shape)
-    ts = dg.gen(thetas=train_thetas[i*bs:(i+1)*bs])
-    print("ts shape: ", ts.shape)
-    # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
-    if ts.shape == (1000,401,3):
-        train_ts = np.concatenate((train_ts,ts),axis=0)
+    start = i * bs
+    end = (i + 1) * bs
+
+    ts = dg.gen(thetas=train_thetas[start:end])
+    train_ts = np.append(train_ts,ts,0)
+    print("start: ", start, ", end: ", end, "train_ts shape: ", train_ts.shape)
+
+# for i in range(epochs):
+#     print("thetas shape: ", train_thetas[i*bs:(i+1)*bs].shape)
+#     ts = dg.gen(thetas=train_thetas[i*bs:(i+1)*bs])
+#     print("ts shape: ", ts.shape)
+#     # print("train_ts shape: ", train_ts.shape, ", ts shape: ", ts.shape)
+#     if ts.shape == (1000,401,3):
+#         train_ts = np.concatenate((train_ts,ts),axis=0)
 
     print("trainig data shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
 print("generating trainig data done, shape: train_ts: ", train_ts.shape, ", train_thetas: ", train_thetas.shape)
 
-pickle.dump( train_ts, open( 'datasets/lhc/' + modelname + '/train_ts_.p', "wb" ) )
+
+
+pickle.dump( train_ts, open( 'datasets/lhc2/' + modelname + '/train_ts_.p', "wb" ) )
 
 # validation_thetas = np.zeros((0,15))
 # validation_ts = np.zeros((0,num_timestamps,3))
