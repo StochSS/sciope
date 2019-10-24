@@ -13,7 +13,7 @@ import dask
 import pickle
 import os
 import time
-# from sciope.designs import latin_hypercube_sampling as lhs
+from sciope.designs import latin_hypercube_sampling as lhs
 from latin_hyper_cube import lhc_sampling
 from sklearn.metrics import mean_absolute_error
 
