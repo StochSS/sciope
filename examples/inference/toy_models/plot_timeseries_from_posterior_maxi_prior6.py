@@ -154,8 +154,8 @@ for i in range(nrs):
     if i == 0:
         prod = Posterior_fit
     else:
-        for i in range(15):
-            prod[i] *= Posterior_fit[i]
+        for j in range(15):
+            prod[j] *= Posterior_fit[i]
     #
     # print("prod shape: ", prod.shape)
     # for e in prod:
