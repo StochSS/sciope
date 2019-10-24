@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 from sciope.inference import abc_inference
 from sciope.models.cnn_regressor import CNNModel
 from sciope.models.pen_regressor_beta import PEN_CNNModel
@@ -43,6 +46,9 @@ for i in range(15):
 
 
 
+
+
+
 #Normalize parameter values
 train_thetas = normalize_data(train_thetas,dmin,dmax)
 validation_thetas = normalize_data(validation_thetas,dmin,dmax)
@@ -56,8 +62,22 @@ validation_ts = validation_ts[:,:end_step:step,species]
 clay=[32,48,64,96]
 
 ts_len = train_ts.shape[1]
+
+f, ax = plt.subplots(15,15,figsize=(40,40))
+for x in range(15):
+    for y in range(x,15):
+        if x == y:
+            ax[x,x].hist(train_thetas[:,x],bins=100)
+        else:
+            ax[x,y].scatter(train_thetas[:,x],train_thetas[:,y],s=0.3)
+
+plt.savefig("lhc_thetas")
+plt.close()
+
+
+
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=[100,100,100],dataname='speciesC')
+nnm = CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=15, con_len=3, con_layers=clay, dense_layers=[100,100,100],dataname='speciesC_lhc')
 # nnm = PEN_CNNModel(input_shape=(ts_len,train_ts.shape[2]), output_shape=(15), pen_nr=3, con_layers=[32,64,128], dense_layers=[100,100])
 # nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=[200,200,00])
 print("Model name: ", nnm.name)

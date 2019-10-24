@@ -7,7 +7,7 @@ from sciope.inference import abc_inference
 from sciope.models.cnn_regressor import CNNModel
 from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
-from abc_inference_diag_hist import abc_inference
+from abc_inference_diag_hist_full import abc_inference
 
 import numpy as np
 
