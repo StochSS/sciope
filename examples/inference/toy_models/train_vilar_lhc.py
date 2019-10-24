@@ -60,7 +60,7 @@ print("batch size 128")
 
 start_time = time.time()
 history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=128, epochs=40*10, learning_rate=0.001, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=verb)
+          batch_size=128, epochs=40*10, learning_rate=0.001, val_freq=1, early_stopping_patience=50, plot_training_progress=False, verbose=verb)
 
 
 print("history: ", history1.history)
@@ -68,7 +68,7 @@ pickle.dump(history1.history, open('history1.p', "wb"))
 
 
 history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+          batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=15, plot_training_progress=False)
 
 
 

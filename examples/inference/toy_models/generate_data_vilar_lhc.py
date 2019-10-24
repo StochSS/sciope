@@ -68,7 +68,7 @@ Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 
 simulate = Vilar_.simulate
 
-modelname = "vilar_ACR_prior6_" + str(endtime) + "_" + str(num_timestamps)
+modelname = "vilar_ACR_prior_" + str(endtime) + "_" + str(num_timestamps)
 
 
 
