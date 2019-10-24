@@ -34,7 +34,7 @@ def plot(posterior,bins,nr,dmin,dmax,true_param):
         peakv = np.max(posterior[i])
         ax[x, y].plot([true_param[i], true_param[i]],[peakv, 0])
 
-    plt.savefig('posterior_plots/posterior_abc_prod' + str(nr))
+    plt.savefig('posterior_plots/posterior_abc_p' + str(nr))
     plt.close()
 
 
@@ -151,16 +151,16 @@ for i in range(nrs):
     # abc_post.append(Posterior_fit)
     #
     #
-    # if i == 0:
-    #     prod = Posterior_fit
-    # else:
-    #     for i in range(15):
-    #         prod[i] *= Posterior_fit[i]
+    if i == 0:
+        prod = Posterior_fit
+    else:
+        for i in range(15):
+            prod[i] *= Posterior_fit[i]
     #
     # print("prod shape: ", prod.shape)
     # for e in prod:
     #     print("e shape: ", e.shape)
-    # plot(prod, bins=bins, nr=i, dmin=dmin, dmax=dmax, true_param=true_params[0])
+    plot(prod, bins=bins, nr=i, dmin=dmin, dmax=dmax, true_param=true_params[0])
 
 pred_param = nnm.predict(obs_data_big)
 pred_param = denormalize_data(pred_param,dmin,dmax)
