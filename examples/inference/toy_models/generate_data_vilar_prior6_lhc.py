@@ -96,7 +96,7 @@ if not os.path.exists('datasets/lhc2/' + modelname):
     os.mkdir('datasets/lhc2/' + modelname)
 
 
-train_thetas = lhc_sampling(n=1000, dim=15, dmin=dmin, dmax=dmax)
+train_thetas = lhc_sampling(n=1000, dim=15, dmin=dmin, dmax=dmax).T
 print("train_thetas shape: ", train_thetas.shape)
 pickle.dump(train_thetas, open('datasets/lhc2/' + modelname + '/train_thetas_.p', "wb"))
 
