@@ -91,6 +91,8 @@ training_samples = 50000
 
 if not os.path.exists('datasets/lhc2'):
     os.mkdir('datasets/lhc2')
+
+if not os.path.exists('datasets/lhc2/' + modelname):
     os.mkdir('datasets/lhc2/' + modelname)
 
 if not os.path.isfile('datasets/lhc/' + modelname + '/train_thetas_'+str(1)+'.p'):
