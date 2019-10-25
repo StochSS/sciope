@@ -127,7 +127,7 @@ for i in range(nrs):
         for y in range(5):
             i = x*5+y
             # points = int((1/test_ae_norm[i]))
-            points = int (1/np.std(normalize_data(accepted_para,dmin,dmax)[:,i]**2))
+            points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,i]))**2)
             print("i: ", i, ", points: ", points)
             bins = np.linspace(dmin[i],dmax[i],points)
             ret = ax[x,y].hist(accepted_para[:,i], bins=bins, color='g',alpha=0.5)
