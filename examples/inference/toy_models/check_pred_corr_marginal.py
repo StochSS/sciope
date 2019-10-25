@@ -124,25 +124,13 @@ for i in range(nrs):
     for x in range(3):
         for y in range(5):
             i = x*5+y
-            ax[x,y].scatter(accepted_para[:,i],accepted_pred[:,i], c='b')
-            dist = abs(accepted_pred[:,i]-data_pred[i])
-            accepted_ind = np.argpartition(dist, nr_of_accept2)[0:nr_of_accept2]
-            accepted_para2 = accepted_para[accepted_ind]
-            accepted_pred2 = accepted_pred[accepted_ind]
-            apara_min = np.min(accepted_para2[:,i])
-            apara_max = np.max(accepted_para2[:,i])
-            apred_min = np.min(accepted_pred2[:, i])
-            apred_max = np.max(accepted_pred2[:, i])
-            apara_mean = np.mean(accepted_para2[:, i])
 
+            ret = ax[x,y].hist(accepted_pred[:,i],c='g')
+            peakv = np.max(ret[0])
+            ax[x,y].plot([true_params[0][i], true_params[0][i]], [peakv, 0])
+            ax[x,y].plot([dmin[i], dmin[i]], [peakv, 0], c='b')
+            ax[x,y].plot([dmax[i], dmax[i]], [peakv, 0], c='b')
 
-
-            ax[x,y].plot([apara_min, apara_min, apara_max, apara_max, apara_min],
-                         [apred_min, apred_max, apred_max, apred_min, apred_min], c='g', lw=0.6)
-            ax[x,y].scatter(true_params[0][i],data_pred[i], c='black', marker='x')
-            ax[x,y].scatter(apara_mean,data_pred[i], c='r')
-            ax[x,y].scatter(data_pred[i],data_pred[i], c='y')
-            ax[x,y].plot([dmin[i],dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]])
 
 
 
