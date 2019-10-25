@@ -138,10 +138,11 @@ for i in range(nrs):
 
 
             ax[x,y].plot([apara_min, apara_min, apara_max, apara_max, apara_min],
-                         [apred_min, apred_max, apred_max, apred_min, apred_min], c='g', lw=0.3)
-            ax[x,y].scatter(true_params[0][i],data_pred[i], c='r')
-            ax[x,y].scatter(apara_mean,data_pred[i], c='black')
+                         [apred_min, apred_max, apred_max, apred_min, apred_min], c='g', lw=0.6)
+            ax[x,y].scatter(true_params[0][i],data_pred[i], c='black', marker='x')
+            ax[x,y].scatter(apara_mean,data_pred[i], c='r')
             ax[x,y].scatter(data_pred[i],data_pred[i], c='y')
+            ax[x,y].plot([dmin[i],dmin[i], dmax[i], dmax[i], dmin[i]], [dmin[i], dmax[i], dmax[i], dmin[i], dmin[i]])
 
 
 
