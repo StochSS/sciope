@@ -115,12 +115,25 @@ for i in range(nrs):
     print("od shape: ", od.shape)
     accepted_para, accepted_pred, data_pred = abc_inference(data=od, abc_trial_thetas=train_thetas,abc_trial_ts=train_ts, nnm=nnm, nr_of_accept = 1000)
     print("data_pred shape: ", data_pred.shape)
+    nr_of_accept2 = 10
+
     f, ax = plt.subplots(3,5,figsize=(20,20))
 
     for x in range(3):
         for y in range(5):
             i = x*5+y
             ax[x,y].scatter(accepted_para[:,i],accepted_pred[:,i], c='b')
+            dist = abs(accepted_pred[:,i]-data_pred[i])
+            accepted_ind = np.argpartition(dist, nr_of_accept2)[0:nr_of_accept2]
+            accepted_para2 = accepted_para[accepted_ind]
+            accepted_pred2 = accepted_pred[accepted_ind]
+            apara_min = np.min(accepted_para2[:,i])
+            apara_max = np.max(accepted_para2[:,i])
+            apred_min = np.min(accepted_pred2[:, i])
+            apred_max = np.max(accepted_pred2[:, i])
+
+            ax[x,y].plot([apara_min, apara_min, apara_max, apara_max, apara_min],
+                         [apred_min, apred_max, apred_max, apred_min, apred_min], c='g', lw=0.3)
             ax[x,y].scatter(true_params[0][i],data_pred[i], c='r')
 
     plt.savefig("check_corr")
