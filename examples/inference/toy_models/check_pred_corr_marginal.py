@@ -125,7 +125,7 @@ for i in range(nrs):
         for y in range(5):
             i = x*5+y
 
-            ret = ax[x,y].hist(accepted_pred[:,i],c='g')
+            ret = ax[x,y].hist(accepted_pred[:,i],color='g')
             peakv = np.max(ret[0])
             ax[x,y].plot([true_params[0][i], true_params[0][i]], [peakv, 0])
             ax[x,y].plot([dmin[i], dmin[i]], [peakv, 0], c='b')
