@@ -118,6 +118,8 @@ for i in range(nrs):
     data_pred = denormalize_data(data_pred,dmin,dmax)
     accepted_pred = denormalize_data(accepted_pred,dmin,dmax)
     nr_of_accept2 = 10
+    print("accepted para shape: ", accepted_para.shape)
+
 
     f, ax = plt.subplots(3,5,figsize=(20,20))
 
@@ -125,7 +127,7 @@ for i in range(nrs):
         for y in range(5):
             i = x*5+y
 
-            ret = ax[x,y].hist(accepted_pred[:,i],color='g')
+            ret = ax[x,y].hist(accepted_para[:,i],color='g')
             peakv = np.max(ret[0])
             ax[x,y].plot([true_params[0][i], true_params[0][i]], [peakv, 0])
             ax[x,y].plot([dmin[i], dmin[i]], [peakv, 0], c='b')
