@@ -23,9 +23,9 @@ def abc_inference_marginal(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accep
     abc_trial_pred = nnm.predict(abc_trial_ts)
     accepted_para = np.zeros((nr_of_accept,abc_trial_thetas.shape[1]))
     accepted_pred = np.zeros((nr_of_accept,abc_trial_thetas.shape[1]))
-
+    print("abc_trial_pred shape: ", abc_trial_pred.shape, "data_pred shape: ", data_pred.shape)
     for i in range(abc_trial_thetas.shape[1]):
-        dist = np.mean(abs(abc_trial_pred[:,i] - data_pred[i]))
+        dist = abs(abc_trial_pred[:,i] - data_pred[i])
         print("i: ", i, ", dist shape: ", dist.shape)
         accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
         accepted_para[:,i] = abc_trial_thetas[accepted_ind][:,i]
