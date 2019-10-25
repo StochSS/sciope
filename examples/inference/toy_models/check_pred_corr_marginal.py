@@ -126,7 +126,8 @@ for i in range(nrs):
     for x in range(3):
         for y in range(5):
             i = x*5+y
-
+            points = int((1/test_ae_norm[i])**2)
+            bins = np.linspace(dmin[i],dmax[i],points)
             ret = ax[x,y].hist(accepted_para[:,i],color='g')
             peakv = np.max(ret[0])
             ax[x,y].plot([true_params[0][i], true_params[0][i]], [peakv, 0])
