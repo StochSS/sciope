@@ -131,10 +131,17 @@ for i in range(nrs):
             apara_max = np.max(accepted_para2[:,i])
             apred_min = np.min(accepted_pred2[:, i])
             apred_max = np.max(accepted_pred2[:, i])
+            apara_mean = np.mean(accepted_para2[:, i])
+
+
 
             ax[x,y].plot([apara_min, apara_min, apara_max, apara_max, apara_min],
                          [apred_min, apred_max, apred_max, apred_min, apred_min], c='g', lw=0.3)
             ax[x,y].scatter(true_params[0][i],data_pred[i], c='r')
+            ax[x,y].scatter(apara_mean,data_pred[i], c='black')
+            ax[x,y].scatter(data_pred[i],data_pred[i], c='y')
+
+
 
     plt.savefig("check_corr")
 
