@@ -54,20 +54,20 @@ print("Model name: ", nnm.name)
 verb = 2
 print("verbose: ", verb)
 print("species: ", species)
-# nnm.load_model('saved_models/None_DNNModel')
+nnm.load_model()
 start_time = time.time()
-history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=verb)
-
-
-print("history: ", history1.history)
-pickle.dump(history1.history, open('history1.p', "wb"))
-
-
-history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-          batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
-
-
+# history1 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=32, epochs=40*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=verb)
+#
+#
+# print("history: ", history1.history)
+# pickle.dump(history1.history, open('history1.p', "wb"))
+#
+#
+# history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
+#           batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+#
+#
 
 
 end_time = time.time()
