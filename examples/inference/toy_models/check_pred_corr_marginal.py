@@ -120,17 +120,18 @@ for i in range(nrs):
     nr_of_accept2 = 10
     print("accepted para shape: ", accepted_para.shape)
 
-    linew = 10
+    linew = 2
     f, ax = plt.subplots(3,5,figsize=(20,20))
 
     for x in range(3):
         for y in range(5):
             i = x*5+y
             points = int((1/test_ae_norm[i])**2)
+            print("i: ", i, ", points: ", points)
             bins = np.linspace(dmin[i],dmax[i],points)
-            ret = ax[x,y].hist(accepted_para[:,i],color='g',alpha=0.5)
+            ret = ax[x,y].hist(accepted_para[:,i], bins=bins, color='g',alpha=0.5)
             peakv = np.max(ret[0])
-            ax[x,y].plot([true_params[0][i], true_params[0][i]], [peakv, 0],lw=linew)
+            ax[x,y].plot([true_params[0][i], true_params[0][i]], [peakv, 0],lw=linew, c='black')
             ax[x,y].plot([dmin[i], dmin[i]], [peakv, 0], c='b', lw=linew)
             ax[x,y].plot([dmax[i], dmax[i]], [peakv, 0], c='b', lw=linew)
 
