@@ -121,7 +121,7 @@ for i in range(nrs):
         for y in range(5):
             i = x*5+y
             ax[x,y].scatter(accepted_para[:,i],accepted_pred[:,i], c='b')
-            ax[x,y].scatter(true_params[0][i],data_pred[0,i], c='r')
+            ax[x,y].scatter(true_params[0][i],data_pred[i], c='r')
 
     plt.savefig("check_corr")
 
