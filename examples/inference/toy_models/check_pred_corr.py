@@ -113,7 +113,7 @@ for i in range(nrs):
 
     od = obs_data_big[[i]]
     print("od shape: ", od.shape)
-    accepted_para, accepted_pred, data_pred = abc_inference(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
+    accepted_para, accepted_pred, data_pred = abc_inference(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 100)
     print("data_pred shape: ", data_pred.shape)
     data_pred = denormalize_data(data_pred,dmin,dmax)
     accepted_pred = denormalize_data(accepted_pred,dmin,dmax)
