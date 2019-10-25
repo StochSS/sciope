@@ -113,7 +113,7 @@ for i in range(nrs):
 
     od = obs_data_big[[i]]
     print("od shape: ", od.shape)
-    accepted_para, accepted_pred, data_pred = abc_inference(data=od, abc_trial_thetas=train_thetas,abc_trial_ts=train_ts, nnm=nnm, nr_of_accept = 1000)
+    accepted_para, accepted_pred, data_pred = abc_inference(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
     print("data_pred shape: ", data_pred.shape)
     nr_of_accept2 = 10
 
