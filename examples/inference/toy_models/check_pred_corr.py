@@ -113,15 +113,15 @@ for i in range(nrs):
 
     od = obs_data_big[[i]]
     print("od shape: ", od.shape)
-    accepted_para, accepted_pred, data, data_pred = abc_inference(data=od, abc_trial_thetas=train_thetas,abc_trial_ts=train_ts, nnm=nnm, nr_of_accept = 1000)
-    print("data shape: ", data.shape, ", data_pred shape: ", data_pred.shape)
+    accepted_para, accepted_pred, data_pred = abc_inference(data=od, abc_trial_thetas=train_thetas,abc_trial_ts=train_ts, nnm=nnm, nr_of_accept = 1000)
+    print("data_pred shape: ", data_pred.shape)
     f, ax = plt.subplots(3,5,figsize=(20,20))
 
     for x in range(3):
         for y in range(5):
             i = x*5+y
             ax[x,y].scatter(accepted_para[:,i],accepted_pred[:,i], c='b')
-            ax[x,y].scatter(data[0,i],data_pred[0,i], c='r')
+            ax[x,y].scatter(true_params[0,i],data_pred[0,i], c='r')
 
     plt.savefig("check_corr")
 

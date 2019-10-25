@@ -13,4 +13,4 @@ def abc_inference(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000)
     accepted_para = abc_trial_thetas[accepted_ind]
     accepted_pred = abc_trial_pred[accepted_ind]
 
-    return accepted_para, accepted_pred, data, data_pred
+    return accepted_para, accepted_pred, data_pred
