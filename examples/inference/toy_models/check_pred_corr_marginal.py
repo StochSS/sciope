@@ -88,7 +88,7 @@ for i in range(15):
     bins.append(bin_)
 
 
-nrs = 1
+nrs = 10
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
@@ -141,7 +141,7 @@ for i in range(nrs):
 
 
 
-    plt.savefig("check_corr_marginal2")
+    plt.savefig("check_corr_marginal_" + str(i))
 
 
 
