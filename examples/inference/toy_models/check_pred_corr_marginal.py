@@ -130,7 +130,7 @@ for i in range(nrs):
             points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,i]))**1.5)
             print("i: ", i, ", points: ", points)
             bins = np.linspace(dmin[i],dmax[i],points)
-            ret = ax[x,y].hist(accepted_para[:,i], bins=bins, color='g',alpha=0.5)
+            ret = ax[x,y].hist(accepted_para[:,i], bins=bins, color='y',alpha=0.3)
             peakv = np.max(ret[0])
             ax[x,y].plot([dmin[i], dmin[i]], [peakv, 0], c='b', lw=linew)
             ax[x,y].plot([dmax[i], dmax[i]], [peakv, 0], c='b', lw=linew)
