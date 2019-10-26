@@ -121,7 +121,7 @@ for i in range(nrs):
     print("accepted para shape: ", accepted_para.shape)
 
     linew = 3
-    f, ax = plt.subplots(3,5,figsize=(40,20))
+    f, ax = plt.subplots(3,5,figsize=(50,20))
 
     for x in range(3):
         for y in range(5):
@@ -134,6 +134,8 @@ for i in range(nrs):
             peakv = np.max(ret[0])
             ax[x,y].plot([dmin[i], dmin[i]], [peakv, 0], c='b', lw=linew)
             ax[x,y].plot([dmax[i], dmax[i]], [peakv, 0], c='b', lw=linew)
+            ax[x,y].plot([data_pred[i], data_pred[i]], [peakv, 0],lw=linew, ls=':', c='silver')
+
             ax[x,y].plot([true_params[0][i], true_params[0][i]], [peakv, 0],lw=linew, ls='--', c='black')
 
 
