@@ -112,13 +112,13 @@ for i in range(nrs):
     print("i: ", i)
 
     od = obs_data_big[[i]]
-    print("od shape: ", od.shape)
+    # print("od shape: ", od.shape)
     accepted_para, accepted_pred, data_pred = abc_inference_marginal(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
-    print("data_pred shape: ", data_pred.shape)
+    # print("data_pred shape: ", data_pred.shape)
     data_pred = denormalize_data(data_pred,dmin,dmax)
     accepted_pred = denormalize_data(accepted_pred,dmin,dmax)
     nr_of_accept2 = 10
-    print("accepted para shape: ", accepted_para.shape)
+    # print("accepted para shape: ", accepted_para.shape)
 
     linew = 3
     f, ax = plt.subplots(3,5,figsize=(50,20))
@@ -128,7 +128,6 @@ for i in range(nrs):
             j = x*5+y
             # points = int((1/test_ae_norm[i]))
             points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
-            print("i: ", i, ", points: ", points)
             bins = np.linspace(dmin[j],dmax[j],points)
             ret = ax[x,y].hist(accepted_para[:,j], bins=bins, color='y',alpha=0.3)
             peakv = np.max(ret[0])
