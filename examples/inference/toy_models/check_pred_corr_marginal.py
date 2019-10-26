@@ -125,18 +125,18 @@ for i in range(nrs):
 
     for x in range(3):
         for y in range(5):
-            i = x*5+y
+            j = x*5+y
             # points = int((1/test_ae_norm[i]))
-            points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,i]))**1.5)
+            points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
             print("i: ", i, ", points: ", points)
-            bins = np.linspace(dmin[i],dmax[i],points)
-            ret = ax[x,y].hist(accepted_para[:,i], bins=bins, color='y',alpha=0.3)
+            bins = np.linspace(dmin[j],dmax[j],points)
+            ret = ax[x,y].hist(accepted_para[:,j], bins=bins, color='y',alpha=0.3)
             peakv = np.max(ret[0])
-            ax[x,y].plot([dmin[i], dmin[i]], [peakv, 0], c='b', lw=linew)
-            ax[x,y].plot([dmax[i], dmax[i]], [peakv, 0], c='b', lw=linew)
-            ax[x,y].plot([data_pred[i], data_pred[i]], [peakv, 0],lw=linew, ls=':', c='silver')
+            ax[x,y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
+            ax[x,y].plot([dmax[j], dmax[j]], [peakv, 0], c='b', lw=linew)
+            ax[x,y].plot([data_pred[j], data_pred[j]], [peakv, 0],lw=linew, ls=':', c='silver')
 
-            ax[x,y].plot([true_params[0][i], true_params[0][i]], [peakv, 0],lw=linew, ls='--', c='black')
+            ax[x,y].plot([true_params[0][j], true_params[0][j]], [peakv, 0],lw=linew, ls='--', c='black')
 
 
 
