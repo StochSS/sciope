@@ -141,7 +141,7 @@ for i in range(nrs):
 
 
 
-    plt.savefig("check_corr_marginal")
+    plt.savefig("check_corr_marginal2")
 
 
 
