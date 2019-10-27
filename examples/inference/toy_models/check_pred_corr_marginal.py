@@ -88,7 +88,7 @@ for i in range(15):
     bins.append(bin_)
 
 
-nrs = 2
+nrs = 5
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
@@ -144,6 +144,7 @@ for i in range(nrs):
 
 
     plt.savefig("check_corr_marginal_" + str(i))
+    plt.close()
 
 print("accepted_para_hist len: ", len(accepted_para_hist))
 print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
