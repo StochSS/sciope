@@ -117,7 +117,7 @@ for i in range(nrs):
     # print("od shape: ", od.shape)
     accepted_para, accepted_pred, data_pred = abc_inference_marginal(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
     # print("data_pred shape: ", data_pred.shape)
-    accepted_para_hist.append(accepted_para)
+    accepted_para_hist.append(np.array([accepted_para]))
     data_pred = denormalize_data(data_pred,dmin,dmax)
     accepted_pred = denormalize_data(accepted_pred,dmin,dmax)
     nr_of_accept2 = 10
