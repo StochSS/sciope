@@ -110,7 +110,7 @@ print("obs_data_big shape: ", obs_data_big.shape)
 
 accepted_para_hist = []
 
-for i in range(nrs):
+for i in range(10,10+nrs):
     print("i: ", i)
 
     od = obs_data_big[[i]]
@@ -129,7 +129,7 @@ for i in range(nrs):
     for x in range(3):
         for y in range(5):
             j = x*5+y
-            points = int((1/test_ae_norm[i])**2)
+            points = int((1/test_ae_norm[i])**1.5)+1
             # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
             bins = np.linspace(dmin[j],dmax[j],points)
             ret = ax[x,y].hist(accepted_para[:,j], bins=bins, color='y',alpha=0.3)
