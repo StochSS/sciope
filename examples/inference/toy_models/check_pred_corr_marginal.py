@@ -171,6 +171,7 @@ for x in range(3):
 
 
         ap = np.prod(np.array(ap),0)
+        ap = ap/np.trapz(ap,bins)
         print("ap shape: ", ap.shape)
         # ret = ax[x,y].hist(ap, bins=bins, alpha=0.3)
         # peakv = np.max(ret[0])
