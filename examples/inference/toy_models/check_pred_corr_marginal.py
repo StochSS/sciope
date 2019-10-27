@@ -88,7 +88,7 @@ for i in range(15):
     bins.append(bin_)
 
 
-nrs = 2
+nrs = 4
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
@@ -161,7 +161,7 @@ for x in range(3):
             print("accepted_para_hist[k] shape: ", accepted_para_hist[k].shape)
             ap.append(accepted_para_hist[k][:,j])
             print("ap shape: ", np.array(ap).shape)
-        ret = ax[x,y].hist(ap, bins=bins, color=['y','b'],alpha=0.3)
+        ret = ax[x,y].hist(ap, bins=bins, alpha=0.3)
         peakv = np.max(ret[0])
         ax[x,y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
         ax[x,y].plot([dmax[j], dmax[j]], [peakv, 0], c='b', lw=linew)
