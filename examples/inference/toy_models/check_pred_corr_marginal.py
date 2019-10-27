@@ -88,7 +88,7 @@ for i in range(15):
     bins.append(bin_)
 
 
-nrs = 4
+nrs = 2
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
@@ -152,9 +152,10 @@ for x in range(3):
     for y in range(5):
         j = x*5+y
         points = int((1/test_ae_norm[i])**2)+1
-        x_points = (np.array(points[1:])+np.array(points[0:-1]))/2
         # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
         bins = np.linspace(dmin[j],dmax[j],points)
+        x_points = (np.array(bins[1:])+np.array(bins[0:-1]))/2
+
         ap = []
         for k in range(nrs):
 
