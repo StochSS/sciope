@@ -108,6 +108,8 @@ print("obs_data_big shape: ", obs_data_big.shape)
 obs_data_big = obs_data_big[:,:,[6]]
 print("obs_data_big shape: ", obs_data_big.shape)
 
+accepted_para_hist = []
+
 for i in range(nrs):
     print("i: ", i)
 
@@ -115,6 +117,7 @@ for i in range(nrs):
     # print("od shape: ", od.shape)
     accepted_para, accepted_pred, data_pred = abc_inference_marginal(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
     # print("data_pred shape: ", data_pred.shape)
+    accepted_para_hist.append(accepted_para)
     data_pred = denormalize_data(data_pred,dmin,dmax)
     accepted_pred = denormalize_data(accepted_pred,dmin,dmax)
     nr_of_accept2 = 10
@@ -126,8 +129,8 @@ for i in range(nrs):
     for x in range(3):
         for y in range(5):
             j = x*5+y
-            # points = int((1/test_ae_norm[i]))
-            points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
+            points = int((1/test_ae_norm[i])**2)
+            # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
             bins = np.linspace(dmin[j],dmax[j],points)
             ret = ax[x,y].hist(accepted_para[:,j], bins=bins, color='y',alpha=0.3)
             peakv = np.max(ret[0])
@@ -141,6 +144,27 @@ for i in range(nrs):
 
 
     plt.savefig("check_corr_marginal_" + str(i))
+
+
+    for x in range(3):
+        for y in range(5):
+            j = x*5+y
+            points = int((1/test_ae_norm[i])**2)
+            # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
+            bins = np.linspace(dmin[j],dmax[j],points)
+            ap = []
+            for k in range(nrs):
+                ap.append(accepted_para_hist[k][:,j])
+                print("ap shape: ", np.array(ap).shape)
+            ret = ax[x,y].hist(ap, bins=bins, color='y',alpha=0.3)
+            peakv = np.max(ret[0])
+            ax[x,y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
+            ax[x,y].plot([dmax[j], dmax[j]], [peakv, 0], c='b', lw=linew)
+            ax[x,y].plot([data_pred[j], data_pred[j]], [peakv, 0],lw=linew, ls=':', c='silver')
+
+            ax[x,y].plot([true_params[0][j], true_params[0][j]], [peakv, 0],lw=linew, ls='--', c='black')
+
+    plt.savefig("check_corr_prod")
 
 
 
