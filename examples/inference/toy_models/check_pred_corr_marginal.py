@@ -153,7 +153,7 @@ f, ax = plt.subplots(3, 5, figsize=(50, 20))
 for x in range(3):
     for y in range(5):
         j = x*5+y
-        points = int((1/test_ae_norm[i])**2)+1
+        points = int((1/test_ae_norm[i])**1.5)+1
         # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
         bins = np.linspace(dmin[j],dmax[j],points)
         x_points = (np.array(bins[1:])+np.array(bins[0:-1]))/2
