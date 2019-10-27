@@ -148,6 +148,7 @@ for i in range(nrs):
 
 print("accepted_para_hist len: ", len(accepted_para_hist))
 print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
+f, ax = plt.subplots(3, 5, figsize=(50, 20))
 
 for x in range(3):
     for y in range(5):
