@@ -151,7 +151,8 @@ print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
 for x in range(3):
     for y in range(5):
         j = x*5+y
-        points = int((1/test_ae_norm[i])**2)
+        points = int((1/test_ae_norm[i])**2)+1
+        x_points = (np.array(points[1:])+np.array(points[0:-1]))/2
         # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
         bins = np.linspace(dmin[j],dmax[j],points)
         ap = []
@@ -159,12 +160,17 @@ for x in range(3):
 
             print("k: ", k, ", j: ", j)
             print("accepted_para_hist[k] shape: ", accepted_para_hist[k].shape)
-            ap.append(accepted_para_hist[k][:,j])
+            # ap.append(accepted_para_hist[k][:,j])
+            ap.append(np.histogram(accepted_para_hist[k][:,j])[0])
+
             print("ap shape: ", np.array(ap).shape)
-        ap = np.prod(np.array(ap),1)
+
+
+        ap = np.prod(np.array(ap),0)
         print("ap shape: ", ap.shape)
-        ret = ax[x,y].hist(ap, bins=bins, alpha=0.3)
-        peakv = np.max(ret[0])
+        # ret = ax[x,y].hist(ap, bins=bins, alpha=0.3)
+        # peakv = np.max(ret[0])
+        ax[x,y].plot(x_points,ap)
         ax[x,y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
         ax[x,y].plot([dmax[j], dmax[j]], [peakv, 0], c='b', lw=linew)
         ax[x,y].plot([data_pred[j], data_pred[j]], [peakv, 0],lw=linew, ls=':', c='silver')
