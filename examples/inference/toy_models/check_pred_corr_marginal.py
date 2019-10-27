@@ -165,7 +165,7 @@ for x in range(3):
             print("k: ", k, ", j: ", j)
             print("accepted_para_hist[k] shape: ", accepted_para_hist[k].shape)
             # ap.append(accepted_para_hist[k][:,j])
-            ap.append(np.histogram(accepted_para_hist[k][:,j],bins=bins)[0])
+            ap.append(np.histogram(accepted_para_hist[k][:,j],bins=bins, density=True)[0])
 
             print("ap shape: ", np.array(ap).shape)
 
