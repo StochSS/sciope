@@ -155,6 +155,7 @@ for x in range(3):
         # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
         bins = np.linspace(dmin[j],dmax[j],points)
         x_points = (np.array(bins[1:])+np.array(bins[0:-1]))/2
+        print("points: ", points, ", x_points shape: ", x_points.shape)
 
         ap = []
         for k in range(nrs):
