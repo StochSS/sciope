@@ -156,6 +156,8 @@ for i in range(nrs):
             bins = np.linspace(dmin[j],dmax[j],points)
             ap = []
             for k in range(nrs):
+
+                print("k: ", k, ", j: ", j, ", accepted_para_hist[k] shape: ", accepted_para_hist[k].shape)
                 ap.append(accepted_para_hist[k][:,j])
                 print("ap shape: ", np.array(ap).shape)
             ret = ax[x,y].hist(ap, bins=bins, color='y',alpha=0.3)
