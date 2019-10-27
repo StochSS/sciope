@@ -145,6 +145,8 @@ for i in range(nrs):
 
     plt.savefig("check_corr_marginal_" + str(i))
 
+    print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
+
 
     for x in range(3):
         for y in range(5):
