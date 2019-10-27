@@ -145,6 +145,7 @@ for i in range(nrs):
 
     plt.savefig("check_corr_marginal_" + str(i))
 
+    print("accepted_para_hist len: ", len(accepted_para_hist))
     print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
 
 
@@ -157,7 +158,8 @@ for i in range(nrs):
             ap = []
             for k in range(nrs):
 
-                print("k: ", k, ", j: ", j, ", accepted_para_hist[k] shape: ", accepted_para_hist[k].shape)
+                print("k: ", k, ", j: ", j)
+                print("accepted_para_hist[k] shape: ", accepted_para_hist[k].shape)
                 ap.append(accepted_para_hist[k][:,j])
                 print("ap shape: ", np.array(ap).shape)
             ret = ax[x,y].hist(ap, bins=bins, color='y',alpha=0.3)
