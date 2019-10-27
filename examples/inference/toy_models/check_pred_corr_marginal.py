@@ -171,7 +171,7 @@ for x in range(3):
 
 
         ap = np.prod(np.array(ap),0)
-        ap = ap/np.trapz(ap,bins)
+        ap = ap/np.trapz(ap,x_points)
         print("ap shape: ", ap.shape)
         # ret = ax[x,y].hist(ap, bins=bins, alpha=0.3)
         # peakv = np.max(ret[0])
@@ -179,7 +179,7 @@ for x in range(3):
         ax[x,y].plot(x_points,ap)
         ax[x,y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
         ax[x,y].plot([dmax[j], dmax[j]], [peakv, 0], c='b', lw=linew)
-        ax[x,y].plot([data_pred[j], data_pred[j]], [peakv, 0],lw=linew, ls=':', c='silver')
+        # ax[x,y].plot([data_pred[j], data_pred[j]], [peakv, 0],lw=linew, ls=':', c='silver')
 
         ax[x,y].plot([true_params[0][j], true_params[0][j]], [peakv, 0],lw=linew, ls='--', c='black')
 
