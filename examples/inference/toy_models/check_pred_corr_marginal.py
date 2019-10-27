@@ -88,7 +88,7 @@ for i in range(15):
     bins.append(bin_)
 
 
-nrs = 10
+nrs = 2
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
