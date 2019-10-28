@@ -16,7 +16,7 @@ def heatmap(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=Non
             ax[x,y].plot([dmin[j], dmin[j], dmax[j], dmax[j], dmin[j]],[dmin[j], dmax[j], dmax[j], dmin[j], dmin[j]],c='w',lw=4)
             ax[x,y].plot([dmin[j],dmax[j]],[dmin[j],dmax[j]], lw=5, c='w', ls=':')
 
-            if pred_point:
+            if pred_point is not None:
                 for pp in pred_point[:,j]:
                     ax[x, y].scatter(true_point[j], pp, c='r', marker='x')
 
