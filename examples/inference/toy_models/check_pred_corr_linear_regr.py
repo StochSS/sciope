@@ -120,7 +120,7 @@ for j in range(15):
 accepted_para_hist = []
 print("nrs: ", nrs)
 bin_box_tot = []
-for i in range(10,10+nrs):
+for i in range(30,30+nrs):
     print("i: ", i)
 
     od = obs_data_big[[i]]
