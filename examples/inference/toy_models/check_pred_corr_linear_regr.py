@@ -114,7 +114,7 @@ pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
 heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 bins = []
 for j in range(15):
-    points = int((1/test_ae_norm[j])**1.2)+1
+    points = int((1/test_ae_norm[j])**2)+1
     bins.append(np.linspace(dmin[j],dmax[j],points))
 
 accepted_para_hist = []
