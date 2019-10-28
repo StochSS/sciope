@@ -133,6 +133,10 @@ for i in range(120,120+nrs):
     # print("data_pred shape: ", data_pred.shape)
     accepted_para_hist.append(accepted_para)
     data_pred = denormalize_data(data_pred,dmin,dmax)
+    accepted_pred_d = denormalize_data(accepted_pred, dmin,dmax)
+    heatmap(true_thetas=accepted_para, pred_thetas=accepted_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0],
+            pred_point=data_pred, name='accepted')
+
     # print("accepted para shape: ", accepted_para.shape)
 
     linew = 3

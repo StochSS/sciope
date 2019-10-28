@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 
-def heatmap(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=None):
+def heatmap(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=None,name=""):
 
     f, ax = plt.subplots(3,5,figsize= (50,20))
 
@@ -23,6 +23,6 @@ def heatmap(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=Non
                     ax[x,y].scatter(true_point[j], pp, c='r', s=20, alpha=0.1)
 
 
-    plt.savefig('true_pred_plot')
+    plt.savefig('true_pred_plot'+name)
 
 
