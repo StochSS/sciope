@@ -11,7 +11,7 @@ def re_hist(bins,data,color='g'):
     for x in range(3):
         for y in range(5):
             j = x * 5 + y
-            for k in range(len(bins[15])-1):
+            for k in range(len(bins[j])-1):
                 l, r = bins[k], bins[k+1]
                 t, b = data[j][k], 0
                 print("l,r,t,b: ", l,r,t,b)
