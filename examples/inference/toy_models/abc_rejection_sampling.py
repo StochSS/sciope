@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn import datasets, linear_model
+from sklearn import datasets, linear_model, neural_network
 
 
 def abc_inference(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000):
@@ -49,6 +49,27 @@ def abc_inference_linear_regression(data, abc_trial_thetas,abc_trial_ts, nnm, nr
     accepted_pred = abc_trial_pred[accepted_ind]
 
     regr = linear_model.LinearRegression()
+    regr.fit(accepted_pred, accepted_para)
+    accepted_para_lf = regr.predict(accepted_pred)
+    data_pred_lf = regr.predict(data_pred)
+    accepted_para = accepted_para - accepted_para_lf + data_pred_lf
+    data_pred = np.squeeze(data_pred)
+
+    return accepted_para, accepted_pred, data_pred
+
+def abc_inference_MLP_regression(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000):
+
+    data_pred = nnm.predict(data)
+
+
+    abc_trial_pred = nnm.predict(abc_trial_ts)
+
+    dist = np.linalg.norm(abc_trial_pred - data_pred, axis=1)
+    accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
+    accepted_para = abc_trial_thetas[accepted_ind]
+    accepted_pred = abc_trial_pred[accepted_ind]
+
+    regr = neural_network.MLPRegressor()
     regr.fit(accepted_pred, accepted_para)
     accepted_para_lf = regr.predict(accepted_pred)
     data_pred_lf = regr.predict(data_pred)
