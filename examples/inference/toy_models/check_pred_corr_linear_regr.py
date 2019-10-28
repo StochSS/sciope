@@ -162,7 +162,7 @@ print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
 
 bin_box_mean = []
 for i in range(15):
-    bin_box_mean.append(np.prod(bin_box_tot[:,i]))
+    bin_box_mean.append(np.prod(np.array(bin_box_tot)[:,i]))
 
 re_hist(bins=bins,data=bin_box_mean,color='g')
 
