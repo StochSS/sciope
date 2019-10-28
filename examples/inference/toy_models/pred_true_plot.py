@@ -49,10 +49,11 @@ def heatmap2(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=No
 
 
                 print("ind shape: ", true_thetas[ind,j].shape)
-                print("pred thetas min/max: ", np.min(pred_thetas[ind,j]), np.max(pred_thetas[ind,j]), ", shape: ", pred_thetas[ind,j].shape)
+                print("pred thetas min/max: ", np.min(true_thetas[ind,j]), np.max(true_thetas[ind,j]), ", shape: ", true_thetas[ind,j].shape)
                 ret=np.histogram(pred_thetas[ind,j],bins=bins,density=True)
                 image.append(ret[0])
             image = np.array(image).T
+            image = image[::-1]
             print("image shape: ", image.shape)
             ax[x,y].imshow(image,cmap='terrain',extent=[dmin[j],dmax[j],dmin[j],dmax[j]])
 
