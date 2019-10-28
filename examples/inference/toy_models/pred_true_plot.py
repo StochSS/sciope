@@ -11,9 +11,10 @@ def heatmap(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=Non
     for x in range(3):
         for y in range(5):
             j = x * 5 + y
+            ax[x,y].plot([dmin[j], dmin[j], dmax[j], dmax[j], dmin[j]],[dmin[j], dmax[j], dmax[j], dmin[j], dmin[j]],c='w',lw=4)
             ax[x,y].hist2d(true_thetas[:,j],pred_thetas[:,j],bins=100,cmap='terrain')
-            ax[x,y].plot([dmin[j], dmin[j], dmax[j], dmax[j], dmin[j]],[dmin[j], dmax[j], dmax[j], dmin[j], dmin[j]],c='w',lw=2)
-            ax[x,y].plot([dmin[j],dmax[j]],[dmin[j],dmax[j]], lw=2, c='w', ls=':')
+            ax[x,y].plot([dmin[j], dmin[j], dmax[j], dmax[j], dmin[j]],[dmin[j], dmax[j], dmax[j], dmin[j], dmin[j]],c='w',lw=4)
+            ax[x,y].plot([dmin[j],dmax[j]],[dmin[j],dmax[j]], lw=5, c='w', ls=':')
 
     plt.savefig('true_pred_plot')
 
