@@ -89,7 +89,7 @@ for i in range(15):
     bins.append(bin_)
 
 
-nrs = 1
+nrs = 10
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
@@ -115,7 +115,7 @@ heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, 
 
 
 accepted_para_hist = []
-
+print("nrs: ", nrs)
 for i in range(10,10+nrs):
     print("i: ", i)
 
