@@ -164,6 +164,9 @@ bin_box_mean = []
 for i in range(15):
     bin_box_mean.append(np.prod(np.array(bin_box_tot)[:,i]))
 
+bin_box_mean = np.array(bin_box_mean)
+print("bin box mean shape: ", bin_box_mean.shape)
+print("bins shape: ", np.array(bins).shape)
 re_hist(bins=bins,data=bin_box_mean,color='g')
 
 #f, ax = plt.subplots(3, 5, figsize=(50, 20))
