@@ -30,23 +30,24 @@ def heatmap(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=Non
 def heatmap2(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=None,name=""):
 
     f, ax = plt.subplots(3,5,figsize= (50,20))
-
+    nr = 100
     for x in range(3):
         for y in range(5):
             j = x * 5 + y
-            bins = np.linspace(dmin[j],dmax[j],21)
-            dx = (dmax[j]-dmin[j])/20
+
+            bins = np.linspace(dmin[j],dmax[j],nr+1)
+            dx = (dmax[j]-dmin[j])/nr
             image = []
-            for i in range(20):
+            for i in range(nr):
                 ind = np.where(abs(true_thetas-bins[i]+dx/2)<dx/2)
                 ret=np.histogram(pred_thetas[ind],bins=bins,density=True)
                 image.append(ret[0])
-            image = np.array(image)
+            image = np.array(image).T
             print("image shape: ", image.shape)
-            ax[x,y].imshow(image)
+            ax[x,y].imshow(image,cmap='terrain',)
 
 
 
 
 
-    plt.savefig('true_pred_plot'+name)
+    plt.savefig('heatmap2'+name)
