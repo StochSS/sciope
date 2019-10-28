@@ -73,7 +73,9 @@ end_step=401
 step = 1
 train_ts = train_ts[:,:end_step:step,species]
 
-
+train_pred = nnm.predict(train_ts)
+train_pred = np.reshape(train_pred,(-1,15))
+train_pred_d = denormalize_data(train_pred,dmin,dmax)
 
 print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
