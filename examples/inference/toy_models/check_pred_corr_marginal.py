@@ -17,7 +17,7 @@ from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
 from vilar_all_species import Vilar_model
 import vilar
-
+from pred_true_plot import heatmap
 
 
 num_timestamps=401
@@ -65,6 +65,8 @@ test_mse = np.mean((test_thetas-test_pred)**2)
 test_mae = np.mean(abs(test_thetas-test_pred_d))
 test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
 test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
+
+heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=None, pred_point=None)
 
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
 print("train_ts shape: ", train_ts.shape)
