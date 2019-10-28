@@ -111,7 +111,7 @@ print("obs_data_big shape: ", obs_data_big.shape)
 
 pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
 
-heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:10])
+heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 
 
 accepted_para_hist = []
