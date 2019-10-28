@@ -30,7 +30,7 @@ def heatmap(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=Non
 def heatmap2(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=None,name=""):
 
     f, ax = plt.subplots(3,5,figsize= (50,20))
-    nr = 100
+    nr = 10
     print("true_thetas shape: ", true_thetas.shape)
 
     for x in range(3):
@@ -43,7 +43,8 @@ def heatmap2(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=No
             image = []
             for i in range(nr):
                 print("bins[",i,"]: ", bins[i])
-                ind = np.where(abs(true_thetas[:,j]-bins[i]+dx/2)<dx/2)
+                print("true thetas min: ", np.min(true_thetas[:,j]))
+                ind = np.where(abs(true_thetas[:,j]-bins[i]+dx/2) < dx/2)
 
 
 
