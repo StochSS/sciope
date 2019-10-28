@@ -66,7 +66,6 @@ test_mae = np.mean(abs(test_thetas-test_pred_d))
 test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
 test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 
-heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=None, pred_point=None)
 
 train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
 print("train_ts shape: ", train_ts.shape)
@@ -110,6 +109,11 @@ print("obs_data_big shape: ", obs_data_big.shape)
 obs_data_big = obs_data_big[:,:,[6]]
 print("obs_data_big shape: ", obs_data_big.shape)
 
+pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
+
+heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:10])
+
+
 accepted_para_hist = []
 
 for i in range(10,10+nrs):
@@ -148,8 +152,8 @@ for i in range(10,10+nrs):
     plt.savefig("check_corr_marginal_" + str(i))
     plt.close()
 
-print("accepted_para_hist len: ", len(accepted_para_hist))
-print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
+# print("accepted_para_hist len: ", len(accepted_para_hist))
+# print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
 f, ax = plt.subplots(3, 5, figsize=(50, 20))
 
 for x in range(3):
