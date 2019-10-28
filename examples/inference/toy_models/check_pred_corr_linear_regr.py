@@ -113,7 +113,7 @@ print("obs_data_big shape: ", obs_data_big.shape)
 
 pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
 
-heatmap(true_thetas=train_thetas, pred_thetas=train_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
+# heatmap(true_thetas=train_thetas, pred_thetas=train_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 bins = []
 for j in range(15):
     points = int((1/test_ae_norm[j])**1.4)+1
@@ -135,7 +135,7 @@ for i in range(120,120+nrs):
     data_pred = denormalize_data(data_pred,dmin,dmax)
     accepted_pred_d = denormalize_data(accepted_pred, dmin,dmax)
     heatmap(true_thetas=accepted_para, pred_thetas=accepted_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0],
-            pred_point=data_pred, name='accepted')
+            pred_point=np.expand_dims(data_pred,0), name='accepted')
 
     # print("accepted para shape: ", accepted_para.shape)
 
