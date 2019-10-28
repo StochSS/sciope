@@ -31,6 +31,8 @@ def heatmap2(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=No
 
     f, ax = plt.subplots(3,5,figsize= (50,20))
     nr = 100
+    print("true_thetas shape: ", true_thetas.shape)
+
     for x in range(3):
         for y in range(5):
             j = x * 5 + y
@@ -40,6 +42,7 @@ def heatmap2(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=No
             image = []
             for i in range(nr):
                 ind = np.where(abs(true_thetas[:,j]-bins[i]+dx/2)<dx/2)
+                print("ind shape: ", ind.shape)
                 print("pred thetas min/max: ", np.min(pred_thetas[ind,j]), np.max(pred_thetas[ind,j]), ", shape: ", pred_thetas[ind,j].shape)
                 ret=np.histogram(pred_thetas[ind,j],bins=bins,density=True)
                 image.append(ret[0])
