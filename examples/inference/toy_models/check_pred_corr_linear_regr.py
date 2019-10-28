@@ -114,7 +114,7 @@ pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
 heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 bins = []
 for j in range(15):
-    points = int((1/test_ae_norm[j])**1.5)+1
+    points = int((1/test_ae_norm[j]))+1
     bins.append(np.linspace(dmin[j],dmax[j],points))
 
 accepted_para_hist = []
@@ -125,7 +125,7 @@ for i in range(0,0+nrs):
 
     od = obs_data_big[[i]]
     # print("od shape: ", od.shape)
-    accepted_para, accepted_pred, data_pred = abc_inference_MLP_regression(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
+    accepted_para, accepted_pred, data_pred = abc_inference_linear_regression(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
     # print("data_pred shape: ", data_pred.shape)
     accepted_para_hist.append(accepted_para)
     data_pred = denormalize_data(data_pred,dmin,dmax)
