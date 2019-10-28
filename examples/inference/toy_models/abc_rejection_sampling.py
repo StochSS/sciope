@@ -17,7 +17,7 @@ def abc_inference(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000)
     return accepted_para, accepted_pred, data_pred
 
 
-def abc_inference_marginal(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000):
+def abc_inference_marginal(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 100):
 
     data_pred = nnm.predict(data)
     data_pred = np.squeeze(data_pred)
