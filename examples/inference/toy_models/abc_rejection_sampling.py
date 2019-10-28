@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn import datasets, linear_model
 
 
 def abc_inference(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000):
@@ -15,6 +16,7 @@ def abc_inference(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000)
 
     return accepted_para, accepted_pred, data_pred
 
+
 def abc_inference_marginal(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000):
 
     data_pred = nnm.predict(data)
@@ -30,5 +32,24 @@ def abc_inference_marginal(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accep
         accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
         accepted_para[:,i] = abc_trial_thetas[accepted_ind][:,i]
         accepted_pred[:,i] = abc_trial_pred[accepted_ind][:,i]
+
+    return accepted_para, accepted_pred, data_pred
+
+
+def abc_inference_linear_regression(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000):
+
+    data_pred = nnm.predict(data)
+    data_pred = np.squeeze(data_pred)
+
+    abc_trial_pred = nnm.predict(abc_trial_ts)
+
+    dist = np.linalg.norm(abc_trial_pred - data_pred, axis=1)
+    accepted_ind = np.argpartition(dist, nr_of_accept)[0:nr_of_accept]
+    accepted_para = abc_trial_thetas[accepted_ind]
+    accepted_pred = abc_trial_pred[accepted_ind]
+
+    regr = linear_model.LinearRegression()
+    regr.fit(accepted_pred, accepted_para)
+    accepted_para = regr.predict(accepted_pred)
 
     return accepted_para, accepted_pred, data_pred

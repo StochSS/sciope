@@ -7,7 +7,7 @@ from sciope.inference import abc_inference
 from sciope.models.cnn_regressor import CNNModel
 from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
-from abc_rejection_sampling import abc_inference, abc_inference_marginal
+from abc_rejection_sampling import abc_inference, abc_inference_marginal, abc_inference_linear_regression
 
 import numpy as np
 
@@ -121,7 +121,7 @@ for i in range(10,10+nrs):
 
     od = obs_data_big[[i]]
     # print("od shape: ", od.shape)
-    accepted_para, accepted_pred, data_pred = abc_inference_marginal(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
+    accepted_para, accepted_pred, data_pred = abc_inference_linear_regression(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
     # print("data_pred shape: ", data_pred.shape)
     accepted_para_hist.append(accepted_para)
     data_pred = denormalize_data(data_pred,dmin,dmax)
