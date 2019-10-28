@@ -39,7 +39,6 @@ def abc_inference_marginal(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accep
 def abc_inference_linear_regression(data, abc_trial_thetas,abc_trial_ts, nnm, nr_of_accept = 1000):
 
     data_pred = nnm.predict(data)
-    data_pred = np.squeeze(data_pred)
 
 
     abc_trial_pred = nnm.predict(abc_trial_ts)
@@ -54,5 +53,6 @@ def abc_inference_linear_regression(data, abc_trial_thetas,abc_trial_ts, nnm, nr
     accepted_para_lr = regr.predict(accepted_pred)
     data_pred_lr = regr.predict(data_pred)
     accepted_para = accepted_para - accepted_para_lr + data_pred_lr
+    data_pred = np.squeeze(data_pred)
 
     return accepted_para, accepted_pred, data_pred
