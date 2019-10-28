@@ -18,7 +18,7 @@ from load_data import load_spec
 from vilar_all_species import Vilar_model
 import vilar
 from pred_true_plot import heatmap
-
+from rebuild_histogram import re_hist
 
 num_timestamps=401
 endtime=200
@@ -113,6 +113,9 @@ pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
 
 heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 
+for j in range(15):
+    points = int((1/test_ae_norm[j])**1.5)+1
+    bins.append(np.linspace(dmin[j],dmax[j],points))
 
 accepted_para_hist = []
 print("nrs: ", nrs)
@@ -134,11 +137,11 @@ for i in range(10,10+nrs):
     for x in range(3):
         for y in range(5):
             j = x*5+y
-            points = int((1/test_ae_norm[j])**1.5)+1
-            # print("j: ", j, ", points: ", points)
-            # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
-            bins = np.linspace(dmin[j],dmax[j],points)
-            ret = ax[x,y].hist(accepted_para[:,j], bins=bins, color='y',alpha=0.3)
+            # points = int((1/test_ae_norm[j])**1.5)+1
+            # # print("j: ", j, ", points: ", points)
+            # # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
+            # bins = np.linspace(dmin[j],dmax[j],points)
+            ret = ax[x,y].hist(accepted_para[:,j], bins=bins[j], color='y',alpha=0.3)
             bin_box.append(ret[0])
             peakv = np.max(ret[0])
             ax[x,y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
@@ -156,42 +159,48 @@ for i in range(10,10+nrs):
 print("bin_box_tot shape: ", np.array(bin_box_tot).shape)
 print("accepted_para_hist len: ", len(accepted_para_hist))
 print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
-f, ax = plt.subplots(3, 5, figsize=(50, 20))
 
-for x in range(3):
-    for y in range(5):
-        j = x*5+y
-        points = int((1/test_ae_norm[i])**1.5)+1
-        # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
-        bins = np.linspace(dmin[j],dmax[j],points)
-        x_points = (np.array(bins[1:])+np.array(bins[0:-1]))/2
-        print("points: ", points, ", x_points shape: ", x_points.shape)
+bin_box_mean = []
+for i in range(15):
+    bin_box_mean.append(np.prod(bin_box_tot[:,i]))
 
-        ap = []
-        for k in range(nrs):
+re_hist(bins=bins,data=bin_box_mean,color='g')
 
-            print("k: ", k, ", j: ", j)
-            print("accepted_para_hist[k] shape: ", accepted_para_hist[k].shape)
-            # ap.append(accepted_para_hist[k][:,j])
-            ap.append(np.histogram(accepted_para_hist[k][:,j],bins=bins, density=True)[0])
-
-            print("ap shape: ", np.array(ap).shape)
-
-
-        ap = np.prod(np.array(ap),0)
-        ap = ap/np.trapz(ap,x_points)
-        print("ap shape: ", ap.shape)
-        # ret = ax[x,y].hist(ap, bins=bins, alpha=0.3)
-        # peakv = np.max(ret[0])
-        peakv = np.max(ap)
-        ax[x,y].plot(x_points,ap)
-        ax[x,y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
-        ax[x,y].plot([dmax[j], dmax[j]], [peakv, 0], c='b', lw=linew)
-        # ax[x,y].plot([data_pred[j], data_pred[j]], [peakv, 0],lw=linew, ls=':', c='silver')
-
-        ax[x,y].plot([true_params[0][j], true_params[0][j]], [peakv, 0],lw=linew, ls='--', c='black')
-
-    plt.savefig("check_corr_prod")
+#f, ax = plt.subplots(3, 5, figsize=(50, 20))
+# for x in range(3):
+#     for y in range(5):
+#         j = x*5+y
+#         points = int((1/test_ae_norm[i])**1.5)+1
+#         # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
+#         bins = np.linspace(dmin[j],dmax[j],points)
+#         x_points = (np.array(bins[1:])+np.array(bins[0:-1]))/2
+#         print("points: ", points, ", x_points shape: ", x_points.shape)
 #
+#         ap = []
+#         for k in range(nrs):
+#
+#             print("k: ", k, ", j: ", j)
+#             print("accepted_para_hist[k] shape: ", accepted_para_hist[k].shape)
+#             # ap.append(accepted_para_hist[k][:,j])
+#             ap.append(np.histogram(accepted_para_hist[k][:,j],bins=bins, density=True)[0])
+#
+#             print("ap shape: ", np.array(ap).shape)
+#
+#
+#         ap = np.prod(np.array(ap),0)
+#         ap = ap/np.trapz(ap,x_points)
+#         print("ap shape: ", ap.shape)
+#         # ret = ax[x,y].hist(ap, bins=bins, alpha=0.3)
+#         # peakv = np.max(ret[0])
+#         peakv = np.max(ap)
+#         ax[x,y].plot(x_points,ap)
+#         ax[x,y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
+#         ax[x,y].plot([dmax[j], dmax[j]], [peakv, 0], c='b', lw=linew)
+#         # ax[x,y].plot([data_pred[j], data_pred[j]], [peakv, 0],lw=linew, ls=':', c='silver')
+#
+#         ax[x,y].plot([true_params[0][j], true_params[0][j]], [peakv, 0],lw=linew, ls='--', c='black')
+#
+#     plt.savefig("check_corr_prod")
+# #
 #
 
