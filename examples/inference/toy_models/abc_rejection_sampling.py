@@ -41,6 +41,7 @@ def abc_inference_linear_regression(data, abc_trial_thetas,abc_trial_ts, nnm, nr
     data_pred = nnm.predict(data)
     data_pred = np.squeeze(data_pred)
 
+
     abc_trial_pred = nnm.predict(abc_trial_ts)
 
     dist = np.linalg.norm(abc_trial_pred - data_pred, axis=1)
@@ -50,6 +51,8 @@ def abc_inference_linear_regression(data, abc_trial_thetas,abc_trial_ts, nnm, nr
 
     regr = linear_model.LinearRegression()
     regr.fit(accepted_pred, accepted_para)
-    accepted_para = regr.predict(accepted_pred)
+    accepted_para_lr = regr.predict(accepted_pred)
+    data_pred_lr = regr.predict(data_pred)
+    accepted_para = accepted_para - accepted_para_lr + data_pred_lr
 
     return accepted_para, accepted_pred, data_pred
