@@ -12,7 +12,7 @@ def re_hist(bins,data,color='g'):
         for y in range(5):
             j = x * 5 + y
             for k in range(len(bins[j])-1):
-                l, r = bins[k], bins[k+1]
+                l, r = bins[j][k], bins[j][k+1]
                 t, b = data[j][k], 0
                 print("l,r,t,b: ", l,r,t,b)
                 patch = plt.Rectangle((l, t), r - l, b - t, color=color, fill=True, alpha=0.3)
