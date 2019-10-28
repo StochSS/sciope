@@ -17,7 +17,7 @@ from normalize_data import normalize_data, denormalize_data
 from load_data import load_spec
 from vilar_all_species import Vilar_model
 import vilar
-from pred_true_plot import heatmap
+from pred_true_plot import heatmap, heatmap2
 from rebuild_histogram import re_hist
 
 num_timestamps=401
