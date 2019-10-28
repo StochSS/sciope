@@ -162,7 +162,10 @@ print("accepted_para_hist[0] shape: ", accepted_para_hist[0].shape)
 
 bin_box_mean = []
 for i in range(15):
-    bin_box_mean.append(np.prod(np.array(bin_box_tot)[:,i]))
+    a = np.prod(np.array(bin_box_tot)[:, i])
+    dx = bins[i][1]-bins[i][0]
+    a = a / np.sum(a*dx)
+    bin_box_mean.append(a)
 
 bin_box_mean = np.array(bin_box_mean)
 
