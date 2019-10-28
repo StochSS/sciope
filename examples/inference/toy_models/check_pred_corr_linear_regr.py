@@ -111,7 +111,7 @@ print("obs_data_big shape: ", obs_data_big.shape)
 
 pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
 
-heatmap(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
+heatmap(true_thetas=train_thetas, pred_thetas=train_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 bins = []
 for j in range(15):
     points = int((1/test_ae_norm[j])**1.4)+1
@@ -120,14 +120,14 @@ for j in range(15):
 accepted_para_hist = []
 print("nrs: ", nrs)
 bin_box_tot = []
-for i in range(0,0+nrs):
+for i in range(120,120+nrs):
     print("i: ", i)
 
     od = obs_data_big[[i]]
     # print("od shape: ", od.shape)
     # accepted_para, accepted_pred, data_pred = abc_inference(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
 
-    accepted_para, accepted_pred, data_pred = abc_inference_linear_regression(data=od, abc_trial_thetas=train_thetas,abc_trial_ts=train_ts, nnm=nnm, nr_of_accept = 1000)
+    accepted_para, accepted_pred, data_pred = abc_inference_linear_regression(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
     # print("data_pred shape: ", data_pred.shape)
     accepted_para_hist.append(accepted_para)
     data_pred = denormalize_data(data_pred,dmin,dmax)
