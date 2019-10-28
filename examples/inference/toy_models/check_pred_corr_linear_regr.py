@@ -89,7 +89,7 @@ for i in range(15):
     bins.append(bin_)
 
 
-nrs = 10
+nrs = 100
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
@@ -125,7 +125,7 @@ for i in range(0,0+nrs):
 
     od = obs_data_big[[i]]
     # print("od shape: ", od.shape)
-    accepted_para, accepted_pred, data_pred = abc_inference_linear_regression(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 10000)
+    accepted_para, accepted_pred, data_pred = abc_inference_linear_regression(data=od, abc_trial_thetas=test_thetas,abc_trial_ts=test_ts, nnm=nnm, nr_of_accept = 1000)
     # print("data_pred shape: ", data_pred.shape)
     accepted_para_hist.append(accepted_para)
     data_pred = denormalize_data(data_pred,dmin,dmax)
