@@ -1,6 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.collections import PatchCollection
 
 
 #bins shape 15 x nr of slices +1
@@ -15,7 +16,10 @@ def re_hist(bins,data,color='g'):
                 l, r = bins[j][k], bins[j][k+1]
                 t, b = data[j][k], 0
                 print("l,r,t,b: ", l,r,t,b)
-                patch = plt.Rectangle((l, t), r - l, b - t, color=color, fill=True, alpha=0.3)
-                ax[x,y].add_patch(patch)
+                # patches.append[plt.Rectangle((l, t), r - l, b - t, color=color, fill=True, alpha=0.3)]
+                ax[x,y].plot([l,r,r,l,l],[t,t,b,b,t], c=color, lw=5)
+
+
+            # ax[x,y].add_patch(patch)
 
     plt.savefig('re_hist')
