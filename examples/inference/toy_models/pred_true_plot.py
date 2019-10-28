@@ -30,7 +30,7 @@ def heatmap(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=Non
 def heatmap2(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=None,name=""):
 
     f, ax = plt.subplots(3,5,figsize= (50,20))
-    nr = 10
+    nr = 100
     print("true_thetas shape: ", true_thetas.shape)
 
     for x in range(3):
