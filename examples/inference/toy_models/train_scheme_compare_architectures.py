@@ -1,4 +1,4 @@
-from train_func import train_routine
+from train_function import train_routine
 
 
 num_timestamps=401
