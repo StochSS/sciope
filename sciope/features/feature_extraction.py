@@ -73,6 +73,40 @@ def generate_tsfresh_features(data, features):  # pragma: no cover
     res = np.array(_wrapper(data))
     return res.reshape(-1, res.shape[1]*res.shape[2])
 
+def _get_tsfresh_features_names(features):
+    """
+    Generates time series features names from TSFRESH library
+
+    Parameters
+    ----------
+    features : dict, optional
+        dict containing tsfresh features
+        for exempel:  features = {'variance': None,
+                                                'absolute_sum_of_changes': None,
+                                                'agg_autocorrelation': [{'f_agg': 'mean'},
+                                                                        {'f_agg': 'var'}]}
+        
+    
+    Returns
+    -------
+    list
+        shape: Nr of total features
+    """
+    f_names = []
+    
+    for key in features.keys():
+        assert hasattr(feature_calculators, key), "%s does not exist as a feature supported by tsfresh" % key
+
+
+    for function_name, parameter_list in features.items():
+        func = getattr(feature_calculators, function_name)
+        if parameter_list:
+            for param in parameter_list:
+                f_names.append(function_name + str(param))
+        else:
+            f_names.append(function_name)
+
+    return f_names
 
 def remove_nan_features(x, features):   # pragma: no cover
     """

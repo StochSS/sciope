@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from sciope.features.feature_extraction import generate_tsfresh_features
+from sciope.features.feature_extraction import generate_tsfresh_features, _get_tsfresh_features_names
 from sciope.utilities.summarystats.summary_base import SummaryBase
 from itertools import combinations
 from tsfresh.feature_extraction.settings import EfficientFCParameters, MinimalFCParameters
@@ -27,6 +27,8 @@ class SummariesTSFRESH(SummaryBase):
 
     def __init__(self, features='minimal', corrcoef=False, use_logger=False):
         self.name = 'SummariesTSFRESH'
+        super(SummariesTSFRESH, self).__init__(self.name, use_logger=use_logger)
+        
         if type(features) is str:
             allowed_str = ['minimal', 'full']
             assert features in allowed_str,"{0} is not recognized, supported sets are 'minimal' and 'full'".format(features)
@@ -39,8 +41,10 @@ class SummariesTSFRESH(SummaryBase):
             self.features = features
         
         self.corrcoef = corrcoef
+
+        self.summaries_names = _get_tsfresh_features_names(self.features)
         
-        super(SummariesTSFRESH, self).__init__(self.name, use_logger=use_logger)
+        
 
     def _compute_tsfresh(self, point):
         """

@@ -34,6 +34,7 @@ class SummaryBase(object):
         :param use_logger: if enabled, logs the summary statistic calculation in a file and on screen
         """
         self.name = name
+        self.summaries_names = None
         self.mean_trajectories = mean_trajectories
         self.use_logger = use_logger
 
