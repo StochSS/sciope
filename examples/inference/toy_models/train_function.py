@@ -52,6 +52,7 @@ def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000
     para_names = vilar.get_parameter_names()
 
     if load_model:
+        start_time = time.time()
         nnm.load_model()
     else:
         start_time = time.time()
@@ -62,7 +63,7 @@ def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000
         pickle.dump(history1.history, open('history1.p', "wb"))
 
         history2 = nnm.train(inputs=train_ts, targets=train_thetas,validation_inputs=validation_ts,validation_targets=validation_thetas,
-                  batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False)
+                  batch_size=4096, epochs=5*10, val_freq=1, early_stopping_patience=5, plot_training_progress=False, verbose=verbose)
 
 
         end_time = time.time()
