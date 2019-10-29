@@ -16,7 +16,7 @@ from vilar import Vilar_model
 
 
 
-def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000, step=2, end_step=401,clay=[32,48,64,96],dlay=[100,100,100],
+def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000, step=1, end_step=401,clay=[32,48,64,96],dlay=[100,100,100],
                   model='CNN',load_model=False, verbose=2, dataname =""):
 
 
