@@ -14,6 +14,6 @@ models = ['CNN', 'PEN', 'DNN']
 
 for i in range(3):
     train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=species,dataname=dataname,
-                  pooling_len=2, dlay=[200,200,200], model=models[i])
+                  pooling_len=2, dlay=[400,400,400], model=models[i])
 
 
