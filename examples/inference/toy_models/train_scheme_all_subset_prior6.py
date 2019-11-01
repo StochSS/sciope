@@ -13,7 +13,7 @@ models = ['CNN'] #, 'PEN', 'DNN']
 # models = ['PEN', 'DNN']
 
 for i in range(9):
-    train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=species[9],dataname=dataname,
+    train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=species[i],dataname=dataname,
                   pooling_len=2, dlay=[400,400,400], model='CNN')
 
 
