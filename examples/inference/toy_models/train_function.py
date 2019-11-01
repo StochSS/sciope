@@ -33,6 +33,7 @@ def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000
     validation_thetas = normalize_data(validation_thetas,dmin,dmax)
     #Resample data
     train_ts = train_ts[:,:end_step:step,:]
+    print("validation_ts shape: ", validation_ts.shape)
     validation_ts = validation_ts[:,:end_step:step,:]
 
     ts_len = train_ts.shape[1]
