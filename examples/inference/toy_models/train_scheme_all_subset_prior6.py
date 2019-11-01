@@ -12,6 +12,7 @@ print("species len: ", len(species))
 modelname = "vilar_allspecies_" + str(endtime) + "_" + str(num_timestamps)
 models = ['CNN'] #, 'PEN', 'DNN']
 # models = ['PEN', 'DNN']
+dataname = "new_approach"
 
 for i in range(9):
     train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=species[i],dataname=dataname,
