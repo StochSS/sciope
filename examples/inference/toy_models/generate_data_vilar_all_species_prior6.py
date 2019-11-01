@@ -107,18 +107,18 @@ print("generating some data")
 #     pickle.dump( train_thetas, open( 'datasets/' + modelname + '/train_thetas_'+str(nr)+'.p', "wb" ) )
 #     pickle.dump( train_ts, open( 'datasets/' + modelname + '/train_ts_'+str(nr)+'.p', "wb" ) )
 
-validation_thetas = np.zeros((0,15))
-validation_ts = np.zeros((0,num_timestamps,9))
-for i in range(20):
-    param, ts = dg.gen(batch_size=1000)
-    validation_thetas = np.concatenate((validation_thetas,param),axis=0)
-    validation_ts = np.concatenate((validation_ts,ts),axis=0)
-    print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
-
-print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
-
-pickle.dump( validation_thetas, open( 'datasets/' + modelname + '/validation_thetas.p', "wb" ) )
-pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', "wb" ) )
+# validation_thetas = np.zeros((0,15))
+# validation_ts = np.zeros((0,num_timestamps,9))
+# for i in range(20):
+#     param, ts = dg.gen(batch_size=1000)
+#     validation_thetas = np.concatenate((validation_thetas,param),axis=0)
+#     validation_ts = np.concatenate((validation_ts,ts),axis=0)
+#     print("validation data shape: train_ts: ", validation_ts.shape, ", train_thetas: ", validation_thetas.shape)
+#
+# print("generating validation data done, shape: validation_ts: ", validation_ts.shape, ", validation_thetas: ", validation_thetas.shape)
+#
+# pickle.dump( validation_thetas, open( 'datasets/' + modelname + '/validation_thetas.p', "wb" ) )
+# pickle.dump( validation_ts, open( 'datasets/' + modelname + '/validation_ts.p', "wb" ) )
 
 
 # test_thetas = np.zeros((0,15))
