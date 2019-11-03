@@ -6,7 +6,7 @@ from sciope.models.pen_regressor_beta import PEN_CNNModel
 from sciope.models.dnn_regressor import ANNModel
 from load_data_from_julia import load_data
 import numpy as np
-
+import os
 import pickle
 import time
 from normalize_data import normalize_data, denormalize_data
@@ -17,7 +17,8 @@ from vilar import Vilar_model
 
 
 def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000, step=1, end_step=401,clay=[32,48,64,96],dlay=[100,100,100],
-                  model='CNN',load_model=False, verbose=2, pooling_len=3, dataname =""):
+                  model='CNN',load_model=False, verbose=2, pooling_len=3, dataname ="",
+                  res_folder="Random_folder"+str(np.random.rand(4))):
 
 
 
@@ -98,7 +99,12 @@ def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000
 
 
     test_results = {"model name": nnm.name, "training_time": training_time, "mse": test_mse, "mae": test_mae, "ae": test_ae, "rel_test_ae": test_ae_norm}
+
+    if not os.path.exists('results/' + res_folder):
+        os.mkdir('results/' + res_folder)
+
     pickle.dump(test_results,
-                open('results/compare_models/training_results_' + modelname + '_' + nnm.name + '_training_size_' + str(training_size) +
-                     '_step_' + str(step) + '_endstep_' + str(end_step) + '_species_' + str(species) + '.p', "wb"))
+                open('results/' + res_folder +'/training_results_' + modelname + '_' + nnm.name + '_training_size_' +
+                     str(training_size) + '_step_' + str(step) + '_endstep_' + str(end_step) + '_species_' +
+                     str(species) + '.p', "wb"))
 
