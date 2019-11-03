@@ -14,8 +14,8 @@ models = ['CNN'] #, 'PEN', 'DNN']
 # models = ['PEN', 'DNN']
 dataname = "new_approach"
 training_size = [200000, 100000, 30000]
-for i in range(9):
+for i in range(3):
     train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=species[6], training_size=training_size[i],
-                  dataname=dataname, pooling_len=2, dlay=[400,400,400], model='CNN')
+                  dataname=dataname, pooling_len=2, dlay=[400,400,400], model='CNN', res_folder="diff_training_sizes")
 
 
