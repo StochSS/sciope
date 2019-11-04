@@ -3,7 +3,9 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.collections import PatchCollection
+import vilar
 
+para_names = vilar.get_parameter_names()
 
 #bins shape 15 x nr of slices +1
 #data shape 15 x nr of slices
@@ -19,6 +21,7 @@ def re_hist(bins,data,true_param,dmin,dmax,color='g'):
                 t, b = data[j][k], 0
                 # print("l,r,t,b: ", l,r,t,b)
                 # patches.append[plt.Rectangle((l, t), r - l, b - t, color=color, fill=True, alpha=0.3)]
+                ax[x, y].set_title(para_names[j])
                 ax[x,y].plot([l,r,r,l,l],[t,t,b,b,t], c=color, lw=5)
             peakv = np.max(data[j])
             ax[x, y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
