@@ -20,7 +20,7 @@ import vilar
 from pred_true_plot import heatmap, heatmap2
 from rebuild_histogram import re_hist
 
-
+print("start 1")
 num_timestamps=401
 endtime=200
 
@@ -53,6 +53,7 @@ data = pickle.load(open('datasets/' + modelname + '/obs_data_pack.p', "rb" ) )
 print("data shape: ", data.shape)
 
 nnm.load_model()
+print("start 2")
 
 
 test_thetas = pickle.load(open('datasets/' + modelname + '/test_thetas.p', "rb" ) )
@@ -69,6 +70,7 @@ test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 
 end_step=401
 step = 1
+print("start 3")
 
 # train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
 # print("train_ts shape: ", train_ts.shape)
@@ -84,6 +86,7 @@ print("mean square error: ", test_mse)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
 
 para_names = vilar.get_parameter_names()
+print("start 4")
 
 #create bins
 bins = []
