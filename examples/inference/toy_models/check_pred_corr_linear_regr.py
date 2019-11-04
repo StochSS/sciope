@@ -20,6 +20,7 @@ import vilar
 from pred_true_plot import heatmap, heatmap2
 from rebuild_histogram import re_hist
 
+
 num_timestamps=401
 endtime=200
 
@@ -113,6 +114,7 @@ obs_data_big = obs_data_big[:,:,[6]]
 print("obs_data_big shape: ", obs_data_big.shape)
 
 pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
+para_names = vilar.get_parameter_names()
 
 heatmap2(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 bins = []
@@ -135,8 +137,8 @@ for i in range(120,120+nrs):
     accepted_para_hist.append(accepted_para)
     data_pred = denormalize_data(data_pred,dmin,dmax)
     accepted_pred_d = denormalize_data(accepted_pred, dmin,dmax)
-    heatmap(true_thetas=accepted_para, pred_thetas=accepted_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0],
-            pred_point=np.expand_dims(data_pred,0), name='accepted')
+    # heatmap(true_thetas=accepted_para, pred_thetas=accepted_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0],
+    #         pred_point=np.expand_dims(data_pred,0), name='accepted')
 
     # print("accepted para shape: ", accepted_para.shape)
 
@@ -150,6 +152,7 @@ for i in range(120,120+nrs):
             # # print("j: ", j, ", points: ", points)
             # # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
             # bins = np.linspace(dmin[j],dmax[j],points)
+            ax[x,y].set_title(para_names[j])
             ret = ax[x,y].hist(accepted_para[:,j], bins=bins[j], color='y',alpha=0.3)
             bin_box.append(ret[0])
             peakv = np.max(ret[0])
