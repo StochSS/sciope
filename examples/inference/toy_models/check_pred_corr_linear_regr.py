@@ -98,6 +98,7 @@ for i in range(15):
 
 
 nrs = 10
+print("start 5")
 
 Vilar_ = Vilar_model(num_timestamps=num_timestamps, endtime=endtime)
 simulate = Vilar_.simulate
@@ -110,6 +111,7 @@ abc_post = []
 
 prod = []
 
+print("start 6")
 
 obs_data_big = pickle.load(open('datasets/' + modelname + '/obs_data_pack_1k.p', "rb" ) )
 print("obs_data_big shape: ", obs_data_big.shape)
@@ -120,6 +122,8 @@ print("obs_data_big shape: ", obs_data_big.shape)
 pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
 print("pred data shape: ", pred_data.shape)
 linew=3
+print("start 7")
+
 f, ax = plt.subplots(3, 5, figsize=(50, 20))
 for x in range(3):
     for y in range(5):
@@ -138,9 +142,12 @@ for x in range(3):
 
 plt.savefig("pred_dist")
 plt.close()
+print("start 8")
 
 heatmap2(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 bins = []
+print("start 9")
+
 for j in range(15):
     points = int((1/test_ae_norm[j])**1.4)+1
     bins.append(np.linspace(dmin[j],dmax[j],points))
