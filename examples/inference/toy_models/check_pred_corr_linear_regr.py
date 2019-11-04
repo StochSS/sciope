@@ -83,6 +83,7 @@ print("Model name: ", nnm.name)
 print("mean square error: ", test_mse)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
 
+para_names = vilar.get_parameter_names()
 
 #create bins
 bins = []
@@ -90,6 +91,7 @@ nr_of_bins = []
 for i in range(15):
     nr_of_bins.append(int(4/test_ae_norm[i]))
     bin_ = np.linspace(dmin[i],dmax[i], nr_of_bins[i]+1)
+    print(para_names[i], " bins: ", bin_)
     bins.append(bin_)
 
 
@@ -114,7 +116,6 @@ obs_data_big = obs_data_big[:,:,[6]]
 print("obs_data_big shape: ", obs_data_big.shape)
 
 pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
-para_names = vilar.get_parameter_names()
 
 heatmap2(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 bins = []
