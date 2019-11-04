@@ -115,6 +115,26 @@ obs_data_big = obs_data_big[:,:,[6]]
 print("obs_data_big shape: ", obs_data_big.shape)
 
 pred_data = denormalize_data(nnm.predict(obs_data_big),dmin,dmax)
+print("pred data shape: ", pred_data.shape)
+linew=3
+f, ax = plt.subplots(3, 5, figsize=(50, 20))
+for x in range(3):
+    for y in range(5):
+        j = x * 5 + y
+        # points = int((1/test_ae_norm[j])**1.5)+1
+        # # print("j: ", j, ", points: ", points)
+        # # points = int((1/np.std(normalize_data(accepted_para,dmin,dmax)[:,j]))**1.5)
+        # bins = np.linspace(dmin[j],dmax[j],points)
+        ax[x, y].set_title(para_names[j],fontsize=20)
+        ret = ax[x, y].hist(pred_data[:,j], color='y', alpha=0.3)
+        peakv = np.max(ret[0])
+        ax[x, y].plot([dmin[j], dmin[j]], [peakv, 0], c='b', lw=linew)
+        ax[x, y].plot([dmax[j], dmax[j]], [peakv, 0], c='b', lw=linew)
+
+        ax[x, y].plot([true_params[0][j], true_params[0][j]], [peakv, 0], lw=linew, ls='--', c='black')
+
+plt.savefig("pred_dist")
+plt.close()
 
 heatmap2(true_thetas=test_thetas, pred_thetas=test_pred_d, dmin=dmin, dmax=dmax, true_point=true_params[0], pred_point=pred_data[:100])
 bins = []
@@ -127,7 +147,7 @@ for j in range(15):
 accepted_para_hist = []
 print("nrs: ", nrs)
 bin_box_tot = []
-for i in range(110,110+nrs):
+for i in range(0,10+nrs):
     print("i: ", i)
 
     od = obs_data_big[[i]]
@@ -186,6 +206,9 @@ bin_box_mean = np.array(bin_box_mean)
 print("bin box mean shape: ", bin_box_mean.shape)
 print("bins shape: ", np.array(bins).shape)
 re_hist(bins=bins,data=bin_box_mean,true_param=true_params[0],dmin=dmin,dmax=dmax,color='g')
+
+print("obs big data shape: ", obs_data_big.shape)
+
 
 #f, ax = plt.subplots(3, 5, figsize=(50, 20))
 # for x in range(3):
