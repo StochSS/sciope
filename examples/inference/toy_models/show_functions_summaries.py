@@ -49,4 +49,4 @@ def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000
     else:
         print("invalid model name!")
 
-    nnm.model.summery()
+    # nnm.model.summery()
