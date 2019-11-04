@@ -15,6 +15,7 @@ models = ['CNN'] #, 'PEN', 'DNN']
 dataname = "new_approach"
 
 for i in range(8):
+    print("species: ", species[i])
     train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=species[i],dataname=dataname, step=2,
                   pooling_len=2, dlay=[400,400,400], model='CNN',res_folder="2species")
 
