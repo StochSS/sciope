@@ -31,7 +31,7 @@ def heatmap2(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=No
 
     f, ax = plt.subplots(3,5,figsize= (50,20))
     nr = 100
-    print("true_thetas shape: ", true_thetas.shape)
+    # print("true_thetas shape: ", true_thetas.shape)
 
     for x in range(3):
         for y in range(5):
@@ -39,22 +39,22 @@ def heatmap2(true_thetas,pred_thetas, dmin, dmax, true_point=None, pred_point=No
 
             bins = np.linspace(dmin[j],dmax[j],nr+1)
             dx = (dmax[j]-dmin[j])/nr
-            print("dx: ", dx)
+            # print("dx: ", dx)
             image = []
             for i in range(nr):
-                print("bins[",i,"]: ", bins[i])
-                print("true thetas min: ", np.min(true_thetas[:,j]))
+                # print("bins[",i,"]: ", bins[i])
+                # print("true thetas min: ", np.min(true_thetas[:,j]))
                 ind = np.where(abs(true_thetas[:,j]-bins[i]) < dx/2)[0]
 
 
 
-                print("ind shape: ", true_thetas[ind,j].shape)
-                print("pred thetas min/max: ", np.min(true_thetas[ind,j]), np.max(true_thetas[ind,j]), ", shape: ", true_thetas[ind,j].shape)
+                # print("ind shape: ", true_thetas[ind,j].shape)
+                # print("pred thetas min/max: ", np.min(true_thetas[ind,j]), np.max(true_thetas[ind,j]), ", shape: ", true_thetas[ind,j].shape)
                 ret=np.histogram(pred_thetas[ind,j],bins=bins,density=True)
                 image.append(ret[0])
             image = np.array(image).T
             image = image[::-1]
-            print("image shape: ", image.shape)
+            # print("image shape: ", image.shape)
             ax[x,y].imshow(image,cmap='terrain',extent=[dmin[j],dmax[j],dmin[j],dmax[j]])
 
 

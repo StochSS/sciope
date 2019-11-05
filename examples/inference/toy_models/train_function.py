@@ -17,7 +17,7 @@ from vilar import Vilar_model
 
 
 def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000, step=1, end_step=401,clay=[32,48,64,96],dlay=[100,100,100],
-                  model='CNN',load_model=False, verbose=2, pooling_len=3, dataname ="",
+                  model='CNN',load_model=False, verbose=2, pooling_len=3, pen_nr=10, dataname ="",
                   res_folder="Random_folder"+str(np.random.rand(4))):
 
 
@@ -45,7 +45,7 @@ def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000
     elif model == 'DNN':
         nnm = ANNModel(input_shape=(ts_len, train_ts.shape[2]), output_shape=(15), layers=dlay)
     elif model == 'PEN':
-        nnm = PEN_CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(15), pen_nr=10, con_layers=clay, dense_layers=dlay)
+        nnm = PEN_CNNModel(input_shape=(train_ts.shape[1],train_ts.shape[2]), output_shape=(15), pen_nr=pen_nr, con_layers=clay, dense_layers=dlay)
     else:
         print("invalid model name!")
 
