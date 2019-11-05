@@ -17,10 +17,10 @@ pens = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
 for i in range(16):
     print("pens: ", pens[i])
-    # train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=[6],dataname=dataname, step=1,
-    #               pooling_len=2, dlay=[400,400,400], model='PEN', pen_nr =pens[i], res_folder="pens")
+    train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=[6],dataname=dataname, step=1,
+                  pooling_len=2, dlay=[400,400,400], model='PEN', pen_nr =pens[i], res_folder="pens")
 
-    train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=[6], dataname=dataname, step=1,
-                  pooling_len=2, dlay=[400, 400, 400], model='PEN', res_folder="pens")
+    # train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=[6], dataname=dataname, step=1,
+    #               pooling_len=2, dlay=[400, 400, 400], model='PEN', res_folder="pens")
 
 
