@@ -13,7 +13,7 @@ modelname = "vilar_allspecies_" + str(endtime) + "_" + str(num_timestamps)
 models = ['PEN'] #, 'PEN', 'DNN']
 # models = ['PEN', 'DNN']
 dataname = "new_approach"
-pens = np.arange(15)
+pens = np.arange(1,15)
 
 for i in range(15):
     print("species: ", species[i])
