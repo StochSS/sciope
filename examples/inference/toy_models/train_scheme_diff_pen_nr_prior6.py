@@ -14,6 +14,7 @@ models = ['PEN'] #, 'PEN', 'DNN']
 # models = ['PEN', 'DNN']
 dataname = "new_approach"
 pens = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+pens = [10,10,10]
 
 for i in range(15):
     print("pens: ", pens[i])
