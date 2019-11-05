@@ -26,6 +26,8 @@ class PEN_CNNModel(ModelBase):
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Artificial Neural Network regression model initialized")
+
+        print("pen_nr: ", pen_nr, ", input_shape: ", input_shape, ", output_shape: ", output_shape, ", con_layers: ", con_layers)
         self.model = construct_model(input_shape,output_shape,pen_nr,con_layers,dense_layers=dense_layers)
         self.pen_nr = pen_nr
         self.save_as = 'saved_models/pen'+str(self.pen_nr)
