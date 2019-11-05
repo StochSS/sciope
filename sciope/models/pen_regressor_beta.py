@@ -120,7 +120,7 @@ def construct_model(input_shape, output_shape, pen_nr = 3, con_layers=[25, 50, 1
     #Reshape previous layer to 1 dimension (feature state).
     layer = keras.layers.Flatten()(layer)
     cut_Input = keras.layers.Lambda(lambda x: x[:,0:pen_nr+1,:], )(Input)
-    cut_Input_1d = keras.layers.Lambda(lambda x: keras.backend.reshape(x,(-1,pen_nr*input_shape[1],)))(cut_Input)
+    cut_Input_1d = keras.layers.Lambda(lambda x: keras.backend.reshape(x,(-1,(pen_nr+1)*input_shape[1],)))(cut_Input)
     layer = keras.layers.concatenate([layer, cut_Input_1d])
 
     #Add 3 layers of Dense layers with activation function and Batch Norm.
