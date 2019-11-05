@@ -112,7 +112,7 @@ def construct_model(input_shape, output_shape, pen_nr = 3, con_layers=[25, 50, 1
                                       activity_regularizer=reg)(layer)
         layer = keras.layers.Activation(activation)(layer)
 
-    poolsize = input_shape[0] - (pen_nr - 1)
+    poolsize = input_shape[0] - (pen_nr)
     print("poolsize: ", poolsize)
     #Using Avgpooling to downsample the temporal dimension size to 1.
     layer = keras.layers.AvgPool1D(poolsize,padding=poolpadding)(layer)
