@@ -35,6 +35,8 @@ def train_routine(modelname, dmin, dmax, species = [0,2], training_size = 300000
     #Resample data
     train_ts = train_ts[:,:end_step:step,:]
     print("validation_ts shape: ", validation_ts.shape)
+    print("train_ts shape: ", train_ts.shape)
+
     validation_ts = validation_ts[:,:end_step:step,:]
 
     ts_len = train_ts.shape[1]
