@@ -18,6 +18,6 @@ pens = np.arange(15)
 for i in range(15):
     print("species: ", species[i])
     train_routine(modelname=modelname, dmin=dmin, dmax=dmax, species=[6],dataname=dataname, step=1,
-                  pooling_len=2, dlay=[400,400,400], model='CNN', pen_nr =pens[i], res_folder="pens")
+                  pooling_len=2, dlay=[400,400,400], model='PEN', pen_nr =pens[i], res_folder="pens")
 
 
