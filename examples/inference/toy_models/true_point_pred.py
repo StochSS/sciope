@@ -66,14 +66,18 @@ test_mae = np.mean(abs(test_thetas-test_pred_d))
 test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
 test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 
-train_thetas, train_ts = load_spec(modelname=modelname, type = "train", species=species)
-print("train_ts shape: ", train_ts.shape)
-end_step=401
-step = 1
-train_ts = train_ts[:,:end_step:step,species]
+true_param_norm = normalize_data(true_param,dmin,dmax)
+data_pred = nnm.predict(data)
+data_pred_d = denormalize_data(data_pred,dmin,dmax)
+
+
+data_ae_n = np.mean(abs(true_param_norm - data_pred),axis=0)
+data_ae = np.mean(abs(true_param - data_pred_d),axis=0)
 
 
 
 print("Model name: ", nnm.name)
-print("mean square error: ", test_mse)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
+
+print("data mean error: ", np.mean(data_ae))
+print("data mean error E%: ", np.mean(data_ae_n))
