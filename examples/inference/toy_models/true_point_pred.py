@@ -74,7 +74,7 @@ data_pred_d = denormalize_data(data_pred,dmin,dmax)
 
 
 data_ae_n = np.mean(abs(true_param_norm - data_pred),axis=0)
-data_ae = np.mean(abs(true_param - data_pred_d),axis=1)
+data_ae = np.mean(abs(true_param - data_pred_d),axis=0)
 
 
 
