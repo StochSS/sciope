@@ -67,7 +67,9 @@ test_ae = np.mean(abs(test_thetas-test_pred_d),axis=0)
 test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 
 true_param_norm = normalize_data(true_param,dmin,dmax)
-data_pred = nnm.predict(data)
+
+print("data shape: ", data.shape)
+data_pred = nnm.predict(data[:,:,0])
 data_pred_d = denormalize_data(data_pred,dmin,dmax)
 
 
@@ -80,4 +82,4 @@ print("Model name: ", nnm.name)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
 
 print("data mean error: ", np.mean(data_ae))
-print("data mean error E%: ", np.mean(data_ae_n))
+print("data mean error E%: ", np.mean(data_ae_n)*4)
