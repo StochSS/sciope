@@ -38,7 +38,7 @@ ts_len = 401
 nr_of_species = len(species)
 
 # choose neural network model
-nnm = CNNModel(input_shape=(ts_len,nr_of_species), output_shape=(15), con_len=3, pooling_len=2, con_layers=clay, dense_layers=[400,400,400],dataname='dataC')
+nnm = CNNModel(input_shape=(ts_len,nr_of_species), output_shape=(15), con_len=3, pooling_len=2, con_layers=clay, dense_layers=[400,400,400],dataname='C')
 
 print("Model name: ", nnm.name)
 
