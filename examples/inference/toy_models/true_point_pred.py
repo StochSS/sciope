@@ -69,7 +69,7 @@ test_ae_norm = np.mean(abs(test_thetas_n-test_pred),axis=0)
 true_param_norm = normalize_data(true_param,dmin,dmax)
 
 print("data shape: ", data.shape)
-data_pred = nnm.predict(data[:,:,[0]])
+data_pred = nnm.predict(data[:,:,[6]])
 data_pred_d = denormalize_data(data_pred,dmin,dmax)
 
 
