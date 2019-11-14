@@ -82,4 +82,4 @@ print("Model name: ", nnm.name)
 print("mean rel absolute error: ", np.mean(test_ae_norm))
 
 print("data mean error: ", data_ae)
-print("data mean error E%: ", np.mean(data_ae_n)*4)
+print("data mean error E%: ", data_ae_n*4)
