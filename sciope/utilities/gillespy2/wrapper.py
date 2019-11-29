@@ -33,13 +33,33 @@ def _simulator(params, model, kwargs, species_of_interest):
     res = model_update.run(**kwargs)
     
     tot_res = []
-    if type(res[0]) == np.ndarray:
+    if kwargs["show_labels"]:
+        for n in res:
+            tot_res.append([n[species] for species in species_of_interest])
+        tot_res = np.asarray(tot_res)
+
+    else:
         tot_res = np.asarray([x.T for x in res]) # reshape to (N, S, T)  
         tot_res = tot_res[:,1:, :] # should not contain timepoints
-    else:
-        tot_res = np.asarray([np.asarray(list(x.values())[1:]) for x in res])
+    
     return tot_res
 
-def get_simulator(gillespy_model,  run_settings, species_of_interest=None):
+def get_parameter_expression_array(gillespy_model):
+    default_param = np.array(list(gillespy_model.listOfParameters.items()))[:,1]
+    as_array = []
+    for exp in default_param:
+        as_array.append(float(exp.expression))
     
-    return lambda x : _simulator(x, model=gillespy_model, kwargs=run_settings)
+    return np.array(as_array)
+
+def get_simulator(gillespy_model,  run_settings, species_of_interest=[]):
+
+    if "show_labels" not in run_settings.keys():
+        run_settings["show_labels"] = True
+        if not species_of_interest:
+            species_of_interest = list(gillespy_model.listOfSpecies.keys())
+        else:
+            for species in species_of_interest:
+                assert species in gillespy_model.listOfSpecies.keys()
+    
+    return lambda x : _simulator(x, gillespy_model, run_settings, species_of_interest)
