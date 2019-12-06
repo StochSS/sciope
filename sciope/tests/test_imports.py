@@ -11,7 +11,7 @@ def test_features():
 
 
 def test_inference():
-    from sciope.inference import abc_inference, bandits_abc, inference_base
+    from sciope.inference import abc_inference, inference_base
 
 
 def test_models():
