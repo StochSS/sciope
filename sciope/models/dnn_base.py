@@ -51,6 +51,9 @@ class DNNBase(ModelBase):
             self._r_min = np.tile(np.expand_dims(np.min(inputs, (0, 2)), 1), num_timestamps)
             self._r_max = np.tile(np.expand_dims(np.max(inputs, (0, 2)), 1), num_timestamps)
             inputs = (inputs - self._r_min) / (self._r_max - self._r_min)
+            if validation_inputs is not None:
+                validation_inputs = (validation_inputs - self._r_min) / (self._r_max - self._r_min)
+                validation_inputs = validation_inputs.transpose((0, 2, 1))
 
         # reshape from NxSxT to NxTxS
         inputs = inputs.transpose((0, 2, 1))
