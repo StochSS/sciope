@@ -53,10 +53,10 @@ class DNNBase(ModelBase):
             inputs = (inputs - self._r_min) / (self._r_max - self._r_min)
             if validation_inputs is not None:
                 validation_inputs = (validation_inputs - self._r_min) / (self._r_max - self._r_min)
-                validation_inputs = validation_inputs.transpose((0, 2, 1))
 
         # reshape from NxSxT to NxTxS
         inputs = inputs.transpose((0, 2, 1))
+        validation_inputs = validation_inputs.transpose((0, 2, 1))
 
         # scale the thetas/targets
         if scale_output:
@@ -73,6 +73,7 @@ class DNNBase(ModelBase):
                            loss='mean_squared_error', metrics=['mae'])
 
         if validation_inputs is not None and validation_targets is not None:
+            validation_inputs = validation_inputs.transpose((0, 2, 1))
             history = self.model.fit(inputs, targets, validation_data=(validation_inputs, validation_targets),
                                      epochs=epochs, batch_size=batch_size, shuffle=True, callbacks=[es],
                                      validation_freq=val_freq, verbose=verbose)
