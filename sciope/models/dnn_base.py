@@ -73,7 +73,6 @@ class DNNBase(ModelBase):
                            loss='mean_squared_error', metrics=['mae'])
 
         if validation_inputs is not None and validation_targets is not None:
-            validation_inputs = validation_inputs.transpose((0, 2, 1))
             history = self.model.fit(inputs, targets, validation_data=(validation_inputs, validation_targets),
                                      epochs=epochs, batch_size=batch_size, shuffle=True, callbacks=[es],
                                      validation_freq=val_freq, verbose=verbose)
