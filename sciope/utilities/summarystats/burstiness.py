@@ -83,7 +83,8 @@ class Burstiness(SummaryBase):
 
         out = np.array(trajs)
         res = np.reshape(out, (out.size, 1))
-
+       
+        res = res.transpose()
         if self.mean_trajectories:
             res = np.asarray(np.mean(res, axis=0))  # returns a scalar, so we cast it as an array
 

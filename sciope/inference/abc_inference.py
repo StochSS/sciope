@@ -132,6 +132,9 @@ class ABC(InferenceBase):
         self.fixed_mean = stats_mean.compute()
         del stats_mean
 
+    def test(self):
+        return 1
+
     # @sciope_profiler.profile
     def rejection_sampling(self, num_samples, batch_size, chunk_size, ensemble_size, normalize):
         """
@@ -192,51 +195,56 @@ class ABC(InferenceBase):
 
             keep_idx = {f.key: idx for idx, f in enumerate(futures_dist)}
 
-            while accepted_count < num_samples:
+            #while accepted_count < num_samples:
+            completed = as_completed(futures_dist, with_results=True)
 
-                for f, dist in as_completed(futures_dist, with_results=True):
-                    sim_dist_scaled = []
-                    params = []
-                    dists = []
-                    for d in dist:
-                        dists.append(d)
-                        trial_count += 1
-                        if normalize:
-                            # Normalize distances between [0,1]
-                            sim_dist_scaled.append(self.scale_distance(d))
+            for f, dist in completed:
+                #print("result arriving..")
+                #submit new task to keep workers at work
+                #new_chunk = core.get_graph_chunked(self.prior_function, self.sim, self.summaries_function,
+                #                    chunk_size, chunk_size)
+                #new_chunk["distances"] = core.get_distance(dist_func, new_chunk["summarystats"], chunked=True)
+
+                #c_param, c_dist = dask.persist(new_chunk["parameters"], new_chunk["distances"])
+                #f_dist = core.get_futures(c_dist)[0]
+                #f_param = core.get_futures(c_param)[0]
+                #futures_dist.append(f_dist)
+                #futures_params.append(f_param)
+                #completed.add(f_dist)
+
+                #keep_idx[f_dist.key] = len(keep_idx)
+                
+                #collect results
+                sim_dist_scaled = []
+                params = []
+                dists = []
+                for d in dist:
+                    dists.append(d)
+                    trial_count += 1
+                    if normalize:
+                        # Normalize distances between [0,1]
+                        sim_dist_scaled.append(self.scale_distance(d))
+                
+                idx = keep_idx[f.key]
+                param = futures_params[idx]
+                params_res = param.result()
+                for p in params_res:
+                    params.append(p)
+                
+                accepted_samples, distances, accepted_count = self._scale_reject(sim_dist_scaled, 
+                                                                                    dists, 
+                                                                                    accepted_samples, 
+                                                                                    distances,
+                                                                                    params,
+                                                                                    accepted_count, 
+                                                                                    normalize)
+                del dist, param
+                if accepted_count >= num_samples:
                     
-                    idx = keep_idx[f.key]
-                    param = futures_params[idx]
-                    params_res = param.result()
-                    for p in params_res:
-                        params.append(p)
-                    
-                    accepted_samples, distances, accepted_count = self._scale_reject(sim_dist_scaled, 
-                                                                                        dists, 
-                                                                                        accepted_samples, 
-                                                                                        distances,
-                                                                                        params,
-                                                                                        accepted_count, 
-                                                                                        normalize)
-                    del dist, param
-                    if accepted_count < num_samples:
-                        new_chunk = core.get_graph_chunked(self.prior_function, self.sim, self.summaries_function,
-                                        chunk_size, chunk_size)
-                        new_chunk["distances"] = core.get_distance(dist_func, new_chunk["summarystats"], chunked=True)
-
-                        c_param, c_dist = dask.persist(new_chunk["parameters"], new_chunk["distances"])
-                        f_dist = core.get_futures(c_dist)[0]
-                        f_param = core.get_futures(c_param)[0]
-                        futures_dist.append(f_dist)
-                        futures_params.append(f_param)
-
-                        keep_idx[f_dist.key] = len(keep_idx)
-
-                    else:
-                        del futures_dist, futures_params, res_param, res_dist
-                        self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
-                        'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
-                        return self.results
+                    del futures_dist, futures_params, res_param, res_dist
+                    self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
+                    'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
+                    return self.results
 
 
         # else use multiprocessing mode
@@ -277,9 +285,11 @@ class ABC(InferenceBase):
 
         # Take the norm to combine the distances, if more than one summary is used
         if sim_dist_scaled.shape[1] > 1:
-            combined_distance = [dask.delayed(np.linalg.norm)(scaled.reshape(1, scaled.size), axis=1)
+            #combined_distance = [dask.delayed(np.linalg.norm)(scaled.reshape(1, scaled.size), axis=1)
+            #                        for scaled in sim_dist_scaled]
+            #result, = dask.compute(combined_distance)
+            result = [np.linalg.norm(scaled.reshape(1, scaled.size), axis=1)
                                     for scaled in sim_dist_scaled]
-            result, = dask.compute(combined_distance)
         else:
             result = sim_dist_scaled.ravel()
 

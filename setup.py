@@ -62,7 +62,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=find_packages(),
+    #packages=find_packages(),
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -72,28 +72,28 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=[
-        'numpy',
-        'scipy',
-        'scikit-learn',
-        'tsfresh',
-        'ipywidgets',
-        'dask',
-        'distributed',
-        'matplotlib',
-        'umap-learn'],
+    #install_requires=[
+    #    'numpy',
+    #    'scipy',
+    #    'scikit-learn',
+    #    'tsfresh',
+    #    'ipywidgets',
+    #    'dask',
+    #    'distributed',
+    #    'matplotlib',
+    #    'umap-learn'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
     # for example:
     # $ pip install -e .[dev,test]
-    extras_require={
-        'dev': ['check-manifest'],
-        'test': ['coverage'],
-    },
+   # extras_require={
+   #     'dev': ['check-manifest'],
+   #     'test': ['coverage'],
+   # },
 
-    dependency_links=['https://github.com/GPflow/GPflow/archive/0.5.0.tar.gz#egg=GPflow-0.5.0',
-                      'https://github.com/GPflow/GPflowOpt/archive/v0.1.0.tar.gz#egg=GPflowOpt-0.1.0'],
+    #dependency_links=['https://github.com/GPflow/GPflow/archive/0.5.0.tar.gz#egg=GPflow-0.5.0',
+    #                  'https://github.com/GPflow/GPflowOpt/archive/v0.1.0.tar.gz#egg=GPflowOpt-0.1.0'],
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these

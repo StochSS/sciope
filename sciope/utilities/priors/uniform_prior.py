@@ -66,14 +66,13 @@ class UniformPrior(PriorBase):
     
     @delayed
     def _uniform_scale(self, n, d):
-        # Generate samples in [-1,1]
-        generated_samples = np.random.random((n, d)) * 2 - 1
+        # Generate samples in [0,1)
+        generated_samples = np.random.random((n, d))
 
-        # scale from [-1,1] to problem range
+        # scale from [0,1) to problem range
         scaled_values = generated_samples
         for j in range(0, d):
-            scaled_values[:, j] = abs((((generated_samples[:, j] + 1) *
-                                        (self.ub[j] - self.lb[j])) / 2) + self.lb[j])
+            scaled_values[:, j] = (generated_samples[:, j] * (self.ub[j] - self.lb[j])) + self.lb[j]
         if self.use_logger:
             self.logger.info("Uniform Prior: sampled {} points in {} dimensions".format(n, len(self.lb)))
         
