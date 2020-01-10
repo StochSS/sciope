@@ -56,7 +56,8 @@ class DNNBase(ModelBase):
 
         # reshape from NxSxT to NxTxS
         inputs = inputs.transpose((0, 2, 1))
-        validation_inputs = validation_inputs.transpose((0, 2, 1))
+        if validation_inputs is not None:
+            validation_inputs = validation_inputs.transpose((0, 2, 1))
 
         # scale the thetas/targets
         if scale_output:
