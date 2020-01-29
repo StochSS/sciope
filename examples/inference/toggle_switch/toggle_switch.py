@@ -16,7 +16,7 @@ Example: The toggle switch model
 """
 # Initialize
 import numpy as np
-from gillespy2.solvers.stochkit import StochKitSolver
+from gillespy2.solvers.cpp import SSACSolver
 from sciope.utilities.summarystats import auto_tsfresh
 from sciope.utilities.priors import uniform_prior
 from sciope.inference.abc_inference import ABC
@@ -100,7 +100,7 @@ def get_fixed_data():
     :return: a dataset of 100 trajectories
     """
     model = ToggleSwitch()
-    fixed_data = model.run(solver=StochKitSolver, number_of_trajectories=100, show_labels=False)
+    fixed_data = model.run(solver=SSACSolver, number_of_trajectories=100, show_labels=False)
 
     # reshape data to (n_points,n_species,n_timepoints)
     fixed_data = np.asarray([x.T for x in fixed_data])
@@ -120,7 +120,7 @@ def simulate(params):
     model_update = set_model_parameters(params, model)
     num_trajectories = 1  # TODO: howto handle ensembles
 
-    res = model_update.run(solver=StochKitSolver, show_labels=False,
+    res = model_update.run(solver=SSACSolver, show_labels=False,
                            number_of_trajectories=num_trajectories)
     tot_res = np.asarray([x.T for x in res])  # reshape to (N, S, T)
     tot_res = tot_res[:, 1:, :]  # should not contain timepoints

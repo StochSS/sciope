@@ -82,7 +82,8 @@ class MaximinSampling(SamplingBase):
         num_candidates = num_samples * candidates_ratio
 
         # Generate MC candidates
-        c = da.random.uniform(low=self.xmin, high=self.xmax, size=(num_candidates, num_dimensions))
+        c = da.random.uniform(low=np.asarray(self.xmin), high=np.asarray(self.xmax),
+                              size=(num_candidates, num_dimensions))
 
         # Compute distances
         # p = 1 implies Manhattan distance
