@@ -1,10 +1,12 @@
 [![Build Status](https://travis-ci.com/sciope/sciope.svg?branch=develop)](https://travis-ci.com/sciope/sciope)
 [![codecov](https://codecov.io/gh/sciope/sciope/branch/develop/graph/badge.svg)](https://codecov.io/gh/sciope/sciope)
 
+![Sciope logo](logo.png)
+
 # README #
 
 Scalable inference, optimization and parameter exploration (sciope)
-is a Python 3 package for performing model-assisted inference and model
+is a Python 3 package for performing machine learning-assisted inference and model
 exploration by large-scale parameter sweeps.
 
 ### What can the sciope toolbox do? ###
