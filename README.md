@@ -1,7 +1,10 @@
+![Sciope logo](logo.png)
+----------------------------------------------------------
+
+
 [![Build Status](https://travis-ci.com/sciope/sciope.svg?branch=develop)](https://travis-ci.com/sciope/sciope)
 [![codecov](https://codecov.io/gh/sciope/sciope/branch/develop/graph/badge.svg)](https://codecov.io/gh/sciope/sciope)
 
-![Sciope logo](logo.png)
 
 # README #
 
