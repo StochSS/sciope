@@ -15,6 +15,9 @@
 from sciope.utilities.summarystats.summary_base import SummaryBase
 from sciope.features.feature_extraction import generate_tsfresh_features
 from sciope.designs.initial_design_base import InitialDesignBase
+from sciope.designs.latin_hypercube_sampling import LatinHypercube
+from sciope.designs.factorial_design import FactorialDesign
+from sciope.utilities.summarystats.summary_base import SummaryBase
 from sciope.sampling.sampling_base import SamplingBase
 from sciope.utilities.priors.prior_base import PriorBase
 from sciope.visualize.interactive_scatter import interative_scatter
@@ -33,24 +36,28 @@ from itertools import combinations
 
 def _do_tsne(data, nr_components=2, init='random', plex=30,
              n_iter=1000, lr=200, rs=None):
-    """[summary]
+    """Uses sklearn TSNE non-linear dimension reduction method
     
     Parameters
     ----------
-    data : [type]
-        [description]
+    data : ndarray
     nr_components : int, optional
-        [description], by default 2
+        desired dimension, by default 2
     init : str, optional
-        [description], by default 'random'
+        see sklearn.manifold.t_sne documentation, by default 'random'
     plex : int, optional
-        [description], by default 30
+        perplexity see sklearn.manifold.t_sne documentation, by default 30
     n_iter : int, optional
-        [description], by default 1000
+        see sklearn.manifold.t_sne documentation, by default 1000
     lr : int, optional
-        [description], by default 200
-    rs : [type], optional
-        [description], by default None
+        learning_rate, see sklearn.manifold.t_sne documentation, by default 200
+    rs : int, optional
+        random seed, by default None
+    
+    Returns
+    -------
+    tuple, (transformed data, model)
+    
     """
 
     tsne = t_sne.TSNE(n_components=nr_components, init=init,
@@ -60,16 +67,19 @@ def _do_tsne(data, nr_components=2, init='random', plex=30,
 
 
 def _do_pca(data, nr_components=2, rs=None):
-    """[summary]
+    """Uses sklearn PCA dimension reduction method
     
     Parameters
     ----------
-    data : [type]
-        [description]
+    data : ndarray
     nr_components : int, optional
-        [description], by default 2
-    rs : [type], optional
-        [description], by default None
+        desired dimension, by default 2
+    rs : int, optional
+        random seed, by default None
+    
+    Returns
+    -------
+    tuple, (transformed data, model)
     """
     pca = PCA(n_components=nr_components, random_state=rs)
     return pca.fit_transform(data), pca
@@ -77,20 +87,23 @@ def _do_pca(data, nr_components=2, rs=None):
 
 def _do_kpca(data, nr_components=2, kernel='rbf', gamma=0.01,
              degree=3):
-    """[summary]
+    """Uses sklearn kernel-PCA dimension reduction method
     
     Parameters
     ----------
-    data : [type]
-        [description]
+    data : ndarray
     nr_components : int, optional
-        [description], by default 2
+        desired dimension, by default 2
     kernel : str, optional
-        [description], by default 'rbf'
+        desired kernel see sklearn documentation, by default 'rbf'
     gamma : float, optional
-        [description], by default 0.01
+        see sklearn documentation, by default 0.01
     degree : int, optional
-        [description], by default 3
+        see sklearn documentation, by default 3
+
+    Returns
+    -------
+    tuple, (transformed data, model)
     """
 
     kpca = KernelPCA(n_components=nr_components, kernel=kernel, gamma=gamma,
@@ -99,18 +112,21 @@ def _do_kpca(data, nr_components=2, kernel='rbf', gamma=0.01,
 
 
 def _do_umap(data, nr_components=2, nr_neighbors=10, min_dist=0.1):
-    """[summary]
+    """Uses UMAP non-linear dimension reduction method
     
     Parameters
     ----------
-    data : [type]
-        [description]
+    data : ndarray
     nr_components : int, optional
-        [description], by default 2
+        desired dimension, by default 2
     nr_neighbors : int, optional
-        [description], by default 10
+        see umap documentation, by default 10
     min_dist : float, optional
-        [description], by default 0.1
+        see umap documentation, by default 0.1
+    
+    Returns
+    -------
+    tuple, (transformed data, model)
     """
     rd = umap.UMAP(n_components=nr_components, n_neighbors=nr_neighbors,
                    min_dist=min_dist)
@@ -118,51 +134,60 @@ def _do_umap(data, nr_components=2, nr_neighbors=10, min_dist=0.1):
 
 
 def _validate_dr_method(method):
-    """[summary]
+    """validate supported dimension reduction methods,
+    called in _do_dimension_reduction
     
     Parameters
     ----------
-    method : [type]
-        [description]
+    method : string
     
     Raises
     ------
     ValueError
-        [description]
+        if method is not supported
     """
     allowed_methods = ["umap", "t_sne", "pca", "kpca"]
     if method not in allowed_methods:
-        raise ValueError("Implemented dimension reduction methods are: {0} "
+        raise ValueError("Supported dimension reduction methods are: {0} "
                          " got dr_method={1}".format(allowed_methods,
                                                      method))
 
 
-def _do_dimension_reduction(X, method, kwargs={}):
-    """[summary]
+def _do_dimension_reduction(data, method, kwargs={}):
+    """Perform dimension reduction method
     
     Parameters
     ----------
-    X : [type]
-        [description]
-    method : [type]
-        [description]
+    data : ndarray
+    method : string
+        dimension reduction method, supported ["umap", "t_sne", "pca", "kpca"]
     kwargs : dict, optional
-        [description], by default {}
+        optional parameters to method, by default {}
+
+    Raises
+    ------
+    ValueError
+        if method is not supported
+    
+    Returns
+    -------
+    tuple, (transformed data, model)
+    
     """
     _validate_dr_method(method)
     if method == 'umap':
-        return _do_umap(X, **kwargs)
+        return _do_umap(data, **kwargs)
     if method == 't_sne':
-        return _do_tsne(X, **kwargs)
+        return _do_tsne(data, **kwargs)
     if method == 'pca':
-        return _do_pca(X, **kwargs)
+        return _do_pca(data, **kwargs)
     else:
-        return _do_kpca(X, **kwargs)
+        return _do_kpca(data, **kwargs)
 
 
 class DataSetMET(DataSet):
     """ 
-    DataSet class. Container for keeping MET results in memory. 
+    DataSet class. Container for keeping MET results. 
     """
 
     def __init__(self):
@@ -186,28 +211,16 @@ class StochMET():
     Parameters
     ----------
 
-    simulator : function which takes a parameter point (generated by "sampler",
+    sim : function which takes a parameter point (generated by "sampler",
                 see below) and returns simulation results in the form of
                 trajectories (time series) with shape (n_timepoints, n_species)
-    sampler :   function with parameter "n_points" as int which returns a ndarray of n_points
-                parameter points
-                TODO: support both user-defined functions and built-in options as string
-    features :  Dictionary, containing tsfresh features to be computed. Sets the default_fc_parameters used 
-                in tsfresh. For example: 
-                fc_parameters = {
-                                "length": None,
-                                "large_standard_deviation": [{"r": 0.05}, {"r": 0.1}]
-                                }
-                See tsfresh documentation for supported features.
-                Default is {'sum_values': None,
-                            'median': None,
-                            'mean': None,
-                            'standard_deviation': None,
-                            'variance': None,
-                            'maximum': None,
-                            'minimum': None}
+    sampler :   Instance of LatinHypercube, FactorialDesign or PriorBase
+                TODO: add support for all "InitialDesignBase", "PriorBase", "SamplingBase"
+    summarystats :  Instance of SummaryBase
 
-    default_batch_size : int, sets the default batch size of the parameter sweeps. Default is 10.
+    default_batch_size : int, sets the default batch size (number of points computed) of the
+                         parameter sweeps. Default is 10.
+    default_chunk_size : int, sets the default chunk size
 
     Attributes
     ----------
@@ -227,10 +240,15 @@ class StochMET():
 
         assert callable(sim), "simulator must be a callable function"
 
-        allowed_sampler = ["InitialDesignBase", "PriorBase", "SamplingBase"]
+        allowed_sampler = ["LatinHypercube", "FactorialDesign", "PriorBase"]
         assert isinstance(sampler,
-                          (InitialDesignBase, PriorBase, SamplingBase)), "sampling must be an instance of: {0}".format(
+                          (LatinHypercube, FactorialDesign, PriorBase)), "sampling must be an instance of: {0}".format(
             allowed_sampler)
+        
+        allowed_stats = ["SummaryBase"]
+        assert isinstance(summarystats,
+                          SummaryBase), "summarystats must be an instance of: {0}".format(
+            allowed_stats)
 
         self.simulator = sim
         self.sampling = sampler
@@ -245,16 +263,8 @@ class StochMET():
 
         Parameters
         ----------
-
-        n_species : int or array-like. If int, will compute features of all 
-                    species with index in the list range(n_species) based on the output from
-                    simulator with shape (n_timepoints, n_species). If array-like, explicitly
-                    set which indices to compute features on.
-                    
-
         n_points : int, optional. The batch size of the sweep. Defaults to default_batch_size.
-        join_features : boolean. Wheather features of each species should be joined into a single
-                        array. Default is True.
+        chunk_size : int, sets the chunk size
         predictor : function, optional. Use a model predictor based on the features as input as the 
                     final step of the workflow. The predictor function must take an array with the
                     same length as the joined feature output. 
@@ -376,18 +386,7 @@ class StochMET():
 
         scaling : class, optional. Class containing method 'fit_transform' (see sklearn).
 
-        from_distributed : boolean. Collect data from persited storage. Obs! If all data 
-                           has already been collected and from_distributed = True an error 
-                           will be raised complaining that no futures exists, set 
-                           from_distributed to False in this case. 
-                           TODO: future versions will simplify this
-
-        filter_func : function, optional. A function that takes the output from "predictor" 
-                      (if used in "compute") and filter persited data according to some 
-                      criteria (e.g entropy for active learning or predicted class). 
-                      The function should return True if the criteria is statisfied for one
-                      individual point, and False otherwise.
-        kwargs : TODO: parameters for dr_method 
+        kwargs : TODO: optional parameters to dimension reduction method 
         
         """
         data = self.data.s.reshape(self.data.s.shape[0],self.data.s.shape[-1])
