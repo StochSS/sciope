@@ -11,7 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+Model Exploration
+"""
 
+# Imports 
 from sciope.utilities.summarystats.summary_base import SummaryBase
 from sciope.features.feature_extraction import generate_tsfresh_features
 from sciope.designs.initial_design_base import InitialDesignBase
