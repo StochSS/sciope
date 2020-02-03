@@ -240,7 +240,7 @@ class StochMET():
 
     """
 
-    def __init__(self, sim, sampler, summarystats, default_batch_size=100, default_chunk_size=10):
+    def __init__(self, sim, sampler, summarystats, default_batch_size=100, default_chunk_size=1):
 
         assert callable(sim), "simulator must be a callable function"
 
@@ -275,7 +275,7 @@ class StochMET():
                     TODO: currently only supports joined features    
 
         """
-        cluster_mode = core._cluster_mode()
+        cluster_mode = core._cluster_mode()chunk
         if n_points is None:
             n_points = self.batch_size
         if chunk_size is None:
