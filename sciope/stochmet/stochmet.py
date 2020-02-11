@@ -275,7 +275,7 @@ class StochMET():
                     TODO: currently only supports joined features    
 
         """
-        cluster_mode = core._cluster_mode()chunk
+        cluster_mode = core._cluster_mode()
         if n_points is None:
             n_points = self.batch_size
         if chunk_size is None:
