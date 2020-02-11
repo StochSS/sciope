@@ -113,7 +113,7 @@ summaries = auto_tsfresh.SummariesTSFRESH(features=default_fc_params)
 
 
 
-def test_stochmet_toggleswitch():
+def test_stochmet_toggleswitch_10points():
 
     #multi-processing mode
     met = stochmet.StochMET(sim=simulator2, sampler=uni_prior, summarystats=summaries)
@@ -133,6 +133,29 @@ def test_stochmet_toggleswitch():
     np.testing.assert_equal(met.data.ts.shape, (20, 1, 2, 101))
     np.testing.assert_equal(met.data.x.shape, (20, 5))
     np.testing.assert_equal(met.data.user_labels.shape, (20,))
+
+    c.close()
+
+def test_stochmet_toggleswitch_100points():
+
+    #multi-processing mode
+    met = stochmet.StochMET(sim=simulator2, sampler=uni_prior, summarystats=summaries)
+    met.compute(n_points=100, chunk_size=2)
+
+    np.testing.assert_equal(met.data.s.shape, (100, 1, 12))
+    np.testing.assert_equal(met.data.ts.shape, (100, 1, 2, 101))
+    np.testing.assert_equal(met.data.x.shape, (100, 5))
+    np.testing.assert_equal(met.data.user_labels.shape, (100,))
+
+    #cluster-mode
+    c = Client()
+
+    met.compute(n_points=100, chunk_size=2)
+
+    np.testing.assert_equal(met.data.s.shape, (200, 1, 12))
+    np.testing.assert_equal(met.data.ts.shape, (200, 1, 2, 101))
+    np.testing.assert_equal(met.data.x.shape, (200, 5))
+    np.testing.assert_equal(met.data.user_labels.shape, (200,))
 
     c.close()
 
