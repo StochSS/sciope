@@ -154,32 +154,38 @@ Use Sciope's Gillespy2 wrapper to extract simulator and parameters
     from sciope.utilities.gillespy2 import wrapper
 
     settings = {"solver": NumPySSASolver, "number_of_trajectories":10, "show_labels":True}
-    simulator = wrapper.get_simulator(gillespy_model=toggle_model, run_settings=settings, species_of_interest=["U"])
+    simulator = wrapper.get_simulator(gillespy_model=toggle_model, run_settings=settings, species_of_interest=["U", "V"])
 
     expression_array = wrapper.get_parameter_expression_array(toggle_model)
 
 
 
-Use LHD for sampling and TSFRESH minimal summary statistics
-
-.. code-block:: python
-
-    from sciope.designs import latin_hypercube_sampling
-    from sciope.utilities.summarystats.auto_tsfresh import SummariesTSFRESH
-
-    lhc = latin_hypercube_sampling.LatinHypercube(xmin=expression_array, xmax=expression_array*3)
-
-    #will use default minimal set of features
-    summary_stats = SummariesTSFRESH()
-
-Start local cluster using dask client and Model exploration with StochMET
+Use Latin Latin Hypercube design to generate points which will be sampled from during exploration, the points will
+be generated using distributed resources if we have a Dask Client Initialized (in this example just a local cluster).
+Generated points will be persited over the worker nodes (i.e no local memory would be used in case of a real cluster).
+Random points from the persisted collection can be gathered by calling :code:`lhc.draw(n_samples)`
+Here, we will also use TSFRESH minimal feature set as our summary statistics.
 
 .. code-block:: python
 
     from dask.distributed import Client
-    from sciope.stochmet.stochmet import StochMET
+    from sciope.designs import latin_hypercube_sampling
+    from sciope.utilities.summarystats.auto_tsfresh import SummariesTSFRESH
 
     c = Client()
+
+    lhc = latin_hypercube_sampling.LatinHypercube(xmin=expression_array, xmax=expression_array*3)
+    #generate points that we will randomly sample from during the exploration
+    lhc.generate_array(1000)
+
+    #will use default minimal set of features
+    summary_stats = SummariesTSFRESH()
+
+Start Model exploration with StochMET
+
+.. code-block:: python
+
+    from sciope.stochmet.stochmet import StochMET
     met = StochMET(simulator, lhc, summary_stats)
 
 Run the parameter sweep of 500 points
@@ -189,14 +195,20 @@ Run the parameter sweep of 500 points
     met.compute(n_points=500, chunk_size=10)
 
 Here we will explore parameter points expressed in feature space using a dimension reduction method. 
-User can interact with points and label points according to different model behavior
+User can interact with points and label points according to different model behavior. 
+
+OBS! The explore function make use of interactive tools such as `ipywidgets <https://github.com/jupyter-widgets/ipywidgets>`_,
+it is therefore required that you run in a jupyter notebook with an interactive backend (see the first code cell of this example)
 
 .. code-block:: python
 
     # Here we use UMAP for dimension reduction
     met.explore(dr_method='umap')
 
-.. code-block:: python
+.. image:: met.gif
+   :alt: sciope met gif
+   :width: 100%
+   :align: center
 
 .. toctree::
    :maxdepth: 2
