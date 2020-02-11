@@ -64,8 +64,6 @@ class LatinHypercube(InitialDesignBase):
 
         Parameters
         ----------
-        levels : integer
-            The number of levels of the factorial design. Number of generated points will be levels^dimensionality
         xmin : vector or 1D array
             Specifies the lower bound of the hypercube within which the design is generated
         xmax : vector or 1D array
