@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
   
   
 
@@ -21,10 +23,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -163,14 +165,14 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1"># Imports</span>
-<span class="kn">from</span> <span class="nn">sciope.inference.inference_base</span> <span class="k">import</span> <span class="n">InferenceBase</span>
-<span class="kn">from</span> <span class="nn">sciope.utilities.distancefunctions</span> <span class="k">import</span> <span class="n">euclidean</span> <span class="k">as</span> <span class="n">euc</span>
-<span class="kn">from</span> <span class="nn">sciope.utilities.summarystats</span> <span class="k">import</span> <span class="n">burstiness</span> <span class="k">as</span> <span class="n">bs</span>
-<span class="kn">from</span> <span class="nn">sciope.core</span> <span class="k">import</span> <span class="n">core</span>
-<span class="kn">from</span> <span class="nn">sciope.utilities.housekeeping</span> <span class="k">import</span> <span class="n">sciope_logger</span> <span class="k">as</span> <span class="n">ml</span>
-<span class="kn">from</span> <span class="nn">toolz</span> <span class="k">import</span> <span class="n">partition_all</span>
+<span class="kn">from</span> <span class="nn">sciope.inference.inference_base</span> <span class="kn">import</span> <span class="n">InferenceBase</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.distancefunctions</span> <span class="kn">import</span> <span class="n">euclidean</span> <span class="k">as</span> <span class="n">euc</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.summarystats</span> <span class="kn">import</span> <span class="n">burstiness</span> <span class="k">as</span> <span class="n">bs</span>
+<span class="kn">from</span> <span class="nn">sciope.core</span> <span class="kn">import</span> <span class="n">core</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.housekeeping</span> <span class="kn">import</span> <span class="n">sciope_logger</span> <span class="k">as</span> <span class="n">ml</span>
+<span class="kn">from</span> <span class="nn">toolz</span> <span class="kn">import</span> <span class="n">partition_all</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="k">import</span> <span class="n">futures_of</span><span class="p">,</span> <span class="n">as_completed</span><span class="p">,</span> <span class="n">get_client</span>
+<span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">futures_of</span><span class="p">,</span> <span class="n">as_completed</span><span class="p">,</span> <span class="n">get_client</span>
 <span class="kn">import</span> <span class="nn">dask</span>
 
 <span class="c1"># The following variable stores n normalized distance values after n summary statistics have been calculated</span>
@@ -196,7 +198,7 @@
 <span class="sd">    * infer 					(perform parameter inference)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">summaries_function</span><span class="o">=</span><span class="n">bs</span><span class="o">.</span><span class="n">Burstiness</span><span class="p">(),</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sim</span><span class="p">,</span> <span class="n">prior_function</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">summaries_function</span><span class="o">=</span><span class="n">bs</span><span class="o">.</span><span class="n">Burstiness</span><span class="p">(),</span>
                  <span class="n">distance_function</span><span class="o">=</span><span class="n">euc</span><span class="o">.</span><span class="n">EuclideanDistance</span><span class="p">(),</span> <span class="n">summaries_divisor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        ABC class for rejection sampling</span>

@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+  
   
   
 
@@ -21,10 +23,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -165,8 +167,8 @@
 <span class="c1"># Imports</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">math</span> <span class="k">as</span> <span class="nn">mt</span>
-<span class="kn">from</span> <span class="nn">sciope.utilities.summarystats.summary_base</span> <span class="k">import</span> <span class="n">SummaryBase</span>
-<span class="kn">from</span> <span class="nn">sciope.utilities.housekeeping</span> <span class="k">import</span> <span class="n">sciope_logger</span> <span class="k">as</span> <span class="n">ml</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.summarystats.summary_base</span> <span class="kn">import</span> <span class="n">SummaryBase</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.housekeeping</span> <span class="kn">import</span> <span class="n">sciope_logger</span> <span class="k">as</span> <span class="n">ml</span>
 
 
 <span class="c1"># Class definition: Burstiness Statistic</span>
@@ -178,7 +180,7 @@
 <span class="sd">    Ref: Burstiness and memory in complex systems, Europhys. Let., 81, pp. 48002, 2008.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mean_trajectories</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">improvement</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mean_trajectories</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">improvement</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_logger</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        [summary]</span>
 <span class="sd">        </span>

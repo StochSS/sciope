@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
   
   
 
@@ -21,10 +23,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -84,7 +86,22 @@
             
               <!-- Local TOC -->
               <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Welcome to sciope’s documentation!</a></li>
+<li><a class="reference internal" href="#">Welcome to sciope’s documentation!</a><ul>
+<li><a class="reference internal" href="#stochastic-gene-regulatory-networks">Stochastic Gene Regulatory Networks</a></li>
+<li><a class="reference internal" href="#likelihood-free-inference">Likelihood-free inference</a></li>
+<li><a class="reference internal" href="#model-exploration">Model exploration</a></li>
+<li><a class="reference internal" href="#scales-from-laptops-to-clusters">Scales from laptops to clusters</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#pip">Pip</a></li>
+<li><a class="reference internal" href="#install-from-source">Install from Source</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#model-exploration-of-a-genetic-toggleswitch">Model Exploration of a Genetic Toggleswitch</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 </div>
@@ -150,9 +167,185 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-sciope-s-documentation">
+  <a class="reference internal image-reference" href="_images/logo.png"><img alt="sciope logo" class="align-center" src="_images/logo.png" style="width: 100%;" /></a>
+<div class="section" id="welcome-to-sciope-s-documentation">
 <h1>Welcome to sciope’s documentation!<a class="headerlink" href="#welcome-to-sciope-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Scalable inference, optimization and parameter exploration (sciope)
+is a Python 3 package for performing machine learning-assisted likelihood-free inference and model
+exploration by large-scale parameter sweeps. It has been designed to simplify the data-driven workflows
+so that users quickly can test and develop new machine learning-assisted approches to likelihood-free inference
+and model exploration.</p>
+<p>Salient features and contributions of sciope include:</p>
+<p>Systems:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Parallel implementation of likelihood-free inference via approximate Bayesian computation (ABC).</p></li>
+<li><p>Built-in large-scale summary statistic, or feature extraction.</p></li>
+<li><p>Support for generating statistical designs including random sampling, factorial design and latin hypercube sampling.</p></li>
+<li><p>Support for training fast data-driven surrogate models of computationally expensive simulations, or observed datasets.</p></li>
+<li><p>Sequential space-filling sampling with the <em>maximin</em> criterion.</p></li>
+<li><p>Visualization plugin for model exploration in Jupyter notebooks.</p></li>
+<li><p>Parallel backend using <a class="reference external" href="https://dask.org">Dask</a></p></li>
+</ul>
+</div></blockquote>
+<p>Methodology:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A novel, scalable reinforcement learning based summary statistic selection framework that allows the user to obtain a ranking of top $m$ summary statistics from a pool of $n$ candidates.</p></li>
+<li><p>A semi-supervised scalable human-in-the-loop model exploration methodology.</p></li>
+</ul>
+</div></blockquote>
+<div class="section" id="stochastic-gene-regulatory-networks">
+<h2>Stochastic Gene Regulatory Networks<a class="headerlink" href="#stochastic-gene-regulatory-networks" title="Permalink to this headline">¶</a></h2>
+<p>Sciope has been designed for (but is not limited to) Stochastic Gene Regulatory Networks (GRN).
+Sciope have built-in support and wrappers for <a class="reference external" href="https://github.com/GillesPy2/GillesPy2">Gillespy2</a>
+and is part of the development of next-generation <a class="reference external" href="https://stochss.org">StochSS</a>.</p>
+</div>
+<div class="section" id="likelihood-free-inference">
+<h2>Likelihood-free inference<a class="headerlink" href="#likelihood-free-inference" title="Permalink to this headline">¶</a></h2>
+<p>In model inference the task is to fit model parameters to observed experimental data.
+A popular approach for parameter inference in systems biology is Approximate Bayesian Computation (ABC).
+ABC inference requires substantial hyperparameter tuning (such as choosing the prior, tuning acceptance
+thresholds and distance metrics). ABC can become prohibitively slow for high-dimensional problems and it
+is of utmost importance to select informative summary statistics.</p>
+</div>
+<div class="section" id="model-exploration">
+<h2>Model exploration<a class="headerlink" href="#model-exploration" title="Permalink to this headline">¶</a></h2>
+<p>In model parameter space exploration the modeller’s objective is to use the simulator to screen for
+different qualitative behaviours displayed by the model under large variations in parameters.
+Model exploration is often the first step in understanding a system, and applies also when no
+experimental data is available.</p>
+</div>
+<div class="section" id="scales-from-laptops-to-clusters">
+<h2>Scales from laptops to clusters<a class="headerlink" href="#scales-from-laptops-to-clusters" title="Permalink to this headline">¶</a></h2>
+<p>The sheer computational cost associated with simulation and feature extraction for complex high-dimensional and
+stochastic models becomes a bottle-neck both for end-users and method developers. For this reason, Sciope is built
+with a <a class="reference external" href="https://dask.org">Dask</a> backend to support massive parallelism on platforms from laptops to clouds.</p>
+</div>
+</div>
+<div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>You can install sciope with  <code class="docutils literal notranslate"><span class="pre">pip</span></code>, or by installing from source.</p>
+<div class="section" id="pip">
+<h2>Pip<a class="headerlink" href="#pip" title="Permalink to this headline">¶</a></h2>
+<p>This will install both sciope and other dependencies like NumPy, sklearn,
+and so on that are necessary:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">sciope</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-from-source">
+<h2>Install from Source<a class="headerlink" href="#install-from-source" title="Permalink to this headline">¶</a></h2>
+<p>To install sciope from source, clone the repository from <a class="reference external" href="https://github.com/sciope/sciope">github</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">sciope</span><span class="o">/</span><span class="n">sciope</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">sciope</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>Or do a developer install by using the <code class="docutils literal notranslate"><span class="pre">-e</span></code> flag:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="model-exploration-of-a-genetic-toggleswitch">
+<h2>Model Exploration of a Genetic Toggleswitch<a class="headerlink" href="#model-exploration-of-a-genetic-toggleswitch" title="Permalink to this headline">¶</a></h2>
+<p>Here we will implement the stochastic genetic toggleswitch model (Gardner et al. Nature 1999) using GillesPy2.
+and use it to explore the qualitative output by varying the input parameter space. To be able to visualize and
+interact with the simulated output we need to use an interacitve backend of jupyter notebooks.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">notebook</span>
+ <span class="c1"># Interactive backend required for model exploration</span>
+ <span class="kn">import</span> <span class="nn">gillespy2</span>
+ <span class="kn">from</span> <span class="nn">gillespy2.solvers.numpy</span> <span class="kn">import</span> <span class="n">NumPySSASolver</span>
+ <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<p>Setting up the model using Gillespy2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ToggleSwitch</span><span class="p">(</span><span class="n">gillespy2</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Gardner et al. Nature (1999)</span>
+<span class="sd">    &#39;Construction of a genetic toggle switch in Escherichia coli&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Initialize the model.</span>
+        <span class="n">gillespy2</span><span class="o">.</span><span class="n">Model</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;toggle_switch&quot;</span><span class="p">)</span>
+        <span class="c1"># Parameters</span>
+        <span class="n">alpha1</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;alpha1&#39;</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">alpha2</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;alpha2&#39;</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="s2">&quot;2.0&quot;</span><span class="p">)</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;gamma&#39;</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="s2">&quot;2.0&quot;</span><span class="p">)</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">([</span><span class="n">alpha1</span><span class="p">,</span> <span class="n">alpha2</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">mu</span><span class="p">])</span>
+
+        <span class="c1"># Species</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Species</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Species</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_species</span><span class="p">([</span><span class="n">U</span><span class="p">,</span> <span class="n">V</span><span class="p">])</span>
+
+        <span class="c1"># Reactions</span>
+        <span class="n">cu</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Reaction</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;r1&quot;</span><span class="p">,</span><span class="n">reactants</span><span class="o">=</span><span class="p">{},</span> <span class="n">products</span><span class="o">=</span><span class="p">{</span><span class="n">U</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span>
+                <span class="n">propensity_function</span><span class="o">=</span><span class="s2">&quot;alpha1/(1+pow(V,beta))&quot;</span><span class="p">)</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Reaction</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;r2&quot;</span><span class="p">,</span><span class="n">reactants</span><span class="o">=</span><span class="p">{},</span> <span class="n">products</span><span class="o">=</span><span class="p">{</span><span class="n">V</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span>
+                <span class="n">propensity_function</span><span class="o">=</span><span class="s2">&quot;alpha2/(1+pow(U,gamma))&quot;</span><span class="p">)</span>
+        <span class="n">du</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Reaction</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;r3&quot;</span><span class="p">,</span><span class="n">reactants</span><span class="o">=</span><span class="p">{</span><span class="n">U</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span> <span class="n">products</span><span class="o">=</span><span class="p">{},</span>
+                <span class="n">rate</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span>
+        <span class="n">dv</span> <span class="o">=</span> <span class="n">gillespy2</span><span class="o">.</span><span class="n">Reaction</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;r4&quot;</span><span class="p">,</span><span class="n">reactants</span><span class="o">=</span><span class="p">{</span><span class="n">V</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span> <span class="n">products</span><span class="o">=</span><span class="p">{},</span>
+                <span class="n">rate</span><span class="o">=</span><span class="n">mu</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_reaction</span><span class="p">([</span><span class="n">cu</span><span class="p">,</span><span class="n">cv</span><span class="p">,</span><span class="n">du</span><span class="p">,</span><span class="n">dv</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timespan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">101</span><span class="p">))</span>
+
+<span class="n">toggle_model</span> <span class="o">=</span> <span class="n">ToggleSwitch</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Use Sciope’s Gillespy2 wrapper to extract simulator and parameters</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sciope.utilities.gillespy2</span> <span class="kn">import</span> <span class="n">wrapper</span>
+
+<span class="n">settings</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="n">NumPySSASolver</span><span class="p">,</span> <span class="s2">&quot;number_of_trajectories&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;show_labels&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">wrapper</span><span class="o">.</span><span class="n">get_simulator</span><span class="p">(</span><span class="n">gillespy_model</span><span class="o">=</span><span class="n">toggle_model</span><span class="p">,</span> <span class="n">run_settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span> <span class="n">species_of_interest</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;V&quot;</span><span class="p">])</span>
+
+<span class="n">expression_array</span> <span class="o">=</span> <span class="n">wrapper</span><span class="o">.</span><span class="n">get_parameter_expression_array</span><span class="p">(</span><span class="n">toggle_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use Latin Latin Hypercube design to generate points which will be sampled from during exploration, the points will
+be generated using distributed resources if we have a Dask Client Initialized (in this example just a local cluster).
+Generated points will be persited over the worker nodes (i.e no local memory would be used in case of a real cluster).
+Random points from the persisted collection can be gathered by calling <code class="code docutils literal notranslate"><span class="pre">lhc.draw(n_samples)</span></code>
+Here, we will also use TSFRESH minimal feature set as our summary statistics.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">sciope.designs</span> <span class="kn">import</span> <span class="n">latin_hypercube_sampling</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.summarystats.auto_tsfresh</span> <span class="kn">import</span> <span class="n">SummariesTSFRESH</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+
+<span class="n">lhc</span> <span class="o">=</span> <span class="n">latin_hypercube_sampling</span><span class="o">.</span><span class="n">LatinHypercube</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">expression_array</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">expression_array</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1">#generate points that we will randomly sample from during the exploration</span>
+<span class="n">lhc</span><span class="o">.</span><span class="n">generate_array</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1">#will use default minimal set of features</span>
+<span class="n">summary_stats</span> <span class="o">=</span> <span class="n">SummariesTSFRESH</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Start Model exploration with StochMET</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sciope.stochmet.stochmet</span> <span class="kn">import</span> <span class="n">StochMET</span>
+<span class="n">met</span> <span class="o">=</span> <span class="n">StochMET</span><span class="p">(</span><span class="n">simulator</span><span class="p">,</span> <span class="n">lhc</span><span class="p">,</span> <span class="n">summary_stats</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Run the parameter sweep of 500 points</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">met</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we will explore parameter points expressed in feature space using a dimension reduction method.
+User can interact with points and label points according to different model behavior.</p>
+<p>OBS! The explore function make use of interactive tools such as <a class="reference external" href="https://github.com/jupyter-widgets/ipywidgets">ipywidgets</a>,
+it is therefore required that you run in a jupyter notebook with an interactive backend (see the first code cell of this example)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here we use UMAP for dimension reduction</span>
+<span class="n">met</span><span class="o">.</span><span class="n">explore</span><span class="p">(</span><span class="n">dr_method</span><span class="o">=</span><span class="s1">&#39;umap&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/met.gif"><img alt="sciope met gif" class="align-center" src="_images/met.gif" style="width: 100%;" /></a>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
