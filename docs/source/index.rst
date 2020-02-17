@@ -205,6 +205,19 @@ it is therefore required that you run in a jupyter notebook with an interactive 
     # Here we use UMAP for dimension reduction
     met.explore(dr_method='umap')
 
+Once at least a few points have been assigned a label, sciope has support for semi-supervised learning using label propagation where 
+we can infer the labels of unassigned points. This is a great way of filtering the vast amount of data according qualitative behaviour 
+and preferences.
+
+.. code-block:: python
+    from sciope.models.label_propagation import LPModel
+    #here lets use the dimension reduction embedding as input data
+    data = met.dr_model.embedding_
+
+    model_lp = LPModel()
+    #train using basinhopping
+    model_lp.train(data, met.data.user_labels, min_=0.01, max_=10, niter=50)
+
 .. image:: met.gif
    :alt: sciope met gif
    :width: 100%
