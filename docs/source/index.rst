@@ -97,9 +97,9 @@ Examples
 
 Model Exploration of a Genetic Toggleswitch
 ------------------------------------------- 
-Here we will implement the stochastic genetic toggleswitch model (Gardner et al. Nature 1999) using GillesPy2.
+Here we will implement the stochastic genetic toggleswitch model (Gardner et al. Nature 1999) using GillesPy2
 and use it to explore the qualitative output by varying the input parameter space. To be able to visualize and
-interact with the simulated output we need to use an interacitve backend of jupyter notebooks. 
+interact with the simulated output we need to use an interacitve backend in jupyter notebooks. 
 
 .. code-block:: python
 
@@ -160,8 +160,8 @@ Use Sciope's Gillespy2 wrapper to extract simulator and parameters
 
 
 
-Use Latin Latin Hypercube design to generate points which will be sampled from during exploration, the points will
-be generated using distributed resources if we have a Dask Client Initialized (in this example just a local cluster).
+Use Latin Hypercube design to generate points which will be sampled from during exploration, the points will
+be generated using distributed resources if we have a Dask client initialized (in this example just a local cluster).
 Generated points will be persited over the worker nodes (i.e no local memory would be used in case of a real cluster).
 Random points from the persisted collection can be gathered by calling :code:`lhc.draw(n_samples)`
 Here, we will also use TSFRESH minimal feature set as our summary statistics.
@@ -188,14 +188,14 @@ Start Model exploration with StochMET
     from sciope.stochmet.stochmet import StochMET
     met = StochMET(simulator, lhc, summary_stats)
 
-Run the parameter sweep of 500 points
+Run a parameter sweep of 500 points
 
 .. code-block:: python
 
     met.compute(n_points=500, chunk_size=10)
 
-Here we will explore parameter points expressed in feature space using a dimension reduction method. 
-User can interact with points and label points according to different model behavior. 
+Here we will explore parameter points expressed in feature space (summary statistics) using a dimension reduction method. 
+The User can interact with points and label points according to different model behavior. 
 
 OBS! The explore function make use of interactive tools such as `ipywidgets <https://github.com/jupyter-widgets/ipywidgets>`_,
 it is therefore required that you run in a jupyter notebook with an interactive backend (see the first code cell of this example)
