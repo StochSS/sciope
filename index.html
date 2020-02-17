@@ -253,9 +253,9 @@ and so on that are necessary:</p>
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="model-exploration-of-a-genetic-toggleswitch">
 <h2>Model Exploration of a Genetic Toggleswitch<a class="headerlink" href="#model-exploration-of-a-genetic-toggleswitch" title="Permalink to this headline">¶</a></h2>
-<p>Here we will implement the stochastic genetic toggleswitch model (Gardner et al. Nature 1999) using GillesPy2.
+<p>Here we will implement the stochastic genetic toggleswitch model (Gardner et al. Nature 1999) using GillesPy2
 and use it to explore the qualitative output by varying the input parameter space. To be able to visualize and
-interact with the simulated output we need to use an interacitve backend of jupyter notebooks.</p>
+interact with the simulated output we need to use an interacitve backend in jupyter notebooks.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">notebook</span>
  <span class="c1"># Interactive backend required for model exploration</span>
  <span class="kn">import</span> <span class="nn">gillespy2</span>
@@ -308,8 +308,8 @@ interact with the simulated output we need to use an interacitve backend of jupy
 <span class="n">expression_array</span> <span class="o">=</span> <span class="n">wrapper</span><span class="o">.</span><span class="n">get_parameter_expression_array</span><span class="p">(</span><span class="n">toggle_model</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Use Latin Latin Hypercube design to generate points which will be sampled from during exploration, the points will
-be generated using distributed resources if we have a Dask Client Initialized (in this example just a local cluster).
+<p>Use Latin Hypercube design to generate points which will be sampled from during exploration, the points will
+be generated using distributed resources if we have a Dask client initialized (in this example just a local cluster).
 Generated points will be persited over the worker nodes (i.e no local memory would be used in case of a real cluster).
 Random points from the persisted collection can be gathered by calling <code class="code docutils literal notranslate"><span class="pre">lhc.draw(n_samples)</span></code>
 Here, we will also use TSFRESH minimal feature set as our summary statistics.</p>
@@ -332,18 +332,21 @@ Here, we will also use TSFRESH minimal feature set as our summary statistics.</p
 <span class="n">met</span> <span class="o">=</span> <span class="n">StochMET</span><span class="p">(</span><span class="n">simulator</span><span class="p">,</span> <span class="n">lhc</span><span class="p">,</span> <span class="n">summary_stats</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Run the parameter sweep of 500 points</p>
+<p>Run a parameter sweep of 500 points</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">met</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">n_points</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Here we will explore parameter points expressed in feature space using a dimension reduction method.
-User can interact with points and label points according to different model behavior.</p>
+<p>Here we will explore parameter points expressed in feature space (summary statistics) using a dimension reduction method.
+The User can interact with points and label points according to different model behavior.</p>
 <p>Note: The explore function make use of interactive tools such as <a class="reference external" href="https://github.com/jupyter-widgets/ipywidgets">ipywidgets</a>,
 it is therefore required that you run in a jupyter notebook with an interactive backend (see the first code cell of this example)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here we use UMAP for dimension reduction</span>
 <span class="n">met</span><span class="o">.</span><span class="n">explore</span><span class="p">(</span><span class="n">dr_method</span><span class="o">=</span><span class="s1">&#39;umap&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Once at least a few points have been assigned a label, sciope has support for semi-supervised learning using label propagation where
+we can infer the labels of unassigned points. This is a great way of filtering the vast amount of data according qualitative behaviour
+and preferences.</p>
 <a class="reference internal image-reference" href="_images/met.gif"><img alt="sciope met gif" class="align-center" src="_images/met.gif" style="width: 100%;" /></a>
 </div>
 <div class="section" id="parameter-inference-of-a-genetic-toggleswitch">
