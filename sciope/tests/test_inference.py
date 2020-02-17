@@ -4,7 +4,6 @@ from sciope.utilities.priors import uniform_prior
 from sciope.inference.abc_inference import ABC
 from sciope.utilities.distancefunctions import naive_squared
 from tsfresh.feature_extraction.settings import MinimalFCParameters
-from sciope.utilities.mab import mab_halving as mh, mab_sar as sar, mab_direct as md, mab_incremental as mi
 from sklearn.metrics import mean_absolute_error
 from gillespy2.solvers.numpy import NumPySSASolver
 from dask.distributed import Client
@@ -113,7 +112,7 @@ def test_abc_functional():
 
     mae_inference = mean_absolute_error(true_params, abc.results['inferred_parameters'])
     assert abc.results['trial_count'] > 0 and abc.results[
-        'trial_count'] < 300, "ABC inference test failed, trial count out of bounds"
+        'trial_count'] < 1000, "ABC inference test failed, trial count out of bounds"
     assert mae_inference < 0.5, "ABC inference test failed, error too high"
 
     ## run in cluster mode

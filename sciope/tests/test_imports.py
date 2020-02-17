@@ -29,7 +29,6 @@ def test_visualize():
 def test_utilities():
     from sciope.utilities.distancefunctions import distance_base, euclidean, manhattan, naive_squared
     from sciope.utilities.housekeeping import sciope_logger, sciope_profiler
-    from sciope.utilities.mab import mab_base, mab_direct, mab_halving, mab_incremental, mab_sar
     from sciope.utilities.priors import prior_base, uniform_prior
     
 def test_core():
