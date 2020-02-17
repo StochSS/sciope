@@ -246,6 +246,7 @@ For the purpose of exposition, the prior is defined around the true parameter ve
 Next, we generate the observed dataset by simulating the true parameter point.
 
 .. code-block:: python
+
     # Generate some fixed(observed) data based on default parameters of model 
     fixed_data = toggle_model.run(solver=NumPySSASolver, number_of_trajectories=100, show_labels=False)
 
@@ -259,6 +260,7 @@ We are now ready to define the building blocks of the parameter inference pipeli
 We instantiate the summary statistics to use, the distance function and finally the ABC object.
 
 .. code-block:: python
+
     # Function to generate summary statistics 
     summ_func = SummariesTSFRESH()
 
@@ -271,6 +273,7 @@ We instantiate the summary statistics to use, the distance function and finally 
 Initialise and run ABC.
 
 .. code-block:: python
+
     # First compute the fixed (observed) mean 
     abc.compute_fixed_mean(chunk_size=2)
 
@@ -280,6 +283,7 @@ Initialise and run ABC.
 Evaluate parameter inference quality.
 
 .. code-block:: python
+
     mae_inference = mean_absolute_error(true_param, abc.results['inferred_parameters'])
     print('Mean absolute error in parameter inference = {}'.format(mae_inference))
 
