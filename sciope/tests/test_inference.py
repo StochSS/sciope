@@ -4,7 +4,6 @@ from sciope.utilities.priors import uniform_prior
 from sciope.inference.abc_inference import ABC
 from sciope.utilities.distancefunctions import naive_squared
 from tsfresh.feature_extraction.settings import MinimalFCParameters
-from sciope.utilities.mab import mab_halving as mh, mab_sar as sar, mab_direct as md, mab_incremental as mi
 from sklearn.metrics import mean_absolute_error
 from gillespy2.solvers.numpy import NumPySSASolver
 from dask.distributed import Client
