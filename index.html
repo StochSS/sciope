@@ -344,10 +344,19 @@ it is therefore required that you run in a jupyter notebook with an interactive 
 <span class="n">met</span><span class="o">.</span><span class="n">explore</span><span class="p">(</span><span class="n">dr_method</span><span class="o">=</span><span class="s1">&#39;umap&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<a class="reference internal image-reference" href="_images/met.gif"><img alt="sciope met gif" class="align-center" src="_images/met.gif" style="width: 100%;" /></a>
 <p>Once at least a few points have been assigned a label, sciope has support for semi-supervised learning using label propagation where
 we can infer the labels of unassigned points. This is a great way of filtering the vast amount of data according qualitative behaviour
 and preferences.</p>
-<a class="reference internal image-reference" href="_images/met.gif"><img alt="sciope met gif" class="align-center" src="_images/met.gif" style="width: 100%;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sciope.models.label_propagation</span> <span class="kn">import</span> <span class="n">LPModel</span>
+<span class="c1">#here lets use the dimension reduction embedding as input data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">met</span><span class="o">.</span><span class="n">dr_model</span><span class="o">.</span><span class="n">embedding_</span>
+
+<span class="n">model_lp</span> <span class="o">=</span> <span class="n">LPModel</span><span class="p">()</span>
+<span class="c1">#train using basinhopping</span>
+<span class="n">model_lp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">met</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">user_labels</span><span class="p">,</span> <span class="n">min_</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="parameter-inference-of-a-genetic-toggleswitch">
 <h2>Parameter Inference of a Genetic Toggleswitch<a class="headerlink" href="#parameter-inference-of-a-genetic-toggleswitch" title="Permalink to this headline">¶</a></h2>
