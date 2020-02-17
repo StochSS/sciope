@@ -197,7 +197,7 @@ Run the parameter sweep of 500 points
 Here we will explore parameter points expressed in feature space using a dimension reduction method. 
 User can interact with points and label points according to different model behavior. 
 
-OBS! The explore function make use of interactive tools such as `ipywidgets <https://github.com/jupyter-widgets/ipywidgets>`_,
+Note: The explore function make use of interactive tools such as `ipywidgets <https://github.com/jupyter-widgets/ipywidgets>`_,
 it is therefore required that you run in a jupyter notebook with an interactive backend (see the first code cell of this example)
 
 .. code-block:: python
@@ -209,6 +209,79 @@ it is therefore required that you run in a jupyter notebook with an interactive 
    :alt: sciope met gif
    :width: 100%
    :align: center
+
+Parameter Inference of a Genetic Toggleswitch
+---------------------------------------------
+This example illustrates the workflow for performing ABC parameter inference of the genetic ToggleSwitch model described above.
+We start by importing the required modules.
+
+.. code-block:: python
+
+    from sciope.utilities.priors import uniform_prior
+    from sciope.inference.abc_inference import ABC
+    from sciope.utilities.distancefunctions import naive_squared
+    from sklearn.metrics import mean_absolute_error
+
+We define a search space characterised by the prior function as below.
+For the purpose of exposition, the prior is defined around the true parameter vector.
+
+.. code-block:: python
+
+    toggle_model = ToggleSwitch()
+    true_param = np.array(list(toggle_model.listOfParameters.items()))[:,1]
+
+    # Use true theta as the reference
+    bound = []
+    for exp in true_param:
+        bound.append(float(exp.expression))
+    
+    # Set the bounds
+    bound = np.array(bound)
+    dmin = bound * 0.1
+    dmax = bound * 2.0
+
+    # Here we use a uniform prior
+    uni_prior = uniform_prior.UniformPrior(dmin, dmax)
+
+Next, we generate the observed dataset by simulating the true parameter point.
+
+.. code-block:: python
+    # Generate some fixed(observed) data based on default parameters of model 
+    fixed_data = toggle_model.run(solver=NumPySSASolver, number_of_trajectories=100, show_labels=False)
+
+    # Reshape data to (n_points,n_species,n_timepoints)
+    fixed_data = np.asarray([x.T for x in fixed_data])
+
+    # and remove timepoints array
+    fixed_data = fixed_data[:,1:, :]
+
+We are now ready to define the building blocks of the parameter inference pipeline. 
+We instantiate the summary statistics to use, the distance function and finally the ABC object.
+
+.. code-block:: python
+    # Function to generate summary statistics 
+    summ_func = SummariesTSFRESH()
+
+    # Distance
+    ns = naive_squared.NaiveSquaredDistance()
+
+    # Setup abc instance
+    abc = ABC(fixed_data, sim=simulator, prior_function=uni_prior, summaries_function=summ_func.compute, distance_function=ns)
+
+Initialise and run ABC.
+
+.. code-block:: python
+    # First compute the fixed (observed) mean 
+    abc.compute_fixed_mean(chunk_size=2)
+
+    # Run in multiprocessing mode
+    res = abc.infer(num_samples=100, batch_size=10, chunk_size=2)
+
+Evaluate parameter inference quality.
+
+.. code-block:: python
+    mae_inference = mean_absolute_error(true_param, abc.results['inferred_parameters'])
+    print('Mean absolute error in parameter inference = {}'.format(mae_inference))
 
 .. toctree::
    :maxdepth: 2
