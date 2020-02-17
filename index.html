@@ -100,6 +100,7 @@
 </li>
 <li><a class="reference internal" href="#examples">Examples</a><ul>
 <li><a class="reference internal" href="#model-exploration-of-a-genetic-toggleswitch">Model Exploration of a Genetic Toggleswitch</a></li>
+<li><a class="reference internal" href="#parameter-inference-of-a-genetic-toggleswitch">Parameter Inference of a Genetic Toggleswitch</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
@@ -337,13 +338,48 @@ Here, we will also use TSFRESH minimal feature set as our summary statistics.</p
 </div>
 <p>Here we will explore parameter points expressed in feature space using a dimension reduction method.
 User can interact with points and label points according to different model behavior.</p>
-<p>OBS! The explore function make use of interactive tools such as <a class="reference external" href="https://github.com/jupyter-widgets/ipywidgets">ipywidgets</a>,
+<p>Note: The explore function make use of interactive tools such as <a class="reference external" href="https://github.com/jupyter-widgets/ipywidgets">ipywidgets</a>,
 it is therefore required that you run in a jupyter notebook with an interactive backend (see the first code cell of this example)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here we use UMAP for dimension reduction</span>
 <span class="n">met</span><span class="o">.</span><span class="n">explore</span><span class="p">(</span><span class="n">dr_method</span><span class="o">=</span><span class="s1">&#39;umap&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/met.gif"><img alt="sciope met gif" class="align-center" src="_images/met.gif" style="width: 100%;" /></a>
+</div>
+<div class="section" id="parameter-inference-of-a-genetic-toggleswitch">
+<h2>Parameter Inference of a Genetic Toggleswitch<a class="headerlink" href="#parameter-inference-of-a-genetic-toggleswitch" title="Permalink to this headline">¶</a></h2>
+<p>This example illustrates the workflow for performing ABC parameter inference of the genetic ToggleSwitch model described above.
+We start by importing the required modules.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sciope.utilities.priors</span> <span class="kn">import</span> <span class="n">uniform_prior</span>
+<span class="kn">from</span> <span class="nn">sciope.inference.abc_inference</span> <span class="kn">import</span> <span class="n">ABC</span>
+<span class="kn">from</span> <span class="nn">sciope.utilities.distancefunctions</span> <span class="kn">import</span> <span class="n">naive_squared</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
+</pre></div>
+</div>
+<p>We define a search space characterised by the prior function as below.
+For the purpose of exposition, the prior is defined around the true parameter vector.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">toggle_model</span> <span class="o">=</span> <span class="n">ToggleSwitch</span><span class="p">()</span>
+<span class="n">true_param</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">toggle_model</span><span class="o">.</span><span class="n">listOfParameters</span><span class="o">.</span><span class="n">items</span><span class="p">()))[:,</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Use true theta as the reference</span>
+<span class="n">bound</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="n">true_param</span><span class="p">:</span>
+    <span class="n">bound</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">exp</span><span class="o">.</span><span class="n">expression</span><span class="p">))</span>
+
+<span class="c1"># Set the bounds</span>
+<span class="n">bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+<span class="n">dmin</span> <span class="o">=</span> <span class="n">bound</span> <span class="o">*</span> <span class="mf">0.1</span>
+<span class="n">dmax</span> <span class="o">=</span> <span class="n">bound</span> <span class="o">*</span> <span class="mf">2.0</span>
+
+<span class="c1"># Here we use a uniform prior</span>
+<span class="n">uni_prior</span> <span class="o">=</span> <span class="n">uniform_prior</span><span class="o">.</span><span class="n">UniformPrior</span><span class="p">(</span><span class="n">dmin</span><span class="p">,</span> <span class="n">dmax</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we generate the observed dataset by simulating the true parameter point.</p>
+<p>We are now ready to define the building blocks of the parameter inference pipeline.
+We instantiate the summary statistics to use, the distance function and finally the ABC object.</p>
+<p>Initialise and run ABC.</p>
+<p>Evaluate parameter inference quality.</p>
 <div class="toctree-wrapper compound">
 </div>
 </div>
