@@ -376,10 +376,41 @@ For the purpose of exposition, the prior is defined around the true parameter ve
 </pre></div>
 </div>
 <p>Next, we generate the observed dataset by simulating the true parameter point.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate some fixed(observed) data based on default parameters of model</span>
+<span class="n">fixed_data</span> <span class="o">=</span> <span class="n">toggle_model</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="n">NumPySSASolver</span><span class="p">,</span> <span class="n">number_of_trajectories</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">show_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Reshape data to (n_points,n_species,n_timepoints)</span>
+<span class="n">fixed_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fixed_data</span><span class="p">])</span>
+
+<span class="c1"># and remove timepoints array</span>
+<span class="n">fixed_data</span> <span class="o">=</span> <span class="n">fixed_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]</span>
+</pre></div>
+</div>
 <p>We are now ready to define the building blocks of the parameter inference pipeline.
 We instantiate the summary statistics to use, the distance function and finally the ABC object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Function to generate summary statistics</span>
+<span class="n">summ_func</span> <span class="o">=</span> <span class="n">SummariesTSFRESH</span><span class="p">()</span>
+
+<span class="c1"># Distance</span>
+<span class="n">ns</span> <span class="o">=</span> <span class="n">naive_squared</span><span class="o">.</span><span class="n">NaiveSquaredDistance</span><span class="p">()</span>
+
+<span class="c1"># Setup abc instance</span>
+<span class="n">abc</span> <span class="o">=</span> <span class="n">ABC</span><span class="p">(</span><span class="n">fixed_data</span><span class="p">,</span> <span class="n">sim</span><span class="o">=</span><span class="n">simulator</span><span class="p">,</span> <span class="n">prior_function</span><span class="o">=</span><span class="n">uni_prior</span><span class="p">,</span> <span class="n">summaries_function</span><span class="o">=</span><span class="n">summ_func</span><span class="o">.</span><span class="n">compute</span><span class="p">,</span> <span class="n">distance_function</span><span class="o">=</span><span class="n">ns</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Initialise and run ABC.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># First compute the fixed (observed) mean</span>
+<span class="n">abc</span><span class="o">.</span><span class="n">compute_fixed_mean</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Run in multiprocessing mode</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">infer</span><span class="p">(</span><span class="n">num_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Evaluate parameter inference quality.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mae_inference</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">true_param</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;inferred_parameters&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mean absolute error in parameter inference = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mae_inference</span><span class="p">))</span>
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </div>
