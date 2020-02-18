@@ -18,7 +18,8 @@ exploration by large-scale parameter sweeps. Please see the [documentation](http
 	- train fast metamodels of computationally expensive problems
 	- perform surrogate-assisted model reduction for large-scale models/simulators (e.g., biochemical reaction networks)
 * Inference: 
-	- perform likelihood-free parameter inference using surrogate modeling or Bayesian optimization
+	- perform likelihood-free parameter inference using parallel ABC
+	- train surrogate models (ANNs) as expressive summary statistics for likelihood-free inference
 	- perform efficient parameter sweeps based on statistical designs and sampling techniques
 * Optimization: 
 	- optimize a specified objective function or surrogate model using a variety of approaches
@@ -33,21 +34,10 @@ exploration by large-scale parameter sweeps. Please see the [documentation](http
 
 ### How do I get set up? ###
 
-* pip install . --process-dependency-links
+* pip install .
 * Configuration
 * Dependencies
-	scikit-learn, SciPy, numpy, gpflowopt, ipywidgets, tsfresh, pandas and dask
-* How to run tests
-	test suite coming up
-
-### Contribution guidelines ###
-
-* Writing tests
-	Ongoing
-* Code review
-	ToDo
-* Other guidelines
-	ToDo
+	scikit-learn, SciPy, numpy, ipywidgets, tsfresh, pandas and dask
 
 ### Who do I talk to? ###
 
