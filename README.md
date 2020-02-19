@@ -34,10 +34,7 @@ exploration by large-scale parameter sweeps. Please see the [documentation](http
 
 ### How do I get set up? ###
 
-* pip install .
-* Configuration
-* Dependencies
-	scikit-learn, SciPy, numpy, ipywidgets, tsfresh, pandas and dask
+Please see the [documentation](https://sciope.github.io/sciope/) for instructions to install and examples.
 
 ### Who do I talk to? ###
 
