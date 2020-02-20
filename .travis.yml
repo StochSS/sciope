@@ -1,7 +1,8 @@
 language: python
 python:
-  - "3.5"
   - "3.6"
+  - "3.7"
+  - "3.8"
 install:
   - python3 -m pip install gillespy2
   - pip install pytest
@@ -14,7 +15,7 @@ install:
 before_script:
   - cd sciope/tests
 # command to run tests
-script: travis_wait 10 py.test  --cov-report term --cov
+script: pytest  --cov-report term --cov
 after_success:
   - codecov
   - cd ../../docs/ && make html
