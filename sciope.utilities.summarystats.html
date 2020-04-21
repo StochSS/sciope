@@ -169,16 +169,16 @@
 <div class="section" id="sciope-utilities-summarystats-burstiness-module">
 <h2>sciope.utilities.summarystats.burstiness module<a class="headerlink" href="#sciope-utilities-summarystats-burstiness-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.summarystats.burstiness"></span><p>The ‘Burstiness’ summary statistic</p>
-<dl class="class">
+<dl class="py class">
 <dt id="sciope.utilities.summarystats.burstiness.Burstiness">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.burstiness.</code><code class="sig-name descname">Burstiness</code><span class="sig-paren">(</span><em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">improvement=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.burstiness.</code><code class="sig-name descname">Burstiness</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mean_trajectories</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">improvement</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_logger</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
 <p>Burstiness Summary statictics
 Burstiness = (sigma-mu)/(sigma+mu)</p>
 <p>Ref: Burstiness and memory in complex systems, Europhys. Let., 81, pp. 48002, 2008.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.utilities.summarystats.burstiness.Burstiness.compute">
-<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness.compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the value(s) of the summary statistic(s)</p>
 <dl class="simple">
 <dt>data<span class="classifier">[type]</span></dt><dd><p>simulated or data set in the form N x S X T - num data points x num species x num time steps</p>
@@ -202,14 +202,14 @@ Burstiness = (sigma-mu)/(sigma+mu)</p>
 <div class="section" id="sciope-utilities-summarystats-summary-base-module">
 <h2>sciope.utilities.summarystats.summary_base module<a class="headerlink" href="#sciope-utilities-summarystats-summary-base-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.summarystats.summary_base"></span><p>Base Class for Summary Statistics</p>
-<dl class="class">
+<dl class="py class">
 <dt id="sciope.utilities.summarystats.summary_base.SummaryBase">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.summary_base.</code><code class="sig-name descname">SummaryBase</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">mean_trajectories=False</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sciope.utilities.summarystats.summary_base.</code><code class="sig-name descname">SummaryBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">mean_trajectories</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_logger</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for summary statistics.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.utilities.summarystats.summary_base.SummaryBase.compute">
-<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase.compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the summary statistic value for given ‘data’
 :param data: a fixed data set or simulation result
 :return: the computed summary statistic value</p>

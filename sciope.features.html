@@ -164,9 +164,9 @@
 <div class="section" id="sciope-features-feature-extraction-module">
 <h2>sciope.features.feature_extraction module<a class="headerlink" href="#sciope-features-feature-extraction-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.features.feature_extraction"></span><p>Feature Extraction</p>
-<dl class="function">
+<dl class="py function">
 <dt id="sciope.features.feature_extraction.generate_tsfresh_features">
-<code class="sig-prename descclassname">sciope.features.feature_extraction.</code><code class="sig-name descname">generate_tsfresh_features</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">features</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/features/feature_extraction.html#generate_tsfresh_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.features.feature_extraction.generate_tsfresh_features" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sciope.features.feature_extraction.</code><code class="sig-name descname">generate_tsfresh_features</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">features</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/features/feature_extraction.html#generate_tsfresh_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.features.feature_extraction.generate_tsfresh_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates time series features from TSFRESH library</p>
 <dl>
 <dt>data<span class="classifier">ndarray</span></dt><dd><p>time series collections of shape N x T, where T is number of time points</p>
@@ -190,9 +190,9 @@ for exempel:  features = {‘variance’: None,</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="sciope.features.feature_extraction.remove_nan_features">
-<code class="sig-prename descclassname">sciope.features.feature_extraction.</code><code class="sig-name descname">remove_nan_features</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">features</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/features/feature_extraction.html#remove_nan_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.features.feature_extraction.remove_nan_features" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sciope.features.feature_extraction.</code><code class="sig-name descname">remove_nan_features</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">features</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/features/feature_extraction.html#remove_nan_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.features.feature_extraction.remove_nan_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to remove features containing NaN values.</p>
 <dl class="simple">
 <dt>x: vector/array-like</dt><dd><p>array of calculated features</p>

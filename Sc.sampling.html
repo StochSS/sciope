@@ -166,9 +166,9 @@
 <h2>sciope.sampling.maximin_sampling module<a class="headerlink" href="#sciope-sampling-maximin-sampling-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.sampling.maximin_sampling"></span><p>Maximin space-filling sampling algorithm
 Ranks monte-carlo samples such that minimum distance between them is maximized</p>
-<dl class="class">
+<dl class="py class">
 <dt id="sciope.sampling.maximin_sampling.MaximinSampling">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.sampling.maximin_sampling.</code><code class="sig-name descname">MaximinSampling</code><span class="sig-paren">(</span><em class="sig-param">xmin</em>, <em class="sig-param">xmax</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sciope.sampling.maximin_sampling.</code><code class="sig-name descname">MaximinSampling</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xmin</span></em>, <em class="sig-param"><span class="n">xmax</span></em>, <em class="sig-param"><span class="n">use_logger</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.sampling.sampling_base.SamplingBase" title="sciope.sampling.sampling_base.SamplingBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.sampling.sampling_base.SamplingBase</span></code></a></p>
 <p>Algorithm:
 1. Generate MC candidate samples
@@ -178,9 +178,9 @@ Ranks monte-carlo samples such that minimum distance between them is maximized</
 Johnson, Mark E., Leslie M. Moore, and Donald Ylvisaker.
 “Minimax and maximin distance designs.”
 Journal of statistical planning and inference 26.2 (1990): 131-148.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.sampling.maximin_sampling.MaximinSampling.select_point">
-<code class="sig-name descname">select_point</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_point" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">select_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get top ranked candidate according to maximin sampling to add to current samples x</p>
 <dl class="simple">
 <dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
@@ -189,9 +189,9 @@ Journal of statistical planning and inference 26.2 (1990): 131-148.</p>
 <p>dask.delayed</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.sampling.maximin_sampling.MaximinSampling.select_points">
-<code class="sig-name descname">select_points</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">select_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get ‘n’ top ranked candidates according to maximin sampling to add to current samples x</p>
 <dl class="simple">
 <dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
@@ -208,9 +208,9 @@ Journal of statistical planning and inference 26.2 (1990): 131-148.</p>
 <div class="section" id="sciope-sampling-sampling-base-module">
 <h2>sciope.sampling.sampling_base module<a class="headerlink" href="#sciope-sampling-sampling-base-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.sampling.sampling_base"></span><p>Sequential Sampling Base Class</p>
-<dl class="class">
+<dl class="py class">
 <dt id="sciope.sampling.sampling_base.SamplingBase">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.sampling.sampling_base.</code><code class="sig-name descname">SamplingBase</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">xmin</em>, <em class="sig-param">xmax</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sciope.sampling.sampling_base.</code><code class="sig-name descname">SamplingBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">xmin</span></em>, <em class="sig-param"><span class="n">xmax</span></em>, <em class="sig-param"><span class="n">use_logger</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for sequential sampling.
 Must not be used directly!
@@ -221,9 +221,9 @@ Each sampling algorithm must implement the methods described herein:</p>
 </ul>
 <p>The following variables are available to derived classes:
 *</p>
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.sampling.sampling_base.SamplingBase.select_point">
-<em class="property">abstract </em><code class="sig-name descname">select_point</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_point" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">select_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for selecting one new point to X. Each derived class must implement</p>
 <dl class="simple">
 <dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
@@ -231,9 +231,9 @@ Each sampling algorithm must implement the methods described herein:</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.sampling.sampling_base.SamplingBase.select_points">
-<em class="property">abstract </em><code class="sig-name descname">select_points</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_points" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">select_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for selecting ‘n’ new points to X. Each derived class must implement.</p>
 <dl class="simple">
 <dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>

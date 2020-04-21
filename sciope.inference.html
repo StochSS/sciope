@@ -166,7 +166,7 @@
 <div class="section" id="sciope-inference-abc-inference-module">
 <h2>sciope.inference.abc_inference module<a class="headerlink" href="#sciope-inference-abc-inference-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.inference.abc_inference"></span><p>Approximate Bayesian Computation</p>
-<dl class="class">
+<dl class="py class">
 <dt id="sciope.inference.abc_inference.ABC">
 <em class="property">class </em><code class="sig-prename descclassname">sciope.inference.abc_inference.</code><code class="sig-name descname">ABC</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">sim</em>, <em class="sig-param">prior_function</em>, <em class="sig-param">epsilon=0.1</em>, <em class="sig-param">summaries_function=&lt;sciope.utilities.summarystats.burstiness.Burstiness object&gt;</em>, <em class="sig-param">distance_function=&lt;sciope.utilities.distancefunctions.euclidean.EuclideanDistance object&gt;</em>, <em class="sig-param">summaries_divisor=None</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.inference.inference_base.InferenceBase" title="sciope.inference.inference_base.InferenceBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.inference.inference_base.InferenceBase</span></code></a></p>
@@ -182,9 +182,9 @@
 * use_logger                        (whether logging is enabled or disabled)</p>
 <p>Methods:
 * infer                                     (perform parameter inference)</p>
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.inference.abc_inference.ABC.compute_fixed_mean">
-<code class="sig-name descname">compute_fixed_mean</code><span class="sig-paren">(</span><em class="sig-param">chunk_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.compute_fixed_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.compute_fixed_mean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_fixed_mean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chunk_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.compute_fixed_mean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.compute_fixed_mean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the mean over summary statistics on fixed data</p>
 <dl class="simple">
 <dt>chunk_size<span class="classifier">int</span></dt><dd><p>the partition size when splitting the fixed data. For avoiding many individual tasks
@@ -197,9 +197,9 @@ in dask if the data is large</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.inference.abc_inference.ABC.infer">
-<code class="sig-name descname">infer</code><span class="sig-paren">(</span><em class="sig-param">num_samples</em>, <em class="sig-param">batch_size</em>, <em class="sig-param">chunk_size=10</em>, <em class="sig-param">ensemble_size=1</em>, <em class="sig-param">normalize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.infer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.infer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">infer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_samples</span></em>, <em class="sig-param"><span class="n">batch_size</span></em>, <em class="sig-param"><span class="n">chunk_size</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">ensemble_size</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.infer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.infer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for rejection sampling. Performs ABC rejection sampling</p>
 <dl class="simple">
 <dt>num_samples<span class="classifier">int</span></dt><dd><p>The number of required accepted samples</p>
@@ -225,9 +225,9 @@ in dask if the data is large. Default 10.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.inference.abc_inference.ABC.rejection_sampling">
-<code class="sig-name descname">rejection_sampling</code><span class="sig-paren">(</span><em class="sig-param">num_samples</em>, <em class="sig-param">batch_size</em>, <em class="sig-param">chunk_size</em>, <em class="sig-param">ensemble_size</em>, <em class="sig-param">normalize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.rejection_sampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.rejection_sampling" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rejection_sampling</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_samples</span></em>, <em class="sig-param"><span class="n">batch_size</span></em>, <em class="sig-param"><span class="n">chunk_size</span></em>, <em class="sig-param"><span class="n">ensemble_size</span></em>, <em class="sig-param"><span class="n">normalize</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.rejection_sampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.rejection_sampling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform ABC inference according to initialized configuration.</p>
 <dl class="simple">
 <dt>num_samples<span class="classifier">int</span></dt><dd><p>The number of required accepted samples</p>
@@ -249,9 +249,9 @@ in dask if the data is large.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.inference.abc_inference.ABC.scale_distance">
-<code class="sig-name descname">scale_distance</code><span class="sig-paren">(</span><em class="sig-param">dist</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.scale_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.scale_distance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scale_distance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dist</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/abc_inference.html#ABC.scale_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.abc_inference.ABC.scale_distance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs scaling in [0,1] of a given distance vector/value with respect to historical distances</p>
 <dl class="simple">
 <dt>dist<span class="classifier">ndarray, float</span></dt><dd><p>distance</p>
@@ -272,9 +272,9 @@ in dask if the data is large.</p>
 <div class="section" id="sciope-inference-inference-base-module">
 <h2>sciope.inference.inference_base module<a class="headerlink" href="#sciope-inference-inference-base-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.inference.inference_base"></span><p>Parameter Inference Base Class</p>
-<dl class="class">
+<dl class="py class">
 <dt id="sciope.inference.inference_base.InferenceBase">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.inference.inference_base.</code><code class="sig-name descname">InferenceBase</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">data</em>, <em class="sig-param">sim</em>, <em class="sig-param">use_logger=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/inference_base.html#InferenceBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.inference_base.InferenceBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sciope.inference.inference_base.</code><code class="sig-name descname">InferenceBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">sim</span></em>, <em class="sig-param"><span class="n">use_logger</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/inference_base.html#InferenceBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.inference_base.InferenceBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for parameter inference algorithms.
 Must not be used directly!
@@ -282,7 +282,7 @@ Each inference algorithm must implement the methods described herein:</p>
 <ul class="simple">
 <li><p>InferenceBase.infer()</p></li>
 </ul>
-<dl class="method">
+<dl class="py method">
 <dt id="sciope.inference.inference_base.InferenceBase.infer">
 <em class="property">abstract </em><code class="sig-name descname">infer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/inference/inference_base.html#InferenceBase.infer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.inference.inference_base.InferenceBase.infer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for performing parameter inference. Each derived class must implement.</p>

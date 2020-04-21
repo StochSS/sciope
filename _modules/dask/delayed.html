@@ -153,10 +153,7 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterator</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">cytoolz</span> <span class="kn">import</span> <span class="n">curry</span><span class="p">,</span> <span class="n">concat</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">merge</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">toolz</span> <span class="kn">import</span> <span class="n">curry</span><span class="p">,</span> <span class="n">concat</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">merge</span>
+<span class="kn">from</span> <span class="nn">tlz</span> <span class="kn">import</span> <span class="n">curry</span><span class="p">,</span> <span class="n">concat</span><span class="p">,</span> <span class="n">unique</span><span class="p">,</span> <span class="n">merge</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">threaded</span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">is_dask_collection</span><span class="p">,</span> <span class="n">dont_optimize</span><span class="p">,</span> <span class="n">DaskMethodsMixin</span>
@@ -383,6 +380,15 @@
 <span class="sd">        to hashing content. Note that this only affects the name of the object</span>
 <span class="sd">        wrapped by this call to delayed, and *not* the output of delayed</span>
 <span class="sd">        function calls - for that use ``dask_key_name=`` as described below.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">           Because this ``name`` is used as the key in task graphs, you should</span>
+<span class="sd">           ensure that it uniquely identifies ``obj``. If you&#39;d like to provide</span>
+<span class="sd">           a descriptive name that is still unique, combine the descriptive name</span>
+<span class="sd">           with :func:`dask.base.tokenize` of the ``array_like``. See</span>
+<span class="sd">           :ref:`graphs` for more.</span>
+
 <span class="sd">    pure : bool, optional</span>
 <span class="sd">        Indicates whether calling the resulting ``Delayed`` object is a pure</span>
 <span class="sd">        operation. If True, arguments to the call are hashed to produce</span>
@@ -490,11 +496,15 @@
 
 <span class="sd">    The key name of a delayed object is hashed by default if ``pure=True`` or</span>
 <span class="sd">    is generated randomly if ``pure=False`` (default).  To explicitly set the</span>
-<span class="sd">    name, you can use the ``name`` keyword:</span>
+<span class="sd">    name, you can use the ``name`` keyword. To ensure that the key is unique</span>
+<span class="sd">    you should include the tokenized value as well, or otherwise ensure that</span>
+<span class="sd">    it&#39;s unique:</span>
 
-<span class="sd">    &gt;&gt;&gt; a = delayed([1, 2, 3], name=&#39;mylist&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; a</span>
-<span class="sd">    Delayed(&#39;mylist&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; from dask.base import tokenize</span>
+<span class="sd">    &gt;&gt;&gt; data = [1, 2, 3]</span>
+<span class="sd">    &gt;&gt;&gt; a = delayed(data, name=&#39;mylist-&#39; + tokenize(data))</span>
+<span class="sd">    &gt;&gt;&gt; a  # doctest: +SKIP</span>
+<span class="sd">    Delayed(&#39;mylist-55af65871cb378a4fa6de1660c3e8fb7&#39;)</span>
 
 <span class="sd">    Delayed results act as a proxy to the underlying object. Many operators</span>
 <span class="sd">    are supported:</span>
