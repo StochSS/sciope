@@ -4,6 +4,7 @@
 
 [![Build Status](https://travis-ci.com/sciope/sciope.svg?branch=develop)](https://travis-ci.com/sciope/sciope)
 [![codecov](https://codecov.io/gh/sciope/sciope/branch/develop/graph/badge.svg)](https://codecov.io/gh/sciope/sciope)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
 # README #
