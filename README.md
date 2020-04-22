@@ -37,6 +37,16 @@ exploration by large-scale parameter sweeps. Please see the [documentation](http
 
 Please see the [documentation](https://sciope.github.io/sciope/) for instructions to install and examples.
 
+### Steps to a successful contribution ###
+
+ 1. Fork Sciope (https://help.github.com/articles/fork-a-repo/)
+ 2. Make the changes to the source code in your fork.
+ 3. Check your code with PEP8 or pylint. Please limit text to 80 columns wide.
+ 4. Each feature or bugfix commit should consist of the corresponding code, tests, and documentation.
+ 5. Create a pull request to the develop branch in Sciope.
+ 7. Please feel free to use the comments section to communicate with us, and raise issues as appropriate.
+ 8. The pull request gets accepted and your new feature will soon be integrated into Sciope!
+
 ### Who do I talk to? ###
 
 * Prashant Singh (prashant.singh@it.uu.se)
