@@ -64,14 +64,35 @@ class UniformPrior(PriorBase):
         return generated_samples
 
     def pdf(self, x, log = False):
-        if len(np.asarray(x).shape) == 0:
-            v = np.prod(1/(self.ub - self.lb))
+        if len(np.asarray(x).shape) == 1:
+            z = np.asarray(x)
+            if (z > self.lb).all() and (z < self.ub).all():
+                v = np.prod(1/(self.ub - self.lb))
+                if log:
+                    v = np.log(v)
+            else:
+                v = 0
+                if log:
+                    v = -np.inf
+            return v
         else:
-            v = np.prod(1/(self.ub - self.lb)) * np.ones(np.asarray(x).shape[0])
-        if log:
-            return np.log(v)
+            z = np.asarray(x)
+            vs = []
+            for i in range(z.shape[0]):
+                if (z[i] > self.lb).all() and (z[i] < self.ub).all():
+                    v = np.prod(1/(self.ub - self.lb))
+                    if log:
+                        vs.append(np.log(v))
+                    else:
+                        vs.append(v)
+                else:
+                    if log:
+                        vs.append(-np.inf)
+                    else:
+                        vs.append(0)
+            return np.asarray(vs)
         return v
-        
+
     @delayed
     def _uniform_scale(self, n, d):
         # Generate samples in [0,1)
