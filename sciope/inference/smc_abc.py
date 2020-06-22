@@ -32,10 +32,11 @@ from dask import delayed
 
 class PerturbationPrior(PriorBase):
 
-    def __init__(self, samples, normalized_weights, perturbation_kernel,
+    def __init__(self, ref_prior, samples, normalized_weights, perturbation_kernel,
                  use_logger = False):
 
         self.name = 'Perturbation Prior'
+        self.ref_prior = ref_prior
         self.samples = samples
         self.normalized_weights = normalized_weights
         self.perturbation_kernel = perturbation_kernel
@@ -60,7 +61,14 @@ class PerturbationPrior(PriorBase):
         idxs = np.random.choice(self.samples.shape[0], m,
                                 p = self.normalized_weights)
         s0 = [self.samples[idx] for idx in idxs]
-        s = [self.perturbation_kernel.rvs(z) for z in s0]
+        s = []
+        for z in s0:
+            accepted = False
+            while not accepted:
+                sz = self.perturbation_kernel.rvs(z)
+                if self.ref_prior.pdf(sz) > 0:
+                    accepted = True
+                    s.append(sz)
 
         return np.asarray(s)
 
@@ -143,17 +151,18 @@ class SMCABC(InferenceBase):
                                          summaries_divisor = self.summaries_divisor,
                                          use_logger = self.use_logger)
 
-        res = abc_instance.compute_fixed_mean(chunk_size = chunk_size)
-        abc_results = abc_instance.infer(num_samples = t, batch_size = batch_size, chunk_size = chunk_size)
+        print("Starting epsilon={}".format(self.epsilons[0]))
+        abc_instance.compute_fixed_mean(chunk_size = chunk_size)
+        abc_results = abc_instance.infer(num_samples = t, batch_size = batch_size, chunk_size = chunk_size, normalize = normalize)
 
-        final_results = None
-        population = np.asarray(abc_results['accepted_samples'])
+        final_results = abc_results
+        population = np.vstack(abc_results['accepted_samples'])[:t]
         normalized_weights = np.ones(t)/t
         d = population.shape[1]
 
         # SMC iterations
         for eps in self.epsilons[1:]:
-
+            print("Starting epsilon={}".format(eps))
             if self.use_logger:
                 self.logger.info("Starting epsilon={}".format(eps))
 
@@ -161,30 +170,35 @@ class SMCABC(InferenceBase):
             self.perturbation_kernel.adapt(population)
 
             # Generate a proposal prior based on the population
-            new_prior = PerturbationPrior(population, normalized_weights, self.perturbation_kernel)
+            new_prior = PerturbationPrior(self.prior_function, population, normalized_weights, self.perturbation_kernel)
 
-            # Run ABC on the next epsilon using the proposal prior
-            abc_instance = abc_inference.ABC(self.data, self.sim, new_prior,
-                                    epsilon = eps, summaries_function = self.summaries_function,
-                                    distance_function = self.distance_function,
-                                    summaries_divisor = self.summaries_divisor,
-                                    use_logger = self.use_logger)
-            res = abc_instance.compute_fixed_mean(chunk_size = chunk_size)
-            abc_results = abc_instance.infer(num_samples = t,
-                                             batch_size = batch_size,
-                                             chunk_size = chunk_size,
-                                             normalize = normalize)
-            new_samples = np.asarray(abc_results['accepted_samples'])[:t]
+            try:
+                # Run ABC on the next epsilon using the proposal prior
+                abc_instance = abc_inference.ABC(self.data, self.sim, new_prior,
+                                        epsilon = eps, summaries_function = self.summaries_function,
+                                        distance_function = self.distance_function,
+                                        summaries_divisor = self.summaries_divisor,
+                                        use_logger = self.use_logger)
+                abc_instance.compute_fixed_mean(chunk_size = chunk_size)
+                abc_results = abc_instance.infer(num_samples = t,
+                                                 batch_size = batch_size,
+                                                 chunk_size = chunk_size,
+                                                 normalize = normalize)
+                new_samples = np.vstack(abc_results['accepted_samples'])[:t]
 
-            # Compute importance weights for the new samples
-            prior_weights = self.prior_function.pdf(new_samples)
-            kweights = self.perturbation_kernel.pdf(population, new_samples)
+                # Compute importance weights for the new samples
+                prior_weights = self.prior_function.pdf(new_samples)
+                kweights = self.perturbation_kernel.pdf(population, new_samples)
 
-            new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis = 0)
-            new_weights = new_weights/sum(new_weights)
+                new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis = 0)
+                new_weights = new_weights/sum(new_weights)
 
-            population = new_samples
-            normalized_weights = new_weights
-            final_results = abc_results
+                population = new_samples
+                normalized_weights = new_weights
+                final_results = abc_results
+            except KeyboardInterrupt:
+                return final_results
+            except:
+                raise
 
         return final_results

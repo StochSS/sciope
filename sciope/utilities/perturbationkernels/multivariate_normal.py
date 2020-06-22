@@ -50,4 +50,4 @@ class MultivariateNormalKernel(PerturbationKernelBase):
 
     def adapt(self, population):
         if self._adapt:
-            self.cov = np.sqrt(1/2.38) * np.cov(population, rowvar = False)
+            self.cov = (2.4**2)/self.d * np.cov(population, rowvar = False)
