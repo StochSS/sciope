@@ -50,3 +50,9 @@ class PriorBase(object):
         :param n: number of desired samples from prior; defaults to 1
         :return: the 'n' drawn samples as a vector
         """
+
+    @abstractmethod
+    def get_dimension(self):
+        """
+        Get the dimension of the prior.
+        """

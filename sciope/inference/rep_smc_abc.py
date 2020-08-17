@@ -21,10 +21,11 @@ from sciope.inference.inference_base import InferenceBase
 from sciope.inference import abc_inference
 from sciope.core import core
 from sciope.utilities.distancefunctions import euclidean as euc
-from sciope.utilities.summarystats import burstiness as bs
+from sciope.utilities.summarystats import identity
 from sciope.utilities.housekeeping import sciope_logger as ml
 from sciope.utilities.priors.prior_base import PriorBase
 from sciope.utilities.epsilonselectors import RelativeEpsilonSelector
+from sciope.utilities.perturbationkernels.multivariate_normal import MultivariateNormalKernel
 
 import numpy as np
 import dask
@@ -49,8 +50,9 @@ class ReplenishmentSMCABC(InferenceBase):
     * infer 					(perform parameter inference)
     """
 
-    def __init__(self, data, sim, prior_function, perturbation_kernel,
-                 summaries_function=bs.Burstiness(),
+    def __init__(self, data, sim, prior_function, 
+                 perturbation_kernel=None,
+                 summaries_function=identity.Identity(),
                  distance_function=euc.EuclideanDistance(),
                  summaries_divisor=None, use_logger=False):
 
@@ -61,17 +63,23 @@ class ReplenishmentSMCABC(InferenceBase):
         self.summaries_function = summaries_function
         self.distance_function = distance_function
         self.summaries_divisor = summaries_divisor
-        self.perturbation_kernel = perturbation_kernel
+        if perturbation_kernel is not None:
+            self.perturbation_kernel = perturbation_kernel
+        else:
+            self.perturbation_kernel = MultivariateNormalKernel(
+                    d = self.prior_function.get_dimension(),
+                    adapt = True)
 
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Sequential Monte-Carlo Approximate Bayesian Computation initialized")
 
-    def _simulate_N(self, prior, N):
+    def _simulate_N(self, prior, N, params = None):
 
-        params_delayed = prior.draw(N)
-        params, = dask.compute(params_delayed, num_workers = 10)
-        params = np.vstack(params).reshape(N, -1)
+        if params is None:
+            params_delayed = prior.draw(N)
+            params, = dask.compute(params_delayed, num_workers = 10)
+            params = np.vstack(params).reshape(N, -1)
 
         results = []
         for i in range(params.shape[0]):
@@ -80,15 +88,20 @@ class ReplenishmentSMCABC(InferenceBase):
             results.append(lazy_results)
 
         computed_results, = dask.compute(results)
+        dists, c = list(zip(*computed_results))
 
-        return np.asarray(computed_results), params
+        return np.asarray(dists), params, np.sum(c)
 
     def _simulate_distance(self, param):
-        res = self.summaries_function(self.sim(param))
-        res_obs = self.summaries_function(self.data)
-        return self.distance_function.compute(res_obs, res)
+        r, c = self.sim(param)
+        if r is None:
+            return np.inf, c
+        else:
+            res = self.summaries_function(r)
+            res_obs = self.summaries_function(self.data)
+            return self.distance_function.compute(res_obs, res), c
 
-    def infer(self, num_samples, alpha, R_trial = 10, c = 0.01, p_min = 0.05):
+    def infer(self, num_samples, alpha, initial_population = None, R_trial = 10, c = 0.01, p_min = 0.05):
         """Performs SMC-ABC.
 
         Parameters
@@ -111,6 +124,8 @@ class ReplenishmentSMCABC(InferenceBase):
             p_acc = 0
             n_moves = 0
             new_distance = cur_distance
+            ssa_count = 0
+            N_count  = 0
             for _ in range(R):
                 z = self.perturbation_kernel.rvs(p)
                 num = prior.pdf(z)
@@ -120,22 +135,31 @@ class ReplenishmentSMCABC(InferenceBase):
                     dnm = prior.pdf(p) * self.perturbation_kernel.pdf(z.reshape(1,-1), p.reshape(1,-1))[0,0]
                     weight = num/dnm
                     if np.random.rand() < min(1, weight):
-                        distance = self._simulate_distance(z)
+                        distance, c = self._simulate_distance(z)
+                        ssa_count += c
+                        N_count += 1
                         if distance <= tol:
                             n_moves += 1
                             p = z
                             new_distance = distance
                             p_acc = p_acc + (1/(R * Na))
-            return p, new_distance, p_acc, n_moves
+            return p, new_distance, p_acc, n_moves, ssa_count, N_count
 
         prior = self.prior_function
         Na = round(num_samples * alpha)
 
+        total_ssa = 0
+        total_N = 0
         # Sample N particles
-        distances, population = self._simulate_N(prior, num_samples)
+        distances, population, ssa_count = self._simulate_N(prior, num_samples, params = initial_population)
+
+        total_ssa = ssa_count
+        total_N = num_samples
         terminate = False
         while not terminate:
             try:
+                iter_ssa_count = 0
+                iter_N_count = 0
                 # Sort population by distance
                 sorted_idxs = np.argsort(distances)
                 population = population[sorted_idxs,:]
@@ -158,11 +182,13 @@ class ReplenishmentSMCABC(InferenceBase):
                     perturbed_ps.append(dask.delayed(perturb_resample)(population[i,:], distances[i], R_trial, tol))
                 res, = dask.compute(perturbed_ps)
 
-                updated_ps, updated_distances, update_p_accs, N_accs = list(zip(*res))
+                updated_ps, updated_distances, update_p_accs, N_accs, ssa_count, N_count = list(zip(*res))
                 population[Na:] = np.vstack(updated_ps)
                 distances[Na:] = np.asarray(updated_distances)
                 p_acc = np.sum(update_p_accs)
                 N_acc = np.sum(N_accs)
+                iter_ssa_count += np.sum(ssa_count)
+                iter_N_count += np.sum(N_count)
 
                 R = int(round(np.log(c) / np.log(1 - p_acc)))
 
@@ -171,17 +197,21 @@ class ReplenishmentSMCABC(InferenceBase):
                     perturbed_ps.append(dask.delayed(perturb_resample)(population[i,:], distances[i], R, tol))
                 res, = dask.compute(perturbed_ps)
 
-                updated_ps, updated_distances, update_p_accs, N_accs = list(zip(*res))
+                updated_ps, updated_distances, update_p_accs, N_accs, ssa_count, N_count = list(zip(*res))
                 population[Na:] = np.vstack(updated_ps)
                 distances[Na:] = np.asarray(updated_distances)
                 p_acc += p_acc + np.sum(update_p_accs)
                 N_acc += np.sum(N_accs)
-                print("Tol : {}, R : {}, N_acc : {}, p_acc : {}".format(tol, R, N_acc, p_acc))
+                iter_ssa_count += np.sum(ssa_count)
+                iter_N_count += np.sum(N_count)
+                total_ssa += iter_ssa_count
+                total_N += iter_N_count
+                print("Tol : {}, R : {}, N_acc : {}, p_acc : {}, iter_ssa_count : {}, iter_N_count : {}".format(tol, R, N_acc, p_acc, iter_ssa_count, iter_N_count))
                 if p_acc < p_min:
                     terminate = True
             except KeyboardInterrupt:
-                return {'accepted_samples' : population, 'distances' : distances}
+                return {'accepted_samples' : population, 'distances' : distances, 'ssa_count' : total_ssa, 'N_count' : total_N}
             except:
                 raise
 
-        return {'accepted_samples' : population, 'distances' : distances}
+        return {'accepted_samples' : population, 'distances' : distances, 'ssa_count' : total_ssa, 'N_count' : total_N}
