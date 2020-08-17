@@ -52,7 +52,7 @@ class ReplenishmentSMCABC(InferenceBase):
 
     def __init__(self, data, sim, prior_function, 
                  perturbation_kernel=None,
-                 summaries_function=identity.Identity(),
+                 summaries_function=identity.Identity().compute,
                  distance_function=euc.EuclideanDistance(),
                  summaries_divisor=None, use_logger=False):
 
