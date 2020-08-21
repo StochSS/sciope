@@ -30,10 +30,11 @@ import dask
 from dask.distributed import futures_of, as_completed, wait
 from dask import delayed
 
+
 class PerturbationPrior(PriorBase):
 
     def __init__(self, ref_prior, samples, normalized_weights, perturbation_kernel,
-                 use_logger = False):
+                 use_logger=False):
 
         self.name = 'Perturbation Prior'
         self.ref_prior = ref_prior
@@ -42,7 +43,7 @@ class PerturbationPrior(PriorBase):
         self.perturbation_kernel = perturbation_kernel
         super(PerturbationPrior, self).__init__(self.name, use_logger)
 
-    def draw(self, n = 1, chunk_size = 1):
+    def draw(self, n=1, chunk_size=1):
 
         assert n >= chunk_size
 
@@ -57,9 +58,9 @@ class PerturbationPrior(PriorBase):
         return generated_samples
 
     @delayed
-    def _weighted_draw_perturb(self,m):
+    def _weighted_draw_perturb(self, m):
         idxs = np.random.choice(self.samples.shape[0], m,
-                                p = self.normalized_weights)
+                                p=self.normalized_weights)
         s0 = [self.samples[idx] for idx in idxs]
         s = []
         for z in s0:
@@ -71,6 +72,7 @@ class PerturbationPrior(PriorBase):
                     s.append(sz)
 
         return np.asarray(s)
+
 
 class SMCABC(InferenceBase):
     """
@@ -145,19 +147,20 @@ class SMCABC(InferenceBase):
 
         # Generate an initial population from the first epsilon
         abc_instance = abc_inference.ABC(self.data, self.sim, prior_function,
-                                         epsilon = self.epsilons[0],
-                                         summaries_function = self.summaries_function,
-                                         distance_function = self.distance_function,
-                                         summaries_divisor = self.summaries_divisor,
-                                         use_logger = self.use_logger)
+                                         epsilon=self.epsilons[0],
+                                         summaries_function=self.summaries_function,
+                                         distance_function=self.distance_function,
+                                         summaries_divisor=self.summaries_divisor,
+                                         use_logger=self.use_logger)
 
         print("Starting epsilon={}".format(self.epsilons[0]))
-        abc_instance.compute_fixed_mean(chunk_size = chunk_size)
-        abc_results = abc_instance.infer(num_samples = t, batch_size = batch_size, chunk_size = chunk_size, normalize = normalize)
+        abc_instance.compute_fixed_mean(chunk_size=chunk_size)
+        abc_results = abc_instance.infer(num_samples=t, batch_size=batch_size, chunk_size=chunk_size,
+                                         normalize=normalize)
 
         final_results = abc_results
         population = np.vstack(abc_results['accepted_samples'])[:t]
-        normalized_weights = np.ones(t)/t
+        normalized_weights = np.ones(t) / t
         d = population.shape[1]
 
         # SMC iterations
@@ -175,23 +178,23 @@ class SMCABC(InferenceBase):
             try:
                 # Run ABC on the next epsilon using the proposal prior
                 abc_instance = abc_inference.ABC(self.data, self.sim, new_prior,
-                                        epsilon = eps, summaries_function = self.summaries_function,
-                                        distance_function = self.distance_function,
-                                        summaries_divisor = self.summaries_divisor,
-                                        use_logger = self.use_logger)
-                abc_instance.compute_fixed_mean(chunk_size = chunk_size)
-                abc_results = abc_instance.infer(num_samples = t,
-                                                 batch_size = batch_size,
-                                                 chunk_size = chunk_size,
-                                                 normalize = normalize)
+                                                 epsilon=eps, summaries_function=self.summaries_function,
+                                                 distance_function=self.distance_function,
+                                                 summaries_divisor=self.summaries_divisor,
+                                                 use_logger=self.use_logger)
+                abc_instance.compute_fixed_mean(chunk_size=chunk_size)
+                abc_results = abc_instance.infer(num_samples=t,
+                                                 batch_size=batch_size,
+                                                 chunk_size=chunk_size,
+                                                 normalize=normalize)
                 new_samples = np.vstack(abc_results['accepted_samples'])[:t]
 
                 # Compute importance weights for the new samples
                 prior_weights = self.prior_function.pdf(new_samples)
                 kweights = self.perturbation_kernel.pdf(population, new_samples)
 
-                new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis = 0)
-                new_weights = new_weights/sum(new_weights)
+                new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
+                new_weights = new_weights / sum(new_weights)
 
                 population = new_samples
                 normalized_weights = new_weights

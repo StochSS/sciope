@@ -35,7 +35,7 @@ class PriorBase(object):
         self.use_logger = use_logger
 
     @abstractmethod
-    def pdf(self, x, log = False):
+    def pdf(self, x, log=False):
         """
         Evaluate the PDF of the sample
         :param x: the point or collection of points to evaluate the pdf at

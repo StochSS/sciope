@@ -34,6 +34,7 @@ class UniformPrior(PriorBase):
         Set up a uniform prior corresponding to the space bounded by:
         :param space_min: the lowerbound of each variable/dimension
         :param space_max: the upperbound of each variable/dimension
+        :param use_logger: whether logging is enabled or disabled
         """
         self.name = 'Uniform'
         self.lb = space_min
