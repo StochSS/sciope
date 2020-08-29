@@ -101,7 +101,7 @@ class ReplenishmentSMCABC(InferenceBase):
             res_obs = self.summaries_function(self.data)
             return self.distance_function.compute(res_obs, res), c
 
-    def infer(self, num_samples, alpha, initial_population = None, R_trial = 10, c = 0.01, p_min = 0.05):
+    def infer(self, num_samples, alpha = 0.5, initial_population = None, R_trial = 10, c = 0.01, p_min = 0.05):
         """Performs SMC-ABC.
 
         Parameters
