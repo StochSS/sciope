@@ -31,10 +31,11 @@ import dask
 from dask.distributed import futures_of, as_completed, wait
 from dask import delayed
 
+
 class PerturbationPrior(PriorBase):
 
     def __init__(self, ref_prior, samples, normalized_weights, perturbation_kernel,
-                 use_logger = False):
+                 use_logger=False):
 
         self.name = 'Perturbation Prior'
         self.ref_prior = ref_prior
@@ -43,7 +44,7 @@ class PerturbationPrior(PriorBase):
         self.perturbation_kernel = perturbation_kernel
         super(PerturbationPrior, self).__init__(self.name, use_logger)
 
-    def draw(self, n = 1, chunk_size = 1):
+    def draw(self, n=1, chunk_size=1):
 
         assert n >= chunk_size
 
@@ -58,9 +59,9 @@ class PerturbationPrior(PriorBase):
         return generated_samples
 
     @delayed
-    def _weighted_draw_perturb(self,m):
+    def _weighted_draw_perturb(self, m):
         idxs = np.random.choice(self.samples.shape[0], m,
-                                p = self.normalized_weights)
+                                p=self.normalized_weights)
         s0 = [self.samples[idx] for idx in idxs]
         s = []
         for z in s0:
@@ -72,6 +73,7 @@ class PerturbationPrior(PriorBase):
                     s.append(sz)
 
         return np.asarray(s)
+
 
 class SMCABC(InferenceBase):
     """
@@ -205,8 +207,8 @@ class SMCABC(InferenceBase):
                 prior_weights = self.prior_function.pdf(new_samples)
                 kweights = self.perturbation_kernel.pdf(population, new_samples)
 
-                new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis = 0)
-                new_weights = new_weights/sum(new_weights)
+                new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
+                new_weights = new_weights / sum(new_weights)
 
                 population = new_samples
                 normalized_weights = new_weights

@@ -52,3 +52,24 @@ Please see the [documentation](https://sciope.github.io/sciope/) for instruction
 * Prashant Singh (prashant.singh@it.uu.se)
 * Fredrik Wrede (fredrik.wrede@it.uu.se)
 * Andreas Hellander (andreas.hellander@it.uu.se)
+
+### Citing Sciope ###
+
+To cite Sciope, please reference the [Bioinformatics application note](https://doi.org/10.1093/bioinformatics/btaa673). Sample Bibtex is given below:
+
+```
+@article{sciope,
+    author = {Singh, Prashant and Wrede, Fredrik and Hellander, Andreas},
+    title = "{Scalable machine learning-assisted model exploration and inference using Sciope}",
+    journal = {Bioinformatics},
+    year = {2020},
+    month = {07},
+    issn = {1367-4803},
+    doi = {10.1093/bioinformatics/btaa673},
+    url = {https://doi.org/10.1093/bioinformatics/btaa673},
+    note = {btaa673},
+    eprint = {https://academic.oup.com/bioinformatics/advance-article-pdf/doi/10.1093/bioinformatics/btaa673/33529616/btaa673.pdf},
+}
+
+```
+
