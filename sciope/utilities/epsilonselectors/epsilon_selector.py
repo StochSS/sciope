@@ -1,6 +1,13 @@
+"""
+Epsilon Selector base class
+"""
+
 from abc import ABCMeta, abstractmethod
 
 class EpsilonSelector(object):
+    """
+    Base class for creating epsilon sequences for use in ABC-SMC.
+    """
 
     __metaclass__ = ABCMeta
 

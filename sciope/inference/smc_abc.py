@@ -25,6 +25,7 @@ from sciope.utilities.summarystats import burstiness as bs
 from sciope.utilities.housekeeping import sciope_logger as ml
 from sciope.utilities.priors.prior_base import PriorBase
 from sciope.utilities.epsilonselectors import RelativeEpsilonSelector
+from sciope.utilities.perturbationkernels.multivariate_normal import MultivariateNormalKernel
 
 import numpy as np
 import dask
@@ -93,8 +94,9 @@ class SMCABC(InferenceBase):
     * infer 					(perform parameter inference)
     """
 
-    def __init__(self, data, sim, prior_function, perturbation_kernel,
-                 summaries_function=bs.Burstiness(),
+    def __init__(self, data, sim, prior_function,
+                 perturbation_kernel=None,
+                 summaries_function=bs.Burstiness().compute,
                  distance_function=euc.EuclideanDistance(),
                  summaries_divisor=None, use_logger=False):
 
@@ -105,14 +107,19 @@ class SMCABC(InferenceBase):
         self.summaries_function = summaries_function
         self.distance_function = distance_function
         self.summaries_divisor = summaries_divisor
-        self.perturbation_kernel = perturbation_kernel
+        if perturbation_kernel is not None:
+            self.perturbation_kernel = perturbation_kernel
+        else:
+            self.perturbation_kernel = MultivariateNormalKernel(
+                    d = self.prior_function.get_dimension(),
+                    adapt = True)
 
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Sequential Monte-Carlo Approximate Bayesian Computation initialized")
 
     def infer(self, num_samples, batch_size,
-              eps_selector = RelativeEpsilonSelector(0.05), chunk_size=10,
+              eps_selector = RelativeEpsilonSelector(20), chunk_size=10,
               ensemble_size = 1):
         """Performs SMC-ABC.
 

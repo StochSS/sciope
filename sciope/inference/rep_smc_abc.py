@@ -50,18 +50,37 @@ class ReplenishmentSMCABC(InferenceBase):
     * infer 					(perform parameter inference)
     """
 
-    def __init__(self, data, sim, prior_function, 
+    def __init__(self, data, sim, prior_function,
                  perturbation_kernel=None,
-                 summaries_function=identity.Identity().compute,
+                 summaries_function=identity.Identity(),
                  distance_function=euc.EuclideanDistance(),
                  summaries_divisor=None, use_logger=False):
+        """Replenishment SMC-ABC implementation.
 
-        self.name = 'SMC-ABC'
+        Parameters
+        ----------
+        data : nd-array
+            the observed / fixed dataset
+        sim : Callable[[nd-array], nd-array]
+            the simulator function
+        prior_function : sciope.utilities.priors object
+            the prior function generating candidate samples
+        perturbation_kernel : sciope.utilities.perturbationkernels object, optional
+            kernel to perturb samples
+        summaries_function : sciope.utilities.summarystats object, optional
+            function calculating summary stats over simulated results
+        distance_function : sciope.utilities.distancefunction, optional
+            distance function operating over summary statistics
+        use_logger : bool
+            enable/disable logging
+        """
+
+        self.name = 'Replenisment-SMC-ABC'
         super(ReplenishmentSMCABC, self).__init__(self.name, data, sim, use_logger)
 
         self.prior_function = prior_function
         self.summaries_function = summaries_function
-        self.distance_function = distance_function
+        self.distance_function = distance_function.compute
         self.summaries_divisor = summaries_divisor
         if perturbation_kernel is not None:
             self.perturbation_kernel = perturbation_kernel
@@ -72,36 +91,44 @@ class ReplenishmentSMCABC(InferenceBase):
 
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
-            self.logger.info("Sequential Monte-Carlo Approximate Bayesian Computation initialized")
+            self.logger.info("Replenisment Sequential Monte-Carlo \
+                              Approximate Bayesian Computation initialized")
 
-    def _simulate_N(self, prior, N, params = None):
+    def compute_fixed_mean(self, chunk_size):
+        stats_mean = core.get_fixed_mean(self.data, self.summaries_function, chunk_size)
+        self.fixed_mean = stats_mean.compute()
+        del stats_mean
 
-        if params is None:
-            params_delayed = prior.draw(N)
-            params, = dask.compute(params_delayed, num_workers = 10)
-            params = np.vstack(params).reshape(N, -1)
+    @dask.delayed
+    def _perturb_resample(self, param, current_distance, n_perturbations, tol):
+        p_acc = 0
+        n_successful_moves = 0
+        new_distance = current_distance
 
-        results = []
-        for i in range(params.shape[0]):
-            current_param = params[i,:]
-            lazy_results = dask.delayed(self._simulate_distance)(current_param)
-            results.append(lazy_results)
+        for _ in range(n_perturbations):
+            proposal = self.perturbation_kernel.rvs(param)
+            nume = self.prior_function.pdf(proposal)
 
-        computed_results, = dask.compute(results)
-        dists, c = list(zip(*computed_results))
+            # Metropolis Perturbation
+            if nume > 0:
+                nume = nume * self.perturbation_kernel.pdf(param.reshape(1,-1), proposal.reshape(1,-1))[0,0,]
+                dnm = self.prior_function.pdf(param) * self.perturbation_kernel.pdf(proposal.reshape(1,-1), param.reshape(1,-1))[0,0]
 
-        return np.asarray(dists), params, np.sum(c)
+                weight = nume/dnm
+                if np.random.rand() < min(1, weight):
+                    proposal_ss = self.summaries_function(self.sim(proposal))
+                    distance = self.distance_function(self.fixed_mean, proposal_ss)
+                    if distance <= tol:
+                        n_successful_moves += 1
+                        param = proposal
+                        new_distance = distance
 
-    def _simulate_distance(self, param):
-        r, c = self.sim(param)
-        if r is None:
-            return np.inf, c
-        else:
-            res = self.summaries_function(r)
-            res_obs = self.summaries_function(self.data)
-            return self.distance_function.compute(res_obs, res), c
+                        # Update estimate of movement probability
+                        p_acc += 1/n_perturbations
 
-    def infer(self, num_samples, alpha = 0.5, initial_population = None, R_trial = 10, c = 0.01, p_min = 0.05):
+        return param, new_distance, p_acc, n_successful_moves
+
+    def infer(self, num_samples, alpha = 0.5, R_trial = 10, c = 0.01, p_min = 0.05, batch_size = 10, chunk_size = 1):
         """Performs SMC-ABC.
 
         Parameters
@@ -111,7 +138,11 @@ class ReplenishmentSMCABC(InferenceBase):
         alpha : float
             Culling percentage
         R_trial : int
-            Number of perturbs per replenishment
+            Number of perturbs per replenishment to estimate probability
+        c : float
+            Sensitivity for more perturbations
+        p_min : float
+            Termination condition as a probability of a successul perturbation
 
         Returns
         -------
@@ -120,98 +151,96 @@ class ReplenishmentSMCABC(InferenceBase):
             'accepted_samples: The accepted parameter values',
             'distances: Accepted distance values'
         """
-        def perturb_resample(p, cur_distance, R, tol):
-            p_acc = 0
-            n_moves = 0
-            new_distance = cur_distance
-            ssa_count = 0
-            N_count  = 0
-            for _ in range(R):
-                z = self.perturbation_kernel.rvs(p)
-                num = prior.pdf(z)
-                # Metropolis Perturbation
-                if num > 0:
-                    num = num * self.perturbation_kernel.pdf(p.reshape(1,-1), z.reshape(1,-1))[0,0,]
-                    dnm = prior.pdf(p) * self.perturbation_kernel.pdf(z.reshape(1,-1), p.reshape(1,-1))[0,0]
-                    weight = num/dnm
-                    if np.random.rand() < min(1, weight):
-                        distance, c = self._simulate_distance(z)
-                        ssa_count += c
-                        N_count += 1
-                        if distance <= tol:
-                            n_moves += 1
-                            p = z
-                            new_distance = distance
-                            p_acc = p_acc + (1/(R * Na))
-            return p, new_distance, p_acc, n_moves, ssa_count, N_count
 
-        prior = self.prior_function
-        Na = round(num_samples * alpha)
+        assert hasattr(self, "fixed_mean"), "Please call compute_fixed_mean before infer"
 
-        total_ssa = 0
-        total_N = 0
-        # Sample N particles
-        distances, population, ssa_count = self._simulate_N(prior, num_samples, params = initial_population)
+        # Get the dask graph and add another distances task to it
+        graph_dict = core.get_graph_chunked(self.prior_function.draw, self.sim, self.summaries_function,
+                                    batch_size, chunk_size)
+        dist_func = lambda x: self.distance_function(self.fixed_mean, x)
+        graph_dict["distances"] = core.get_distance(dist_func, graph_dict["summarystats"], chunked = True)
 
-        total_ssa = ssa_count
-        total_N = num_samples
+        # Culling Cutoff
+        n_cull = round(alpha * num_samples)
+
+        # Draw the initial population and compute distances
+        population, distances = dask.compute(graph_dict['parameters'], graph_dict['distances'])
+        population = core._reshape_chunks(population)
+        distances = core._reshape_chunks(distances)
+
+        while population.shape[0] < num_samples:
+            params, dists = dask.compute(graph_dict["parameters"], graph_dict["distances"])
+            params = core._reshape_chunks(params)
+            dists = core._reshape_chunks(dists)
+            population = np.vstack([population, params])
+            distances = np.vstack([distances, dists])
+
+        population = population[:num_samples]
+        distances = distances[:num_samples,0]
+
         terminate = False
         while not terminate:
+
             try:
-                iter_ssa_count = 0
-                iter_N_count = 0
                 # Sort population by distance
                 sorted_idxs = np.argsort(distances)
-                population = population[sorted_idxs,:]
+                population = population[sorted_idxs]
                 distances = distances[sorted_idxs]
+
                 # Cull the last Na
-                population = population[:Na]
-                distances = distances[:Na]
+                population = population[:n_cull]
+                distances = distances[:n_cull]
                 tol = distances[-1]
 
-                # Resample with replacement
-                resampled_idxs = np.random.choice(Na, num_samples - Na)
+                # Resample with replacement to replenish in the population
+                resampled_idxs = np.random.choice(n_cull, num_samples - n_cull)
                 population = np.vstack([population, population[resampled_idxs]])
                 distances = np.concatenate([distances, distances[resampled_idxs]])
-                # Adapt transition kernel using samples
+
+                # Adapt transition kernel using the new population
                 self.perturbation_kernel.adapt(population)
 
-                perturbed_ps = []
-                # Perturb each of the resampled values
-                for i in range(Na, num_samples):
-                    perturbed_ps.append(dask.delayed(perturb_resample)(population[i,:], distances[i], R_trial, tol))
-                res, = dask.compute(perturbed_ps)
+                # For each replenished value, perturb and resample a few time
+                # to get an idea of how easy it is to move to a lower distance
+                perturb_tasks = []
+                for i in range(n_cull, num_samples):
+                    perturb_tasks.append(self._perturb_resample(population[i,:], distances[i], R_trial, tol))
+                res, = dask.compute(perturb_tasks)
 
-                updated_ps, updated_distances, update_p_accs, N_accs, ssa_count, N_count = list(zip(*res))
-                population[Na:] = np.vstack(updated_ps)
-                distances[Na:] = np.asarray(updated_distances)
-                p_acc = np.sum(update_p_accs)
+                # Update the population with the perturbed population
+                updated_ps, updated_distances, update_p_accs, N_accs = list(zip(*res))
+
+                population[n_cull:] = np.vstack(updated_ps)
+                distances[n_cull:] = np.asarray(updated_distances)
+
+                # Update metrics from the trial to estimate the probability
+                # of a move to assess convergence and decide how many more
+                # perturbation attempts to make
+                p_acc = np.sum(update_p_accs)/(num_samples - n_cull)
                 N_acc = np.sum(N_accs)
-                iter_ssa_count += np.sum(ssa_count)
-                iter_N_count += np.sum(N_count)
 
                 R = int(round(np.log(c) / np.log(1 - p_acc)))
 
-                perturbed_ps = []
-                for i in range(Na, num_samples):
-                    perturbed_ps.append(dask.delayed(perturb_resample)(population[i,:], distances[i], R, tol))
-                res, = dask.compute(perturbed_ps)
+                # Perturb again with better estimate
+                perturb_tasks = []
+                for i in range(n_cull, num_samples):
+                    perturb_tasks.append(self._perturb_resample(population[i,:], distances[i], R - R_trial, tol))
+                res, = dask.compute(perturb_tasks)
 
-                updated_ps, updated_distances, update_p_accs, N_accs, ssa_count, N_count = list(zip(*res))
-                population[Na:] = np.vstack(updated_ps)
-                distances[Na:] = np.asarray(updated_distances)
-                p_acc += p_acc + np.sum(update_p_accs)
+                updated_ps, updated_distances, update_p_accs, N_accs = list(zip(*res))
+
+                population[n_cull:] = np.vstack(updated_ps)
+                distances[n_cull:] = np.asarray(updated_distances)
+
+                p_acc += np.sum(update_p_accs)/(num_samples - n_cull)
                 N_acc += np.sum(N_accs)
-                iter_ssa_count += np.sum(ssa_count)
-                iter_N_count += np.sum(N_count)
-                total_ssa += iter_ssa_count
-                total_N += iter_N_count
-                print("Tol : {}, R : {}, N_acc : {}, p_acc : {}, iter_ssa_count : {}, iter_N_count : {}".format(tol, R, N_acc, p_acc, iter_ssa_count, iter_N_count))
+
+                print("Tol : {}, R : {}, p_acc : {}".format(tol, R, p_acc))
                 if p_acc < p_min:
                     terminate = True
             except KeyboardInterrupt:
-                return {'accepted_samples' : population, 'distances' : distances, 'ssa_count' : total_ssa, 'N_count' : total_N}
+                return {'accepted_samples' : population, 'distances' : distances}
             except:
                 raise
 
-        return {'accepted_samples' : population, 'distances' : distances, 'ssa_count' : total_ssa, 'N_count' : total_N}
+        return {'accepted_samples' : population, 'distances' : distances}
