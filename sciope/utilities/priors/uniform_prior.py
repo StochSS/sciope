@@ -94,6 +94,9 @@ class UniformPrior(PriorBase):
             return np.asarray(vs)
         return v
 
+    def get_dimension(self):
+        return len(self.lb)
+
     @delayed
     def _uniform_scale(self, n, d):
         # Generate samples in [0,1)

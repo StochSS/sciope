@@ -24,6 +24,8 @@ from sciope.utilities.distancefunctions import euclidean as euc
 from sciope.utilities.summarystats import burstiness as bs
 from sciope.utilities.housekeeping import sciope_logger as ml
 from sciope.utilities.priors.prior_base import PriorBase
+from sciope.utilities.epsilonselectors import RelativeEpsilonSelector
+from sciope.utilities.perturbationkernels.multivariate_normal import MultivariateNormalKernel
 
 import numpy as np
 import dask
@@ -83,7 +85,6 @@ class SMCABC(InferenceBase):
     * sim   					(simulator function handle)
     * prior_function			(prior over the simulator parameters)
     * perturbation_kernel       (kernel for perturbing parameters samples)
-    * epsilons 	    			(sequence of tolerance bounds)
     * summaries_function    	(summary statistics calculation function)
     * distance_function         (function calculating deviation between simulated statistics and observed statistics)
     * summaries_divisor         (numpy array of maxima - used for normalizing summary statistic values)
@@ -93,8 +94,9 @@ class SMCABC(InferenceBase):
     * infer 					(perform parameter inference)
     """
 
-    def __init__(self, data, sim, prior_function, perturbation_kernel,
-                 epsilons=[1], summaries_function=bs.Burstiness(),
+    def __init__(self, data, sim, prior_function,
+                 perturbation_kernel=None,
+                 summaries_function=bs.Burstiness().compute,
                  distance_function=euc.EuclideanDistance(),
                  summaries_divisor=None, use_logger=False):
 
@@ -103,18 +105,23 @@ class SMCABC(InferenceBase):
 
         self.prior_function = prior_function
         self.summaries_function = summaries_function
-        self.epsilons = epsilons
         self.distance_function = distance_function
         self.summaries_divisor = summaries_divisor
-        self.perturbation_kernel = perturbation_kernel
+        if perturbation_kernel is not None:
+            self.perturbation_kernel = perturbation_kernel
+        else:
+            self.perturbation_kernel = MultivariateNormalKernel(
+                    d = self.prior_function.get_dimension(),
+                    adapt = True)
 
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Sequential Monte-Carlo Approximate Bayesian Computation initialized")
 
-    def infer(self, num_samples, batch_size, chunk_size=10, ensemble_size=1, normalize=False):
-        """
-        Performs SMC-ABC.
+    def infer(self, num_samples, batch_size,
+              eps_selector = RelativeEpsilonSelector(20), chunk_size=10,
+              ensemble_size = 1):
+        """Performs SMC-ABC.
 
         Parameters
         ----------
@@ -122,6 +129,8 @@ class SMCABC(InferenceBase):
             The number of required accepted samples
         batch_size : int
             The batch size of samples for performing rejection sampling
+        eps_selector : EpsilonSelector
+            The epsilon selector to determine the sequence of epsilons
         chunk_size : int
             The partition size when splitting the fixed data. For avoiding many individual tasks
             in dask if the data is large. Default 10.
@@ -141,55 +150,67 @@ class SMCABC(InferenceBase):
             'inferred_parameters': The mean of accepted parameter samples
         """
 
+        abc_history = []
         t = num_samples
-
         prior_function = self.prior_function
 
-        # Generate an initial population from the first epsilon
+        tol, relative, terminate = eps_selector.get_initial_epsilon()
+        print("Determining initial population using {}".format(tol))
+
         abc_instance = abc_inference.ABC(self.data, self.sim, prior_function,
-                                         epsilon=self.epsilons[0],
-                                         summaries_function=self.summaries_function,
-                                         distance_function=self.distance_function,
-                                         summaries_divisor=self.summaries_divisor,
-                                         use_logger=self.use_logger)
+                                         epsilon = tol,
+                                         summaries_function = self.summaries_function,
+                                         distance_function = self.distance_function,
+                                         summaries_divisor = self.summaries_divisor,
+                                         use_logger = self.use_logger)
 
-        print("Starting epsilon={}".format(self.epsilons[0]))
-        abc_instance.compute_fixed_mean(chunk_size=chunk_size)
-        abc_results = abc_instance.infer(num_samples=t, batch_size=batch_size, chunk_size=chunk_size,
-                                         normalize=normalize)
+        abc_instance.compute_fixed_mean(chunk_size = chunk_size)
+        abc_results = abc_instance.infer(num_samples = t,
+                                         batch_size = batch_size,
+                                         chunk_size = chunk_size,
+                                         normalize = relative)
 
-        final_results = abc_results
         population = np.vstack(abc_results['accepted_samples'])[:t]
-        normalized_weights = np.ones(t) / t
-        d = population.shape[1]
+        normalized_weights = np.ones(t)/t
+
+        abc_history.append(abc_results)
 
         # SMC iterations
-        for eps in self.epsilons[1:]:
-            print("Starting epsilon={}".format(eps))
+        round = 1
+        while not terminate:
+
+            tol, relative, terminate = eps_selector.get_epsilon(round, abc_history)
+
+            print("Starting epsilon = {}".format(tol))
             if self.use_logger:
-                self.logger.info("Starting epsilon={}".format(eps))
+                self.logger.info("Starting epsilon = {}".format(tol))
 
             # Adapt the kernel based on the current population
             self.perturbation_kernel.adapt(population)
 
             # Generate a proposal prior based on the population
-            new_prior = PerturbationPrior(self.prior_function, population, normalized_weights, self.perturbation_kernel)
+            new_prior = PerturbationPrior(self.prior_function,
+                                          population,
+                                          normalized_weights,
+                                          self.perturbation_kernel)
 
             try:
                 # Run ABC on the next epsilon using the proposal prior
                 abc_instance = abc_inference.ABC(self.data, self.sim, new_prior,
-                                                 epsilon=eps, summaries_function=self.summaries_function,
-                                                 distance_function=self.distance_function,
-                                                 summaries_divisor=self.summaries_divisor,
-                                                 use_logger=self.use_logger)
-                abc_instance.compute_fixed_mean(chunk_size=chunk_size)
-                abc_results = abc_instance.infer(num_samples=t,
-                                                 batch_size=batch_size,
-                                                 chunk_size=chunk_size,
-                                                 normalize=normalize)
-                new_samples = np.vstack(abc_results['accepted_samples'])[:t]
+                                    epsilon = tol,
+                                    summaries_function = self.summaries_function,
+                                    distance_function = self.distance_function,
+                                    summaries_divisor = self.summaries_divisor,
+                                    use_logger = self.use_logger)
+                abc_instance.compute_fixed_mean(chunk_size = chunk_size)
+                abc_results = abc_instance.infer(num_samples = t,
+                                                 batch_size = batch_size,
+                                                 chunk_size = chunk_size,
+                                                 normalize = relative)
 
                 # Compute importance weights for the new samples
+                new_samples = np.vstack(abc_results['accepted_samples'])[:t]
+
                 prior_weights = self.prior_function.pdf(new_samples)
                 kweights = self.perturbation_kernel.pdf(population, new_samples)
 
@@ -198,10 +219,13 @@ class SMCABC(InferenceBase):
 
                 population = new_samples
                 normalized_weights = new_weights
-                final_results = abc_results
+
+                abc_history.append(abc_results)
+                round += 1
+
             except KeyboardInterrupt:
-                return final_results
+                return abc_history
             except:
                 raise
 
-        return final_results
+        return abc_history

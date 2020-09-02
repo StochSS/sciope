@@ -24,6 +24,7 @@ setup(
     version='0.2',
 
     description='The sciope toolbox for surrogate modeling, likelihood-free parameter inference and black-box optimization.',
+    long_description_content_type='text/markdown',
     long_description=long_description,
 
     # The project's main homepage.
