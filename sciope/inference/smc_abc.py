@@ -111,16 +111,16 @@ class SMCABC(InferenceBase):
             self.perturbation_kernel = perturbation_kernel
         else:
             self.perturbation_kernel = MultivariateNormalKernel(
-                    d = self.prior_function.get_dimension(),
-                    adapt = True)
+                d=self.prior_function.get_dimension(),
+                adapt=True)
 
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Sequential Monte-Carlo Approximate Bayesian Computation initialized")
 
     def infer(self, num_samples, batch_size,
-              eps_selector = RelativeEpsilonSelector(20), chunk_size=10,
-              ensemble_size = 1):
+              eps_selector=RelativeEpsilonSelector(20), chunk_size=10,
+              ensemble_size=1):
         """Performs SMC-ABC.
 
         Parameters
@@ -158,20 +158,20 @@ class SMCABC(InferenceBase):
         print("Determining initial population using {}".format(tol))
 
         abc_instance = abc_inference.ABC(self.data, self.sim, prior_function,
-                                         epsilon = tol,
-                                         summaries_function = self.summaries_function,
-                                         distance_function = self.distance_function,
-                                         summaries_divisor = self.summaries_divisor,
-                                         use_logger = self.use_logger)
+                                         epsilon=tol,
+                                         summaries_function=self.summaries_function,
+                                         distance_function=self.distance_function,
+                                         summaries_divisor=self.summaries_divisor,
+                                         use_logger=self.use_logger)
 
-        abc_instance.compute_fixed_mean(chunk_size = chunk_size)
-        abc_results = abc_instance.infer(num_samples = t,
-                                         batch_size = batch_size,
-                                         chunk_size = chunk_size,
-                                         normalize = relative)
+        abc_instance.compute_fixed_mean(chunk_size=chunk_size)
+        abc_results = abc_instance.infer(num_samples=t,
+                                         batch_size=batch_size,
+                                         chunk_size=chunk_size,
+                                         normalize=relative)
 
         population = np.vstack(abc_results['accepted_samples'])[:t]
-        normalized_weights = np.ones(t)/t
+        normalized_weights = np.ones(t) / t
 
         abc_history.append(abc_results)
 
@@ -197,16 +197,16 @@ class SMCABC(InferenceBase):
             try:
                 # Run ABC on the next epsilon using the proposal prior
                 abc_instance = abc_inference.ABC(self.data, self.sim, new_prior,
-                                    epsilon = tol,
-                                    summaries_function = self.summaries_function,
-                                    distance_function = self.distance_function,
-                                    summaries_divisor = self.summaries_divisor,
-                                    use_logger = self.use_logger)
-                abc_instance.compute_fixed_mean(chunk_size = chunk_size)
-                abc_results = abc_instance.infer(num_samples = t,
-                                                 batch_size = batch_size,
-                                                 chunk_size = chunk_size,
-                                                 normalize = relative)
+                                                 epsilon=tol,
+                                                 summaries_function=self.summaries_function,
+                                                 distance_function=self.distance_function,
+                                                 summaries_divisor=self.summaries_divisor,
+                                                 use_logger=self.use_logger)
+                abc_instance.compute_fixed_mean(chunk_size=chunk_size)
+                abc_results = abc_instance.infer(num_samples=t,
+                                                 batch_size=batch_size,
+                                                 chunk_size=chunk_size,
+                                                 normalize=relative)
 
                 # Compute importance weights for the new samples
                 new_samples = np.vstack(abc_results['accepted_samples'])[:t]

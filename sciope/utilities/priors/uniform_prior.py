@@ -1,4 +1,4 @@
-# Copyright 2017 Prashant Singh, Fredrik Wrede and Andreas Hellander
+# Copyright 2020 Prashant Singh, Richard Jiang, Fredrik Wrede and Andreas Hellander
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -64,11 +64,11 @@ class UniformPrior(PriorBase):
 
         return generated_samples
 
-    def pdf(self, x, log = False):
+    def pdf(self, x, log=False):
         if len(np.asarray(x).shape) == 1:
             z = np.asarray(x)
             if (z > self.lb).all() and (z < self.ub).all():
-                v = np.prod(1/(self.ub - self.lb))
+                v = np.prod(1 / (self.ub - self.lb))
                 if log:
                     v = np.log(v)
             else:
@@ -81,7 +81,7 @@ class UniformPrior(PriorBase):
             vs = []
             for i in range(z.shape[0]):
                 if (z[i] > self.lb).all() and (z[i] < self.ub).all():
-                    v = np.prod(1/(self.ub - self.lb))
+                    v = np.prod(1 / (self.ub - self.lb))
                     if log:
                         vs.append(np.log(v))
                     else:

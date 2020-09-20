@@ -32,6 +32,7 @@ import dask
 from dask.distributed import futures_of, as_completed, wait
 from dask import delayed
 
+
 class ReplenishmentSMCABC(InferenceBase):
     """
     Replenishment SMC - Approximate Bayesian Computation
@@ -86,8 +87,8 @@ class ReplenishmentSMCABC(InferenceBase):
             self.perturbation_kernel = perturbation_kernel
         else:
             self.perturbation_kernel = MultivariateNormalKernel(
-                    d = self.prior_function.get_dimension(),
-                    adapt = True)
+                d=self.prior_function.get_dimension(),
+                adapt=True)
 
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
@@ -111,10 +112,11 @@ class ReplenishmentSMCABC(InferenceBase):
 
             # Metropolis Perturbation
             if nume > 0:
-                nume = nume * self.perturbation_kernel.pdf(param.reshape(1,-1), proposal.reshape(1,-1))[0,0,]
-                dnm = self.prior_function.pdf(param) * self.perturbation_kernel.pdf(proposal.reshape(1,-1), param.reshape(1,-1))[0,0]
+                nume = nume * self.perturbation_kernel.pdf(param.reshape(1, -1), proposal.reshape(1, -1))[0, 0,]
+                dnm = self.prior_function.pdf(param) * \
+                      self.perturbation_kernel.pdf(proposal.reshape(1, -1), param.reshape(1, -1))[0, 0]
 
-                weight = nume/dnm
+                weight = nume / dnm
                 if np.random.rand() < min(1, weight):
                     proposal_ss = self.summaries_function(self.sim(proposal))
                     distance = self.distance_function(self.fixed_mean, proposal_ss)
@@ -124,11 +126,11 @@ class ReplenishmentSMCABC(InferenceBase):
                         new_distance = distance
 
                         # Update estimate of movement probability
-                        p_acc += 1/n_perturbations
+                        p_acc += 1 / n_perturbations
 
         return param, new_distance, p_acc, n_successful_moves
 
-    def infer(self, num_samples, alpha = 0.5, R_trial = 10, c = 0.01, p_min = 0.05, batch_size = 10, chunk_size = 1):
+    def infer(self, num_samples, alpha=0.5, R_trial=10, c=0.01, p_min=0.05, batch_size=10, chunk_size=1):
         """Performs SMC-ABC.
 
         Parameters
@@ -156,9 +158,9 @@ class ReplenishmentSMCABC(InferenceBase):
 
         # Get the dask graph and add another distances task to it
         graph_dict = core.get_graph_chunked(self.prior_function.draw, self.sim, self.summaries_function,
-                                    batch_size, chunk_size)
+                                            batch_size, chunk_size)
         dist_func = lambda x: self.distance_function(self.fixed_mean, x)
-        graph_dict["distances"] = core.get_distance(dist_func, graph_dict["summarystats"], chunked = True)
+        graph_dict["distances"] = core.get_distance(dist_func, graph_dict["summarystats"], chunked=True)
 
         # Culling Cutoff
         n_cull = round(alpha * num_samples)
@@ -176,7 +178,7 @@ class ReplenishmentSMCABC(InferenceBase):
             distances = np.vstack([distances, dists])
 
         population = population[:num_samples]
-        distances = distances[:num_samples,0]
+        distances = distances[:num_samples, 0]
 
         terminate = False
         while not terminate:
@@ -204,7 +206,7 @@ class ReplenishmentSMCABC(InferenceBase):
                 # to get an idea of how easy it is to move to a lower distance
                 perturb_tasks = []
                 for i in range(n_cull, num_samples):
-                    perturb_tasks.append(self._perturb_resample(population[i,:], distances[i], R_trial, tol))
+                    perturb_tasks.append(self._perturb_resample(population[i, :], distances[i], R_trial, tol))
                 res, = dask.compute(perturb_tasks)
 
                 # Update the population with the perturbed population
@@ -216,7 +218,7 @@ class ReplenishmentSMCABC(InferenceBase):
                 # Update metrics from the trial to estimate the probability
                 # of a move to assess convergence and decide how many more
                 # perturbation attempts to make
-                p_acc = np.sum(update_p_accs)/(num_samples - n_cull)
+                p_acc = np.sum(update_p_accs) / (num_samples - n_cull)
                 N_acc = np.sum(N_accs)
 
                 R = int(round(np.log(c) / np.log(1 - p_acc)))
@@ -224,7 +226,7 @@ class ReplenishmentSMCABC(InferenceBase):
                 # Perturb again with better estimate
                 perturb_tasks = []
                 for i in range(n_cull, num_samples):
-                    perturb_tasks.append(self._perturb_resample(population[i,:], distances[i], R - R_trial, tol))
+                    perturb_tasks.append(self._perturb_resample(population[i, :], distances[i], R - R_trial, tol))
                 res, = dask.compute(perturb_tasks)
 
                 updated_ps, updated_distances, update_p_accs, N_accs = list(zip(*res))
@@ -232,15 +234,15 @@ class ReplenishmentSMCABC(InferenceBase):
                 population[n_cull:] = np.vstack(updated_ps)
                 distances[n_cull:] = np.asarray(updated_distances)
 
-                p_acc += np.sum(update_p_accs)/(num_samples - n_cull)
+                p_acc += np.sum(update_p_accs) / (num_samples - n_cull)
                 N_acc += np.sum(N_accs)
 
                 print("Tol : {}, R : {}, p_acc : {}".format(tol, R, p_acc))
                 if p_acc < p_min:
                     terminate = True
             except KeyboardInterrupt:
-                return {'accepted_samples' : population, 'distances' : distances}
+                return {'accepted_samples': population, 'distances': distances}
             except:
                 raise
 
-        return {'accepted_samples' : population, 'distances' : distances}
+        return {'accepted_samples': population, 'distances': distances}

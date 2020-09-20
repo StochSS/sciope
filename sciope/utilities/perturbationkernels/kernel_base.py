@@ -1,4 +1,4 @@
-# Copyright 2019 Prashant Singh, Fredrik Wrede and Andreas Hellander
+# Copyright 2020 Richard Jiang, Prashant Singh, Fredrik Wrede and Andreas Hellander
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ class PerturbationKernelBase(object):
         pass
 
     @abstractmethod
-    def pdf(self, x0, x, log = False):
+    def pdf(self, x0, x, log=False):
         pass
 
     @abstractmethod
