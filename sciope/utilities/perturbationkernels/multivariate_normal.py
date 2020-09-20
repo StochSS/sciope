@@ -1,4 +1,4 @@
-# Copyright 2019 Prashant Singh, Fredrik Wrede and Andreas Hellander
+# Copyright 2020 Richard Jiang, Prashant Singh, Fredrik Wrede and Andreas Hellander
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,9 +20,10 @@ from sciope.utilities.perturbationkernels.kernel_base import PerturbationKernelB
 from scipy.stats import multivariate_normal
 import numpy as np
 
+
 class MultivariateNormalKernel(PerturbationKernelBase):
 
-    def __init__(self, d, cov = None, use_logger = False, adapt = False):
+    def __init__(self, d, cov=None, use_logger=False, adapt=False):
 
         self.name = 'MultivariateNormalKernel'
         self.use_logger = use_logger
@@ -35,7 +36,7 @@ class MultivariateNormalKernel(PerturbationKernelBase):
 
         super(MultivariateNormalKernel, self).__init__(self.name, use_logger)
 
-    def pdf(self, x0, x, log = False):
+    def pdf(self, x0, x, log=False):
         pdfs = []
         for i in range(np.asarray(x0).shape[0]):
             if log:
@@ -44,10 +45,10 @@ class MultivariateNormalKernel(PerturbationKernelBase):
                 pdfs.append(multivariate_normal.pdf(x, x0[i], self.cov))
         return np.vstack(pdfs)
 
-    def rvs(self, x0, num_points = 1):
+    def rvs(self, x0, num_points=1):
         r = multivariate_normal.rvs(x0, self.cov)
         return r
 
     def adapt(self, population):
         if self._adapt:
-            self.cov = (2.4/self.d) * np.cov(population, rowvar = False)
+            self.cov = (2.4 / self.d) * np.cov(population, rowvar=False)
