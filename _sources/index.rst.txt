@@ -8,16 +8,16 @@
    :width: 100%
    :align: center
 
-Welcome to sciope's documentation!
+Welcome to Sciope's documentation!
 ===============================
 
 Scalable inference, optimization and parameter exploration (sciope)
 is a Python 3 package for performing machine learning-assisted likelihood-free inference and model
 exploration by large-scale parameter sweeps. It has been designed to simplify the data-driven workflows 
-so that users quickly can test and develop new machine learning-assisted approches to likelihood-free inference
+so that users quickly can test and develop new machine learning-assisted approaches to likelihood-free inference
 and model exploration.  
 
-Salient features and contributions of sciope include:
+Salient features and contributions of Sciope include:
 
 Systems:
 
@@ -38,7 +38,7 @@ Methodology:
 Stochastic Gene Regulatory Networks
 -----------------------------------
 Sciope has been designed for (but is not limited to) Stochastic Gene Regulatory Networks (GRN). 
-Sciope have built-in support and wrappers for `Gillespy2 <https://github.com/GillesPy2/GillesPy2>`_ 
+Sciope has built-in support and wrappers for `Gillespy2 <https://github.com/GillesPy2/GillesPy2>`_
 and is part of the development of next-generation `StochSS <https://stochss.org>`_.
 
 Likelihood-free inference
@@ -66,12 +66,12 @@ with a `Dask <https://dask.org>`_ backend to support massive parallelism on plat
 
 Installation
 ===============================
-You can install sciope with  ``pip``, or by installing from source.
+You can install Sciope with  ``pip``, or by installing from source.
 
 Pip
 ---
 
-This will install both sciope and other dependencies like NumPy, sklearn,
+This will install both Sciope and other dependencies like NumPy, sklearn,
 and so on that are necessary::
 
    pip install sciope
@@ -79,10 +79,10 @@ and so on that are necessary::
 Install from Source
 -------------------
 
-To install sciope from source, clone the repository from `github
-<https://github.com/sciope/sciope>`_::
+To install Sciope from source, clone the repository from `github
+<https://github.com/StochSS/sciope>`_::
 
-    git clone https://github.com/sciope/sciope.git
+    git clone https://github.com/StochSS/sciope.git
     cd sciope
     pip install .
 
@@ -162,7 +162,7 @@ Use Sciope's Gillespy2 wrapper to extract simulator and parameters
 
 Use Latin Hypercube design to generate points which will be sampled from during exploration, the points will
 be generated using distributed resources if we have a Dask client initialized (in this example just a local cluster).
-Generated points will be persited over the worker nodes (i.e no local memory would be used in case of a real cluster).
+Generated points will be persisted over the worker nodes (i.e no local memory would be used in case of a real cluster).
 Random points from the persisted collection can be gathered by calling :code:`lhc.draw(n_samples)`
 Here, we will also use TSFRESH minimal feature set as our summary statistics.
 
@@ -210,7 +210,7 @@ it is therefore required that you run in a jupyter notebook with an interactive 
    :width: 100%
    :align: center
 
-Once at least a few points have been assigned a label, sciope has support for semi-supervised learning using label propagation where 
+Once at least a few points have been assigned a label, Sciope has support for semi-supervised learning using label propagation where
 we can infer the labels of unassigned points. This is a great way of filtering the vast amount of data according qualitative behaviour 
 and preferences.
 

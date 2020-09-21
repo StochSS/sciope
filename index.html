@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to sciope’s documentation! &mdash; sciope 0.2.0 alpha documentation</title>
+  <title>Welcome to Sciope’s documentation! &mdash; sciope 0.2.0 alpha documentation</title>
   
 
   
@@ -88,7 +88,7 @@
             
               <!-- Local TOC -->
               <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Welcome to sciope’s documentation!</a><ul>
+<li><a class="reference internal" href="#">Welcome to Sciope’s documentation!</a><ul>
 <li><a class="reference internal" href="#stochastic-gene-regulatory-networks">Stochastic Gene Regulatory Networks</a></li>
 <li><a class="reference internal" href="#likelihood-free-inference">Likelihood-free inference</a></li>
 <li><a class="reference internal" href="#model-exploration">Model exploration</a></li>
@@ -152,7 +152,7 @@
     
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Welcome to sciope’s documentation!</li>
+      <li>Welcome to Sciope’s documentation!</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -173,13 +173,13 @@
             
   <a class="reference internal image-reference" href="_images/logo.png"><img alt="sciope logo" class="align-center" src="_images/logo.png" style="width: 100%;" /></a>
 <div class="section" id="welcome-to-sciope-s-documentation">
-<h1>Welcome to sciope’s documentation!<a class="headerlink" href="#welcome-to-sciope-s-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>Welcome to Sciope’s documentation!<a class="headerlink" href="#welcome-to-sciope-s-documentation" title="Permalink to this headline">¶</a></h1>
 <p>Scalable inference, optimization and parameter exploration (sciope)
 is a Python 3 package for performing machine learning-assisted likelihood-free inference and model
 exploration by large-scale parameter sweeps. It has been designed to simplify the data-driven workflows
-so that users quickly can test and develop new machine learning-assisted approches to likelihood-free inference
+so that users quickly can test and develop new machine learning-assisted approaches to likelihood-free inference
 and model exploration.</p>
-<p>Salient features and contributions of sciope include:</p>
+<p>Salient features and contributions of Sciope include:</p>
 <p>Systems:</p>
 <blockquote>
 <div><ul class="simple">
@@ -202,7 +202,7 @@ and model exploration.</p>
 <div class="section" id="stochastic-gene-regulatory-networks">
 <h2>Stochastic Gene Regulatory Networks<a class="headerlink" href="#stochastic-gene-regulatory-networks" title="Permalink to this headline">¶</a></h2>
 <p>Sciope has been designed for (but is not limited to) Stochastic Gene Regulatory Networks (GRN).
-Sciope have built-in support and wrappers for <a class="reference external" href="https://github.com/GillesPy2/GillesPy2">Gillespy2</a>
+Sciope has built-in support and wrappers for <a class="reference external" href="https://github.com/GillesPy2/GillesPy2">Gillespy2</a>
 and is part of the development of next-generation <a class="reference external" href="https://stochss.org">StochSS</a>.</p>
 </div>
 <div class="section" id="likelihood-free-inference">
@@ -229,10 +229,10 @@ with a <a class="reference external" href="https://dask.org">Dask</a> backend to
 </div>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>You can install sciope with  <code class="docutils literal notranslate"><span class="pre">pip</span></code>, or by installing from source.</p>
+<p>You can install Sciope with  <code class="docutils literal notranslate"><span class="pre">pip</span></code>, or by installing from source.</p>
 <div class="section" id="pip">
 <h2>Pip<a class="headerlink" href="#pip" title="Permalink to this headline">¶</a></h2>
-<p>This will install both sciope and other dependencies like NumPy, sklearn,
+<p>This will install both Sciope and other dependencies like NumPy, sklearn,
 and so on that are necessary:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">sciope</span>
 </pre></div>
@@ -240,8 +240,8 @@ and so on that are necessary:</p>
 </div>
 <div class="section" id="install-from-source">
 <h2>Install from Source<a class="headerlink" href="#install-from-source" title="Permalink to this headline">¶</a></h2>
-<p>To install sciope from source, clone the repository from <a class="reference external" href="https://github.com/sciope/sciope">github</a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">sciope</span><span class="o">/</span><span class="n">sciope</span><span class="o">.</span><span class="n">git</span>
+<p>To install Sciope from source, clone the repository from <a class="reference external" href="https://github.com/StochSS/sciope">github</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">StochSS</span><span class="o">/</span><span class="n">sciope</span><span class="o">.</span><span class="n">git</span>
 <span class="n">cd</span> <span class="n">sciope</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
 </pre></div>
@@ -313,7 +313,7 @@ interact with the simulated output we need to use an interacitve backend in jupy
 </div>
 <p>Use Latin Hypercube design to generate points which will be sampled from during exploration, the points will
 be generated using distributed resources if we have a Dask client initialized (in this example just a local cluster).
-Generated points will be persited over the worker nodes (i.e no local memory would be used in case of a real cluster).
+Generated points will be persisted over the worker nodes (i.e no local memory would be used in case of a real cluster).
 Random points from the persisted collection can be gathered by calling <code class="code docutils literal notranslate"><span class="pre">lhc.draw(n_samples)</span></code>
 Here, we will also use TSFRESH minimal feature set as our summary statistics.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
@@ -348,7 +348,7 @@ it is therefore required that you run in a jupyter notebook with an interactive 
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="_images/met.gif"><img alt="sciope met gif" class="align-center" src="_images/met.gif" style="width: 100%;" /></a>
-<p>Once at least a few points have been assigned a label, sciope has support for semi-supervised learning using label propagation where
+<p>Once at least a few points have been assigned a label, Sciope has support for semi-supervised learning using label propagation where
 we can infer the labels of unassigned points. This is a great way of filtering the vast amount of data according qualitative behaviour
 and preferences.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sciope.models.label_propagation</span> <span class="kn">import</span> <span class="n">LPModel</span>
