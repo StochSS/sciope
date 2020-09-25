@@ -120,7 +120,7 @@ def test_abc_functional():
     res = abc.infer(num_samples=30, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc.results['inferred_parameters'])
     assert abc.results['trial_count'] > 0 and abc.results[
-        'trial_count'] < 300, "ABC inference test failed, trial count out of bounds"
+        'trial_count'] < 1000, "ABC inference test failed, trial count out of bounds"
     assert mae_inference < 0.5, "ABC inference test failed, error too high"
 
     c.close()
