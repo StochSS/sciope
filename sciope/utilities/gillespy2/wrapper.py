@@ -20,15 +20,15 @@ Simulator wrapper for gillespy2 models
 import numpy as np
 
 
-def _set_model_parameters(params, model):
+def _set_model_parameters(params, model, parameters_of_interest):
     """ params - array, needs to have the same order as model.listOfParameters """
-    for e, (pname, p) in enumerate(model.listOfParameters.items()):
+    for e, pname in enumerate(parameters_of_interest):
         model.get_parameter(pname).set_expression(params[e])
     return model
 
-def _simulator(params, model, kwargs, species_of_interest):
+def _simulator(params, model, kwargs, species_of_interest, parameters_of_interest):
     
-    model_update = _set_model_parameters(params, model)
+    model_update = _set_model_parameters(params, model, parameters_of_interest)
 
     res = model_update.run(**kwargs)
     
@@ -44,15 +44,22 @@ def _simulator(params, model, kwargs, species_of_interest):
     
     return tot_res
 
-def get_parameter_expression_array(gillespy_model):
-    default_param = np.array(list(gillespy_model.listOfParameters.items()))[:,1]
+def get_parameter_expression_array(gillespy_model, parameters_of_interest=[]):
+    default_param = []
+    if not parameters_of_interest:
+        default_param = np.array(list(gillespy_model.listOfParameters.items()))[:,1]
+    else:
+        for param in parameters_of_interest:
+            assert param in gillespy_model.listOfParameters.keys()
+            default_param.append(gillespy_model.listOfParameters[param])
+
     as_array = []
     for exp in default_param:
         as_array.append(float(exp.expression))
     
     return np.array(as_array)
 
-def get_simulator(gillespy_model,  run_settings, species_of_interest=[]):
+def get_simulator(gillespy_model,  run_settings, species_of_interest=[], parameters_of_interest=[]):
 
     if "show_labels" not in run_settings.keys():
         run_settings["show_labels"] = True
@@ -61,5 +68,11 @@ def get_simulator(gillespy_model,  run_settings, species_of_interest=[]):
         else:
             for species in species_of_interest:
                 assert species in gillespy_model.listOfSpecies.keys()
+    if not parameters_of_interest:
+        parameters_of_interest = list(gillespy_model.listOfParameters.keys())
+    else:
+        for param in parameters_of_interest:
+            assert param in gillespy_model.listOfParameters.keys()
+
     
-    return lambda x : _simulator(x, gillespy_model, run_settings, species_of_interest)
+    return lambda x : _simulator(x, gillespy_model, run_settings, species_of_interest, parameters_of_interest)
