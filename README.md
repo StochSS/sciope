@@ -11,7 +11,7 @@
 
 Scalable inference, optimization and parameter exploration (sciope)
 is a Python 3 package for performing machine learning-assisted inference and model
-exploration by large-scale parameter sweeps. Please see the [documentation](https://sciope.github.io/sciope/) for examples.
+exploration by large-scale parameter sweeps. Please see the [documentation](https://stochss.github.io/sciope/) for examples.
 
 ### What can the sciope toolbox do? ###
 
