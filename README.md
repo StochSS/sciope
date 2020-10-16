@@ -35,7 +35,7 @@ exploration by large-scale parameter sweeps. Please see the [documentation](http
 
 ### How do I get set up? ###
 
-Please see the [documentation](https://sciope.github.io/sciope/) for instructions to install and examples. The easiest way to start using Sciope is through the StochSS online platform (https://app.stochss.org).
+Please see the [documentation](https://stochss.github.io/sciope/) for instructions to install and examples. The easiest way to start using Sciope is through the StochSS online platform (https://app.stochss.org).
 
 ### Steps to a successful contribution ###
 
