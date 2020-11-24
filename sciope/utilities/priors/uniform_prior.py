@@ -1,4 +1,4 @@
-# Copyright 2020 Prashant Singh, Richard Jiang, Fredrik Wrede and Andreas Hellander
+# Copyright 2017 Prashant Singh, Fredrik Wrede and Andreas Hellander
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ class UniformPrior(PriorBase):
         Set up a uniform prior corresponding to the space bounded by:
         :param space_min: the lowerbound of each variable/dimension
         :param space_max: the upperbound of each variable/dimension
-        :param use_logger: whether logging is enabled or disabled
         """
         self.name = 'Uniform'
         self.lb = space_min
@@ -63,39 +62,6 @@ class UniformPrior(PriorBase):
             generated_samples.append(self._uniform_scale(chunk_size, d))
 
         return generated_samples
-
-    def pdf(self, x, log=False):
-        if len(np.asarray(x).shape) == 1:
-            z = np.asarray(x)
-            if (z > self.lb).all() and (z < self.ub).all():
-                v = np.prod(1 / (self.ub - self.lb))
-                if log:
-                    v = np.log(v)
-            else:
-                v = 0
-                if log:
-                    v = -np.inf
-            return v
-        else:
-            z = np.asarray(x)
-            vs = []
-            for i in range(z.shape[0]):
-                if (z[i] > self.lb).all() and (z[i] < self.ub).all():
-                    v = np.prod(1 / (self.ub - self.lb))
-                    if log:
-                        vs.append(np.log(v))
-                    else:
-                        vs.append(v)
-                else:
-                    if log:
-                        vs.append(-np.inf)
-                    else:
-                        vs.append(0)
-            return np.asarray(vs)
-        return v
-
-    def get_dimension(self):
-        return len(self.lb)
 
     @delayed
     def _uniform_scale(self, n, d):

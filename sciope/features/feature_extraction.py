@@ -71,8 +71,7 @@ def generate_tsfresh_features(data, features):  # pragma: no cover
         return total
 
     res = np.array(_wrapper(data))
-    return res.reshape(-1, res.shape[1] * res.shape[2])
-
+    return res.reshape(-1, res.shape[1]*res.shape[2])
 
 def _get_tsfresh_features_names(features):
     """
@@ -94,9 +93,10 @@ def _get_tsfresh_features_names(features):
         shape: Nr of total features
     """
     f_names = []
-
+    
     for key in features.keys():
         assert hasattr(feature_calculators, key), "%s does not exist as a feature supported by tsfresh" % key
+
 
     for function_name, parameter_list in features.items():
         func = getattr(feature_calculators, function_name)
@@ -108,8 +108,7 @@ def _get_tsfresh_features_names(features):
 
     return f_names
 
-
-def remove_nan_features(x, features):  # pragma: no cover
+def remove_nan_features(x, features):   # pragma: no cover
     """
     Method to remove features containing NaN values.
 
