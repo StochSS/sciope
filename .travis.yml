@@ -1,8 +1,10 @@
 language: python
 python:
+  - "3.5"
   - "3.6"
-  - "3.7"
-  - "3.8"
+# command to install dependencies
+before_install:
+  - sudo apt-get install -y libxml2 libxml2-dev
 install:
   - python3 -m pip install gillespy2
   - pip install pytest
@@ -13,9 +15,15 @@ install:
   - pip install .
 # tests should run from the tests directory
 before_script:
+  - wget https://github.com/StochSS/StochKit/archive/master.zip
+  - unzip master.zip
+  - cd StochKit-master
+  - ./install.sh
+  - export STOCHKIT_HOME=$PWD
+  - cd ..
   - cd sciope/tests
 # command to run tests
-script: pytest  --cov-report term --cov
+script: travis_wait 30 py.test  --cov-report term --cov
 after_success:
   - codecov
   - cd ../../docs/ && make html
@@ -25,7 +33,7 @@ deploy:
   skip-cleanup: true
   keep-history: true
   on:
-    branch: master
+    branch: develop
   github-token: $GITHUB_TOKEN
   local-dir: docs/build/html
   committer-from-gh: true

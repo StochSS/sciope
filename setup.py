@@ -1,6 +1,6 @@
 """A setuptools based setup module for sciope.
 See:
-https://github.com/sciope/sciope
+http://hellanderlab.research.it.uu.se
 """
 
 # Always prefer setuptools over distutils
@@ -24,11 +24,10 @@ setup(
     version='0.2',
 
     description='The sciope toolbox for surrogate modeling, likelihood-free parameter inference and black-box optimization.',
-    long_description_content_type='text/markdown',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/sciope/sciope',
+    url='https://hellanderlab.research.it.uu.se',
 
     # Author details
     author='Prashant Singh; Fredrik Wrede; Andreas Hellander',
@@ -77,7 +76,7 @@ setup(
         'numpy',
         'scipy',
         'scikit-learn',
-        'tsfresh==0.15.0',
+        'tsfresh',
         'ipywidgets',
         'dask',
         'distributed',
@@ -92,6 +91,9 @@ setup(
         'dev': ['check-manifest'],
         'test': ['coverage'],
     },
+
+    dependency_links=['https://github.com/GPflow/GPflow/archive/0.5.0.tar.gz#egg=GPflow-0.5.0',
+                      'https://github.com/GPflow/GPflowOpt/archive/v0.1.0.tar.gz#egg=GPflowOpt-0.1.0'],
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
