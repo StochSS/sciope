@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>sciope.sampling package &mdash; sciope 0.2.0 alpha documentation</title>
   
@@ -18,7 +18,10 @@
   
     <link rel="shortcut icon" href="_static/favicon.ico"/>
   
+
   
+  
+
   
 
   
@@ -31,7 +34,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -51,7 +53,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> sciope
+            <a href="index.html" class="icon icon-home"> sciope
           
 
           
@@ -135,6 +137,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -146,7 +150,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/Sc.sampling.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -171,7 +175,7 @@
 Ranks monte-carlo samples such that minimum distance between them is maximized</p>
 <dl class="py class">
 <dt id="sciope.sampling.maximin_sampling.MaximinSampling">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.sampling.maximin_sampling.</code><code class="sig-name descname">MaximinSampling</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xmin</span></em>, <em class="sig-param"><span class="n">xmax</span></em>, <em class="sig-param"><span class="n">use_logger</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.sampling.maximin_sampling.</span></code><code class="sig-name descname"><span class="pre">MaximinSampling</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.sampling.sampling_base.SamplingBase" title="sciope.sampling.sampling_base.SamplingBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.sampling.sampling_base.SamplingBase</span></code></a></p>
 <p>Algorithm:
 1. Generate MC candidate samples
@@ -183,7 +187,7 @@ Johnson, Mark E., Leslie M. Moore, and Donald Ylvisaker.
 Journal of statistical planning and inference 26.2 (1990): 131-148.</p>
 <dl class="py method">
 <dt id="sciope.sampling.maximin_sampling.MaximinSampling.select_point">
-<code class="sig-name descname">select_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_point" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">select_point</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get top ranked candidate according to maximin sampling to add to current samples x</p>
 <dl class="simple">
 <dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
@@ -194,7 +198,7 @@ Journal of statistical planning and inference 26.2 (1990): 131-148.</p>
 
 <dl class="py method">
 <dt id="sciope.sampling.maximin_sampling.MaximinSampling.select_points">
-<code class="sig-name descname">select_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">select_points</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/maximin_sampling.html#MaximinSampling.select_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.sampling.maximin_sampling.MaximinSampling.select_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get ‘n’ top ranked candidates according to maximin sampling to add to current samples x</p>
 <dl class="simple">
 <dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
@@ -213,7 +217,7 @@ Journal of statistical planning and inference 26.2 (1990): 131-148.</p>
 <span class="target" id="module-sciope.sampling.sampling_base"></span><p>Sequential Sampling Base Class</p>
 <dl class="py class">
 <dt id="sciope.sampling.sampling_base.SamplingBase">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.sampling.sampling_base.</code><code class="sig-name descname">SamplingBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">xmin</span></em>, <em class="sig-param"><span class="n">xmax</span></em>, <em class="sig-param"><span class="n">use_logger</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.sampling.sampling_base.</span></code><code class="sig-name descname"><span class="pre">SamplingBase</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for sequential sampling.
 Must not be used directly!
@@ -226,7 +230,7 @@ Each sampling algorithm must implement the methods described herein:</p>
 *</p>
 <dl class="py method">
 <dt id="sciope.sampling.sampling_base.SamplingBase.select_point">
-<em class="property">abstract </em><code class="sig-name descname">select_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_point" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">select_point</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for selecting one new point to X. Each derived class must implement</p>
 <dl class="simple">
 <dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
@@ -236,7 +240,7 @@ Each sampling algorithm must implement the methods described herein:</p>
 
 <dl class="py method">
 <dt id="sciope.sampling.sampling_base.SamplingBase.select_points">
-<em class="property">abstract </em><code class="sig-name descname">select_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_points" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">select_points</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/sampling/sampling_base.html#SamplingBase.select_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.sampling.sampling_base.SamplingBase.select_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for selecting ‘n’ new points to X. Each derived class must implement.</p>
 <dl class="simple">
 <dt>x<span class="classifier">vector or array-like</span></dt><dd><p>existing design to which a new point must be added</p>
@@ -259,28 +263,25 @@ Each sampling algorithm must implement the methods described herein:</p>
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander
+        &#169; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

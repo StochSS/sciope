@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>sciope.data package &mdash; sciope 0.2.0 alpha documentation</title>
   
@@ -18,7 +18,10 @@
   
     <link rel="shortcut icon" href="_static/favicon.ico"/>
   
+
   
+  
+
   
 
   
@@ -31,7 +34,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -51,7 +53,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> sciope
+            <a href="index.html" class="icon icon-home"> sciope
           
 
           
@@ -134,6 +136,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -145,7 +149,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/sciope.data.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -169,7 +173,7 @@
 <span class="target" id="module-sciope.data.dataset"></span><p>Dataset Class</p>
 <dl class="py class">
 <dt id="sciope.data.dataset.DataSet">
-<em class="property">class </em><code class="sig-prename descclassname">sciope.data.dataset.</code><code class="sig-name descname">DataSet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.data.dataset.</span></code><code class="sig-name descname"><span class="pre">DataSet</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class for defining a dataset for a modeling/optimization/inference run</p>
 <p>Properties/variables:
@@ -187,7 +191,7 @@
 * apply_func_to_columns     (Applies a transformation function to selected column indices of a matrix)</p>
 <dl class="py method">
 <dt id="sciope.data.dataset.DataSet.add_points">
-<code class="sig-name descname">add_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">targets</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time_series</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">summary_stats</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.add_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.add_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">add_points</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">summary_stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.add_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.add_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the dataset to include new points</p>
 <dl class="simple">
 <dt>inputs<span class="classifier">ndarray, optional</span></dt><dd><p>Usually parameter points, by default None</p>
@@ -207,7 +211,7 @@
 
 <dl class="py method">
 <dt id="sciope.data.dataset.DataSet.apply_func_to_columns">
-<em class="property">static </em><code class="sig-name descname">apply_func_to_columns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">matrix</span></em>, <em class="sig-param"><span class="n">idx</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.apply_func_to_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.apply_func_to_columns" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">apply_func_to_columns</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.apply_func_to_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.apply_func_to_columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies a transformation function to selected column indices of a matrix</p>
 <dl class="simple">
 <dt>func<span class="classifier">callable</span></dt><dd><p>the transformation function</p>
@@ -229,7 +233,7 @@
 
 <dl class="py method">
 <dt id="sciope.data.dataset.DataSet.get_size">
-<code class="sig-name descname">get_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.get_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.get_size" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_size</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.get_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.get_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the current number of points in the dataset</p>
 <dl class="simple">
 <dt>int</dt><dd><p>The current number of points in the dataset</p>
@@ -239,7 +243,7 @@
 
 <dl class="py method">
 <dt id="sciope.data.dataset.DataSet.process_outliers">
-<code class="sig-name descname">process_outliers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'zscore'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.process_outliers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.process_outliers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">process_outliers</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zscore'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.process_outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.process_outliers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check for outliers in calculated summary stats. Outliers are the few very high or very low values that can
 potentially introduce bias in tasks such as parameter inference. One can either remove them, replace with mean
 value, or use log scale for the statistic in question. This choice is left to the user.</p>
@@ -266,28 +270,25 @@ value, or use log scale for the statistic in question. This choice is left to th
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander
+        &#169; Copyright 2019, Prashant Singh, Fredrik Wrede, Andreas Hellander.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
