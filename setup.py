@@ -77,6 +77,7 @@ setup(
         'numpy',
         'scipy',
         'scikit-learn',
+        'gillespy2',
         'tsfresh==0.15.0',
         'ipywidgets',
         'dask',
