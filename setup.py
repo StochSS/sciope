@@ -74,7 +74,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        'numpy',
+        'numpy>=1.16.5',
         'scipy',
         'scikit-learn',
         'gillespy2',
