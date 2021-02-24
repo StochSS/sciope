@@ -30,40 +30,6 @@ tf.enable_v2_behavior()
 import tensorflow_probability as tfp
 tfd = tfp.distributions
 
-
-
-def _sample_local_adaptive(probs, bins, num_samples=1000, use_thresh=False, 
-                           thresh=0.8, 
-                           chunk_size=0):
-    probs_pred = tf.reduce_mean(tf.math.log(probs), axis=0).numpy()
-    print(probs_pred.shape)
-    if use_thresh:
-        argsort = np.argsort(probs_pred)[0]
-        max_remove = int(np.ceil((1-thresh)*probs_pred.shape[1]))
-        probs_pred[:,argsort[:max_remove]] = -np.inf
-        probs_pred = probs_pred - np.log(np.sum(np.exp(probs_pred))) 
-
-    dist = tfd.Categorical(
-    logits=probs_pred, probs=None, dtype=tf.int32, validate_args=True,
-    allow_nan_stats=False, name='Categorical')
-
-    samples_bins = dist.sample(num_samples)
-    print(samples_bins.shape)
-    samples = np.empty((num_samples,2))
-    for e,i in enumerate(samples_bins):
-        interval = bins[i.numpy()[0]]
-        u1 = np.random.uniform(interval[0].left, interval[0].right)
-        u2 = np.random.uniform(interval[1].left, interval[1].right)
-        samples[e] = np.array([u1,u2])
-    if chunk_size > 0:
-        samples = partition_all(chunk_size, samples)
-        samples = np.array(list(samples))
-    return samples
-
-def _exp_adaptive_thresh(start_thresh, growth, rounds):
-    adaptive_thresh = start_thresh + (1 - start_thresh)/rounds**growth*np.arange(1,rounds+1)**growth
-    return adaptive_thresh
-
 def _inBin(data, thetaOld, thetaNew):
     flag = None
     for j in range(thetaNew.shape[1]):
@@ -75,6 +41,60 @@ def _inBin(data, thetaOld, thetaNew):
             flag = flag_max & flag_min
   
     return data[flag,:,:], thetaOld[flag,:]
+class CategoricalSampler():
+
+    def __init__(self, num_bins=5, use_thresh=True, adaptive=False, threshold=0.05):
+        self.num_bins = num_bins
+        self.probs = None
+        self.bins = None
+        self.threshold = threshold
+        self.use_thresh = use_thresh
+        self.adaptive = adaptive
+    
+    def sample(self, num_samples, chunk_size):
+
+        samples = self._sample_local_adaptive(self.probs,
+                                              self.bins,
+                                              num_samples,
+                                              self.use_thresh,
+                                              self.threshold,
+                                              chunk_size)
+        return samples
+
+    def _sample_local_adaptive(self,probs, bins, num_samples=1000, use_thresh=False, 
+                            thresh=0.8, 
+                            chunk_size=0):
+        probs_pred = tf.reduce_mean(tf.math.log(probs), axis=0).numpy()
+        
+        if use_thresh:
+            if self.adaptive:
+                argsort = np.argsort(probs_pred)[0]
+                max_remove = int(np.ceil((1-thresh)*probs_pred.shape[1]))
+                probs_pred[:,argsort[:max_remove]] = -np.inf
+                probs_pred = probs_pred - np.log(np.sum(np.exp(probs_pred)))
+            else:
+                probs_pred[probs_pred < np.log(thresh)] = -np.inf
+
+        dist = tfd.Categorical(
+        logits=probs_pred, probs=None, dtype=tf.int32, validate_args=True,
+        allow_nan_stats=False, name='Categorical')
+
+        samples_bins = dist.sample(num_samples)
+        
+        samples = np.empty((num_samples,2))
+        for e,i in enumerate(samples_bins):
+            interval = bins[i.numpy()[0]]
+            u1 = np.random.uniform(interval[0].left, interval[0].right)
+            u2 = np.random.uniform(interval[1].left, interval[1].right)
+            samples[e] = np.array([u1,u2])
+        if chunk_size > 0:
+            samples = partition_all(chunk_size, samples)
+            samples = np.array(list(samples))
+        return samples
+
+    def _exp_adaptive_thresh(self, start_thresh, growth, rounds):
+        adaptive_thresh = start_thresh + (1 - start_thresh)/rounds**growth*np.arange(1,rounds+1)**growth
+        return adaptive_thresh
 
 class BNN():
     """
@@ -82,6 +102,7 @@ class BNN():
 
     def __init__(self, data, sim, prior_function, num_bins=10,
                  num_monte_carlo=500,
+                 verbose=False,
                  use_logger=False):
 
         self.name = 'BNN'
@@ -93,11 +114,12 @@ class BNN():
         self.use_logger = use_logger #TODO: use super at production ready
         self.sim = sim               #TODO: use super at production ready
         self.data = data             #TODO: use super at production ready
+        self.verbose = verbose
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Sequential Bayesian neural network posterior esitmator initialized")
 
-    def _create_train_val(self, num_bins, train_size=0.8, seed=36):
+    def _create_train_val(self, num_bins, train_size=0.8, seed=2):
         """
         num_bins = number of bins per parameter, total bins = num_bins^2 
         """
@@ -129,6 +151,7 @@ class BNN():
               chunk_size=10, seed=None):
         np.random.seed(seed)
         theta = []
+        local_sampler = CategoricalSampler(num_bins=self.num_bins)
 
         try:
 
@@ -142,59 +165,57 @@ class BNN():
                                             graph_dict["trajectories"])
                 samples = core._reshape_chunks(samples)
                 data = np.array(data)
-                print('data shape: ', data.shape)
+                if self.verbose:
+                    print('data shape: ', data.shape)
+                
                 #Reshaping for NN
                 # standard is num_chunks x chunk_size x ensemble_size x num_species x time_points
                 # new shape num_chunks*chunk_size*ensemble_size x time points x num_species
                 data = data.reshape((np.prod(data.shape[:3]), 
                                      data.shape[-1], 
                                      data.shape[-2]))
-                
+                theta.append(samples)
                 if i > 0:
                     data_, samples_ = _inBin(data, samples, theta[i])
                     data = np.append(data, data_, axis=0)
                     samples = np.append(samples, samples_, axis=0)
-                theta.append(samples)
-                
                 
                 #TODO: for every 2 combinations in parameter space
                 #TODO: Change _create_train_val to not depend on self.train_thetas and
                 #      self.train_ts
                 self.train_thetas = samples
                 self.train_ts = data
-                print('data shape: ', data.shape)
 
+                #Create bins from continous data
                 train_, val_, bins_ = self._create_train_val(self.num_bins)
-
-                self.train_thetas = np.asarray(self.train_thetas)
-                self.train_ts = np.asarray(self.train_ts)
-                self.val_thetas = np.asarray(self.val_thetas)
-                self.val_ts = np.asarray(self.val_ts)
 
                 input_shape = (data.shape[-2],data.shape[-1])
                 output_shape = len(bins_)
+                
                 num_train_examples = len(data)
-                print('input_shape: ', input_shape)
+                
                 bnn = BNNModel(input_shape, output_shape, num_train_examples)
-                print(bnn.model.summary())
+                if self.verbose:
+                    print(bnn.model.summary())
+                    print('num bins: ', len(bins_))
+                    print('input_shape: ', input_shape)
+                    print('data shape: ', data.shape)
+                
                 bnn.train(self.train_ts, train_, self.val_ts, val_)
 
-                probs = bnn.mc_sampling(self.data, self.num_monte_carlo)
-
                 #TODO: adaptive_thresh[i]
-                self.prior_function = lambda x,chunk_size: _sample_local_adaptive(probs, 
-                                                    bins_, 
-                                                    num_samples=x, 
-                                                    chunk_size=chunk_size, 
-                                                    thresh=0.05)
+                local_sampler.probs = bnn.mc_sampling(self.data, self.num_monte_carlo)
+                local_sampler.bins = bins_
+                self.prior_function = local_sampler.sample
 
                 graph_dict = core.get_graph_chunked(self.prior_function, self.sim,
-                                            num_samples, chunk_size)
+                                                    batch_size=num_samples, 
+                                                    chunk_size=chunk_size)
         except KeyboardInterrupt:
-            return theta
+            return np.array(theta)
         except:
             raise
-        return theta
+        return np.array(theta)
             
 
 
