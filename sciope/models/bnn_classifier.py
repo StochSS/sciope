@@ -1,4 +1,4 @@
-# Copyright 2019 Mattias Åkesson, Prashant Singh, Fredrik Wrede and Andreas Hellander
+# # Copyright 2021 Fredrik Wrede, Robin Eriksson, Prashant Singh and Andreas Hellander
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
