@@ -17,7 +17,6 @@ Ref:
 
 """
 
-from numpy.core.numeric import normalize_axis_tuple
 from sciope.models.model_base import ModelBase
 from sciope.utilities.housekeeping import sciope_logger as ml
 import tensorflow.compat.v2 as tf
@@ -28,10 +27,10 @@ import tensorflow_probability as tfp
 tfd = tfp.distributions
 import numpy as np
 
-class BNNModel(ModelBase):
+class BNN_regression(ModelBase):
     
     def __init__(self, input_shape, output_shape, num_train_examples, conv_channel=[25, 6], 
-                dense_channel=20 
+                dense_channel=20, 
                 kernel_size=5,
                 pooling_len=10,
                 add_normal = True,
