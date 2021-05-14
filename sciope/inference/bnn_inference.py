@@ -17,6 +17,7 @@ Sequential Bayesian neural network posterior esitmation
 #Imports
 from sklearn.model_selection import train_test_split
 from sciope.models.bnn_classifier import BNNModel
+from sciope.models.bnn_regressor import BNN_regression
 from sciope.inference.inference_base import InferenceBase
 from sciope.core import core
 from sciope.utilities.housekeeping import sciope_logger as ml
@@ -96,7 +97,7 @@ class CategoricalSampler():
         adaptive_thresh = start_thresh + (1 - start_thresh)/rounds**growth*np.arange(1,rounds+1)**growth
         return adaptive_thresh
 
-class BNN():
+class BNNClassifier():
     """
     """
 
@@ -105,7 +106,7 @@ class BNN():
                  verbose=False,
                  use_logger=False):
 
-        self.name = 'BNN'
+        self.name = 'BNN Classifier'
         #super(BNN, self).__init__(self.name, data, sim, use_logger)
 
         self.prior_function = prior_function.draw
@@ -216,7 +217,97 @@ class BNN():
         except:
             raise
         return np.array(theta)
-            
+
+
+class BNNRegressor():
+
+    def __init__(self, data, sim, prior_function,
+                 num_monte_carlo=20,
+                 verbose=False,
+                 use_logger=False):
+        self.name = 'BNN Regressor'
+        #super(BNN, self).__init__(self.name, data, sim, use_logger)
+
+        self.prior_function = prior_function.draw
+        self.num_monte_carlo = num_monte_carlo
+        self.use_logger = use_logger #TODO: use super at production ready
+        self.sim = sim               #TODO: use super at production ready
+        self.data = data             #TODO: use super at production ready
+        self.verbose = verbose
+        if self.use_logger:
+            self.logger = ml.SciopeLogger().get_logger()
+            self.logger.info("Sequential Bayesian neural network posterior esitmator initialized")
+
+    def _construct_bnn(self, input_shape, output_shape, num_train_examples, conv_channel=[25, 6], 
+                dense_channel=20,
+                kernel_size=5,
+                pooling_len=10,
+                add_normal = True,
+                problem_name='noname', 
+                use_logger=False):
+        
+        self.model = BNN_regression(input_shape, output_shape, num_train_examples, conv_channel, 
+                dense_channel, 
+                kernel_size,
+                pooling_len,
+                add_normal,
+                problem_name, 
+                use_logger)
+        
+        self._bnn_complied = True
+
+    
+    def infer(self, num_samples, num_rounds, chunk_size=10, seed=None):
+        np.random.seed(seed)
+        thetas = []
+        data_tot = []
+
+        try:
+
+            graph_dict = core.get_graph_chunked(self.prior_function, self.sim,
+                                            batch_size=num_samples,
+                                            chunk_size=chunk_size)
+
+            for i in range(num_rounds):
+    
+                samples, data = dask.compute(graph_dict["parameters"], 
+                                            graph_dict["trajectories"])
+                samples = core._reshape_chunks(samples)
+                data = np.array(data)
+                if self.verbose:
+                    print('data shape: ', data.shape)
+                
+                #Reshaping for NN
+                # standard is num_chunks x chunk_size x ensemble_size x num_species x time_points
+                # new shape num_chunks*chunk_size*ensemble_size x time points x num_species
+                data = data.reshape((np.prod(data.shape[:3]), 
+                                     data.shape[-1], 
+                                     data.shape[-2]))
+                
+                #append data from each round
+                thetas.append(samples)
+                data_tot.append(data)
+
+                inputs, inputs_val, targets, targets_val = train_test_split(np.concatenate(data_tot, axis=0),
+                                                                                           np.concatenate(thetas, axis=0), 
+                                                                                           train_size=0.8)
+    
+                #construct the BNN model                                                   
+                if not self._bnn_complied:
+                    self._construct_bnn(inputs.shape, targets.shape, inputs.shape[0])
+
+                
+
+                
+
+        except KeyboardInterrupt:
+            return np.array(thetas)
+        except:
+            raise
+        return np.array(thetas)
+
+
+                
 
 
 
