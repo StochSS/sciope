@@ -47,10 +47,10 @@ class BNN_regression(ModelBase):
         self.model = self._construct_model(input_shape, output_shape, num_train_examples,
                                            conv_channel, 
                                            dense_channel, 
-                                           kernel_size,
-                                           num_train_examples, 
+                                           kernel_size, 
                                            pooling_len,
                                            add_normal)
+        self._compiled_model = False
         self.model.summary()
     
 
@@ -108,22 +108,13 @@ class BNN_regression(ModelBase):
         
         return model
     
-    def train(self, inputs, targets, val_inputs, val_targets, 
-             batch_size=256,
-             epochs=400,
-             learning_rate=0.001, 
-             patience=5, 
-             min_delta=0.001, 
-             verbose=False):
+    def _compile_model(self, learning_rate=0.001):
         tf.keras.backend.clear_session()
         tf.keras.backend.set_floatx('float32')
-
-        
 
         # If one like to use early stopping
         #es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='auto', min_delta=0.1, verbose=1,
         #                                      patience=5)
-
 
         # Model compilation
         negloglik = lambda y, rv_y: -rv_y.log_prob(y)
@@ -133,11 +124,23 @@ class BNN_regression(ModelBase):
             loss = negloglik
         else:
             loss = 'mse'
-        self.model.compile(optimizer, loss=loss, #metrics=['mse'],
+        self.model.compile(optimizer, loss=loss,
                          experimental_run_tf_function=False)
+        self._compiled_model = True
+    
+    def train(self, inputs, targets, val_inputs, val_targets, 
+             batch_size=256,
+             epochs=400,
+             learning_rate=0.001, 
+             patience=5, 
+             min_delta=0.001, 
+             verbose=False):
+
+        if not self._compiled_model:
+            self._compile_model(learning_rate)
         
         self._fit_model(inputs, targets, batch_size=batch_size, epochs=epochs, verbose=verbose,
-                     validation_freq=10, validation_data=(val_inputs, val_targets),#callbacks=[es]
+                        validation_data=(val_inputs, val_targets),#callbacks=[es]
                     )
 
     def _fit_model(self, inputs, targets, batch_size, epochs, verbose,

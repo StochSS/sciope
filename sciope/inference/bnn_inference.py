@@ -21,6 +21,7 @@ from sciope.models.bnn_regressor import BNN_regression
 from sciope.inference.inference_base import InferenceBase
 from sciope.core import core
 from sciope.utilities.housekeeping import sciope_logger as ml
+from sciope.utilities.priors.gaussian_prior import GaussianPrior
 from toolz import partition_all
 import pandas as pd
 import numpy as np
@@ -30,6 +31,32 @@ tf.enable_v2_behavior()
 
 import tensorflow_probability as tfp
 tfd = tfp.distributions
+
+def MCinferMOG(data, model, num_monte_carlo, output_dim):
+        m = np.empty((num_monte_carlo,1,output_dim))
+        S = np.empty((num_monte_carlo,1,output_dim,output_dim))
+
+        # Take samples from posterior predictive, one sample is a Gaussian
+        for i in range(num_monte_carlo):
+            normal = model.model(data)
+            m[i] = normal.mean()
+            S[i] = normal.covariance()
+
+        m_hat = m.mean(axis=0) #mean of a mixture of gaussians with equal weight
+        S_hat_mean = S.mean(axis=0)
+
+        #not efficent, avoid loop
+        # following corresponds to:
+        # (m_i - \hat{m})(m_i - \hat{m})^T
+        matmul = np.empty((num_monte_carlo, 1, output_dim,output_dim))
+        for i in range(num_monte_carlo):
+            inner = m[i] - m_hat
+            matmul[i] = np.matmul(inner.T, inner)
+
+        #1/N \sum_{i=1}^N S_i + (m_i - \hat{m})(m_i - \hat{m})^T
+        S_hat = S_hat_mean + matmul.mean(axis=0) #Covariance of a mixture of gaussians
+
+        return m_hat, S_hat
 
 def _inBin(data, thetaOld, thetaNew):
     flag = None
@@ -228,12 +255,13 @@ class BNNRegressor():
         self.name = 'BNN Regressor'
         #super(BNN, self).__init__(self.name, data, sim, use_logger)
 
-        self.prior_function = prior_function.draw
+        self.prior_function = prior_function
         self.num_monte_carlo = num_monte_carlo
         self.use_logger = use_logger #TODO: use super at production ready
         self.sim = sim               #TODO: use super at production ready
         self.data = data             #TODO: use super at production ready
         self.verbose = verbose
+        self._bnn_complied = False
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Sequential Bayesian neural network posterior esitmator initialized")
@@ -242,6 +270,7 @@ class BNNRegressor():
                 dense_channel=20,
                 kernel_size=5,
                 pooling_len=10,
+                learning_rate=0.001,
                 add_normal = True,
                 problem_name='noname', 
                 use_logger=False):
@@ -253,23 +282,48 @@ class BNNRegressor():
                 add_normal,
                 problem_name, 
                 use_logger)
-        
-        self._bnn_complied = True
 
+        self.model._compile_model(learning_rate)
+        
+        self._bnn_complied = self.model._compiled_model
+    
+    def _train(self, inputs, targets, val_inputs, val_targets, 
+               batch_size=256,
+               epochs=400, 
+               patience=5, 
+               min_delta=0.001, 
+               verbose=False):
+
+        self.model.train(inputs, targets, val_inputs, val_targets, 
+               batch_size=256,
+               epochs=400, 
+               patience=5, 
+               min_delta=0.001, 
+               verbose=False)
+
+
+    def _correct_proposal(self):
+        """TODO"""
+
+        return 
     
     def infer(self, num_samples, num_rounds, chunk_size=10, seed=None):
         np.random.seed(seed)
         thetas = []
         data_tot = []
+        proposal = self.prior_function
 
         try:
+            for i in range(num_rounds):
 
-            graph_dict = core.get_graph_chunked(self.prior_function, self.sim,
+                graph_dict = core.get_graph_chunked(proposal.draw, self.sim,
                                             batch_size=num_samples,
                                             chunk_size=chunk_size)
 
-            for i in range(num_rounds):
-    
+                if self.verbose:
+                    print(f"starting round {i}")
+                
+                #Simulate data
                 samples, data = dask.compute(graph_dict["parameters"], 
                                             graph_dict["trajectories"])
                 samples = core._reshape_chunks(samples)
@@ -288,23 +342,44 @@ class BNNRegressor():
                 thetas.append(samples)
                 data_tot.append(data)
 
-                inputs, inputs_val, targets, targets_val = train_test_split(np.concatenate(data_tot, axis=0),
+                #Split training and validation data
+                inputs, val_inputs, targets, val_targets = train_test_split(np.concatenate(data_tot, axis=0),
                                                                                            np.concatenate(thetas, axis=0), 
                                                                                            train_size=0.8)
     
-                #construct the BNN model                                                   
+                #Construct the BNN model
+                output_dim = targets.shape[-1]                                              
                 if not self._bnn_complied:
-                    self._construct_bnn(inputs.shape, targets.shape, inputs.shape[0])
+                    self._construct_bnn(inputs.shape[1:], output_dim, inputs.shape[0])
 
+
+                if self.model.normal:
                 
+                    #Start training
+                    self._train(inputs, targets, val_inputs, val_targets, 
+                                batch_size=256,
+                                epochs=400, 
+                                patience=5, 
+                                min_delta=0.001, 
+                                verbose=False)
 
+                    #Approximate mixure of gaussians as a single gaussian
+                    proposal_m, proposal_var = MCinferMOG(self.data, self.model, self.num_monte_carlo, output_dim)
+                    proposal = GaussianPrior(proposal_m[0], S=proposal_var[0])
+
+                    #TODO: correction
+                else:
+                    raise ValueError("Current implementation only support Gaussian proposals, use add_normal = True when constructing BNN")
                 
-
         except KeyboardInterrupt:
+            if self.verbose:
+                    print(f"Terminating at round {i}")
             return np.array(thetas)
         except:
             raise
-        return np.array(thetas)
+        if self.verbose:
+                    print(f"Done after {num_rounds} rounds")
+        return proposal, np.array(thetas)
 
 
                 
