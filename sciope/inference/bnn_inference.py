@@ -261,6 +261,7 @@ class BNNRegressor():
         self.sim = sim               #TODO: use super at production ready
         self.data = data             #TODO: use super at production ready
         self.verbose = verbose
+        self._train_hyperparams = {'batch_size':256, 'epochs':400, 'verbose':False}
         self._bnn_complied = False
         if self.use_logger:
             self.logger = ml.SciopeLogger().get_logger()
@@ -287,19 +288,16 @@ class BNNRegressor():
         
         self._bnn_complied = self.model._compiled_model
     
-    def _train(self, inputs, targets, val_inputs, val_targets, 
-               batch_size=256,
-               epochs=400, 
-               patience=5, 
-               min_delta=0.001, 
-               verbose=False):
+    def _train(self, inputs, targets, val_inputs, val_targets):
+
+        batch_size = self._train_hyperparams['batch_size']
+        epochs = self._train_hyperparams['epochs']
+        verbose = self._train_hyperparams['verbose']
 
         self.model.train(inputs, targets, val_inputs, val_targets, 
-               batch_size=256,
-               epochs=400, 
-               patience=5, 
-               min_delta=0.001, 
-               verbose=False)
+               batch_size=batch_size,
+               epochs=epochs, 
+               verbose=verbose)
 
 
     def _correct_proposal(self):
@@ -356,12 +354,7 @@ class BNNRegressor():
                 if self.model.normal:
                 
                     #Start training
-                    self._train(inputs, targets, val_inputs, val_targets, 
-                                batch_size=256,
-                                epochs=400, 
-                                patience=5, 
-                                min_delta=0.001, 
-                                verbose=False)
+                    self._train(inputs, targets, val_inputs, val_targets)
 
                     #Approximate mixure of gaussians as a single gaussian
                     proposal_m, proposal_var = MCinferMOG(self.data, self.model, self.num_monte_carlo, output_dim)
