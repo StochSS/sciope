@@ -95,11 +95,11 @@ class GaussianPrior(PriorBase):
             raise ValueError('Mean information missing.')
     def draw(self, n=1, chunk_size=1):
         """Returns independent samples from the gaussian."""
-        if self.C:
+        try:
             z = np.random.randn(n, self.ndim)
             samples = np.dot(z, self.C) + self.m
             
-        else:
+        except:
             samples = np.random.multivariate_normal(self.m, self.S, size = n)
 
         samples = list(partition_all(chunk_size, samples))
