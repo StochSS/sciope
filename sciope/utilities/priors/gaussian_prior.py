@@ -44,8 +44,13 @@ class GaussianPrior(PriorBase):
 
             elif S is not None:
                 S = np.asarray(S)
+                assert np.isfinite(np.linalg.cond(S)), 'Covariance matrix is singular'
+                
                 self.P = np.linalg.inv(S)
-                self.C = np.linalg.cholesky(S).T
+                if np.all(np.linalg.eigvals(S) > 0):
+                    self.C = np.linalg.cholesky(S).T
+                else:
+                    self.C = None
                 self.S = S
                 self.Pm = np.dot(self.P, m)
                 self.logdetP = -2.0 * np.sum(np.log(np.diagonal(self.C)))
@@ -90,11 +95,14 @@ class GaussianPrior(PriorBase):
             raise ValueError('Mean information missing.')
     def draw(self, n=1, chunk_size=1):
         """Returns independent samples from the gaussian."""
+        if self.C:
+            z = np.random.randn(n, self.ndim)
+            samples = np.dot(z, self.C) + self.m
+            
+        else:
+            samples = np.random.multivariate_normal(self.m, self.S, size = n)
 
-        z = np.random.randn(n, self.ndim)
-        samples = np.dot(z, self.C) + self.m
         samples = list(partition_all(chunk_size, samples))
-
         return samples
     
     def pdf(self, x, ii=None, log=True):
