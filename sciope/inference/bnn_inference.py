@@ -305,7 +305,7 @@ class BNNRegressor():
 
         return 
     
-    def infer(self, num_samples, num_rounds, chunk_size=10, seed=None):
+    def infer(self, num_samples, num_rounds, chunk_size=10, exploit=True, seed=None):
         np.random.seed(seed)
         thetas = []
         data_tot = []
@@ -338,18 +338,26 @@ class BNNRegressor():
                 
                 #append data from each round
                 thetas.append(samples)
-                data_tot.append(data)
+                #data_tot.append(data)
 
                 #Split training and validation data
-                inputs, val_inputs, targets, val_targets = train_test_split(np.concatenate(data_tot, axis=0),
-                                                                                           np.concatenate(thetas, axis=0), 
-                                                                                           train_size=0.8)
+                #inputs, val_inputs, targets, val_targets = train_test_split(np.concatenate(data_tot, axis=0),
+                #                                                                           np.concatenate(thetas, axis=0), 
+                #                                                                           train_size=0.95)
     
+                inputs, val_inputs, targets, val_targets = train_test_split(data,
+                                                                            samples, 
+                                                                            train_size=0.8)
+    
+                
                 #Construct the BNN model
                 output_dim = targets.shape[-1]                                              
                 if not self._bnn_complied:
                     self._construct_bnn(inputs.shape[1:], output_dim, inputs.shape[0])
 
+                ############## testing retrain re-compiled model
+                if i > 0:
+                    self.model._compile_model(prior=self.prior_function, proposal=proposal_tf, default=False)
 
                 if self.model.normal:
                 
@@ -357,8 +365,12 @@ class BNNRegressor():
                     self._train(inputs, targets, val_inputs, val_targets)
 
                     #Approximate mixure of gaussians as a single gaussian
-                    proposal_m, proposal_var = MCinferMOG(self.data, self.model, self.num_monte_carlo, output_dim)
-                    proposal = GaussianPrior(proposal_m[0], S=proposal_var[0])
+                    if exploit:
+                        proposal_tf = self.model.model(self.data)
+                        #proposal_m, proposal_var = MCinferMOG(self.data, self.model, self.num_monte_carlo, output_dim)
+                        proposal_m, proposal_var = proposal_tf.mean(), proposal_tf.covariance()
+                        proposal = GaussianPrior(proposal_m[0], S=proposal_var[0])
+                        
 
                     #TODO: correction
                 else:

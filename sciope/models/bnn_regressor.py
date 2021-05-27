@@ -108,7 +108,7 @@ class BNN_regression(ModelBase):
         
         return model
     
-    def _compile_model(self, learning_rate=0.001):
+    def _compile_model(self, learning_rate=0.001, prior=None, proposal=None, default=True):
         tf.keras.backend.clear_session()
         tf.keras.backend.set_floatx('float32')
 
@@ -117,7 +117,13 @@ class BNN_regression(ModelBase):
         #                                      patience=5)
 
         # Model compilation
-        negloglik = lambda y, rv_y: -rv_y.log_prob(y)
+        if default:
+            kl = sum(self.model.losses)
+            negloglik = lambda y, rv_y: -rv_y.log_prob(y)
+        #importance weighted log loss
+        else:
+            kl = sum(self.model.losses)
+            negloglik = lambda y, rv_y: -(prior.pdf(y.numpy())/proposal.prob(y.numpy()))*rv_y.log_prob(y) + kl
         optimizer = tf.keras.optimizers.Adam(learning_rate)
 
         if self.normal:
@@ -125,7 +131,8 @@ class BNN_regression(ModelBase):
         else:
             loss = 'mse'
         self.model.compile(optimizer, loss=loss,
-                         experimental_run_tf_function=False)
+                         experimental_run_tf_function=False,
+                         run_eagerly=True) ## need run_eagerly = True to convert tensor to numpy in loss function, this will make training slower
         self._compiled_model = True
     
     def train(self, inputs, targets, val_inputs, val_targets, 
