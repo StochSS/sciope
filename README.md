@@ -31,7 +31,7 @@ exploration by large-scale parameter sweeps. Please see the [documentation](http
 	- interactive labeling of paramater points in feature space according to the users preferences over the diversity of model behaviors
 	- supports semi-supervised learning and downstream classifiers
 	
-* Version 0.3
+* Version 0.4
 
 ### How do I get set up? ###
 
