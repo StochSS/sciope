@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -175,8 +178,8 @@
 <h2>sciope.utilities.distancefunctions.distance_base module<a class="headerlink" href="#sciope-utilities-distancefunctions-distance-base-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.distancefunctions.distance_base"></span><p>Distance functions base class</p>
 <dl class="py class">
-<dt id="sciope.utilities.distancefunctions.distance_base.DistanceBase">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.utilities.distancefunctions.distance_base.</span></code><code class="sig-name descname"><span class="pre">DistanceBase</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/distance_base.html#DistanceBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.distance_base.DistanceBase" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.distancefunctions.distance_base.DistanceBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.utilities.distancefunctions.distance_base.</span></span><span class="sig-name descname"><span class="pre">DistanceBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/distance_base.html#DistanceBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.distance_base.DistanceBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for creating distance functions used by parameter inference algorithms.
 Must not be used directly!
@@ -185,8 +188,8 @@ Each distance function type must implement the methods described herein:</p>
 <li><p>DistanceBase.compute()</p></li>
 </ul>
 <dl class="py method">
-<dt id="sciope.utilities.distancefunctions.distance_base.DistanceBase.compute">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/distance_base.html#DistanceBase.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.distance_base.DistanceBase.compute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.distancefunctions.distance_base.DistanceBase.compute">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/distance_base.html#DistanceBase.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.distance_base.DistanceBase.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for calculating distances between fixed and simulated data.
 Each derived class must implement.</p>
 <dl class="simple">
@@ -204,16 +207,16 @@ Each derived class must implement.</p>
 <h2>sciope.utilities.distancefunctions.euclidean module<a class="headerlink" href="#sciope-utilities-distancefunctions-euclidean-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.distancefunctions.euclidean"></span><p>The Euclidean distance function</p>
 <dl class="py class">
-<dt id="sciope.utilities.distancefunctions.euclidean.EuclideanDistance">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.utilities.distancefunctions.euclidean.</span></code><code class="sig-name descname"><span class="pre">EuclideanDistance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/euclidean.html#EuclideanDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.euclidean.EuclideanDistance" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.distancefunctions.euclidean.EuclideanDistance">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.utilities.distancefunctions.euclidean.</span></span><span class="sig-name descname"><span class="pre">EuclideanDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/euclidean.html#EuclideanDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.euclidean.EuclideanDistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.utilities.distancefunctions.distance_base.DistanceBase" title="sciope.utilities.distancefunctions.distance_base.DistanceBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.distancefunctions.distance_base.DistanceBase</span></code></a></p>
 <p>Calculates Euclidean distance between two given datasets</p>
 <ul class="simple">
 <li><p>DistanceBase.compute()</p></li>
 </ul>
 <dl class="py method">
-<dt id="sciope.utilities.distancefunctions.euclidean.EuclideanDistance.compute">
-<code class="sig-name descname"><span class="pre">compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/euclidean.html#EuclideanDistance.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.euclidean.EuclideanDistance.compute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.distancefunctions.euclidean.EuclideanDistance.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/euclidean.html#EuclideanDistance.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.euclidean.EuclideanDistance.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summary</p>
 <dl class="simple">
 <dt>data<span class="classifier">[type]</span></dt><dd><p>[description]</p>
@@ -234,16 +237,16 @@ Each derived class must implement.</p>
 <h2>sciope.utilities.distancefunctions.manhattan module<a class="headerlink" href="#sciope-utilities-distancefunctions-manhattan-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.distancefunctions.manhattan"></span><p>The Manhattan distance function</p>
 <dl class="py class">
-<dt id="sciope.utilities.distancefunctions.manhattan.ManhattanDistance">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.utilities.distancefunctions.manhattan.</span></code><code class="sig-name descname"><span class="pre">ManhattanDistance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/manhattan.html#ManhattanDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.manhattan.ManhattanDistance" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.distancefunctions.manhattan.ManhattanDistance">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.utilities.distancefunctions.manhattan.</span></span><span class="sig-name descname"><span class="pre">ManhattanDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/manhattan.html#ManhattanDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.manhattan.ManhattanDistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.utilities.distancefunctions.distance_base.DistanceBase" title="sciope.utilities.distancefunctions.distance_base.DistanceBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.distancefunctions.distance_base.DistanceBase</span></code></a></p>
 <p>Calculates Manhattan distance between two given datasets</p>
 <ul class="simple">
 <li><p>DistanceBase.compute()</p></li>
 </ul>
 <dl class="py method">
-<dt id="sciope.utilities.distancefunctions.manhattan.ManhattanDistance.compute">
-<code class="sig-name descname"><span class="pre">compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/manhattan.html#ManhattanDistance.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.manhattan.ManhattanDistance.compute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.distancefunctions.manhattan.ManhattanDistance.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/manhattan.html#ManhattanDistance.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.manhattan.ManhattanDistance.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>[summary]</p>
 <dl class="simple">
 <dt>data<span class="classifier">[type]</span></dt><dd><p>[description]</p>
@@ -264,16 +267,16 @@ Each derived class must implement.</p>
 <h2>sciope.utilities.distancefunctions.naive_squared module<a class="headerlink" href="#sciope-utilities-distancefunctions-naive-squared-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.distancefunctions.naive_squared"></span><p>The naive squared function: (a-b ** 2)</p>
 <dl class="py class">
-<dt id="sciope.utilities.distancefunctions.naive_squared.NaiveSquaredDistance">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.utilities.distancefunctions.naive_squared.</span></code><code class="sig-name descname"><span class="pre">NaiveSquaredDistance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/naive_squared.html#NaiveSquaredDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.naive_squared.NaiveSquaredDistance" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.distancefunctions.naive_squared.NaiveSquaredDistance">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.utilities.distancefunctions.naive_squared.</span></span><span class="sig-name descname"><span class="pre">NaiveSquaredDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/naive_squared.html#NaiveSquaredDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.naive_squared.NaiveSquaredDistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.utilities.distancefunctions.distance_base.DistanceBase" title="sciope.utilities.distancefunctions.distance_base.DistanceBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.distancefunctions.distance_base.DistanceBase</span></code></a></p>
 <p>Calculates squared element-wise distance between two given datasets</p>
 <ul class="simple">
 <li><p>DistanceBase.compute()</p></li>
 </ul>
 <dl class="py method">
-<dt id="sciope.utilities.distancefunctions.naive_squared.NaiveSquaredDistance.compute">
-<code class="sig-name descname"><span class="pre">compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/naive_squared.html#NaiveSquaredDistance.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.naive_squared.NaiveSquaredDistance.compute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.distancefunctions.naive_squared.NaiveSquaredDistance.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/distancefunctions/naive_squared.html#NaiveSquaredDistance.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.distancefunctions.naive_squared.NaiveSquaredDistance.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>[summary]</p>
 <dl class="simple">
 <dt>data<span class="classifier">[type]</span></dt><dd><p>[description]</p>

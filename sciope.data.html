@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -172,8 +175,8 @@
 <h2>sciope.data.dataset module<a class="headerlink" href="#sciope-data-dataset-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.data.dataset"></span><p>Dataset Class</p>
 <dl class="py class">
-<dt id="sciope.data.dataset.DataSet">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.data.dataset.</span></code><code class="sig-name descname"><span class="pre">DataSet</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.data.dataset.DataSet">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.data.dataset.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class for defining a dataset for a modeling/optimization/inference run</p>
 <p>Properties/variables:
@@ -190,8 +193,8 @@
 * process_outliers                  (check summary stats that contain outliers, and apply log scaling)
 * apply_func_to_columns     (Applies a transformation function to selected column indices of a matrix)</p>
 <dl class="py method">
-<dt id="sciope.data.dataset.DataSet.add_points">
-<code class="sig-name descname"><span class="pre">add_points</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">summary_stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.add_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.add_points" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.data.dataset.DataSet.add_points">
+<span class="sig-name descname"><span class="pre">add_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">summary_stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.add_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.add_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the dataset to include new points</p>
 <dl class="simple">
 <dt>inputs<span class="classifier">ndarray, optional</span></dt><dd><p>Usually parameter points, by default None</p>
@@ -210,8 +213,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.data.dataset.DataSet.apply_func_to_columns">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">apply_func_to_columns</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.apply_func_to_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.apply_func_to_columns" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.data.dataset.DataSet.apply_func_to_columns">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">apply_func_to_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.apply_func_to_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.apply_func_to_columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies a transformation function to selected column indices of a matrix</p>
 <dl class="simple">
 <dt>func<span class="classifier">callable</span></dt><dd><p>the transformation function</p>
@@ -232,8 +235,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.data.dataset.DataSet.get_size">
-<code class="sig-name descname"><span class="pre">get_size</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.get_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.get_size" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.data.dataset.DataSet.get_size">
+<span class="sig-name descname"><span class="pre">get_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.get_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.get_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the current number of points in the dataset</p>
 <dl class="simple">
 <dt>int</dt><dd><p>The current number of points in the dataset</p>
@@ -242,8 +245,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.data.dataset.DataSet.process_outliers">
-<code class="sig-name descname"><span class="pre">process_outliers</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zscore'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.process_outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.process_outliers" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.data.dataset.DataSet.process_outliers">
+<span class="sig-name descname"><span class="pre">process_outliers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zscore'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/data/dataset.html#DataSet.process_outliers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.data.dataset.DataSet.process_outliers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check for outliers in calculated summary stats. Outliers are the few very high or very low values that can
 potentially introduce bias in tasks such as parameter inference. One can either remove them, replace with mean
 value, or use log scale for the statistic in question. This choice is left to the user.</p>

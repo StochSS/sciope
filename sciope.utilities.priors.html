@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -173,27 +176,27 @@
 <h2>sciope.utilities.priors.prior_base module<a class="headerlink" href="#sciope-utilities-priors-prior-base-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.priors.prior_base"></span><p>Base Class for Prior Functions</p>
 <dl class="py class">
-<dt id="sciope.utilities.priors.prior_base.PriorBase">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.utilities.priors.prior_base.</span></code><code class="sig-name descname"><span class="pre">PriorBase</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/prior_base.html#PriorBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.prior_base.PriorBase" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.priors.prior_base.PriorBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.utilities.priors.prior_base.</span></span><span class="sig-name descname"><span class="pre">PriorBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/prior_base.html#PriorBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.prior_base.PriorBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for prior functions used by ABC inference algorithms and MAB-based statistic selection.</p>
 <dl class="py method">
-<dt id="sciope.utilities.priors.prior_base.PriorBase.draw">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">draw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/prior_base.html#PriorBase.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.prior_base.PriorBase.draw" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.priors.prior_base.PriorBase.draw">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/prior_base.html#PriorBase.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.prior_base.PriorBase.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw ‘n’ samples from the prior
 :param n: number of desired samples from prior; defaults to 1
 :return: the ‘n’ drawn samples as a vector</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.utilities.priors.prior_base.PriorBase.get_dimension">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">get_dimension</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/prior_base.html#PriorBase.get_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.prior_base.PriorBase.get_dimension" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.priors.prior_base.PriorBase.get_dimension">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_dimension</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/prior_base.html#PriorBase.get_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.prior_base.PriorBase.get_dimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the dimension of the prior.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.utilities.priors.prior_base.PriorBase.pdf">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">pdf</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/prior_base.html#PriorBase.pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.prior_base.PriorBase.pdf" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.priors.prior_base.PriorBase.pdf">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/prior_base.html#PriorBase.pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.prior_base.PriorBase.pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the PDF of the sample
 :param x: the point or collection of points to evaluate the pdf at
 :param log: whether to return the log pdf
@@ -207,28 +210,28 @@
 <h2>sciope.utilities.priors.uniform_prior module<a class="headerlink" href="#sciope-utilities-priors-uniform-prior-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.priors.uniform_prior"></span><p>The Uniform Prior</p>
 <dl class="py class">
-<dt id="sciope.utilities.priors.uniform_prior.UniformPrior">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.utilities.priors.uniform_prior.</span></code><code class="sig-name descname"><span class="pre">UniformPrior</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/uniform_prior.html#UniformPrior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.priors.uniform_prior.UniformPrior">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.utilities.priors.uniform_prior.</span></span><span class="sig-name descname"><span class="pre">UniformPrior</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/uniform_prior.html#UniformPrior"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.utilities.priors.prior_base.PriorBase" title="sciope.utilities.priors.prior_base.PriorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.priors.prior_base.PriorBase</span></code></a></p>
 <p>The uniform prior draws a sample from the uniform distribution in a specified d-dimensional space described as:
 [min_i, max_i], i=1..d</p>
 <dl class="py method">
-<dt id="sciope.utilities.priors.uniform_prior.UniformPrior.draw">
-<code class="sig-name descname"><span class="pre">draw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/uniform_prior.html#UniformPrior.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior.draw" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.priors.uniform_prior.UniformPrior.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/uniform_prior.html#UniformPrior.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw ‘n’ samples within self.lb and self.ub
 :param n: the desired number of samples
 :return: the n-sized vector of drawn samples</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.utilities.priors.uniform_prior.UniformPrior.get_dimension">
-<code class="sig-name descname"><span class="pre">get_dimension</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/uniform_prior.html#UniformPrior.get_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior.get_dimension" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.priors.uniform_prior.UniformPrior.get_dimension">
+<span class="sig-name descname"><span class="pre">get_dimension</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/uniform_prior.html#UniformPrior.get_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior.get_dimension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the dimension of the prior.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.utilities.priors.uniform_prior.UniformPrior.pdf">
-<code class="sig-name descname"><span class="pre">pdf</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/uniform_prior.html#UniformPrior.pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior.pdf" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.priors.uniform_prior.UniformPrior.pdf">
+<span class="sig-name descname"><span class="pre">pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/priors/uniform_prior.html#UniformPrior.pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.priors.uniform_prior.UniformPrior.pdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the PDF of the sample
 :param x: the point or collection of points to evaluate the pdf at
 :param log: whether to return the log pdf

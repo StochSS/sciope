@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -177,15 +180,15 @@
 <h2>sciope.utilities.summarystats.burstiness module<a class="headerlink" href="#sciope-utilities-summarystats-burstiness-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.summarystats.burstiness"></span><p>The ‘Burstiness’ summary statistic</p>
 <dl class="py class">
-<dt id="sciope.utilities.summarystats.burstiness.Burstiness">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.utilities.summarystats.burstiness.</span></code><code class="sig-name descname"><span class="pre">Burstiness</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean_trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">improvement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.summarystats.burstiness.Burstiness">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.utilities.summarystats.burstiness.</span></span><span class="sig-name descname"><span class="pre">Burstiness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean_trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">improvement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="sciope.utilities.summarystats.summary_base.SummaryBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.utilities.summarystats.summary_base.SummaryBase</span></code></a></p>
 <p>Burstiness Summary statictics
 Burstiness = (sigma-mu)/(sigma+mu)</p>
 <p>Ref: Burstiness and memory in complex systems, Europhys. Let., 81, pp. 48002, 2008.</p>
 <dl class="py method">
-<dt id="sciope.utilities.summarystats.burstiness.Burstiness.compute">
-<code class="sig-name descname"><span class="pre">compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness.compute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.summarystats.burstiness.Burstiness.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/burstiness.html#Burstiness.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.summarystats.burstiness.Burstiness.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the value(s) of the summary statistic(s)</p>
 <dl class="simple">
 <dt>data<span class="classifier">[type]</span></dt><dd><p>simulated or data set in the form N x S X T - num data points x num species x num time steps</p>
@@ -210,13 +213,13 @@ Burstiness = (sigma-mu)/(sigma+mu)</p>
 <h2>sciope.utilities.summarystats.summary_base module<a class="headerlink" href="#sciope-utilities-summarystats-summary-base-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.utilities.summarystats.summary_base"></span><p>Base Class for Summary Statistics</p>
 <dl class="py class">
-<dt id="sciope.utilities.summarystats.summary_base.SummaryBase">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.utilities.summarystats.summary_base.</span></code><code class="sig-name descname"><span class="pre">SummaryBase</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.summarystats.summary_base.SummaryBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.utilities.summarystats.summary_base.</span></span><span class="sig-name descname"><span class="pre">SummaryBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_trajectories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for summary statistics.</p>
 <dl class="py method">
-<dt id="sciope.utilities.summarystats.summary_base.SummaryBase.compute">
-<code class="sig-name descname"><span class="pre">compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase.compute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.utilities.summarystats.summary_base.SummaryBase.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/utilities/summarystats/summary_base.html#SummaryBase.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.utilities.summarystats.summary_base.SummaryBase.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the summary statistic value for given ‘data’
 :param data: a fixed data set or simulation result
 :return: the computed summary statistic value</p>

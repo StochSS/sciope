@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -176,13 +179,13 @@
 <h2>sciope.models.ann_regressor module<a class="headerlink" href="#sciope-models-ann-regressor-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.models.ann_regressor"></span><p>Artificial Neural Network (ANN) Regression Surrogate Model</p>
 <dl class="py class">
-<dt id="sciope.models.ann_regressor.ANNModel">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.models.ann_regressor.</span></code><code class="sig-name descname"><span class="pre">ANNModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.ann_regressor.ANNModel">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.models.ann_regressor.</span></span><span class="sig-name descname"><span class="pre">ANNModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.models.model_base.ModelBase" title="sciope.models.model_base.ModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.models.model_base.ModelBase</span></code></a></p>
 <p>We use the sklearn MLP Regressor implementation here.</p>
 <dl class="py method">
-<dt id="sciope.models.ann_regressor.ANNModel.predict">
-<code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel.predict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.ann_regressor.ANNModel.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict unseen data using the trained model</p>
 <dl class="simple">
 <dt>xt<span class="classifier">nd-array</span></dt><dd><p>unseen data to be predicted</p>
@@ -195,8 +198,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.models.ann_regressor.ANNModel.train">
-<code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel.train" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.ann_regressor.ANNModel.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/ann_regressor.html#ANNModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.ann_regressor.ANNModel.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the ANN model given the data</p>
 <dl class="simple">
 <dt>inputs<span class="classifier">nd-array</span></dt><dd><p>independent variables</p>
@@ -213,13 +216,13 @@
 <h2>sciope.models.gp_regressor module<a class="headerlink" href="#sciope-models-gp-regressor-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.models.gp_regressor"></span><p>Gaussian Process Regression Surrogate Model using sklearn</p>
 <dl class="py class">
-<dt id="sciope.models.gp_regressor.GPRModel">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.models.gp_regressor.</span></code><code class="sig-name descname"><span class="pre">GPRModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.gp_regressor.GPRModel">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.models.gp_regressor.</span></span><span class="sig-name descname"><span class="pre">GPRModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.models.model_base.ModelBase" title="sciope.models.model_base.ModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.models.model_base.ModelBase</span></code></a></p>
 <p>We use the sklearn GP Regressor implementation here.</p>
 <dl class="py method">
-<dt id="sciope.models.gp_regressor.GPRModel.predict">
-<code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel.predict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.gp_regressor.GPRModel.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict unseen data using the trained model.
 GP returns the mean and variance of prediction, so handle it accordingly while using predict.</p>
 <dl class="simple">
@@ -233,8 +236,8 @@ GP returns the mean and variance of prediction, so handle it accordingly while u
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.models.gp_regressor.GPRModel.train">
-<code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel.train" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.gp_regressor.GPRModel.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/gp_regressor.html#GPRModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.gp_regressor.GPRModel.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the GP model given the data</p>
 <dl class="simple">
 <dt>inputs<span class="classifier">nd-array</span></dt><dd><p>independent variables</p>
@@ -251,19 +254,19 @@ GP returns the mean and variance of prediction, so handle it accordingly while u
 <h2>sciope.models.label_propagation module<a class="headerlink" href="#sciope-models-label-propagation-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.models.label_propagation"></span><p>Semi-supervised Label Propagation Surrogate Model</p>
 <dl class="py class">
-<dt id="sciope.models.label_propagation.Bounds">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></code><code class="sig-name descname"><span class="pre">Bounds</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#Bounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.Bounds" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.label_propagation.Bounds">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></span><span class="sig-name descname"><span class="pre">Bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#Bounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.Bounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="sciope.models.label_propagation.LPModel">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></code><code class="sig-name descname"><span class="pre">LPModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.label_propagation.LPModel">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></span><span class="sig-name descname"><span class="pre">LPModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rbf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.models.model_base.ModelBase" title="sciope.models.model_base.ModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.models.model_base.ModelBase</span></code></a></p>
 <p>We use the sklearn Label Spreading implementation here.</p>
 <dl class="py method">
-<dt id="sciope.models.label_propagation.LPModel.objective">
-<code class="sig-name descname"><span class="pre">objective</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.objective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.objective" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.label_propagation.LPModel.objective">
+<span class="sig-name descname"><span class="pre">objective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.objective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.objective" title="Permalink to this definition">¶</a></dt>
 <dd><p>Objective function for hyper-parameter selection/evaluation</p>
 <p>x : hyper-parameter under test - gamma</p>
 <dl class="simple">
@@ -273,8 +276,8 @@ GP returns the mean and variance of prediction, so handle it accordingly while u
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.models.label_propagation.LPModel.optimize">
-<code class="sig-name descname"><span class="pre">optimize</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">niter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.optimize" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.label_propagation.LPModel.optimize">
+<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">niter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>hyper-parameter optimization using basinhopping</p>
 <p><a href="#id1"><span class="problematic" id="id2">min_</span></a> : lower bound for parameter search
 <a href="#id3"><span class="problematic" id="id4">max_</span></a> : upper bound for parameter search
@@ -287,8 +290,8 @@ stepsize : displacement step size</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.models.label_propagation.LPModel.predict">
-<code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.predict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.label_propagation.LPModel.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict unseen data using the trained model</p>
 <dl class="simple">
 <dt>xp<span class="classifier">nd-array</span></dt><dd><p>unseen data to be predicted</p>
@@ -301,8 +304,8 @@ stepsize : displacement step size</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.models.label_propagation.LPModel.train">
-<code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">niter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.train" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.label_propagation.LPModel.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">niter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#LPModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.LPModel.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the LP model given the data</p>
 <dl class="simple">
 <dt>inputs<span class="classifier">nd-array</span></dt><dd><p>independent variables</p>
@@ -323,20 +326,20 @@ stepsize : displacement step size</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="sciope.models.label_propagation.RandomDisplacementBounds">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></code><code class="sig-name descname"><span class="pre">RandomDisplacementBounds</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#RandomDisplacementBounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.RandomDisplacementBounds" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.label_propagation.RandomDisplacementBounds">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></span><span class="sig-name descname"><span class="pre">RandomDisplacementBounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#RandomDisplacementBounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.RandomDisplacementBounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>random displacement with bounds</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="sciope.models.label_propagation.get_average_label_entropy">
-<code class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></code><code class="sig-name descname"><span class="pre">get_average_label_entropy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_distribution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#get_average_label_entropy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.get_average_label_entropy" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.label_propagation.get_average_label_entropy">
+<span class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></span><span class="sig-name descname"><span class="pre">get_average_label_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_distribution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#get_average_label_entropy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.get_average_label_entropy" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="sciope.models.label_propagation.get_label_entropies">
-<code class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></code><code class="sig-name descname"><span class="pre">get_label_entropies</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_distribution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#get_label_entropies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.get_label_entropies" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.label_propagation.get_label_entropies">
+<span class="sig-prename descclassname"><span class="pre">sciope.models.label_propagation.</span></span><span class="sig-name descname"><span class="pre">get_label_entropies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_distribution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/label_propagation.html#get_label_entropies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.label_propagation.get_label_entropies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -344,8 +347,8 @@ stepsize : displacement step size</p>
 <h2>sciope.models.model_base module<a class="headerlink" href="#sciope-models-model-base-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.models.model_base"></span><p>Surrogate Model Base Class</p>
 <dl class="py class">
-<dt id="sciope.models.model_base.ModelBase">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.models.model_base.</span></code><code class="sig-name descname"><span class="pre">ModelBase</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.model_base.ModelBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.models.model_base.</span></span><span class="sig-name descname"><span class="pre">ModelBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for surrogate models.
 Must not be used directly!
@@ -363,14 +366,14 @@ Each model type must implement the methods described herein:</p>
 <li><p>self.n                    (num training points)</p></li>
 </ul>
 <dl class="py method">
-<dt id="sciope.models.model_base.ModelBase.predict">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.predict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.model_base.ModelBase.predict">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for predicting test data. Each derived class must implement.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.models.model_base.ModelBase.scale_training_data">
-<code class="sig-name descname"><span class="pre">scale_training_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.scale_training_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.scale_training_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.model_base.ModelBase.scale_training_data">
+<span class="sig-name descname"><span class="pre">scale_training_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.scale_training_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.scale_training_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>pre-process training data</p>
 <dl class="simple">
 <dt>x<span class="classifier">nd-array</span></dt><dd><p>inputs or independent variables</p>
@@ -381,8 +384,8 @@ Each model type must implement the methods described herein:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.models.model_base.ModelBase.train">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.train" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.model_base.ModelBase.train">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/model_base.html#ModelBase.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.model_base.ModelBase.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for training a given surrogate. Each derived class must implement.</p>
 </dd></dl>
 
@@ -393,13 +396,13 @@ Each model type must implement the methods described herein:</p>
 <h2>sciope.models.svm_regressor module<a class="headerlink" href="#sciope-models-svm-regressor-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.models.svm_regressor"></span><p>Support Vector Machine Regression Surrogate Model</p>
 <dl class="py class">
-<dt id="sciope.models.svm_regressor.SVRModel">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.models.svm_regressor.</span></code><code class="sig-name descname"><span class="pre">SVRModel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.svm_regressor.SVRModel">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.models.svm_regressor.</span></span><span class="sig-name descname"><span class="pre">SVRModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.models.model_base.ModelBase" title="sciope.models.model_base.ModelBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.models.model_base.ModelBase</span></code></a></p>
 <p>We use the sklearn SVM implementation here.</p>
 <dl class="py method">
-<dt id="sciope.models.svm_regressor.SVRModel.predict">
-<code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.predict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.svm_regressor.SVRModel.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict unseen data using the trained model</p>
 <dl class="simple">
 <dt>xt<span class="classifier">nd-array</span></dt><dd><p>unseen data to be predicted</p>
@@ -412,8 +415,8 @@ Each model type must implement the methods described herein:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.models.svm_regressor.SVRModel.train">
-<code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.train" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.svm_regressor.SVRModel.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the SVR model given the data</p>
 <dl class="simple">
 <dt>inputs<span class="classifier">nd-array</span></dt><dd><p>independent variables</p>
@@ -424,8 +427,8 @@ Each model type must implement the methods described herein:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.models.svm_regressor.SVRModel.tune_parameters">
-<code class="sig-name descname"><span class="pre">tune_parameters</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfolds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.tune_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.tune_parameters" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.models.svm_regressor.SVRModel.tune_parameters">
+<span class="sig-name descname"><span class="pre">tune_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfolds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/models/svm_regressor.html#SVRModel.tune_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.models.svm_regressor.SVRModel.tune_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tune hyper-parameters of the model</p>
 <p>x : inputs or independent variables
 y : output or dependent variable

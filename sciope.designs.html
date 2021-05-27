@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,6 +33,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -175,8 +178,8 @@
 <h2>sciope.designs.factorial_design module<a class="headerlink" href="#sciope-designs-factorial-design-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.designs.factorial_design"></span><p>Factorial Initial Design</p>
 <dl class="py class">
-<dt id="sciope.designs.factorial_design.FactorialDesign">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.designs.factorial_design.</span></code><code class="sig-name descname"><span class="pre">FactorialDesign</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/factorial_design.html#FactorialDesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.factorial_design.FactorialDesign">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.designs.factorial_design.</span></span><span class="sig-name descname"><span class="pre">FactorialDesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/factorial_design.html#FactorialDesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.designs.initial_design_base.InitialDesignBase" title="sciope.designs.initial_design_base.InitialDesignBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.designs.initial_design_base.InitialDesignBase</span></code></a></p>
 <p>Class definition for Factorial design</p>
 <p>Properties/variables:
@@ -190,8 +193,8 @@
 <p>Methods:
 * generate                                  (returns a delayed object that can generated the desired number of samples)</p>
 <dl class="py method">
-<dt id="sciope.designs.factorial_design.FactorialDesign.draw">
-<code class="sig-name descname"><span class="pre">draw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_redesign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/factorial_design.html#FactorialDesign.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign.draw" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.factorial_design.FactorialDesign.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_redesign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/factorial_design.html#FactorialDesign.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw specified number of points from a generated LHD</p>
 <dl class="simple">
 <dt>n_samples<span class="classifier">integer</span></dt><dd><p>[]</p>
@@ -205,8 +208,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.designs.factorial_design.FactorialDesign.generate">
-<code class="sig-name descname"><span class="pre">generate</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/factorial_design.html#FactorialDesign.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign.generate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.factorial_design.FactorialDesign.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/factorial_design.html#FactorialDesign.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.factorial_design.FactorialDesign.generate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for generating a factorial design of specified ‘levels’ in the given domain.
 The number of generated points is levels^d.</p>
 <p>dask.delayed</p>
@@ -219,8 +222,8 @@ The number of generated points is levels^d.</p>
 <h2>sciope.designs.initial_design_base module<a class="headerlink" href="#sciope-designs-initial-design-base-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.designs.initial_design_base"></span><p>Initial Design Base Class</p>
 <dl class="py class">
-<dt id="sciope.designs.initial_design_base.InitialDesignBase">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.designs.initial_design_base.</span></code><code class="sig-name descname"><span class="pre">InitialDesignBase</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.initial_design_base.InitialDesignBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.designs.initial_design_base.</span></span><span class="sig-name descname"><span class="pre">InitialDesignBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for initial designs.
 Must not be used directly!
@@ -236,14 +239,14 @@ Each initial design type must implement the methods described herein:</p>
 * scale_variable            (scales a variable from an old domain range to a new domain range)
 * scale_to_new_domain       (scales a matrix from an old domain range to a new domain range)</p>
 <dl class="py method">
-<dt id="sciope.designs.initial_design_base.InitialDesignBase.generate">
-<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">generate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase.generate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.initial_design_base.InitialDesignBase.generate">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase.generate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sub-classable method for generating ‘n’ points within a given domain. Each derived class must implement.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.designs.initial_design_base.InitialDesignBase.scale_to_new_domain">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">scale_to_new_domain</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase.scale_to_new_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase.scale_to_new_domain" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.initial_design_base.InitialDesignBase.scale_to_new_domain">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">scale_to_new_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase.scale_to_new_domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase.scale_to_new_domain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scales a given array/matrix to a new range</p>
 <dl class="simple">
 <dt>x<span class="classifier">multidimensional array/matrix</span></dt><dd><p>to operate upon</p>
@@ -260,8 +263,8 @@ Each initial design type must implement the methods described herein:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="sciope.designs.initial_design_base.InitialDesignBase.scale_variable">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">scale_variable</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase.scale_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase.scale_variable" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.initial_design_base.InitialDesignBase.scale_variable">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">scale_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/initial_design_base.html#InitialDesignBase.scale_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.initial_design_base.InitialDesignBase.scale_variable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scales a dimension from the specified old range to a new range.</p>
 <dl class="simple">
 <dt>x<span class="classifier">vector</span></dt><dd><p>represents a variable or dimension to operate upon</p>
@@ -294,8 +297,8 @@ Viana, Felipe AC, Gerhard Venter, and Vladimir Balabanov.
 “An algorithm for fast optimal Latin hypercube design of experiments.”
 International journal for numerical methods in engineering 82, no. 2 (2010): 135-156.</p>
 <dl class="py class">
-<dt id="sciope.designs.latin_hypercube_sampling.LatinHypercube">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.designs.latin_hypercube_sampling.</span></code><code class="sig-name descname"><span class="pre">LatinHypercube</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/latin_hypercube_sampling.html#LatinHypercube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.latin_hypercube_sampling.LatinHypercube">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.designs.latin_hypercube_sampling.</span></span><span class="sig-name descname"><span class="pre">LatinHypercube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/latin_hypercube_sampling.html#LatinHypercube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.designs.initial_design_base.InitialDesignBase" title="sciope.designs.initial_design_base.InitialDesignBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.designs.initial_design_base.InitialDesignBase</span></code></a></p>
 <p>Translational Propagation Latin Hypercube Sampling</p>
 <p>Properties/variables:
@@ -308,8 +311,8 @@ International journal for numerical methods in engineering 82, no. 2 (2010): 135
 <p>Methods:
 * generate                                  (returns the generated samples)</p>
 <dl class="py method">
-<dt id="sciope.designs.latin_hypercube_sampling.LatinHypercube.draw">
-<code class="sig-name descname"><span class="pre">draw</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_redesign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/latin_hypercube_sampling.html#LatinHypercube.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube.draw" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.latin_hypercube_sampling.LatinHypercube.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_redesign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/latin_hypercube_sampling.html#LatinHypercube.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw specified number of points from a generated LHD</p>
 <dl class="simple">
 <dt>n_samples<span class="classifier">integer</span></dt><dd><p>[]</p>
@@ -323,13 +326,13 @@ International journal for numerical methods in engineering 82, no. 2 (2010): 135
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="sciope.designs.latin_hypercube_sampling.LatinHypercube.generate">
-<code class="sig-name descname"><span class="pre">generate</span></code><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube.generate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.latin_hypercube_sampling.LatinHypercube.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube.generate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="sciope.designs.latin_hypercube_sampling.LatinHypercube.generate_array">
-<code class="sig-name descname"><span class="pre">generate_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('auto',</span> <span class="pre">'auto')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/latin_hypercube_sampling.html#LatinHypercube.generate_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube.generate_array" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.latin_hypercube_sampling.LatinHypercube.generate_array">
+<span class="sig-name descname"><span class="pre">generate_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('auto',</span> <span class="pre">'auto')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/latin_hypercube_sampling.html#LatinHypercube.generate_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.latin_hypercube_sampling.LatinHypercube.generate_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a partial design of specified points</p>
 <dl class="simple">
 <dt>n: integer</dt><dd><p># of desired points</p>
@@ -345,8 +348,8 @@ International journal for numerical methods in engineering 82, no. 2 (2010): 135
 <h2>sciope.designs.random_sampling module<a class="headerlink" href="#sciope-designs-random-sampling-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-sciope.designs.random_sampling"></span><p>Random Sampling Initial Design</p>
 <dl class="py class">
-<dt id="sciope.designs.random_sampling.RandomSampling">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">sciope.designs.random_sampling.</span></code><code class="sig-name descname"><span class="pre">RandomSampling</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/random_sampling.html#RandomSampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.random_sampling.RandomSampling" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.random_sampling.RandomSampling">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sciope.designs.random_sampling.</span></span><span class="sig-name descname"><span class="pre">RandomSampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sciope/designs/random_sampling.html#RandomSampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sciope.designs.random_sampling.RandomSampling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#sciope.designs.initial_design_base.InitialDesignBase" title="sciope.designs.initial_design_base.InitialDesignBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">sciope.designs.initial_design_base.InitialDesignBase</span></code></a></p>
 <p>Random Sampling implemented through gpflowopt</p>
 <p>Properties/variables:
@@ -358,8 +361,8 @@ International journal for numerical methods in engineering 82, no. 2 (2010): 135
 <p>Methods:
 * generate                                  (returns the generated samples)</p>
 <dl class="py attribute">
-<dt id="sciope.designs.random_sampling.RandomSampling.generate">
-<code class="sig-name descname"><span class="pre">generate</span></code><a class="headerlink" href="#sciope.designs.random_sampling.RandomSampling.generate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="sciope.designs.random_sampling.RandomSampling.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><a class="headerlink" href="#sciope.designs.random_sampling.RandomSampling.generate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
