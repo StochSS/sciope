@@ -221,7 +221,10 @@ class ReplenishmentSMCABC(InferenceBase):
                 p_acc = np.sum(update_p_accs) / (num_samples - n_cull)
                 N_acc = np.sum(N_accs)
 
-                R = int(round(np.log(c) / np.log(1 - p_acc)))
+                if p_acc == 1 or p_acc == 0:
+                    R = 1
+                else:
+                    R = int(round(np.log(c) / np.log(1 - p_acc)))
 
                 # Perturb again with better estimate
                 perturb_tasks = []
