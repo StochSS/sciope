@@ -283,6 +283,10 @@ class ABC(InferenceBase):
         else:
             sim_dist_scaled = np.asarray(dists)
 
+        # Make sure the dimensions are how we want them
+        if len(sim_dist_scaled.shape) < 2:
+            sim_dist_scaled = sim_dist_scaled.reshape(len(sim_dist_scaled), 1)
+
         # Take the norm to combine the distances, if more than one summary is used
         if sim_dist_scaled.shape[1] > 1:
             combined_distance = [dask.delayed(np.linalg.norm)(scaled.reshape(1, scaled.size), axis=1)
