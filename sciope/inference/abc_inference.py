@@ -29,6 +29,7 @@ import dask
 # The following variable stores n normalized distance values after n summary statistics have been calculated
 normalized_distances = None
 
+
 # Class definition: ABC rejection sampling
 class ABC(InferenceBase):
     """
@@ -50,7 +51,8 @@ class ABC(InferenceBase):
     """
 
     def __init__(self, data, sim, prior_function, epsilon=0.1, summaries_function=bs.Burstiness(),
-                 distance_function=euc.EuclideanDistance(), summaries_divisor=None, use_logger=False):
+                 distance_function=euc.EuclideanDistance(), summaries_divisor=None, use_logger=False,
+                 max_sampling_iterations=np.Inf):
         """
         ABC class for rejection sampling
         
@@ -74,6 +76,8 @@ class ABC(InferenceBase):
             factors. These may come from prior knowledge, or pre-studies, etc.
         use_logger : bool
             enable/disable logging
+        max_sampling_iterations : integer
+            the total number of rejection sampling iterations allowed; np.Inf indicates unlimited iterations
         """
         self.name = 'ABC'
         self.epsilon = epsilon
@@ -83,6 +87,7 @@ class ABC(InferenceBase):
         self.historical_distances = []
         self.summaries_divisor = summaries_divisor
         self.use_logger = use_logger
+        self.max_sampling_iterations = max_sampling_iterations
         super(ABC, self).__init__(self.name, data, sim, self.use_logger)
         self.sim = sim
 
@@ -175,19 +180,19 @@ class ABC(InferenceBase):
 
         # Get dask graph
         graph_dict = core.get_graph_chunked(self.prior_function, self.sim, self.summaries_function,
-                                      batch_size, chunk_size)
-        
+                                            batch_size, chunk_size)
+
         dist_func = lambda x: self.distance_function(self.fixed_mean, x)
         graph_dict["distances"] = core.get_distance(dist_func, graph_dict["summarystats"], chunked=True)
 
         cluster_mode = core._cluster_mode()
 
         # do rejection sampling
-        #while accepted_count < num_samples:
+        # while accepted_count < num_samples:
 
-            #sim_dist_scaled = []
-            #params = []
-            #dists = []
+        # sim_dist_scaled = []
+        # params = []
+        # dists = []
 
         # If dask cluster is used, use persist and futures, and scale as result is completed
         if cluster_mode:
@@ -212,24 +217,24 @@ class ABC(InferenceBase):
                         if normalize:
                             # Normalize distances between [0,1]
                             sim_dist_scaled.append(self.scale_distance(d))
-                    
+
                     idx = keep_idx[f.key]
                     param = futures_params[idx]
                     params_res = param.result()
                     for p in params_res:
                         params.append(p)
-                    
-                    accepted_samples, distances, accepted_count = self._scale_reject(sim_dist_scaled, 
-                                                                                        dists, 
-                                                                                        accepted_samples, 
-                                                                                        distances,
-                                                                                        params,
-                                                                                        accepted_count, 
-                                                                                        normalize)
-                    del dist, param #TODO: remove all futures including simulation and summarystats
-                    if accepted_count < num_samples:
+
+                    accepted_samples, distances, accepted_count = self._scale_reject(sim_dist_scaled,
+                                                                                     dists,
+                                                                                     accepted_samples,
+                                                                                     distances,
+                                                                                     params,
+                                                                                     accepted_count,
+                                                                                     normalize)
+                    del dist, param  # TODO: remove all futures including simulation and summarystats
+                    if accepted_count < num_samples and trial_count < self.max_sampling_iterations:
                         new_chunk = core.get_graph_chunked(self.prior_function, self.sim, self.summaries_function,
-                                        chunk_size, chunk_size)
+                                                           chunk_size, chunk_size)
                         new_chunk["distances"] = core.get_distance(dist_func, new_chunk["summarystats"], chunked=True)
 
                         c_param, c_dist = dask.persist(new_chunk["parameters"], new_chunk["distances"])
@@ -242,14 +247,18 @@ class ABC(InferenceBase):
 
                     else:
                         del futures_dist, futures_params, res_param, res_dist
-                        self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
-                        'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
+                        if trial_count >= self.max_sampling_iterations:
+                            print('Maximum number of allowed rejection sampling iterations exceeded.')
+                        self.results = {'accepted_samples': accepted_samples, 'distances': distances,
+                                        'accepted_count': accepted_count,
+                                        'trial_count': trial_count,
+                                        'inferred_parameters': np.mean(accepted_samples, axis=0)}
                         return self.results
 
 
         # else use multiprocessing mode
         else:
-            while accepted_count < num_samples:
+            while accepted_count < num_samples and trial_count < self.max_sampling_iterations:
                 sim_dist_scaled = []
                 params = []
                 dists = []
@@ -262,24 +271,27 @@ class ABC(InferenceBase):
                     for d in dists:
                         sim_dist_scaled.append(self.scale_distance(d))
 
-                accepted_samples, distances, accepted_count = self._scale_reject(sim_dist_scaled, 
-                                                                                        dists, 
-                                                                                        accepted_samples, 
-                                                                                        distances,
-                                                                                        params,
-                                                                                        accepted_count, 
-                                                                                        normalize)
+                accepted_samples, distances, accepted_count = self._scale_reject(sim_dist_scaled,
+                                                                                 dists,
+                                                                                 accepted_samples,
+                                                                                 distances,
+                                                                                 params,
+                                                                                 accepted_count,
+                                                                                 normalize)
 
                 trial_count += batch_size
 
-            self.results = {'accepted_samples': accepted_samples, 'distances': distances, 'accepted_count': accepted_count,
-                        'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
+            self.results = {'accepted_samples': accepted_samples, 'distances': distances,
+                            'accepted_count': accepted_count,
+                            'trial_count': trial_count, 'inferred_parameters': np.mean(accepted_samples, axis=0)}
+            if trial_count >= self.max_sampling_iterations:
+                print('Maximum number of allowed rejection sampling iterations exceeded.')
             return self.results
 
-    def _scale_reject(self, sim_dist_scaled, dists, accepted_samples, 
+    def _scale_reject(self, sim_dist_scaled, dists, accepted_samples,
                       distances, params, accepted_count, normalize):
         if normalize:
-                sim_dist_scaled = np.asarray(sim_dist_scaled)
+            sim_dist_scaled = np.asarray(sim_dist_scaled)
         else:
             sim_dist_scaled = np.asarray(dists)
 
@@ -290,7 +302,7 @@ class ABC(InferenceBase):
         # Take the norm to combine the distances, if more than one summary is used
         if sim_dist_scaled.shape[1] > 1:
             combined_distance = [dask.delayed(np.linalg.norm)(scaled.reshape(1, scaled.size), axis=1)
-                                    for scaled in sim_dist_scaled]
+                                 for scaled in sim_dist_scaled]
             result, = dask.compute(combined_distance)
         else:
             result = sim_dist_scaled.ravel()
@@ -306,8 +318,8 @@ class ABC(InferenceBase):
                 accepted_count += 1
                 if self.use_logger:
                     self.logger.info("ABC Rejection Sampling: accepted a new sample, "
-                                        "total accepted samples = {0}".format(accepted_count))
-        
+                                     "total accepted samples = {0}".format(accepted_count))
+
         return accepted_samples, distances, accepted_count
 
     def infer(self, num_samples, batch_size, chunk_size=10, ensemble_size=1, normalize=True):

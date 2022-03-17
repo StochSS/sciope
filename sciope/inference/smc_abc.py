@@ -98,7 +98,8 @@ class SMCABC(InferenceBase):
                  perturbation_kernel=None,
                  summaries_function=bs.Burstiness().compute,
                  distance_function=euc.EuclideanDistance(),
-                 summaries_divisor=None, use_logger=False):
+                 summaries_divisor=None, use_logger=False,
+                 max_sampling_iterations=np.Inf):
 
         self.name = 'SMC-ABC'
         super(SMCABC, self).__init__(self.name, data, sim, use_logger)
@@ -107,6 +108,7 @@ class SMCABC(InferenceBase):
         self.summaries_function = summaries_function
         self.distance_function = distance_function
         self.summaries_divisor = summaries_divisor
+        self.max_sampling_iterations = max_sampling_iterations
         if perturbation_kernel is not None:
             self.perturbation_kernel = perturbation_kernel
         else:
@@ -162,7 +164,8 @@ class SMCABC(InferenceBase):
                                          summaries_function=self.summaries_function,
                                          distance_function=self.distance_function,
                                          summaries_divisor=self.summaries_divisor,
-                                         use_logger=self.use_logger)
+                                         use_logger=self.use_logger,
+                                         max_sampling_iterations=self.max_sampling_iterations)
 
         abc_instance.compute_fixed_mean(chunk_size=chunk_size)
         abc_results = abc_instance.infer(num_samples=t,
@@ -201,7 +204,8 @@ class SMCABC(InferenceBase):
                                                  summaries_function=self.summaries_function,
                                                  distance_function=self.distance_function,
                                                  summaries_divisor=self.summaries_divisor,
-                                                 use_logger=self.use_logger)
+                                                 use_logger=self.use_logger,
+                                                 max_sampling_iterations=self.max_sampling_iterations)
                 abc_instance.compute_fixed_mean(chunk_size=chunk_size)
                 abc_results = abc_instance.infer(num_samples=t,
                                                  batch_size=batch_size,
@@ -209,18 +213,19 @@ class SMCABC(InferenceBase):
                                                  normalize=relative)
 
                 # Compute importance weights for the new samples
-                new_samples = np.vstack(abc_results['accepted_samples'])[:t]
+                if len(abc_results['accepted_samples']) == t:
+                    new_samples = np.vstack(abc_results['accepted_samples'])[:t]
 
-                prior_weights = self.prior_function.pdf(new_samples)
-                kweights = self.perturbation_kernel.pdf(population, new_samples)
+                    prior_weights = self.prior_function.pdf(new_samples)
+                    kweights = self.perturbation_kernel.pdf(population, new_samples)
 
-                new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
-                new_weights = new_weights / sum(new_weights)
+                    new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
+                    new_weights = new_weights / sum(new_weights)
 
-                population = new_samples
-                normalized_weights = new_weights
+                    population = new_samples
+                    normalized_weights = new_weights
 
-                abc_history.append(abc_results)
+                    abc_history.append(abc_results)
                 round += 1
 
             except KeyboardInterrupt:
