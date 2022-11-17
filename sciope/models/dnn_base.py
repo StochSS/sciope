@@ -85,7 +85,7 @@ class DNNBase(ModelBase):
         return history
 
     # Predict
-    def predict(self, xt):
+    def predict(self, xt, verbose=0):
         # scale the input in [0, 1] if desired
         if self.scale_input:
             xt = (xt - self._r_min) / (self._r_max - self._r_min)
@@ -93,7 +93,7 @@ class DNNBase(ModelBase):
         # reshape from NxSxT to NxTxS
         xt = xt.transpose((0, 2, 1))
 
-        yt = self.model.predict(xt)
+        yt = self.model.predict(xt, verbose=verbose)
         if self.scale_output:
             yt = self.target_scaler.inverse_transform(yt)
         return yt
