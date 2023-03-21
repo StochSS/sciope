@@ -67,7 +67,8 @@ def simulator(params, model):
 
     res = model_update.run(solver=NumPySSASolver, show_labels=False,
                            number_of_trajectories=num_trajectories)
-    tot_res = np.asarray([x.T for x in res])  # reshape to (N, S, T)
+    res_arrays = [x.numpy() for x in res]
+    tot_res = np.asarray([x.T for x in res_arrays])  # reshape to (N, S, T)
     tot_res = tot_res[:, 1:, :]  # should not contain timepoints
 
     return tot_res
@@ -93,7 +94,8 @@ uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 fixed_data = toggle_model.run(solver=NumPySSASolver, number_of_trajectories=100, show_labels=False)
 
 # reshape data to (N,S,T)
-fixed_data = np.asarray([x.T for x in fixed_data])
+fixed_data_arrays = [x.numpy() for x in fixed_data]
+fixed_data = np.asarray([x.T for x in fixed_data_arrays])
 # and remove timepoints
 fixed_data = fixed_data[:, 1:, :]
 
