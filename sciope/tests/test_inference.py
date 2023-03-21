@@ -91,7 +91,7 @@ dmax = true_params * 2.0
 
 uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 
-fixed_data = toggle_model.run(solver=NumPySSASolver, number_of_trajectories=100, show_labels=False)
+fixed_data = toggle_model.run(solver=SSACSolver, number_of_trajectories=100, show_labels=False)
 
 # reshape data to (N,S,T)
 N = len(train_params)
