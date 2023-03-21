@@ -30,10 +30,10 @@ class InferenceBase(object):
     """
     __metaclass__ = ABCMeta
 
-    def __init__(self, name, data, sim, use_logger=False):
+    def __init__(self, name, data, sim, problem_name=None, use_logger=False):
         """
         Base class initializer
-        
+
         Parameters
         ----------
         name : string
@@ -42,6 +42,8 @@ class InferenceBase(object):
             Observed data or fixed data
         sim : function handle
             The simulator
+        problem_name : string
+            Name of the problem
         use_logger : bool
             Flag controlling enabling / disabling of logging
         """
@@ -51,6 +53,7 @@ class InferenceBase(object):
         self.sim = sim
         self.use_logger = use_logger
         self.results = dict()
+        self.problem_name = problem_name
 
     @abstractmethod
     def infer(self):
