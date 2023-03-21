@@ -5,7 +5,7 @@ from sciope.inference.abc_inference import ABC
 from sciope.utilities.distancefunctions import naive_squared
 from tsfresh.feature_extraction.settings import MinimalFCParameters
 from sklearn.metrics import mean_absolute_error
-from gillespy2.solvers.numpy import NumPySSASolver
+from gillespy2 import SSACSolver
 from dask.distributed import Client
 import gillespy2
 import pytest
@@ -65,7 +65,7 @@ def simulator(params, model):
     model_update = set_model_parameters(params, model)
     num_trajectories = 1  # TODO: howto handle ensembles
 
-    res = model_update.run(solver=NumPySSASolver, show_labels=False,
+    res = model_update.run(solver=SSACSolver, show_labels=False,
                            number_of_trajectories=num_trajectories)
     tot_res = np.asarray([x.T for x in res])  # reshape to (N, S, T)
     tot_res = tot_res[:, 1:, :]  # should not contain timepoints
@@ -90,7 +90,7 @@ dmax = true_params * 2.0
 
 uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 
-fixed_data = toggle_model.run(solver=NumPySSASolver, number_of_trajectories=100, show_labels=False)
+fixed_data = toggle_model.run(solver=SSACSolver, number_of_trajectories=100, show_labels=False)
 
 # reshape data to (N,S,T)
 fixed_data = np.asarray([x.T for x in fixed_data])
