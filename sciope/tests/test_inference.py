@@ -5,7 +5,7 @@ from sciope.inference.abc_inference import ABC
 from sciope.utilities.distancefunctions import naive_squared
 from tsfresh.feature_extraction.settings import MinimalFCParameters
 from sklearn.metrics import mean_absolute_error
-from gillespy2.solvers.numpy import NumPySSASolver
+from gillespy2.solvers.cpp import SSACSolver
 from dask.distributed import Client
 import gillespy2
 import pytest
@@ -65,9 +65,9 @@ def simulator(params, model):
     model_update = set_model_parameters(params, model)
     num_trajectories = 1  # TODO: howto handle ensembles
 
-    res = model_update.run(solver=NumPySSASolver, show_labels=False,
+    res = model_update.run(solver=SSACSolver, show_labels=False,
                            number_of_trajectories=num_trajectories)
-    res_arrays = [x.numpy() for x in res]
+
     tot_res = np.asarray([x.T for x in res_arrays])  # reshape to (N, S, T)
     tot_res = tot_res[:, 1:, :]  # should not contain timepoints
 
@@ -94,7 +94,11 @@ uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 fixed_data = toggle_model.run(solver=NumPySSASolver, number_of_trajectories=100, show_labels=False)
 
 # reshape data to (N,S,T)
-fixed_data_arrays = [x.numpy() for x in fixed_data]
+N = len(train_params)
+M = len(validation_params)
+num_species = 5
+num_timestamps = 201
+train_ts = train_ts.reshape(N, num_species, num_timestamps)
 fixed_data = np.asarray([x.T for x in fixed_data_arrays])
 # and remove timepoints
 fixed_data = fixed_data[:, 1:, :]
