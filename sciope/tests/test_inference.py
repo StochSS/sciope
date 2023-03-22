@@ -5,11 +5,11 @@ from sciope.inference.abc_inference import ABC
 from sciope.utilities.distancefunctions import naive_squared
 from tsfresh.feature_extraction.settings import MinimalFCParameters
 from sklearn.metrics import mean_absolute_error
-from gillespy2 import SSACSolver
+from gillespy2.solvers.numpy import NumPySSASolver
 from dask.distributed import Client
 import gillespy2
 import pytest
-from collections.abc import Iterable
+from gillespy2 import SSACSolver
 
 
 class ToggleSwitch(gillespy2.Model):
@@ -47,29 +47,38 @@ class ToggleSwitch(gillespy2.Model):
 
 
 toggle_model = ToggleSwitch()
+solver = SSACSolver
+
+parameter_names = ['alpha1','alpha2','beta','gamma','mu']
 
 
 # Define simulator function
 
-def set_model_parameters(params, model):
-    """ params - array, needs to have the same order as
-        model.listOfParameters """
-    for e, (pname, p) in enumerate(model.listOfParameters.items()):
-        model.get_parameter(pname).set_expression(params[e])
-    return model
-
-
 # Here we use gillespy2 numpy solver, so performance will
 # be quite slow for this model
 
-def simulator(params, model,transform = True):
-    model_update = set_model_parameters(params, model)
-    num_trajectories = 1  # TODO: howto handle ensembles
+# +
+# def simulator(params, model):
+#     model_update = set_model_parameters(params, model)
+#     num_trajectories = 1  # TODO: howto handle ensembles
 
-    res = model_update.run(solver=SSACSolver, show_labels=False,
-                           number_of_trajectories=num_trajectories)
+#     res = model_update.run(solver=NumPySSASolver, show_labels=False,
+#                            number_of_trajectories=num_trajectories)
+#     tot_res = np.asarray([x.T for x in res])  # reshape to (N, S, T)
+#     tot_res = tot_res[:, 1:, :]  # should not contain timepoints
+
+#     return tot_res
+def simulator(params, model,transform = True):
+    params = params.ravel()
+    
+    num_trajectories = 1  # TODO: howto handle ensembles
+    res = model.run(
+            solver = solver,
+            variables = {parameter_names[i] : params[i] for i in range(len(parameter_names))})
+    
+
     if transform:
-        # Extract only observed species
+        
         U_ = res['U']
         V_ = res['V']
 
@@ -79,6 +88,7 @@ def simulator(params, model,transform = True):
         return res
 
 
+# -
 
 def simulator2(x):
     return simulator(x, model=toggle_model)
@@ -95,21 +105,22 @@ true_params = np.array(bound)
 dmin = true_params * 0.5
 dmax = true_params * 2.0
 
+# +
+#simulator2(true_params)
+# -
+
 uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 
-fixed_data = toggle_model.run(solver=SSACSolver, number_of_trajectories=100, show_labels=False)
-fixed_data = np.asarray([x[1][:, 1:].reshape((1, -1, x[1].shape[-1])) for x in fixed_data])
+fixed_data = toggle_model.run(solver=solver, number_of_trajectories=100)
 
-#fixed_data = toggle_model.run(solver=SSACSolver, number_of_trajectories=100, show_labels=False)
-#fixed_data = np.asarray([x[1][:, 1:].reshape((1, -1, x[1].shape[-1])) for x in fixed_data])
+results = []
+for x in fixed_data:
+    results.append(np.vstack([x['U'], x['V']])[np.newaxis, :, :])
 
-#fixed_data = np.asarray([x.reshape((1, -1, x.shape[-1])) for x in fixed_data])
+results = np.array(results)
 
-print(fixed_data)
-# reshape data to (N,S,T)
-# fixed_data = np.asarray([x.T for x in fixed_data])
-# # and remove timepoints
-# fixed_data = fixed_data[:, 1:, :]
+fixed_data = np.squeeze(results, axis=1)
+
 
 summ_func = lambda x: fe.generate_tsfresh_features(x, MinimalFCParameters())
 
@@ -138,3 +149,8 @@ def test_abc_functional():
     assert mae_inference < 0.5, "ABC inference test failed, error too high"
 
     c.close()
+
+
+
+
+
