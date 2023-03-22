@@ -61,16 +61,22 @@ def set_model_parameters(params, model):
 # Here we use gillespy2 numpy solver, so performance will
 # be quite slow for this model
 
-def simulator(params, model):
+def simulator(params, model,transform = True):
     model_update = set_model_parameters(params, model)
     num_trajectories = 1  # TODO: howto handle ensembles
 
     res = model_update.run(solver=SSACSolver, show_labels=False,
                            number_of_trajectories=num_trajectories)
-    tot_res = np.asarray([x.T for x in res])  # reshape to (N, S, T)
-    tot_res = tot_res[:, 1:, :]  # should not contain timepoints
+    if transform:
+        # Extract only observed species
+        U_ = res['U']
+        V_ = res['V']
 
-    return tot_res
+        return np.vstack([U_, V_])[np.newaxis, :, :]
+
+    else:
+        return res
+
 
 
 def simulator2(x):
@@ -91,7 +97,7 @@ dmax = true_params * 2.0
 uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 
 fixed_data = toggle_model.run(solver=SSACSolver, number_of_trajectories=100, show_labels=False)
-
+print(fixed_data)
 # reshape data to (N,S,T)
 fixed_data = np.asarray([x.T for x in fixed_data])
 # and remove timepoints
