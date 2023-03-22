@@ -9,6 +9,7 @@ from gillespy2 import SSACSolver
 from dask.distributed import Client
 import gillespy2
 import pytest
+from collections.abc import Iterable
 
 
 class ToggleSwitch(gillespy2.Model):
@@ -97,7 +98,12 @@ dmax = true_params * 2.0
 uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 
 fixed_data = toggle_model.run(solver=SSACSolver, number_of_trajectories=100, show_labels=False)
-fixed_data = np.asarray([x.reshape((1, -1, x.shape[-1])) for x in fixed_data])
+fixed_data = np.asarray([x[1][:, 1:].reshape((1, -1, x[1].shape[-1])) for x in fixed_data])
+
+#fixed_data = toggle_model.run(solver=SSACSolver, number_of_trajectories=100, show_labels=False)
+#fixed_data = np.asarray([x[1][:, 1:].reshape((1, -1, x[1].shape[-1])) for x in fixed_data])
+
+#fixed_data = np.asarray([x.reshape((1, -1, x.shape[-1])) for x in fixed_data])
 
 print(fixed_data)
 # reshape data to (N,S,T)
