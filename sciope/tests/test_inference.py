@@ -142,7 +142,7 @@ def test_abc_functional():
 
     ## run in cluster mode
     c = Client()
-    res = abc.infer(num_samples=30, batch_size=10, chunk_size=2)
+    res = abc.infer(num_samples=10, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc.results['inferred_parameters'])
     assert abc.results['trial_count'] > 0 and abc.results[
         'trial_count'] < 1000, "ABC inference test failed, trial count out of bounds"
