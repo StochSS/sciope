@@ -15,7 +15,7 @@
 Test suite for ML models
 """
 from sklearn.datasets import load_iris
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_california_housing  # Use California housing dataset instead
 from sciope.models import label_propagation
 from sciope.models import gp_regressor
 from sciope.models import ann_regressor
@@ -26,13 +26,12 @@ import numpy as np
 import pytest
 
 # Prepare regression dataset
-boston = load_boston()
-x, y = shuffle(boston.data, boston.target, random_state=13)
+housing = fetch_california_housing()  # Use California housing dataset instead
+x, y = shuffle(housing.data, housing.target, random_state=13)
 x = x.astype(np.float32)
 offset = int(x.shape[0] * 0.9)
 x_train, y_train = x[:offset], y[:offset]
 x_test, y_test = x[offset:], y[offset:]
-
 
 # Lower dimensional noisy test function for GPR
 def f(inp):
