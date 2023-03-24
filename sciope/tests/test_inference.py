@@ -47,8 +47,7 @@ class ToggleSwitch(gillespy2.Model):
 
 
 toggle_model = ToggleSwitch()
-solver = SSACSolver
-
+solver = NumPySSASolver
 parameter_names = ['alpha1', 'alpha2', 'beta', 'gamma', 'mu']
 
 
