@@ -49,7 +49,7 @@ class ToggleSwitch(gillespy2.Model):
 toggle_model = ToggleSwitch()
 solver = SSACSolver
 
-parameter_names = ['alpha1','alpha2','beta','gamma','mu']
+parameter_names = ['alpha1', 'alpha2', 'beta', 'gamma', 'mu']
 
 
 # Define simulator function
@@ -68,17 +68,16 @@ parameter_names = ['alpha1','alpha2','beta','gamma','mu']
 #     tot_res = tot_res[:, 1:, :]  # should not contain timepoints
 
 #     return tot_res
-def simulator(params, model,transform = True):
+def simulator(params, model, transform=True):
     params = params.ravel()
-    
+
     num_trajectories = 1  # TODO: howto handle ensembles
     res = model.run(
-            solver = solver,
-            variables = {parameter_names[i] : params[i] for i in range(len(parameter_names))})
-    
+        solver=solver,
+        variables={parameter_names[i]: params[i] for i in range(len(parameter_names))})
 
     if transform:
-        
+
         U_ = res['U']
         V_ = res['V']
 
@@ -106,12 +105,12 @@ dmin = true_params * 0.5
 dmax = true_params * 2.0
 
 # +
-#simulator2(true_params)
+# simulator2(true_params)
 # -
 
 uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 
-fixed_data = toggle_model.run(solver=solver, number_of_trajectories=100)
+fixed_data = toggle_model.run(solver=solver, number_of_trajectories=1)
 
 results = []
 for x in fixed_data:
@@ -120,7 +119,6 @@ for x in fixed_data:
 results = np.array(results)
 
 fixed_data = np.squeeze(results, axis=1)
-
 
 summ_func = lambda x: fe.generate_tsfresh_features(x, MinimalFCParameters())
 
