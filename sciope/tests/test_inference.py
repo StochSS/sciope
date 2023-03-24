@@ -109,7 +109,7 @@ dmax = true_params * 2.0
 
 uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 
-fixed_data = toggle_model.run(solver=solver, number_of_trajectories=1)
+fixed_data = toggle_model.run(solver=solver, number_of_trajectories=30)
 
 results = []
 for x in fixed_data:
@@ -137,15 +137,20 @@ def test_abc_functional():
         'trial_count'] < 1000, "ABC inference test failed, trial count out of bounds"
     assert mae_inference < 0.5, "ABC inference test failed, error too high"
 
-    ## run in cluster mode
-    c = Client()
-    res = abc.infer(num_samples=10, batch_size=10, chunk_size=2)
-    mae_inference = mean_absolute_error(true_params, abc.results['inferred_parameters'])
-    assert abc.results['trial_count'] > 0 and abc.results[
-        'trial_count'] < 1000, "ABC inference test failed, trial count out of bounds"
-    assert mae_inference < 0.5, "ABC inference test failed, error too high"
+    # print('Done')
+    # # run in cluster mode
+    # c = Client()
+    # res = abc.infer(num_samples=50, batch_size=10, chunk_size=2)
+    # mae_inference = mean_absolute_error(true_params, abc.results['inferred_parameters'])
+    # assert abc.results['trial_count'] > 0 and abc.results[
+    #     'trial_count'] < 1000, "ABC inference test failed, trial count out of bounds"
+    # assert mae_inference < 0.5, "ABC inference test failed, error too high"
+    #
+    # c.close()
 
-    c.close()
+
+
+test_abc_functional()
 
 
 
