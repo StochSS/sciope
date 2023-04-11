@@ -70,4 +70,4 @@ class AbsoluteEpsilonSelector(EpsilonSelector):
         terminate : bool
             Whether to stop after this epsilon
         """
-        return self.epsilon_sequence[round], False, round == last_round
+        return self.epsilon_sequence[round], False, round == self.last_round

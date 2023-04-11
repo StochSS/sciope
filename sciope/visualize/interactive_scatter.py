@@ -9,6 +9,7 @@ from IPython.display import display
 
 
 class UserLabel():  # pragma: no cover
+    """Class to keep track of highligted points, will be used for interactive labeling"""
     def __init__(self):
         self.highlighted = []
 
@@ -33,19 +34,6 @@ def draw_scatterplot(axis, x_values, y_values, labels): # pragma: no cover
         c=labels,
         picker=True
     )
-
-
-class UserLabel():  # pragma: no cover
-    """Class to keep track of highligted points, will be used for interactive labeling"""
-
-    def __init__(self):
-        self.highlighted = []
-
-    def clear(self):
-        self.highlighted = []
-
-    def add(self, x):
-        self.highlighted.append(x)
 
 
 def interative_scatter(scatter_data, data_class=None):  # pragma: no cover
