@@ -75,7 +75,7 @@ class RelativeEpsilonSelector(EpsilonSelector):
             Whether to stop after this epsilon
         """
         if round > len(abc_history):
-            t = np.percentile(abc_history[-1]['distances'], self.epsilon_percentile)
+            epsilon = np.percentile(abc_history[-1]['distances'], self.epsilon_percentile)
         else:
-            t = np.percentile(abc_history[round - 1]['distances'], self.epsilon_percentile)
-        return t, False, self.max_rounds and round + 1 == self.max_rounds
+            epsilon = np.percentile(abc_history[round - 1]['distances'], self.epsilon_percentile)
+        return epsilon, False, self.max_rounds and round + 1 == self.max_rounds

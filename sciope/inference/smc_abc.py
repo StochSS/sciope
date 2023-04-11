@@ -26,6 +26,7 @@ from sciope.utilities.housekeeping import sciope_logger as ml
 from sciope.utilities.priors.prior_base import PriorBase
 from sciope.utilities.epsilonselectors import RelativeEpsilonSelector
 from sciope.utilities.perturbationkernels.multivariate_normal import MultivariateNormalKernel
+from sciope.visualize.inference_results import InferenceResults, InferenceRound
 
 import numpy as np
 import dask
@@ -88,6 +89,7 @@ class SMCABC(InferenceBase):
     * summaries_function    	(summary statistics calculation function)
     * distance_function         (function calculating deviation between simulated statistics and observed statistics)
     * summaries_divisor         (numpy array of maxima - used for normalizing summary statistic values)
+    * parameters                (dict of parameters in the form of {name: value} - used for generating result objects)
     * use_logger    			(whether logging is enabled or disabled)
 
     Methods:
@@ -98,7 +100,7 @@ class SMCABC(InferenceBase):
                  perturbation_kernel=None,
                  summaries_function=bs.Burstiness().compute,
                  distance_function=euc.EuclideanDistance(),
-                 summaries_divisor=None, use_logger=False):
+                 summaries_divisor=None, parameters=None, use_logger=False):
 
         self.name = 'SMC-ABC'
         super(SMCABC, self).__init__(self.name, data, sim, use_logger)
@@ -107,6 +109,7 @@ class SMCABC(InferenceBase):
         self.summaries_function = summaries_function
         self.distance_function = distance_function
         self.summaries_divisor = summaries_divisor
+        self.parameters = parameters
         if perturbation_kernel is not None:
             self.perturbation_kernel = perturbation_kernel
         else:
@@ -173,6 +176,8 @@ class SMCABC(InferenceBase):
         population = np.vstack(abc_results['accepted_samples'])[:t]
         normalized_weights = np.ones(t) / t
 
+        if self.parameters is not None:
+            abc_results = InferenceRound.build_from_inference_round(abc_results, list(self.parameters.keys()))
         abc_history.append(abc_results)
 
         # SMC iterations
@@ -220,12 +225,22 @@ class SMCABC(InferenceBase):
                 population = new_samples
                 normalized_weights = new_weights
 
+                if self.parameters is not None:
+                    abc_results = InferenceRound.build_from_inference_round(abc_results, list(self.parameters.keys()))
                 abc_history.append(abc_results)
                 round += 1
 
             except KeyboardInterrupt:
-                return abc_history
+                if self.parameters is None:
+                    return abc_history
+                return InferenceResults(
+                    abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                )
             except:
                 raise
 
-        return abc_history
+        if self.parameters is None:
+            return abc_history
+        return InferenceResults(
+            abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+        )
