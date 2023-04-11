@@ -34,7 +34,7 @@ class AbsoluteEpsilonSelector(EpsilonSelector):
 
         assert (len(epsilon_sequence) > 0)
         self.epsilon_sequence = epsilon_sequence
-        self.last_round = len(self.epsilon_sequence) - 1
+        self.last_round = len(self.epsilon_sequence)
 
     def get_initial_epsilon(self):
         """Gets the first epsilon in the sequence.
@@ -48,14 +48,14 @@ class AbsoluteEpsilonSelector(EpsilonSelector):
         has_more : bool
             Whether there are more epsilons after this one
         """
-        return self.epsilon_sequence[0], False, len(self.epsilon_sequence) == 1
+        return self.epsilon_sequence[0], False, self.last_round == 1
 
-    def get_epsilon(self, round, abc_history):
+    def get_epsilon(self, abc_round, abc_history):
         """Returns the n-th epsilon in the seqeunce.
 
         Parameters
         ----------
-        round : int
+        abc_round : int
             the round to get the epsilon for
         abc_history : type
             A list of dictionaries with keys `accepted_samples` and `distances`
@@ -70,4 +70,4 @@ class AbsoluteEpsilonSelector(EpsilonSelector):
         terminate : bool
             Whether to stop after this epsilon
         """
-        return self.epsilon_sequence[round], False, round == self.last_round
+        return self.epsilon_sequence[abc_round - 1], False, abc_round >= self.last_round

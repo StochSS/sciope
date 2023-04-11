@@ -35,6 +35,8 @@ class RelativeEpsilonSelector(EpsilonSelector):
         max_rounds : int
             The maximum number of rounds before stopping. If None, doesn't end.
         """
+        if max_rounds == 0:
+            raise ValueError("max_rounds must be greater than 0.")
 
         self.epsilon_percentile = epsilon_percentile
         self.max_rounds = max_rounds
@@ -52,14 +54,14 @@ class RelativeEpsilonSelector(EpsilonSelector):
         has_more : bool
             Whether there are more epsilons after this one
         """
-        return self.epsilon_percentile, True, self.max_rounds == 0
+        return self.epsilon_percentile, True, self.max_rounds == 1
 
-    def get_epsilon(self, round, abc_history):
+    def get_epsilon(self, abc_round, abc_history):
         """Returns the new epsilon based on the n-th round.
 
         Parameters
         ----------
-        round : int
+        abc_round : int
             the n-th round of the sequence
         abc_history : type
             A list of dictionaries with keys `accepted_samples` and `distances`
@@ -74,8 +76,8 @@ class RelativeEpsilonSelector(EpsilonSelector):
         terminate : bool
             Whether to stop after this epsilon
         """
-        if round > len(abc_history):
+        if abc_round > len(abc_history):
             epsilon = np.percentile(abc_history[-1]['distances'], self.epsilon_percentile)
         else:
-            epsilon = np.percentile(abc_history[round - 1]['distances'], self.epsilon_percentile)
-        return epsilon, False, self.max_rounds and round + 1 == self.max_rounds
+            epsilon = np.percentile(abc_history[abc_round - 1]['distances'], self.epsilon_percentile)
+        return epsilon, False, self.max_rounds and abc_round >= self.max_rounds

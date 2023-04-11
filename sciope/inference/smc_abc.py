@@ -181,10 +181,10 @@ class SMCABC(InferenceBase):
         abc_history.append(abc_results)
 
         # SMC iterations
-        round = 1
+        abc_round = 2 # Indicates the round getting ready to start
         while not terminate:
 
-            tol, relative, terminate = eps_selector.get_epsilon(round, abc_history)
+            tol, relative, terminate = eps_selector.get_epsilon(abc_round, abc_history)
 
             print("Starting epsilon = {}".format(tol))
             if self.use_logger:
@@ -228,7 +228,7 @@ class SMCABC(InferenceBase):
                 if self.parameters is not None:
                     abc_results = InferenceRound.build_from_inference_round(abc_results, list(self.parameters.keys()))
                 abc_history.append(abc_results)
-                round += 1
+                abc_round += 1
 
             except KeyboardInterrupt:
                 if self.parameters is None:
