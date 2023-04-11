@@ -91,7 +91,7 @@ setup(
     extras_require={
         'dev': ['check-manifest'],
         'test': ['coverage'],
-        'full-plotting': ['plotly']
+        'fullplotting': ['plotly']
     },
 
     # If there are data files included in your packages that need to be
