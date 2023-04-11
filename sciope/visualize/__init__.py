@@ -14,6 +14,7 @@
 '''
 Imports for summary statistics module.
 '''
+from .inference_results import InferenceRound, InferenceResults, LegendTitle, combine_colors, common_rgb_values
 from .interactive_scatter import UserLabel, annotate, draw_scatterplot, interative_scatter
 
 __all__ = [s for s in dir() if not s.startswith('_')]
