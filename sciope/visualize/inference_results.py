@@ -114,16 +114,8 @@ class InferenceRound(UserDict):
         self.__inferred_parameters = {inferred_method: inferred_parameters}
 
     def __getattribute__(self, key):
-        attribute_map = {
-            'accepted_samples': self.data,
-            'distances': self.distances,
-            'accepted_count': self.accepted_count,
-            'trial_count': self.trial_count,
-            'inferred_method': self.inferred_method,
-            'inferred_parameters': self.__inferred_parameters[self.inferred_method]
-        }
-        if key in attribute_map:
-            return attribute_map[key]
+        if key == 'inferred_parameters':
+            return self.__inferred_parameters[self.inferred_method]
         return UserList.__getattribute__(self, key)
 
     def __getitem__(self, key):
