@@ -136,6 +136,16 @@ class InferenceRound(UserDict):
             return self.data[param]
         if key in self.data:
             return self.data[key]
+        attribute_map = {
+            'accepted_samples': self.data,
+            'distances': self.distances,
+            'accepted_count': self.accepted_count,
+            'trial_count': self.trial_count,
+            'inferred_method': self.inferred_method,
+            'inferred_parameters': self.__inferred_parameters[self.inferred_method]
+        }
+        if key in attribute_map:
+            return attribute_map[key]
         if hasattr(self.__class__, "__missing__"):
             return self.__class__.__missing__(self, key)
         raise KeyError(key)
