@@ -9,6 +9,7 @@ from gillespy2.solvers.numpy import NumPySSASolver
 from dask.distributed import Client
 import gillespy2
 import pytest
+from gillespy2 import SSACSolver
 
 
 class ToggleSwitch(gillespy2.Model):
@@ -46,32 +47,32 @@ class ToggleSwitch(gillespy2.Model):
 
 
 toggle_model = ToggleSwitch()
+solver = SSACSolver
+parameter_names = ['alpha1', 'alpha2', 'beta', 'gamma', 'mu']
 
 
 # Define simulator function
 
-def set_model_parameters(params, model):
-    """ params - array, needs to have the same order as
-        model.listOfParameters """
-    for e, (pname, p) in enumerate(model.listOfParameters.items()):
-        model.get_parameter(pname).set_expression(params[e])
-    return model
+def simulator(params, model, transform=True):
+    params = params.ravel()
 
-
-# Here we use gillespy2 numpy solver, so performance will
-# be quite slow for this model
-
-def simulator(params, model):
-    model_update = set_model_parameters(params, model)
     num_trajectories = 1  # TODO: howto handle ensembles
+    res = model.run(
+        solver=solver,
+        variables={parameter_names[i]: params[i] for i in range(len(parameter_names))})
 
-    res = model_update.run(solver=NumPySSASolver, show_labels=False,
-                           number_of_trajectories=num_trajectories)
-    tot_res = np.asarray([x.T for x in res])  # reshape to (N, S, T)
-    tot_res = tot_res[:, 1:, :]  # should not contain timepoints
+    if transform:
 
-    return tot_res
+        U_ = res['U']
+        V_ = res['V']
 
+        return np.vstack([U_, V_])[np.newaxis, :, :]
+
+    else:
+        return res
+
+
+# -
 
 def simulator2(x):
     return simulator(x, model=toggle_model)
@@ -88,14 +89,21 @@ true_params = np.array(bound)
 dmin = true_params * 0.5
 dmax = true_params * 2.0
 
+# +
+# simulator2(true_params)
+# -
+
 uni_prior = uniform_prior.UniformPrior(dmin, dmax)
 
-fixed_data = toggle_model.run(solver=NumPySSASolver, number_of_trajectories=100, show_labels=False)
+fixed_data = toggle_model.run(solver=solver, number_of_trajectories=30)
 
-# reshape data to (N,S,T)
-fixed_data = np.asarray([x.T for x in fixed_data])
-# and remove timepoints
-fixed_data = fixed_data[:, 1:, :]
+results = []
+for x in fixed_data:
+    results.append(np.vstack([x['U'], x['V']])[np.newaxis, :, :])
+
+results = np.array(results)
+
+fixed_data = np.squeeze(results, axis=1)
 
 summ_func = lambda x: fe.generate_tsfresh_features(x, MinimalFCParameters())
 
@@ -115,13 +123,19 @@ def test_abc_functional():
         'trial_count'] < 1000, "ABC inference test failed, trial count out of bounds"
     assert mae_inference < 0.5, "ABC inference test failed, error too high"
 
-    ## run in cluster mode
+    #print('Done')
+    # run in cluster mode
     c = Client()
-    res = abc.infer(num_samples=30, batch_size=10, chunk_size=2)
+    res = abc.infer(num_samples=50, batch_size=10, chunk_size=2)
     mae_inference = mean_absolute_error(true_params, abc.results['inferred_parameters'])
     assert abc.results['trial_count'] > 0 and abc.results[
         'trial_count'] < 1000, "ABC inference test failed, trial count out of bounds"
     assert mae_inference < 0.5, "ABC inference test failed, error too high"
-
+    
     c.close()
+
+
+
+
+
 

@@ -17,7 +17,7 @@ Semi-supervised Label Propagation Surrogate Model
 
 # Imports
 from sciope.models.model_base import ModelBase
-from sklearn.semi_supervised import label_propagation
+from sklearn.semi_supervised import LabelSpreading
 from scipy.optimize import basinhopping
 from scipy.stats.distributions import entropy
 import numpy as np
@@ -124,7 +124,7 @@ class LPModel(ModelBase):
         float
             a measure directly proportional to entropy
         """
-        model = label_propagation.LabelSpreading(kernel=self.kernel, alpha=self.alpha,
+        model = LabelSpreading(kernel=self.kernel, alpha=self.alpha,
                                                  gamma=x)
         model.fit(self.x, self.y)
         label_prob = model.label_distributions_
@@ -157,7 +157,7 @@ class LPModel(ModelBase):
         self.gamma = self.optimize(min_, max_, niter, stepsize)[0]
 
         # Propogate labels
-        self.model = label_propagation.LabelSpreading(kernel=self.kernel, alpha=self.alpha,
+        self.model = LabelSpreading(kernel=self.kernel, alpha=self.alpha,
                                                       gamma=self.gamma)
         self.model.fit(self.x, self.y)
         if self.use_logger:

@@ -28,7 +28,7 @@ from sciope.visualize.interactive_scatter import interative_scatter
 from tsfresh.feature_extraction import MinimalFCParameters
 from sciope.data.dataset import DataSet
 from sciope.core import core
-from sklearn.manifold import t_sne
+from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA, KernelPCA
 from dask import persist, delayed, compute
 from dask.distributed import as_completed, futures_of
@@ -64,7 +64,7 @@ def _do_tsne(data, nr_components=2, init='random', plex=30,
     
     """
 
-    tsne = t_sne.TSNE(n_components=nr_components, init=init,
+    tsne = TSNE(n_components=nr_components, init=init,
                       perplexity=plex, random_state=rs, n_iter=n_iter, learning_rate=lr)
 
     return tsne.fit_transform(data), tsne

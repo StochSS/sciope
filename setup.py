@@ -21,7 +21,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.2',
+    version='0.4',
 
     description='The sciope toolbox for surrogate modeling, likelihood-free parameter inference and black-box optimization.',
     long_description_content_type='text/markdown',
@@ -74,9 +74,10 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        'numpy',
+        'numpy>=1.16.5',
         'scipy',
         'scikit-learn',
+        'gillespy2',
         'tsfresh==0.15.0',
         'ipywidgets',
         'dask',
