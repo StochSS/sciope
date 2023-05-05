@@ -15,25 +15,26 @@
 Sequential Monte-Carlo Approximate Bayesian Computation (SMC-ABC)
 """
 
+import glob
+import os
+import pickle
+
+import dask
+import numpy as np
+from dask import delayed
+from dask.distributed import futures_of, as_completed, wait
+from sciope.core import core
+from sciope.inference import abc_inference
 # Imports
 from sciope.inference.abc_inference import ABC
 from sciope.inference.inference_base import InferenceBase
-from sciope.inference import abc_inference
-from sciope.core import core
 from sciope.utilities.distancefunctions import euclidean as euc
-from sciope.utilities.summarystats import burstiness as bs
-from sciope.utilities.housekeeping import sciope_logger as ml
-from sciope.utilities.priors.prior_base import PriorBase
 from sciope.utilities.epsilonselectors import RelativeEpsilonSelector
+from sciope.utilities.housekeeping import sciope_logger as ml
 from sciope.utilities.perturbationkernels.multivariate_normal import MultivariateNormalKernel
-
-import numpy as np
-import dask
-from dask.distributed import futures_of, as_completed, wait
-from dask import delayed
-import pickle
-import os
-import glob
+from sciope.utilities.priors.prior_base import PriorBase
+from sciope.utilities.summarystats import burstiness as bs
+from sciope.visualize.inference_results import InferenceResults, InferenceRound
 
 
 class PerturbationPrior(PriorBase):
@@ -92,6 +93,7 @@ class SMCABC(InferenceBase):
     * distance_function         (function calculating deviation between simulated statistics and observed statistics)
     * summaries_divisor         (numpy array of maxima - used for normalizing summary statistic values)
     * use_logger    			(whether logging is enabled or disabled)
+    * parameters                (dict of parameters in the form of {name: value} - used for generating result objects)
 
     Methods:
     * infer 					(perform parameter inference)
@@ -101,7 +103,7 @@ class SMCABC(InferenceBase):
                  perturbation_kernel=None,
                  summaries_function=bs.Burstiness().compute,
                  distance_function=euc.EuclideanDistance(),
-                 summaries_divisor=None, use_logger=False,
+                 summaries_divisor=None, use_logger=False, parameters=None,
                  max_sampling_iterations=np.Inf):
 
         self.name = 'SMC-ABC'
@@ -112,6 +114,7 @@ class SMCABC(InferenceBase):
         self.distance_function = distance_function
         self.summaries_divisor = summaries_divisor
         self.max_sampling_iterations = max_sampling_iterations
+        self.parameters = parameters
         if perturbation_kernel is not None:
             self.perturbation_kernel = perturbation_kernel
         else:
@@ -126,6 +129,7 @@ class SMCABC(InferenceBase):
     def infer(self, num_samples, batch_size,
               eps_selector=RelativeEpsilonSelector(20), chunk_size=10,
               ensemble_size=1, round=0, path=None, resume=False):
+
         """Performs SMC-ABC.
 
         Parameters
@@ -145,6 +149,10 @@ class SMCABC(InferenceBase):
             Whether summary statistics should be normalized and epsilon be interpreted as a percentage
         round : int
             Specify from which round SMC-ABC will start from. If no saved files exist it will run from round 0
+        resume: bool
+            Prompt the user to choose if they want to continue for three additional rounds. Default: False
+        Path : str
+            Path variable to store kernels and results of each round. If no path is provided, the current working directory will be used
 
         Returns
         -------
@@ -157,7 +165,6 @@ class SMCABC(InferenceBase):
             'inferred_parameters': The mean of accepted parameter samples
         """
 
-        # Check if problem name is specified, then check if the path is also specified
         if self.problem_name is not None:
             if path and os.path.isdir(path):
                 print(f"Using the path: {path}")
@@ -193,8 +200,9 @@ class SMCABC(InferenceBase):
             t = num_samples
             prior_function = self.prior_function
 
-            tol, relative, terminate = eps_selector.get_initial_epsilon()  # Difference between the two function
+            tol, relative, terminate = eps_selector.get_initial_epsilon()
             print("Determining initial population for round 0 using epsilon: {}".format(tol))
+
             abc_instance = abc_inference.ABC(self.data, self.sim, prior_function,
                                              epsilon=tol,
                                              summaries_function=self.summaries_function,
@@ -212,8 +220,13 @@ class SMCABC(InferenceBase):
             population = np.vstack(abc_results['accepted_samples'])[:t]
             normalized_weights = np.ones(t) / t
 
+            if self.parameters is not None:
+                inference_round = InferenceRound.build_from_inference_round(abc_results, list(self.parameters.keys()))
+                abc_results.update(
+                    inference_round)  # Update the abc_results with the additional keys and values from inference_round
+
             abc_history.append(abc_results)
-            abc_history[0]['eps'] = tol  # add epsilon values for each round
+            abc_history[0]['eps'] = tol
 
             if saved_runs_path:
                 file_path = os.path.join(saved_runs_path, f'smcabc_{0}.pkl')
@@ -225,7 +238,6 @@ class SMCABC(InferenceBase):
             max_rounds = eps_selector.max_rounds
 
             while round <= max_rounds:
-
                 tol, relative, terminate = eps_selector.get_epsilon(round, abc_history)
 
                 print("Determining initial population for round {} using epsilon: {}".format(round, tol))
@@ -257,20 +269,26 @@ class SMCABC(InferenceBase):
                                                      normalize=relative)
 
                     # Compute importance weights for the new samples
-                    if len(abc_results['accepted_samples']) == t:
-                        new_samples = np.vstack(abc_results['accepted_samples'])[:t]
 
-                        prior_weights = self.prior_function.pdf(new_samples)
-                        kweights = self.perturbation_kernel.pdf(population, new_samples)
+                    new_samples = np.vstack(abc_results['accepted_samples'])[:t]
 
-                        new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
-                        new_weights = new_weights / sum(new_weights)
+                    prior_weights = self.prior_function.pdf(new_samples)
+                    kweights = self.perturbation_kernel.pdf(population, new_samples)
 
-                        population = new_samples
-                        normalized_weights = new_weights
+                    new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
+                    new_weights = new_weights / sum(new_weights)
 
-                        abc_history.append(abc_results)
-                        abc_history[round]['eps'] = tol
+                    population = new_samples
+                    normalized_weights = new_weights
+
+                    if self.parameters is not None:
+                        inference_round = InferenceRound.build_from_inference_round(abc_results,
+                                                                                    list(self.parameters.keys()))
+                        abc_results.update(
+                            inference_round)  # Update the abc_results with the additional keys and values from inference_round
+
+                    abc_history.append(abc_results)
+                    abc_history[round]['eps'] = tol
 
                     # Save the perturbation kernel for the next round
                     if saved_kernels_path:
@@ -278,20 +296,20 @@ class SMCABC(InferenceBase):
                         with open(file_path_1, 'wb') as f:
                             pickle.dump(self.perturbation_kernel, f)
 
-                        # Dump abc_history to a text
-                        with open(os.path.join(saved_runs_path,
-                                               f"dump_saved_smc_abc_history_{round}_{self.problem_name}.txt"),
-                                  "w") as f:
-                            f.write(str(abc_history))
-
+                    if saved_runs_path:
                         file_path = os.path.join(saved_runs_path, f'smcabc_{round}.pkl')
                         with open(file_path, 'wb') as f:
                             pickle.dump(abc_history, f)
 
-                        round += 1
+                    round += 1
 
                 except KeyboardInterrupt:
-                    return abc_history
+                    if self.parameters is None:
+                        return abc_history
+
+                    return InferenceResults(
+                        abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                    )
                 except:
                     raise
 
@@ -301,12 +319,33 @@ class SMCABC(InferenceBase):
                         if choice.lower() == 'y':
                             max_rounds += 3
                         else:
-                            break
+                            if self.parameters is None:
+                                return abc_history
+                            return InferenceResults(
+                                abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                            )
 
-            return abc_history
+            if self.parameters is None:
+                return abc_history
+
+            return InferenceResults(
+                abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+            )
 
         def run_from_particular_round(self, abc_history, round, population, kernel, max_rounds):
+
             print(f" Note: SMC_ABC will run for {max_rounds} rounds at a time")
+
+            for j in range(round, max_rounds + 1):
+                file_path = os.path.join(saved_runs_path, f'smcabc_{j}.pkl')
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                    print(f"Deleted {file_path}")
+
+                kernel_path = os.path.join(saved_kernels_path, f'kernel_{j}.pkl')
+                if os.path.isfile(kernel_path):
+                    os.unlink(kernel_path)
+                    print(f"Deleted {kernel_path}")
 
             if resume:
                 if round == (max_rounds):
@@ -314,12 +353,17 @@ class SMCABC(InferenceBase):
                     if choice.lower() == 'y':
                         max_rounds += 3
                     else:
-                        return abc_history
+                        if self.parameters is None:
+                            return abc_history
+                        return InferenceResults(
+                            abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                        )
 
             t = num_samples
             normalized_weights = np.ones(t) / t
+
             i = round
-            while i < max_rounds:
+            while i <= max_rounds:
                 tol, relative, terminate = eps_selector.get_epsilon(i, abc_history)
                 print("Determining initial population for round {} using epsilon: {}".format(i, tol))
 
@@ -354,20 +398,26 @@ class SMCABC(InferenceBase):
                                                      normalize=relative)
 
                     # Compute importance weights for the new samples
-                    if len(abc_results['accepted_samples']) == t:
-                        new_samples = np.vstack(abc_results['accepted_samples'])[:t]
 
-                        prior_weights = self.prior_function.pdf(new_samples)
-                        kweights = perturbation_kernel.pdf(population, new_samples)
+                    new_samples = np.vstack(abc_results['accepted_samples'])[:t]
 
-                        new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
-                        new_weights = new_weights / sum(new_weights)
+                    prior_weights = self.prior_function.pdf(new_samples)
+                    kweights = perturbation_kernel.pdf(population, new_samples)
 
-                        population = new_samples
-                        normalized_weights = new_weights
+                    new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
+                    new_weights = new_weights / sum(new_weights)
 
-                        abc_history.append(abc_results)
-                        abc_history[i]['eps'] = tol
+                    population = new_samples
+                    normalized_weights = new_weights
+
+                    if self.parameters is not None:
+                        inference_round = InferenceRound.build_from_inference_round(abc_results,
+                                                                                    list(self.parameters.keys()))
+                        abc_results.update(
+                            inference_round)
+
+                    abc_history.append(abc_results)
+                    abc_history[round]['eps'] = tol
 
                     # Save the perturbation kernel for the next round
                     file_path_1 = os.path.join(saved_kernels_path, f'kernel_{i}.pkl')
@@ -387,78 +437,81 @@ class SMCABC(InferenceBase):
                             if choice.lower() == 'y':
                                 max_rounds += 3
                             else:
-                                return abc_history
-
+                                if self.parameters is None:
+                                    return abc_history
+                                return InferenceResults(
+                                    abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                                )
                 except KeyboardInterrupt:
-                    return abc_history
+                    if self.parameters is None:
+                        return abc_history
+                    return InferenceResults(
+                        abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                    )
                 except:
                     raise
 
-            return abc_history
+            if self.parameters is None:
+                return abc_history
+            return InferenceResults(
+                abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+            )
 
-        if round >= 0:
-            if saved_runs:
-                # First check if there are saved files
-                print(f"Found {len(saved_runs)} saved runs:")
-                for i, file_path in enumerate(saved_runs):
+        def delete_files_in_directory(directory_path):
+            for file_name in os.listdir(directory_path):
+                file_path = os.path.join(directory_path, file_name)
+                try:
+                    if os.path.isfile(file_path):
+                        os.unlink(file_path)
+                        print(f"Deleted {file_path}")
+                except Exception as e:
+                    print(f"Failed to delete {file_path}. Reason: {e}")
+
+        if round < 0:
+            print("Invalid Round Number")
+
+        elif not saved_runs:
+            print('No saved runs found')
+            abc_history = run_from_start(self)
+            return abc_history
+        else:
+            print(f"Found {len(saved_runs)} saved runs:")
+            for i, file_path in enumerate(saved_runs):
+                if os.path.getsize(file_path) > 0:
                     with open(file_path, 'rb') as f:
                         saved_history = pickle.load(f)
-                    print(f"{i}. Round {i} - {file_path}")
+                        print(f"{i}. Round {i} - {file_path}")
+                else:
+                    print(f"Skipping empty file: {file_path}")
 
-                if 0 <= round <= len(saved_runs):
+            if 0 <= round <= len(saved_runs):
+                if round > 0:
+                    t = num_samples
 
-                    if round > 0 and round <= len(saved_runs):
-                        t = num_samples
-                        population = np.vstack(saved_history[round - 1]['accepted_samples'])[:t]
-                        loaded_eps = saved_history[round - 1]['eps']
-                        file_path_ = os.path.join(saved_kernels_path, f'kernel_{round - 1}.pkl')
+                    population = np.vstack(saved_history[round - 1]['accepted_samples'])[:t]
+                    loaded_eps = saved_history[round - 1]['eps']
+                    file_path_ = os.path.join(saved_kernels_path, f'kernel_{round - 1}.pkl')
 
-                        # file_path_ = os.path.join(f'{self.problem_name}_saved_kernels', f'kernel_{round - 1}.pkl')
-                        with open(file_path_, 'rb') as f:
-                            kernel = pickle.load(f)
+                    with open(file_path_, 'rb') as f:
+                        kernel = pickle.load(f)
+                    saved_history = saved_history[:round]
+                    print(f'Starting from round {round} with epsilon {loaded_eps}')
 
-                        print(f'Starting from round {round} with epsilon {loaded_eps}')
+                    abc_history = run_from_particular_round(self, saved_history, round, population, kernel,
+                                                            max_rounds=eps_selector.max_rounds)
+                    return abc_history
 
-                        abc_history = run_from_particular_round(self, saved_history, round, population, kernel,
-                                                                max_rounds=eps_selector.max_rounds)
+                else:
+                    print('No round is specified, Starting from round 0')
+                    delete_files_in_directory(saved_runs_path)
+                    delete_files_in_directory(saved_kernels_path)
 
-                        return abc_history
-
-                    elif round == 0:
-                        print('No round is specified, Starting from round 0')
-                        dir_path_1 = saved_runs_path
-                        dir_path_2 = saved_kernels_path
-
-                        # loop over the files in the directory and delete them
-                        for file_name in os.listdir(dir_path_1):
-                            file_path = os.path.join(dir_path_1, file_name)
-                            try:
-                                if os.path.isfile(file_path):
-                                    os.unlink(file_path)
-                                    print(f"Deleted {file_path}")
-                            except Exception as e:
-                                print(f"Failed to delete {file_path}. Reason: {e}")
-
-                        for file_name in os.listdir(dir_path_2):
-                            file_path = os.path.join(dir_path_2, file_name)
-                            try:
-                                if os.path.isfile(file_path):
-                                    os.unlink(file_path)
-                                    print(f"Deleted {file_path}")
-                            except Exception as e:
-                                print(f"Failed to delete {file_path}. Reason: {e}")
-                        # After deleting all the saved file, start a fresh run
+                    # After deleting all the saved files, start a fresh run
+                    if self.parameters is None:
                         abc_history = run_from_start(self)
                         return abc_history
                     else:
-                        print(f"No saved {round} round exist")
-
-
-
-                else:
-                    print("Please enter a valid round number")
+                        results = run_from_start(self)
+                        return results
             else:
-                print('No saved runs found')
-                abc_history = run_from_start(self)
-                return abc_history
-
+                print("Please enter a valid round number")
