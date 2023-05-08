@@ -126,6 +126,44 @@ class SMCABC(InferenceBase):
             self.logger = ml.SciopeLogger().get_logger()
             self.logger.info("Sequential Monte-Carlo Approximate Bayesian Computation initialized")
 
+    def create_directories(self, path=None):
+
+        """ This helper function creates two folders, 'saved_runs' and 'saved_kernels', for storing files.
+            If no path is specified, the folders will be created in the current working directory.
+            If a problem name is provided, it will be used to name the folders accordingly"""
+
+        if self.problem_name is not None:
+            directory_prefix = f'{self.problem_name}_'
+        else:
+            directory_prefix = ''
+
+        if path and os.path.isdir(path):
+            print(f"Using the path: {path}")
+        else:
+            print(f"Using the path: {os.getcwd()}")
+            path = os.getcwd()
+
+        saved_runs_path = os.path.join(path, f'{directory_prefix}saved_runs')
+        saved_kernels_path = os.path.join(path, f'{directory_prefix}saved_kernels')
+
+        os.makedirs(saved_runs_path, exist_ok=True)
+        os.makedirs(saved_kernels_path, exist_ok=True)
+
+        return saved_runs_path, saved_kernels_path
+
+    def delete_files_in_directory(self, directory_path):
+
+        """ Helper function to delete saved files"""
+
+        for file_name in os.listdir(directory_path):
+            file_path = os.path.join(directory_path, file_name)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                    print(f"Deleted {file_path}")
+            except Exception as e:
+                print(f"Failed to delete {file_path}. Reason: {e}")
+
     def infer(self, num_samples, batch_size,
               eps_selector=RelativeEpsilonSelector(20), chunk_size=10,
               ensemble_size=1, round=0, path=None, resume=False):
@@ -165,32 +203,7 @@ class SMCABC(InferenceBase):
             'inferred_parameters': The mean of accepted parameter samples
         """
 
-        if self.problem_name is not None:
-            if path and os.path.isdir(path):
-                print(f"Using the path: {path}")
-                saved_runs_path = os.path.join(path, f'{self.problem_name}_saved_runs')
-                saved_kernels_path = os.path.join(path, f'{self.problem_name}_saved_kernels')
-                os.makedirs(saved_runs_path, exist_ok=True)
-                os.makedirs(saved_kernels_path, exist_ok=True)
-            else:
-                print(f"Using the path: {os.getcwd()}")
-                saved_runs_path = f'{self.problem_name}_saved_runs'
-                saved_kernels_path = f'{self.problem_name}_saved_kernels'
-                os.makedirs(saved_runs_path, exist_ok=True)
-                os.makedirs(saved_kernels_path, exist_ok=True)
-        else:
-            if path and os.path.isdir(path):
-                print(f"Using the path: {path}")
-                saved_runs_path = os.path.join(path, 'saved_runs')
-                saved_kernels_path = os.path.join(path, 'saved_kernels')
-                os.makedirs(saved_runs_path, exist_ok=True)
-                os.makedirs(saved_kernels_path, exist_ok=True)
-            else:
-                print(f"Using the path: {os.getcwd()}")
-                saved_runs_path = 'saved_runs'
-                saved_kernels_path = 'saved_kernels'
-                os.makedirs(saved_runs_path, exist_ok=True)
-                os.makedirs(saved_kernels_path, exist_ok=True)
+        saved_runs_path, saved_kernels_path = self.create_directories(path)
 
         saved_kernels = sorted(glob.glob(os.path.join(saved_kernels_path, 'kernel_*.pkl')))
         saved_runs = sorted(glob.glob(os.path.join(saved_runs_path, 'smcabc_*.pkl')))
@@ -457,15 +470,6 @@ class SMCABC(InferenceBase):
                 abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
             )
 
-        def delete_files_in_directory(directory_path):
-            for file_name in os.listdir(directory_path):
-                file_path = os.path.join(directory_path, file_name)
-                try:
-                    if os.path.isfile(file_path):
-                        os.unlink(file_path)
-                        print(f"Deleted {file_path}")
-                except Exception as e:
-                    print(f"Failed to delete {file_path}. Reason: {e}")
 
         if round < 0:
             print("Invalid Round Number")
@@ -503,8 +507,8 @@ class SMCABC(InferenceBase):
 
                 else:
                     print('No round is specified, Starting from round 0')
-                    delete_files_in_directory(saved_runs_path)
-                    delete_files_in_directory(saved_kernels_path)
+                    self.delete_files_in_directory(saved_runs_path)
+                    self.delete_files_in_directory(saved_kernels_path)
 
                     # After deleting all the saved files, start a fresh run
                     if self.parameters is None:
