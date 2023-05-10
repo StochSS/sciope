@@ -153,7 +153,7 @@ class SMCABC(InferenceBase):
 
     def delete_files_in_directory(self, directory_path):
 
-        """ Helper function to delete saved files"""
+        """ Helper function to delete saved files, if we start from round 0"""
 
         for file_name in os.listdir(directory_path):
             file_path = os.path.join(directory_path, file_name)
@@ -163,6 +163,263 @@ class SMCABC(InferenceBase):
                     print(f"Deleted {file_path}")
             except Exception as e:
                 print(f"Failed to delete {file_path}. Reason: {e}")
+
+    def _delete_rounds(self, round, max_rounds, saved_runs_path, saved_kernels_path):
+
+        """ Helper function to delete saved files for rounds and kernels
+         starting from the given round up to max_rounds """
+
+        for j in range(round, max_rounds + 1):
+            file_path = os.path.join(saved_runs_path, f'smcabc_{j}.pkl')
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+                print(f"Deleted {file_path}")
+
+            kernel_path = os.path.join(saved_kernels_path, f'kernel_{j}.pkl')
+            if os.path.isfile(kernel_path):
+                os.unlink(kernel_path)
+                print(f"Deleted {kernel_path}")
+
+    def _run_iteration(self, tol, population, normalized_weights, perturbation_kernel,
+                       new_prior, chunk_size, t, batch_size, relative, abc_history, round):
+
+        """ Helper Function to run a single iteration of SMC-ABC """
+
+        abc_instance = abc_inference.ABC(self.data, self.sim, new_prior,
+                                         epsilon=tol,
+                                         summaries_function=self.summaries_function,
+                                         distance_function=self.distance_function,
+                                         summaries_divisor=self.summaries_divisor,
+                                         use_logger=self.use_logger,
+                                         max_sampling_iterations=self.max_sampling_iterations)
+
+        abc_instance.compute_fixed_mean(chunk_size=chunk_size)
+        abc_results = abc_instance.infer(num_samples=t,
+                                         batch_size=batch_size,
+                                         chunk_size=chunk_size,
+                                         normalize=relative)
+
+        # Compute importance weights for the new samples
+        new_samples = np.vstack(abc_results['accepted_samples'])[:t]
+        prior_weights = self.prior_function.pdf(new_samples)
+        kweights = perturbation_kernel.pdf(population, new_samples)
+
+        new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
+        new_weights = new_weights / sum(new_weights)
+
+        population = new_samples
+        normalized_weights = new_weights
+
+        if self.parameters is not None:
+            inference_round = InferenceRound.build_from_inference_round(abc_results,
+                                                                        list(self.parameters.keys()))
+            abc_results.update(
+                inference_round)
+
+        abc_history.append(abc_results)
+        abc_history[round]['eps'] = tol
+
+        return abc_results, abc_history
+
+    def run_from_start(self, num_samples, batch_size, chunk_size, saved_kernels_path,
+                       saved_runs_path, eps_selector, resume,
+                       ensemble_size=1):
+
+        """ Run ABC-SMC from start i.e Round 0"""
+        
+        abc_history = []
+        t = num_samples
+        prior_function = self.prior_function
+
+        tol, relative, terminate = eps_selector.get_initial_epsilon()
+        print("Determining initial population for round 0 using epsilon: {}".format(tol))
+
+        abc_instance = abc_inference.ABC(self.data, self.sim, prior_function,
+                                         epsilon=tol,
+                                         summaries_function=self.summaries_function,
+                                         distance_function=self.distance_function,
+                                         summaries_divisor=self.summaries_divisor,
+                                         use_logger=self.use_logger,
+                                         max_sampling_iterations=self.max_sampling_iterations)
+
+        abc_instance.compute_fixed_mean(chunk_size=chunk_size)
+        abc_results = abc_instance.infer(num_samples=t,
+                                         batch_size=batch_size,
+                                         chunk_size=chunk_size,
+                                         normalize=relative)
+
+        population = np.vstack(abc_results['accepted_samples'])[:t]
+        normalized_weights = np.ones(t) / t
+
+        if self.parameters is not None:
+            inference_round = InferenceRound.build_from_inference_round(abc_results, list(self.parameters.keys()))
+            abc_results.update(
+                inference_round)  # Update the abc_results with the additional keys and values from inference_round
+
+        abc_history.append(abc_results)
+        abc_history[0]['eps'] = tol
+
+        if saved_runs_path:
+            file_path = os.path.join(saved_runs_path, f'smcabc_{0}.pkl')
+            with open(file_path, 'wb') as f:
+                pickle.dump(abc_history, f)
+
+        # SMC iterations
+        round = 1
+        max_rounds = eps_selector.max_rounds
+
+        while round <= max_rounds:
+            tol, relative, terminate = eps_selector.get_epsilon(round, abc_history)
+
+            print("Determining initial population for round {} using epsilon: {}".format(round, tol))
+            if self.use_logger:
+                self.logger.info("Starting epsilon = {}".format(tol))
+
+            # Adapt the kernel based on the current population
+            self.perturbation_kernel.adapt(population)
+
+            # Generate a proposal prior based on the population
+            new_prior = PerturbationPrior(self.prior_function,
+                                          population,
+                                          normalized_weights,
+                                          self.perturbation_kernel)
+
+            try:
+                abc_results, abc_history = self._run_iteration(tol, population, normalized_weights,
+                                                               self.perturbation_kernel,
+                                                               new_prior, chunk_size, t,
+                                                               batch_size, relative, abc_history, round)
+
+                # Save the perturbation kernel for the next round
+                if saved_kernels_path:
+                    file_path_1 = os.path.join(saved_kernels_path, f'kernel_{round - 1}.pkl')
+                    with open(file_path_1, 'wb') as f:
+                        pickle.dump(self.perturbation_kernel, f)
+
+                if saved_runs_path:
+                    file_path = os.path.join(saved_runs_path, f'smcabc_{round}.pkl')
+                    with open(file_path, 'wb') as f:
+                        pickle.dump(abc_history, f)
+
+                round += 1
+
+            except KeyboardInterrupt:
+                if self.parameters is None:
+                    return abc_history
+
+                return InferenceResults(
+                    abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                )
+            except:
+                raise
+
+            if resume:
+                if round == (max_rounds + 1):
+                    choice = input("Do you want to continue with 3 more rounds? (y/n): ")
+                    if choice.lower() == 'y':
+                        max_rounds += 3
+                    else:
+                        if self.parameters is None:
+                            return abc_history
+                        return InferenceResults(
+                            abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                        )
+
+        if self.parameters is None:
+            return abc_history
+
+        return InferenceResults(
+            abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+        )
+
+    def run_from_particular_round(self , abc_history, batch_size, chunk_size,
+                                  eps_selector, round, population, kernel, max_rounds,
+                                  resume, num_samples, saved_kernels_path,
+                                  saved_runs_path, ensemble_size=1):
+
+        """ Run SMC-ABC from a saved round """
+
+        print(f" Note: SMC_ABC will run for {max_rounds} rounds at a time")
+
+        # Delete redundant saved files
+        self._delete_rounds(round, max_rounds, saved_runs_path, saved_kernels_path)
+
+        if resume:
+            if round == (max_rounds):
+                choice = input("Do you want to continue with 3 more rounds? (y/n): ")
+                if choice.lower() == 'y':
+                    max_rounds += 3
+                else:
+                    if self.parameters is None:
+                        return abc_history
+                    return InferenceResults(
+                        abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                    )
+
+        t = num_samples
+        normalized_weights = np.ones(t) / t
+
+        i = round
+        while i <= max_rounds:
+            tol, relative, terminate = eps_selector.get_epsilon(i, abc_history)
+            print("Determining initial population for round {} using epsilon: {}".format(i, tol))
+
+            if self.use_logger:
+                self.logger.info("Starting epsilon = {}".format(tol))
+
+            # Adapt the kernel based on the current population
+            perturbation_kernel = kernel
+            perturbation_kernel.adapt(population)
+
+            # Generate a proposal prior based on the population
+            new_prior = PerturbationPrior(self.prior_function,
+                                          population,
+                                          normalized_weights,
+                                          perturbation_kernel)
+
+            try:
+                abc_results, abc_history = self._run_iteration(tol, population, normalized_weights,
+                                                               self.perturbation_kernel,
+                                                               new_prior, chunk_size, t,
+                                                               batch_size, relative, abc_history, round)
+
+                # Save the perturbation kernel for the next round
+                file_path_1 = os.path.join(saved_kernels_path, f'kernel_{i}.pkl')
+                with open(file_path_1, 'wb') as f:
+                    pickle.dump(self.perturbation_kernel, f)
+
+                # Save the state in pkl file after each round
+                file_path = os.path.join(saved_runs_path, f'smcabc_{i}.pkl')
+                with open(file_path, 'wb') as f:
+                    pickle.dump(abc_history, f)
+
+                i = i + 1
+
+                if resume:
+                    if i == (max_rounds + 1):
+                        choice = input("Do you want to continue with 3 more rounds? (y/n): ")
+                        if choice.lower() == 'y':
+                            max_rounds += 3
+                        else:
+                            if self.parameters is None:
+                                return abc_history
+                            return InferenceResults(
+                                abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                            )
+            except KeyboardInterrupt:
+                if self.parameters is None:
+                    return abc_history
+                return InferenceResults(
+                    abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+                )
+            except:
+                raise
+
+        if self.parameters is None:
+            return abc_history
+        return InferenceResults(
+            abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
+        )
 
     def infer(self, num_samples, batch_size,
               eps_selector=RelativeEpsilonSelector(20), chunk_size=10,
@@ -205,278 +462,18 @@ class SMCABC(InferenceBase):
 
         saved_runs_path, saved_kernels_path = self.create_directories(path)
 
+        # Sorting the files
         saved_kernels = sorted(glob.glob(os.path.join(saved_kernels_path, 'kernel_*.pkl')))
         saved_runs = sorted(glob.glob(os.path.join(saved_runs_path, 'smcabc_*.pkl')))
-
-        def run_from_start(self):
-            abc_history = []
-            t = num_samples
-            prior_function = self.prior_function
-
-            tol, relative, terminate = eps_selector.get_initial_epsilon()
-            print("Determining initial population for round 0 using epsilon: {}".format(tol))
-
-            abc_instance = abc_inference.ABC(self.data, self.sim, prior_function,
-                                             epsilon=tol,
-                                             summaries_function=self.summaries_function,
-                                             distance_function=self.distance_function,
-                                             summaries_divisor=self.summaries_divisor,
-                                             use_logger=self.use_logger,
-                                             max_sampling_iterations=self.max_sampling_iterations)
-
-            abc_instance.compute_fixed_mean(chunk_size=chunk_size)
-            abc_results = abc_instance.infer(num_samples=t,
-                                             batch_size=batch_size,
-                                             chunk_size=chunk_size,
-                                             normalize=relative)
-
-            population = np.vstack(abc_results['accepted_samples'])[:t]
-            normalized_weights = np.ones(t) / t
-
-            if self.parameters is not None:
-                inference_round = InferenceRound.build_from_inference_round(abc_results, list(self.parameters.keys()))
-                abc_results.update(
-                    inference_round)  # Update the abc_results with the additional keys and values from inference_round
-
-            abc_history.append(abc_results)
-            abc_history[0]['eps'] = tol
-
-            if saved_runs_path:
-                file_path = os.path.join(saved_runs_path, f'smcabc_{0}.pkl')
-                with open(file_path, 'wb') as f:
-                    pickle.dump(abc_history, f)
-
-            # SMC iterations
-            round = 1
-            max_rounds = eps_selector.max_rounds
-
-            while round <= max_rounds:
-                tol, relative, terminate = eps_selector.get_epsilon(round, abc_history)
-
-                print("Determining initial population for round {} using epsilon: {}".format(round, tol))
-                if self.use_logger:
-                    self.logger.info("Starting epsilon = {}".format(tol))
-
-                # Adapt the kernel based on the current population
-                self.perturbation_kernel.adapt(population)
-
-                # Generate a proposal prior based on the population
-                new_prior = PerturbationPrior(self.prior_function,
-                                              population,
-                                              normalized_weights,
-                                              self.perturbation_kernel)
-
-                try:
-                    # Run ABC on the next epsilon using the proposal prior
-                    abc_instance = abc_inference.ABC(self.data, self.sim, new_prior,
-                                                     epsilon=tol,
-                                                     summaries_function=self.summaries_function,
-                                                     distance_function=self.distance_function,
-                                                     summaries_divisor=self.summaries_divisor,
-                                                     use_logger=self.use_logger,
-                                                     max_sampling_iterations=self.max_sampling_iterations)
-                    abc_instance.compute_fixed_mean(chunk_size=chunk_size)
-                    abc_results = abc_instance.infer(num_samples=t,
-                                                     batch_size=batch_size,
-                                                     chunk_size=chunk_size,
-                                                     normalize=relative)
-
-                    # Compute importance weights for the new samples
-
-                    new_samples = np.vstack(abc_results['accepted_samples'])[:t]
-
-                    prior_weights = self.prior_function.pdf(new_samples)
-                    kweights = self.perturbation_kernel.pdf(population, new_samples)
-
-                    new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
-                    new_weights = new_weights / sum(new_weights)
-
-                    population = new_samples
-                    normalized_weights = new_weights
-
-                    if self.parameters is not None:
-                        inference_round = InferenceRound.build_from_inference_round(abc_results,
-                                                                                    list(self.parameters.keys()))
-                        abc_results.update(
-                            inference_round)  # Update the abc_results with the additional keys and values from inference_round
-
-                    abc_history.append(abc_results)
-                    abc_history[round]['eps'] = tol
-
-                    # Save the perturbation kernel for the next round
-                    if saved_kernels_path:
-                        file_path_1 = os.path.join(saved_kernels_path, f'kernel_{round - 1}.pkl')
-                        with open(file_path_1, 'wb') as f:
-                            pickle.dump(self.perturbation_kernel, f)
-
-                    if saved_runs_path:
-                        file_path = os.path.join(saved_runs_path, f'smcabc_{round}.pkl')
-                        with open(file_path, 'wb') as f:
-                            pickle.dump(abc_history, f)
-
-                    round += 1
-
-                except KeyboardInterrupt:
-                    if self.parameters is None:
-                        return abc_history
-
-                    return InferenceResults(
-                        abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
-                    )
-                except:
-                    raise
-
-                if resume:
-                    if round == (max_rounds):
-                        choice = input("Do you want to continue with 3 more rounds? (y/n): ")
-                        if choice.lower() == 'y':
-                            max_rounds += 3
-                        else:
-                            if self.parameters is None:
-                                return abc_history
-                            return InferenceResults(
-                                abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
-                            )
-
-            if self.parameters is None:
-                return abc_history
-
-            return InferenceResults(
-                abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
-            )
-
-        def run_from_particular_round(self, abc_history, round, population, kernel, max_rounds):
-
-            print(f" Note: SMC_ABC will run for {max_rounds} rounds at a time")
-
-            for j in range(round, max_rounds + 1):
-                file_path = os.path.join(saved_runs_path, f'smcabc_{j}.pkl')
-                if os.path.isfile(file_path):
-                    os.unlink(file_path)
-                    print(f"Deleted {file_path}")
-
-                kernel_path = os.path.join(saved_kernels_path, f'kernel_{j}.pkl')
-                if os.path.isfile(kernel_path):
-                    os.unlink(kernel_path)
-                    print(f"Deleted {kernel_path}")
-
-            if resume:
-                if round == (max_rounds):
-                    choice = input("Do you want to continue with 3 more rounds? (y/n): ")
-                    if choice.lower() == 'y':
-                        max_rounds += 3
-                    else:
-                        if self.parameters is None:
-                            return abc_history
-                        return InferenceResults(
-                            abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
-                        )
-
-            t = num_samples
-            normalized_weights = np.ones(t) / t
-
-            i = round
-            while i <= max_rounds:
-                tol, relative, terminate = eps_selector.get_epsilon(i, abc_history)
-                print("Determining initial population for round {} using epsilon: {}".format(i, tol))
-
-                if self.use_logger:
-                    self.logger.info("Starting epsilon = {}".format(tol))
-
-                # Adapt the kernel based on the current population
-                perturbation_kernel = kernel
-                perturbation_kernel.adapt(population)
-
-                # Generate a proposal prior based on the population
-                new_prior = PerturbationPrior(self.prior_function,
-                                              population,
-                                              normalized_weights,
-                                              perturbation_kernel)
-
-                try:
-                    # Run ABC on the next epsilon using the proposal prior
-                    abc_instance = abc_inference.ABC(self.data, self.sim, new_prior,
-                                                     epsilon=tol,
-                                                     summaries_function=self.summaries_function,
-                                                     distance_function=self.distance_function,
-                                                     summaries_divisor=self.summaries_divisor,
-                                                     use_logger=self.use_logger,
-                                                     max_sampling_iterations=self.max_sampling_iterations)
-
-                    abc_instance.compute_fixed_mean(chunk_size=chunk_size)
-
-                    abc_results = abc_instance.infer(num_samples=t,
-                                                     batch_size=batch_size,
-                                                     chunk_size=chunk_size,
-                                                     normalize=relative)
-
-                    # Compute importance weights for the new samples
-
-                    new_samples = np.vstack(abc_results['accepted_samples'])[:t]
-
-                    prior_weights = self.prior_function.pdf(new_samples)
-                    kweights = perturbation_kernel.pdf(population, new_samples)
-
-                    new_weights = prior_weights / np.sum(kweights * normalized_weights[:, np.newaxis], axis=0)
-                    new_weights = new_weights / sum(new_weights)
-
-                    population = new_samples
-                    normalized_weights = new_weights
-
-                    if self.parameters is not None:
-                        inference_round = InferenceRound.build_from_inference_round(abc_results,
-                                                                                    list(self.parameters.keys()))
-                        abc_results.update(
-                            inference_round)
-
-                    abc_history.append(abc_results)
-                    abc_history[round]['eps'] = tol
-
-                    # Save the perturbation kernel for the next round
-                    file_path_1 = os.path.join(saved_kernels_path, f'kernel_{i}.pkl')
-                    with open(file_path_1, 'wb') as f:
-                        pickle.dump(self.perturbation_kernel, f)
-
-                    # Save the state in pkl file after each round
-                    file_path = os.path.join(saved_runs_path, f'smcabc_{i}.pkl')
-                    with open(file_path, 'wb') as f:
-                        pickle.dump(abc_history, f)
-
-                    i = i + 1
-
-                    if resume:
-                        if i == (max_rounds):
-                            choice = input("Do you want to continue with 3 more rounds? (y/n): ")
-                            if choice.lower() == 'y':
-                                max_rounds += 3
-                            else:
-                                if self.parameters is None:
-                                    return abc_history
-                                return InferenceResults(
-                                    abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
-                                )
-                except KeyboardInterrupt:
-                    if self.parameters is None:
-                        return abc_history
-                    return InferenceResults(
-                        abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
-                    )
-                except:
-                    raise
-
-            if self.parameters is None:
-                return abc_history
-            return InferenceResults(
-                abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
-            )
-
 
         if round < 0:
             print("Invalid Round Number")
 
         elif not saved_runs:
             print('No saved runs found')
-            abc_history = run_from_start(self)
+            abc_history = self.run_from_start(num_samples, batch_size, chunk_size,
+                                              saved_kernels_path, saved_runs_path,
+                                              eps_selector, resume)
             return abc_history
         else:
             print(f"Found {len(saved_runs)} saved runs:")
@@ -495,27 +492,30 @@ class SMCABC(InferenceBase):
                     population = np.vstack(saved_history[round - 1]['accepted_samples'])[:t]
                     loaded_eps = saved_history[round - 1]['eps']
                     file_path_ = os.path.join(saved_kernels_path, f'kernel_{round - 1}.pkl')
+                    max_rounds = eps_selector.max_rounds
 
                     with open(file_path_, 'rb') as f:
                         kernel = pickle.load(f)
                     saved_history = saved_history[:round]
                     print(f'Starting from round {round} with epsilon {loaded_eps}')
 
-                    abc_history = run_from_particular_round(self, saved_history, round, population, kernel,
-                                                            max_rounds=eps_selector.max_rounds)
-                    return abc_history
-
+                    return self.run_from_particular_round(saved_history, batch_size, chunk_size,
+                                                         eps_selector, round, population, kernel,
+                                                          max_rounds, resume, num_samples,
+                                                          saved_kernels_path, saved_runs_path,
+                                                          ensemble_size=1)
                 else:
                     print('No round is specified, Starting from round 0')
                     self.delete_files_in_directory(saved_runs_path)
                     self.delete_files_in_directory(saved_kernels_path)
 
                     # After deleting all the saved files, start a fresh run
-                    if self.parameters is None:
-                        abc_history = run_from_start(self)
-                        return abc_history
-                    else:
-                        results = run_from_start(self)
-                        return results
+
+                    return self.run_from_start( num_samples, batch_size, chunk_size,
+                                                  saved_kernels_path, saved_runs_path,
+                                                  eps_selector, resume)
+
             else:
                 print("Please enter a valid round number")
+
+
