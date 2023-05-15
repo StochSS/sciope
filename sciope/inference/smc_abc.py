@@ -127,6 +127,14 @@ class SMCABC(InferenceBase):
             self.logger.info("Sequential Monte-Carlo Approximate Bayesian Computation initialized")
 
     def create_directories(self, path=None):
+        """  This is a helper function to create two directories named 'saved_runs' and 'saved_kernels'
+         in the specified path. If no path is provided, it defaults to the current working directory.
+
+         If the instance has a defined problem_name, this name is prepended to the directory names.
+         For instance, if problem_name is 'test', the directories would be 'test_saved_runs' and 'test_saved_kernels'.
+
+         If the provided path is a file or doesn't exist, a warning is printed and the current working directory is used.
+         """
 
         if self.problem_name is not None:
             directory_prefix = f'{self.problem_name}_'
@@ -240,8 +248,7 @@ class SMCABC(InferenceBase):
         if self.parameters is not None:
             inference_round = InferenceRound.build_from_inference_round(abc_results,
                                                                         list(self.parameters.keys()))
-            abc_results.update(
-                inference_round)
+            abc_results.update(inference_round)
 
         abc_history.append(abc_results)
         abc_history[round]['eps'] = tol
@@ -269,8 +276,7 @@ class SMCABC(InferenceBase):
 
         if self.parameters is not None:
             inference_round = InferenceRound.build_from_inference_round(abc_results, list(self.parameters.keys()))
-            abc_results.update(
-                inference_round)  # Update the abc_results with the additional keys and values from inference_round
+            abc_results.update(inference_round)
 
         abc_history.append(abc_results)
         abc_history[0]['eps'] = tol
@@ -303,7 +309,8 @@ class SMCABC(InferenceBase):
                 abc_results, abc_history = self._run_iteration(tol, population, normalized_weights,
                                                                self.perturbation_kernel,
                                                                new_prior, chunk_size, t,
-                                                               batch_size, relative, abc_history, round)
+                                                               batch_size, relative,
+                                                               abc_history, round)
 
                 self.save_state_and_kernel(abc_history, self.perturbation_kernel,
                                            saved_kernels_path, saved_runs_path, round)
@@ -313,7 +320,6 @@ class SMCABC(InferenceBase):
             except KeyboardInterrupt:
                 if self.parameters is None:
                     return abc_history
-
                 return InferenceResults(
                     abc_history, self.parameters, [self.prior_function.lb, self.prior_function.ub]
                 )
@@ -368,15 +374,14 @@ class SMCABC(InferenceBase):
                                           population,
                                           normalized_weights,
                                           perturbation_kernel)
-
             try:
                 abc_results, abc_history = self._run_iteration(tol, population, normalized_weights,
-                                                               self.perturbation_kernel,
-                                                               new_prior, chunk_size, t,
-                                                               batch_size, relative, abc_history, round)
+                                                               self.perturbation_kernel,new_prior,
+                                                               chunk_size, t,batch_size, relative,
+                                                               abc_history, round)
 
                 self.save_state_and_kernel(abc_history, perturbation_kernel,
-                                           saved_kernels_path, saved_runs_path, round)
+                                           saved_kernels_path, saved_runs_path,round)
 
                 round += 1
 
